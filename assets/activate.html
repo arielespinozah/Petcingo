@@ -1,0 +1,1092 @@
+﻿<!-- START activate.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Activar Placa – Petcingo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://prueb2.dashnexpages.net/assets/css/main.css?v=20260428"/>
+  <link rel="stylesheet" href="https://prueb2.dashnexpages.net/assets/css/petcingo-theme.css?v=20260430"/>
+  <style>
+    /* Step panel visibility — always controlled by JS display:block/none */
+    .act-radio-row{display:flex;gap:12px;margin-top:4px}
+    .act-radio-opt{display:flex;align-items:center;gap:6px;cursor:pointer;padding:8px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:10px;font-size:.88rem;transition:.2s}
+    .act-radio-opt input[type=radio]{accent-color:#5100c0;width:16px;height:16px}
+    .act-radio-opt:has(input:checked){background:rgba(81,0,192,.15);border-color:rgba(81,0,192,.4);color:#c4a8ff}
+    .act-btn-outline{background:#f0f0f5;border:1px solid #dcd0f5;color:#5100c0;padding:10px 16px;border-radius:12px;font-size:.88rem;cursor:pointer;transition:.2s;font-family:'Syne',sans-serif;font-weight:700;}
+    .act-btn-outline:hover{background:#e5def2}
+    .pet-location-link{display:inline-flex;align-items:center;gap:5px;color:#5100c0;font-size:.85rem;font-weight:600;text-decoration:none}
+    .act-input:focus, .act-country-select:focus { box-shadow: 0 0 0 3px rgba(81,0,192,0.15); border-color: #5100c0; outline: none; }
+    .act-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+    .act-section-title { font-size: 1.05rem; font-weight: 700; color: #5100c0; margin: 24px 0 16px 0; padding-bottom: 8px; border-bottom: 2px solid rgba(81,0,192,0.1); }
+    .act-radio-pill { display: inline-flex; border-radius: 20px; background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.08); overflow: hidden; padding:2px; gap:2px; }
+    .act-radio-pill label { padding: 8px 16px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: #4a4a4a; transition: 0.2s; border-radius: 18px; margin: 0; }
+    .act-radio-pill input[type="radio"]:checked + label { background: #5100c0; color: #ffffff; font-weight: 700; box-shadow: 0 2px 6px rgba(81,0,192,0.25); }
+    .privacy-hint { font-size: 0.75rem; color: #7a6e8a; margin-top: 4px; display: flex; gap: 4px; line-height: 1.3; }
+    .custom-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+    .custom-modal.active { display:flex; }
+    .custom-modal-content { background:#ffffff; padding:24px; border-radius:16px; width:90%; max-width:320px; text-align:center; border:1px solid rgba(0,0,0,0.1); box-shadow:0 10px 40px rgba(0,0,0,0.2); }
+    .custom-modal-content h3 { margin:0 0 12px 0; color:#5100c0; font-family:'Syne',sans-serif; }
+    .custom-modal-content p { color:#4a4a4a; font-size:0.95rem; margin:0 0 24px 0; line-height:1.5; }
+    .custom-modal-actions { display:flex; flex-direction:column; gap:12px; }
+  </style>
+
+  <!-- Firebase (app + firestore only) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <!-- Cloudflare R2 (S3 compatible) -->
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1500.0.min.js"></script>
+  <!-- Confetti Animation -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body class="page-activate">
+
+<!-- Loading overlay -->
+<div class="act-loading" id="act-loading">
+  <div class="act-loading-spinner"></div>
+  <div class="act-loading-text" id="act-loading-text">Verificando placa…</div>
+</div>
+
+<div class="act-container">
+  <div class="act-logo">
+    <div class="act-logo-mark">🐾</div>
+    <h1>Petcingo</h1>
+    <p>Sistema de Identificación de Mascotas</p>
+  </div>
+
+  <div class="act-card">
+    <div class="act-alert act-alert-error"   id="act-error"></div>
+    <div class="act-alert act-alert-success" id="act-success"></div>
+
+    <!-- Steps -->
+    <div class="act-steps-wrap" id="act-steps-wrap">
+      <div class="act-steps">
+        <div class="act-step-bar active" id="act-bar-1"></div>
+        <div class="act-step-bar"        id="act-bar-2"></div>
+        <div class="act-step-bar"        id="act-bar-3"></div>
+        <div class="act-step-bar"        id="act-bar-4"></div>
+      </div>
+      <div class="act-step-label" id="act-step-label">Paso <span>1 de 3</span> — Propietario y foto</div>
+    </div>
+
+    <div class="act-id-badge" id="act-plate-badge">🏷 <span id="act-plate-id">—</span></div>
+
+    <!-- ════ STEP 0 (Emocional) ════ -->
+    <div class="act-step-panel" id="act-step0" style="text-align:center; padding: 20px 0; display:none;">
+      <div style="font-size: 3.5rem; margin-bottom: 12px;">❤️</div>
+      <h2 style="font-family:'Syne',sans-serif; font-size:1.5rem; color:#5100c0; margin-bottom:12px;">Estás a un paso de darle seguridad</h2>
+      <p style="font-size:1rem; color:#4a4a4a; line-height:1.6; margin-bottom:24px;">¿Sabías que <strong>8 de cada 10 mascotas</strong> se pierden al menos una vez en su vida? Una placa de identificación es su voz cuando no pueden hablar.</p>
+      
+      <div style="background:#f5f0ff; border: 1px solid #dcd0f5; border-radius:12px; padding:18px; margin-bottom:28px; text-align:left; font-size:0.95rem; color:#4a4a4a;">
+        <strong style="color:#5100c0; display:block; margin-bottom:8px; font-size:1.05rem;">Lo que haremos ahora:</strong>
+        <ul style="margin:0; padding-left:20px; line-height:1.6;">
+          <li>Guardaremos tus datos de contacto para emergencias.</li>
+          <li>Crearemos el perfil médico y físico de tu mascota.</li>
+          <li>Enlazaremos esta placa única a su perfil.</li>
+        </ul>
+      </div>
+      
+      <div style="font-size:1.05rem; font-weight:700; color:#2b2b2b; margin-bottom:14px;">¿Listo para proteger a tu mascota?</div>
+      <button class="act-btn act-btn-primary" onclick="actGoStep1()" style="width:100%; padding:14px; font-size:1.05rem;">Empezar →</button>
+    </div>
+
+    <!-- ════ STEP 1 ════ -->
+    <div class="act-step-panel" id="act-step1" style="display:none;">
+      <div class="act-card-title">Datos del Propietario</div>
+      <div class="act-card-subtitle">Con esta info podrán contactarte si encuentran a tu mascota.</div>
+
+      <div class="act-form-group">
+        <label>Nombre del propietario *</label>
+        <input type="text" class="act-input" id="owner-name" placeholder="Ej: Juan Carlos Suárez" maxlength="60"/>
+      </div>
+
+      <!-- Phone 1 -->
+      <div class="act-form-group">
+        <label>WhatsApp principal *</label>
+        <div class="act-phone-wrap">
+          <div class="act-country-selector">
+            <div class="act-country-btn">
+              <span id="flag-1">🇧🇴</span>
+              <span id="code-1">+591</span>
+              <span style="font-size:.6rem;color:#7a6e8a;margin-left:2px">▼</span>
+            </div>
+            <select class="act-country-select" id="country-select-1" onchange="onCountryChange(1)">
+              <option value="BO" data-code="+591" data-flag="🇧🇴" selected>🇧🇴 Bolivia (+591)</option>
+              <option value="AR" data-code="+54"  data-flag="🇦🇷">🇦🇷 Argentina (+54)</option>
+              <option value="BR" data-code="+55"  data-flag="🇧🇷">🇧🇷 Brasil (+55)</option>
+              <option value="CL" data-code="+56"  data-flag="🇨🇱">🇨🇱 Chile (+56)</option>
+              <option value="CO" data-code="+57"  data-flag="🇨🇴">🇨🇴 Colombia (+57)</option>
+              <option value="CR" data-code="+506" data-flag="🇨🇷">🇨🇷 Costa Rica (+506)</option>
+              <option value="CU" data-code="+53"  data-flag="🇨🇺">🇨🇺 Cuba (+53)</option>
+              <option value="EC" data-code="+593" data-flag="🇪🇨">🇪🇨 Ecuador (+593)</option>
+              <option value="SV" data-code="+503" data-flag="🇸🇻">🇸🇻 El Salvador (+503)</option>
+              <option value="ES" data-code="+34"  data-flag="🇪🇸">🇪🇸 España (+34)</option>
+              <option value="US" data-code="+1"   data-flag="🇺🇸">🇺🇸 Estados Unidos (+1)</option>
+              <option value="GT" data-code="+502" data-flag="🇬🇹">🇬🇹 Guatemala (+502)</option>
+              <option value="HN" data-code="+504" data-flag="🇭🇳">🇭🇳 Honduras (+504)</option>
+              <option value="MX" data-code="+52"  data-flag="🇲🇽">🇲🇽 México (+52)</option>
+              <option value="NI" data-code="+505" data-flag="🇳🇮">🇳🇮 Nicaragua (+505)</option>
+              <option value="PA" data-code="+507" data-flag="🇵🇦">🇵🇦 Panamá (+507)</option>
+              <option value="PY" data-code="+595" data-flag="🇵🇾">🇵🇾 Paraguay (+595)</option>
+              <option value="PE" data-code="+51"  data-flag="🇵🇪">🇵🇪 Perú (+51)</option>
+              <option value="PR" data-code="+1"   data-flag="🇵🇷">🇵🇷 Puerto Rico (+1)</option>
+              <option value="DO" data-code="+1"   data-flag="🇩🇴">🇩🇴 Rep. Dominicana (+1)</option>
+              <option value="UY" data-code="+598" data-flag="🇺🇾">🇺🇾 Uruguay (+598)</option>
+              <option value="VE" data-code="+58"  data-flag="🇻🇪">🇻🇪 Venezuela (+58)</option>
+            </select>
+          </div>
+          <input type="tel" id="pet-phone" placeholder="71234567" maxlength="15"/>
+        </div>
+        <div class="act-phone-hint">Sin código de país (ej: 71234567)</div>
+      </div>
+
+      <!-- Phone 2 -->
+      <div class="act-form-group">
+        <label>WhatsApp secundario <span class="opt">(Opcional)</span></label>
+        <div class="act-phone-wrap">
+          <div class="act-country-selector">
+            <div class="act-country-btn">
+              <span id="flag-2">🇧🇴</span>
+              <span id="code-2">+591</span>
+              <span style="font-size:.6rem;color:#7a6e8a;margin-left:2px">▼</span>
+            </div>
+            <select class="act-country-select" id="country-select-2" onchange="onCountryChange(2)">
+              <option value="BO" data-code="+591" data-flag="🇧🇴" selected>🇧🇴 Bolivia (+591)</option>
+              <option value="AR" data-code="+54"  data-flag="🇦🇷">🇦🇷 Argentina (+54)</option>
+              <option value="BR" data-code="+55"  data-flag="🇧🇷">🇧🇷 Brasil (+55)</option>
+              <option value="CL" data-code="+56"  data-flag="🇨🇱">🇨🇱 Chile (+56)</option>
+              <option value="CO" data-code="+57"  data-flag="🇨🇴">🇨🇴 Colombia (+57)</option>
+              <option value="CR" data-code="+506" data-flag="🇨🇷">🇨🇷 Costa Rica (+506)</option>
+              <option value="CU" data-code="+53"  data-flag="🇨🇺">🇨🇺 Cuba (+53)</option>
+              <option value="EC" data-code="+593" data-flag="🇪🇨">🇪🇨 Ecuador (+593)</option>
+              <option value="SV" data-code="+503" data-flag="🇸🇻">🇸🇻 El Salvador (+503)</option>
+              <option value="ES" data-code="+34"  data-flag="🇪🇸">🇪🇸 España (+34)</option>
+              <option value="US" data-code="+1"   data-flag="🇺🇸">🇺🇸 Estados Unidos (+1)</option>
+              <option value="GT" data-code="+502" data-flag="🇬🇹">🇬🇹 Guatemala (+502)</option>
+              <option value="HN" data-code="+504" data-flag="🇭🇳">🇭🇳 Honduras (+504)</option>
+              <option value="MX" data-code="+52"  data-flag="🇲🇽">🇲🇽 México (+52)</option>
+              <option value="NI" data-code="+505" data-flag="🇳🇮">🇳🇮 Nicaragua (+505)</option>
+              <option value="PA" data-code="+507" data-flag="🇵🇦">🇵🇦 Panamá (+507)</option>
+              <option value="PY" data-code="+595" data-flag="🇵🇾">🇵🇾 Paraguay (+595)</option>
+              <option value="PE" data-code="+51"  data-flag="🇵🇪">🇵🇪 Perú (+51)</option>
+              <option value="PR" data-code="+1"   data-flag="🇵🇷">🇵🇷 Puerto Rico (+1)</option>
+              <option value="DO" data-code="+1"   data-flag="🇩🇴">🇩🇴 Rep. Dominicana (+1)</option>
+              <option value="UY" data-code="+598" data-flag="🇺🇾">🇺🇾 Uruguay (+598)</option>
+              <option value="VE" data-code="+58"  data-flag="🇻🇪">🇻🇪 Venezuela (+58)</option>
+            </select>
+          </div>
+          <input type="tel" id="pet-phone2" placeholder="76543210" maxlength="15"/>
+        </div>
+        <div class="act-phone-hint">Familiar o contacto de emergencia</div>
+      </div>
+
+      <div class="act-section-title">Ubicación del Propietario</div>
+
+      <!-- País -->
+      <div class="act-form-group">
+        <label>País <span class="opt">(Opcional)</span></label>
+        <select class="act-input" id="owner-country" onchange="onLocCountryChange(this.value)">
+          <option value="">— Seleccionar —</option>
+          <option value="Bolivia" selected>🇧🇴 Bolivia</option>
+          <option value="Argentina">🇦🇷 Argentina</option>
+          <option value="Brasil">🇧🇷 Brasil</option>
+          <option value="Chile">🇨🇱 Chile</option>
+          <option value="Colombia">🇨🇴 Colombia</option>
+          <option value="Costa Rica">🇨🇷 Costa Rica</option>
+          <option value="Cuba">🇨🇺 Cuba</option>
+          <option value="Ecuador">🇪🇨 Ecuador</option>
+          <option value="El Salvador">🇸🇻 El Salvador</option>
+          <option value="España">🇪🇸 España</option>
+          <option value="Estados Unidos">🇺🇸 Estados Unidos</option>
+          <option value="Guatemala">🇬🇹 Guatemala</option>
+          <option value="Honduras">🇭🇳 Honduras</option>
+          <option value="México">🇲🇽 México</option>
+          <option value="Nicaragua">🇳🇮 Nicaragua</option>
+          <option value="Panamá">🇵🇦 Panamá</option>
+          <option value="Paraguay">🇵🇾 Paraguay</option>
+          <option value="Perú">🇵🇪 Perú</option>
+          <option value="Puerto Rico">🇵🇷 Puerto Rico</option>
+          <option value="República Dominicana">🇩🇴 República Dominicana</option>
+          <option value="Uruguay">🇺🇾 Uruguay</option>
+          <option value="Venezuela">🇻🇪 Venezuela</option>
+          <option value="Otro">🌍 Otro</option>
+        </select>
+      </div>
+
+      <!-- Bolivia: Departamento + Provincia -->
+      <div class="act-2col" style="align-items:end;" id="act-wrap-bolivia">
+        <div class="act-form-group" style="margin:0; margin-bottom: 10px;" id="act-wrap-dept">
+          <label>Departamento</label>
+          <select class="act-input" id="owner-dept" onchange="onLocDeptChange(this.value)"></select>
+        </div>
+        <div class="act-form-group" style="margin:0; margin-bottom: 10px; display:none;" id="act-wrap-prov">
+          <label>Provincia</label>
+          <select class="act-input" id="owner-province"></select>
+        </div>
+      </div>
+
+      <!-- Dirección texto -->
+      <div class="act-form-group">
+        <label>📝 Dirección de referencia <span class="opt">(Opcional)</span></label>
+        <div style="font-size:0.8rem;color:#a49eb3;margin-bottom:8px;line-height:1.3;">Describe con palabras dónde vives. Ej: Av. Monseñor Rivero, frente al parque, Zona Norte.</div>
+        <input type="text" class="act-input" id="owner-city" placeholder="Ej: Zona Norte, frente al parque" maxlength="120"/>
+      </div>
+
+      <!-- Link GPS -->
+      <div class="act-form-group">
+        <label>📍 Enlace de ubicación GPS <span class="opt">(Opcional)</span></label>
+        <div style="font-size:0.8rem;color:#a49eb3;margin-bottom:8px;line-height:1.3;">Abre Google Maps, busca tu zona, toca "Compartir" y pega el enlace aquí. Solo visible si tu mascota es reportada como perdida.</div>
+        <input type="url" class="act-input" id="owner-maps" placeholder="https://maps.app.goo.gl/..."/>
+        <div class="privacy-hint"><span>🛡️</span> <span>Privado: Solo se mostrará si alguien escanea la placa de tu mascota perdida.</span></div>
+      </div>
+
+      <div class="act-divider"></div>
+    <div class="act-card-title" style="font-size:1rem;margin-bottom:12px">Foto <span style="font-size:.72rem;font-weight:400;color:#7a6e8a">(recomendada)</span></div>
+
+      <!-- Photo drop -->
+      <div class="act-photo-area" id="act-photo-drop">
+        <input type="file" id="act-photo-input" accept="image/*"/>
+        <div class="act-placeholder" id="act-placeholder">
+          <div class="act-ph-icon">📷</div>
+          <div class="act-ph-label"><strong>Seleccionar foto</strong><br>o arrastra aquí · hasta 5 MB</div>
+          <div class="act-ph-badge">✓ Se comprime automáticamente</div>
+        </div>
+        <div class="act-compressing" id="act-compressing">
+          <div class="act-compress-ring"></div>
+          <div style="font-size:.82rem;color:#7a6e8a">Optimizando…</div>
+        </div>
+        <div class="act-preview-wrap" id="act-preview-wrap">
+          <img class="act-preview-img" id="act-preview-img" alt="preview"/>
+          <div>
+            <div class="act-preview-ok">✅ Imagen lista</div>
+            <div class="act-preview-size" id="act-preview-size"></div>
+            <div class="act-preview-change" onclick="resetActPhoto()">Cambiar foto</div>
+          </div>
+        </div>
+      </div>
+
+      <br/>
+      <button class="act-btn act-btn-primary" onclick="actGoStep2()">Siguiente →</button>
+    </div>
+
+    <!-- ════ STEP 2 ════ -->
+    <div class="act-step-panel" id="act-step2" style="display:none;">
+      <div class="act-card-title">Datos de la Mascota</div>
+      <div class="act-card-subtitle">Esta información aparecerá en el perfil público.</div>
+
+      <div class="act-form-group">
+        <label>Nombre de la mascota *</label>
+        <input type="text" class="act-input" id="pet-name" placeholder="Ej: Max, Luna, Coco…" maxlength="40"/>
+      </div>
+
+      <div class="act-section-title">Características Generales</div>
+      
+      <!-- Species + Breed -->
+      <div class="act-2col" style="align-items: end; margin-bottom:16px;">
+        <div class="act-form-group" style="margin:0;">
+          <label>Especie <span class="opt">(Opcional)</span></label>
+          <select class="act-input" id="pet-species">
+            <option value="">— Seleccionar —</option>
+            <option value="Perro">🐕 Perro</option>
+            <option value="Gato">🐈 Gato</option>
+            <option value="Conejo">🐇 Conejo</option>
+            <option value="Ave">🦜 Ave</option>
+            <option value="Caballo">🐎 Caballo</option>
+            <option value="Vaca">🐄 Vaca</option>
+            <option value="Otro">🐾 Otro</option>
+          </select>
+        </div>
+        <div class="act-form-group" style="margin:0;">
+          <label>Raza <span class="opt">(Opcional)</span></label>
+          <input type="text" class="act-input" id="pet-breed" placeholder="Ej: Golden Retriever"/>
+        </div>
+      </div>
+
+      <!-- Gender + Birthdate -->
+      <div class="act-2col" style="align-items: end; margin-bottom:16px;">
+        <div class="act-form-group" style="margin:0;">
+          <label>Género <span class="opt">(Opcional)</span></label>
+          <select class="act-input" id="pet-gender">
+            <option value="">— Seleccionar —</option>
+            <option value="Macho">♂ Macho</option>
+            <option value="Hembra">♀ Hembra</option>
+          </select>
+        </div>
+        <div class="act-form-group" style="margin:0;">
+          <label>Fecha de Nacimiento <span class="opt">(Opc)</span></label>
+          <input type="date" class="act-input" id="pet-birthdate" style="height:44px; box-sizing:border-box;"/>
+        </div>
+      </div>
+
+      <!-- Weight -->
+      <div class="act-2col" style="align-items: end; margin-bottom:16px;">
+        <div class="act-form-group" style="margin:0;">
+          <label>Peso (kg) <span class="opt">(Opcional)</span></label>
+          <input type="number" class="act-input" id="pet-weight" placeholder="Ej: 8.5" min="0.1" max="200" step="0.1" style="height:44px; box-sizing:border-box;"/>
+        </div>
+      </div>
+
+      <div class="act-section-title">Información y Comportamiento</div>
+      <div class="act-form-group">
+        <label>Mensaje para el rescatista <span class="opt">(Opcional)</span></label>
+        <textarea class="act-input" id="pet-message" placeholder="Ej: Muchas gracias por encontrar a mi mascota, te daré una gratificación económica / recompensa si me la devuelves." rows="3" style="resize:vertical"></textarea>
+      </div>
+      <div class="act-form-group">
+        <label>Comportamiento <span class="opt">(Opcional)</span></label>
+        <select class="act-input" id="pet-behavior">
+          <option value="">— Seleccionar —</option>
+          <option value="Amigable">😊 Amigable</option>
+          <option value="Juguetón">🎾 Juguetón/a</option>
+          <option value="Dócil">🌸 Dócil</option>
+          <option value="Tranquilo">😌 Tranquilo/a</option>
+          <option value="Tímido">🙈 Tímido/a</option>
+          <option value="Desconfiado">👀 Desconfiado/a con extraños</option>
+          <option value="Protector">🛡️ Protector/a</option>
+          <option value="Sociable">🤝 Muy sociable</option>
+          <option value="Hiperactivo">⚡ Hiperactivo/a</option>
+          <option value="Agresivo">⚠️ Puede ser agresivo/a</option>
+          <option value="Nervioso">😰 Nervioso/a o ansioso/a</option>
+        </select>
+      </div>
+
+      <div class="act-section-title">Información de Salud</div>
+      <div class="act-form-group">
+        <label>Información Médica / Alergias <span class="opt">(Opcional)</span></label>
+        <textarea class="act-input" id="pet-medical" placeholder="Ej: Alérgico al pollo. Toma medicación para el corazón." rows="2" style="resize:vertical"></textarea>
+      </div>
+      
+      <div class="act-2col" style="margin-bottom:16px;">
+        <div class="act-form-group" style="margin:0;">
+          <label style="margin-bottom:8px">¿Microchip?</label>
+          <div class="act-radio-pill">
+            <input type="radio" name="chip" id="chip-yes" value="yes"/><label for="chip-yes">Sí</label>
+            <input type="radio" name="chip" id="chip-no" value="no"/><label for="chip-no">No</label>
+          </div>
+        </div>
+        <div class="act-form-group" style="margin:0;">
+          <label style="margin-bottom:8px">¿Esterilizado/Castrado?</label>
+          <div class="act-radio-pill">
+            <input type="radio" name="spay" id="spay-yes" value="yes"/><label for="spay-yes">Sí</label>
+            <input type="radio" name="spay" id="spay-no" value="no"/><label for="spay-no">No</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="act-form-group" id="microchip-id-wrap" style="display:none; margin-top:-8px; margin-bottom:16px;">
+        <label>ID del Microchip</label>
+        <input type="text" class="act-input" id="microchip-id" placeholder="Ej: 981020000000000"/>
+      </div>
+
+      <div class="act-2col" style="margin-bottom:16px;">
+        <div class="act-form-group" style="margin:0;">
+          <label style="margin-bottom:8px">¿Vacunas al día?</label>
+          <div class="act-radio-pill">
+            <input type="radio" name="vacc" id="vacc-yes" value="yes"/><label for="vacc-yes">Sí</label>
+            <input type="radio" name="vacc" id="vacc-no" value="no"/><label for="vacc-no">No</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="act-form-group" id="vacc-details-wrap" style="display:none; margin-top:-8px; margin-bottom:16px;">
+        <label>Carnet / Detalles de Vacunas</label>
+        <input type="text" class="act-input" id="vacc-details" placeholder="Ej: Sextuple al día, desparasitado en Mayo"/>
+      </div>
+
+      <div class="act-2col" style="align-items: end;">
+        <div class="act-form-group" style="margin:0;">
+          <label>Chapa de Rabia <span class="opt">(Opcional)</span></label>
+          <input type="text" class="act-input" id="rabies-code" placeholder="Ej: RB-2026-987"/>
+        </div>
+        <div class="act-form-group" style="margin:0;">
+          <label>Vencimiento Rabia <span class="opt">(Opc)</span></label>
+          <input type="date" class="act-input" id="rabies-expiry" style="height:44px; box-sizing:border-box;"/>
+        </div>
+      </div>
+
+      <button class="act-btn act-btn-primary" onclick="actGoStep3()" style="margin-top:16px">Revisar →</button>
+      <button class="act-btn act-btn-back"    onclick="actGoStep1()">← Volver</button>
+    </div>
+
+    <!-- ════ STEP 3 — Review ════ -->
+    <div class="act-step-panel" id="act-step3" style="display:none;">
+      <div class="act-card-title">Revisión Final</div>
+      <div class="act-card-subtitle">Verifica que todo esté correcto antes de activar.</div>
+
+      <div class="act-review-hero">
+        <div id="act-review-avatar-wrap"></div>
+        <div class="act-review-name" id="act-review-pet-name">—</div>
+        <div class="act-review-owner" id="act-review-owner">—</div>
+      </div>
+
+      <div class="review-grid">
+        <div class="review-row"><span class="review-row-icon">📷</span><div class="review-row-content"><div class="review-row-label">Foto</div><div class="review-row-value" id="rval-photo"></div></div></div>
+        <div class="review-row"><span class="review-row-icon">📞</span><div class="review-row-content"><div class="review-row-label">WhatsApp principal</div><div class="review-row-value" id="rval-phone"></div></div></div>
+        <div class="review-row" id="rrow-phone2" style="display:none"><span class="review-row-icon">📱</span><div class="review-row-content"><div class="review-row-label">WhatsApp secundario</div><div class="review-row-value" id="rval-phone2"></div></div></div>
+        <div class="review-row" id="rrow-species" style="display:none"><span class="review-row-icon">🐾</span><div class="review-row-content"><div class="review-row-label">Especie</div><div class="review-row-value" id="rval-species"></div></div></div>
+        <div class="review-row" id="rrow-breed" style="display:none"><span class="review-row-icon">🐕</span><div class="review-row-content"><div class="review-row-label">Raza</div><div class="review-row-value" id="rval-breed"></div></div></div>
+        <div class="review-row" id="rrow-gender" style="display:none"><span class="review-row-icon">⚧️</span><div class="review-row-content"><div class="review-row-label">Género</div><div class="review-row-value" id="rval-gender"></div></div></div>
+        <div class="review-row" id="rrow-birth" style="display:none"><span class="review-row-icon">🎂</span><div class="review-row-content"><div class="review-row-label">Fecha de Nacimiento</div><div class="review-row-value" id="rval-birth"></div></div></div>
+        <div class="review-row" id="rrow-weight" style="display:none"><span class="review-row-icon">⚖️</span><div class="review-row-content"><div class="review-row-label">Peso</div><div class="review-row-value" id="rval-weight"></div></div></div>
+        <div class="review-row" id="rrow-message" style="display:none"><span class="review-row-icon">💬</span><div class="review-row-content"><div class="review-row-label">Mensaje</div><div class="review-row-value" id="rval-message"></div></div></div>
+        <div class="review-row" id="rrow-behavior" style="display:none"><span class="review-row-icon">⭐</span><div class="review-row-content"><div class="review-row-label">Comportamiento</div><div class="review-row-value" id="rval-behavior"></div></div></div>
+        <div class="review-row" id="rrow-medical" style="display:none"><span class="review-row-icon">💊</span><div class="review-row-content"><div class="review-row-label">Info médica</div><div class="review-row-value" id="rval-medical"></div></div></div>
+        <div class="review-row" id="rrow-vacc" style="display:none"><span class="review-row-icon">💉</span><div class="review-row-content"><div class="review-row-label">Vacunación</div><div class="review-row-value" id="rval-vacc"></div></div></div>
+        <div class="review-row" id="rrow-rabies" style="display:none"><span class="review-row-icon">🔬</span><div class="review-row-content"><div class="review-row-label">Vacuna rabia</div><div class="review-row-value" id="rval-rabies"></div></div></div>
+        <div class="review-row" id="rrow-chip" style="display:none"><span class="review-row-icon">🔌</span><div class="review-row-content"><div class="review-row-label">Microchip / Castrado</div><div class="review-row-value" id="rval-chip"></div></div></div>
+        <div class="review-row" id="rrow-loc" style="display:none"><span class="review-row-icon">📍</span><div class="review-row-content"><div class="review-row-label">Zona del dueño</div><div class="review-row-value" id="rval-loc"></div></div></div>
+      </div>
+
+      <div class="review-warning"><span>ℹ️</span><span>Podrás editar estos datos en cualquier momento con tu enlace de edición.</span></div>
+
+      <button class="act-btn act-btn-confirm" id="act-btn-confirm" onclick="actShowConfirmModal()">✅ Confirmar y guardar</button>
+      <button class="act-btn act-btn-back" onclick="actGoStep2()">← Volver a corregir</button>
+    </div>
+
+    <!-- ════ SUCCESS ════ -->
+    <div class="act-success" id="act-success-view" style="display:none;">
+      <div class="act-success-icon">🎉</div>
+      <div class="act-success-title" style="color:#5100c0;">¡Mascota Protegida!</div>
+      <div class="act-success-msg" style="color:#4a4a4a; line-height:1.6; font-size:1rem;">
+        El perfil de tu mascota ha sido activado con éxito. <br><br>
+        <div style="background:#fff4f4; border:1px solid #ffd6d6; padding:16px; border-radius:12px; text-align:left; color:#ba0000; margin-top:8px;">
+          <strong style="display:block; margin-bottom:4px;">🚨 Recomendación vital:</strong>
+          Te recomendamos colocar la placa en el collar de tu mascota en este instante y <strong>evitar sacársela</strong>. Nunca se sabe en qué momento podría perderse y esta placa será su único boleto de vuelta a casa.
+        </div>
+      </div>
+      <br>
+      <div class="act-link-box">
+        <div class="act-link-label">🔐 Enlace de edición (Privado)</div>
+        <div style="font-size:0.85rem; color:#666; margin-bottom:8px; line-height:1.4;">Guarda este enlace en tus favoritos. Es tu acceso único para modificar la foto, actualizar las vacunas o cambiar tu número de teléfono en el futuro.</div>
+        <div class="act-link-url" id="act-edit-link">—</div>
+        <button class="act-copy-btn" onclick="actCopyLink('edit')">📋 Copiar enlace de edición</button>
+      </div>
+      <div class="act-link-box" style="margin-top:16px;">
+        <div class="act-link-label">🌐 Perfil Público</div>
+        <div style="font-size:0.85rem; color:#666; margin-bottom:8px; line-height:1.4;">Este es el perfil que verán las personas al escanear la placa. Úsalo para probar cómo se ve la información de tu mascota.</div>
+        <div class="act-link-url" id="act-public-link">—</div>
+        <button class="act-copy-btn" onclick="actCopyLink('public')">🔗 Copiar enlace público</button>
+      </div>
+    </div>
+
+  </div><!-- /card -->
+</div><!-- /container -->
+
+<!-- Modal de Confirmación Estético -->
+<div id="custom-confirm" class="custom-modal">
+  <div class="custom-modal-content">
+    <h3>¿Todo correcto?</h3>
+    <p>Esta acción creará el perfil de tu mascota. Podrás editar todos los datos posteriormente con tu enlace de edición privado.</p>
+    <div class="custom-modal-actions">
+      <button class="act-btn act-btn-primary" onclick="actProceedConfirm()">Sí, crear perfil</button>
+      <button class="act-btn-outline" onclick="actCloseConfirmModal()">Revisar de nuevo</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://prueb2.dashnexpages.net/assets/js/petcingo.js?v=20260430"></script>
+<script>
+(function() {
+  'use strict';
+
+  /* ── Init Firebase ── */
+  if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+  var _db = firebase.firestore();
+
+  /* ── State ── */
+  var plateId        = null;
+  var compressedBlob = null;
+  var editLinkFull   = '';
+  var publicLinkFull = '';
+  var ownerGpsLat    = null;
+  var ownerGpsLng    = null;
+
+  window.getOwnerGps = function() {
+    if (!navigator.geolocation) { document.getElementById('gps-status').textContent='GPS no disponible en este dispositivo.'; return; }
+    var btn=document.getElementById('btn-get-gps');
+    if(btn){btn.disabled=true;btn.textContent='📍 Obteniendo ubicación…';}
+    document.getElementById('gps-status').textContent='Obteniendo coordenadas…';
+    navigator.geolocation.getCurrentPosition(
+      function(pos){
+        ownerGpsLat=pos.coords.latitude;ownerGpsLng=pos.coords.longitude;
+        document.getElementById('gps-status').textContent='✅ GPS obtenido: '+ownerGpsLat.toFixed(5)+', '+ownerGpsLng.toFixed(5);
+        if(btn){btn.disabled=false;btn.textContent='📍 Ubicación GPS ✓ (actualizar)';}
+      },
+      function(err){
+        document.getElementById('gps-status').textContent='⚠️ No se pudo obtener GPS. Usa el campo de texto en su lugar.';
+        if(btn){btn.disabled=false;btn.textContent='📍 Usar mi ubicación GPS';}
+      },
+      {enableHighAccuracy:true,timeout:12000}
+    );
+  };
+
+  var COUNTRIES = {
+    BO:{code:'+591',flag:'🇧🇴',hint:'Ej: 71234567'},AR:{code:'+54',flag:'🇦🇷',hint:'Ej: 1123456789'},
+    BR:{code:'+55',flag:'🇧🇷',hint:'Ej: 11987654321'},CL:{code:'+56',flag:'🇨🇱',hint:'Ej: 912345678'},
+    CO:{code:'+57',flag:'🇨🇴',hint:'Ej: 3101234567'},CR:{code:'+506',flag:'🇨🇷',hint:'Ej: 81234567'},
+    CU:{code:'+53',flag:'🇨🇺',hint:'Ej: 51234567'},EC:{code:'+593',flag:'🇪🇨',hint:'Ej: 991234567'},
+    SV:{code:'+503',flag:'🇸🇻',hint:'Ej: 71234567'},ES:{code:'+34',flag:'🇪🇸',hint:'Ej: 612345678'},
+    US:{code:'+1',flag:'🇺🇸',hint:'Ej: 2025551234'},GT:{code:'+502',flag:'🇬🇹',hint:'Ej: 41234567'},
+    HN:{code:'+504',flag:'🇭🇳',hint:'Ej: 91234567'},MX:{code:'+52',flag:'🇲🇽',hint:'Ej: 5512345678'},
+    NI:{code:'+505',flag:'🇳🇮',hint:'Ej: 81234567'},PA:{code:'+507',flag:'🇵🇦',hint:'Ej: 61234567'},
+    PY:{code:'+595',flag:'🇵🇾',hint:'Ej: 981234567'},PE:{code:'+51',flag:'🇵🇪',hint:'Ej: 987654321'},
+    PR:{code:'+1',flag:'🇵🇷',hint:'Ej: 7871234567'},DO:{code:'+1',flag:'🇩🇴',hint:'Ej: 8091234567'},
+    UY:{code:'+598',flag:'🇺🇾',hint:'Ej: 91234567'},VE:{code:'+58',flag:'🇻🇪',hint:'Ej: 4121234567'}
+  };
+
+  /* Toggle details for Health radios */
+  document.addEventListener('DOMContentLoaded',function(){
+    document.querySelectorAll('input[name="vacc"]').forEach(function(r){
+      r.addEventListener('change',function(){
+        var wrap=document.getElementById('vacc-details-wrap');
+        if(wrap)wrap.style.display=this.value==='yes'?'block':'none';
+      });
+    });
+    document.querySelectorAll('input[name="chip"]').forEach(function(r){
+      r.addEventListener('change',function(){
+        var wrap=document.getElementById('microchip-id-wrap');
+        if(wrap)wrap.style.display=this.value==='yes'?'block':'none';
+      });
+    });
+  });
+
+  window.onCountryChange = function(n) {
+    var sel=document.getElementById('country-select-'+n), iso=sel.value, c=COUNTRIES[iso]||COUNTRIES['BO'];
+    document.getElementById('flag-'+n).textContent=c.flag;
+    document.getElementById('code-'+n).textContent=c.code;
+  };
+  /* ── Bolivia Location Cascade ── */
+  var BOLIVIA_DEPTS = {
+    'La Paz': ['Murillo','Omasuyos','Pacajes','Camacho','Mu\u00f1ecas','Larecaja','Franz Tamayo','Inquisivi','Sud Yungas','Los Andes','Aroma','Loayza','Nor Yungas','Abel Iturralde','Bautista Saavedra','Manco Kapac','Gualberto Villarroel','Ingavi','Jos\u00e9 Manuel Pando','Caranavi'],
+    'Cochabamba': ['Cercado','Arani','Arque','Ayopaya','Bol\u00edvar','Campero','Capinota','Carrasco','Chapare','Esteban Arze','Germ\u00e1n Jord\u00e1n','Mizque','Punata','Quillacollo','Sacaba','Tapaca\u00ed','Tiraque'],
+    'Santa Cruz': ['Andr\u00e9s Ib\u00e1\u00f1ez','Warnes','Ichilo','Chiquitos','Sara','Cordillera','Vallegrande','Florida','Obispo Santistevan','\u00d1uflo de Ch\u00e1vez','\u00c1ngel Sandoval','Manuel Mar\u00eda Caballero','Velasco','Germ\u00e1n Busch','Guarayos'],
+    'Oruro': ['Cercado','Sajama','Litoral','Carangas','Saucar\u00ed','Nor Carangas','San Pedro de Totora','Mejillones','Sur Carangas','Ladislao Cabrera','Poop\u00f3','Pantalee\u00f3n Dalence','Avaroa','Tom\u00e1s Barron','Sebasti\u00e1n Pagador'],
+    'Potos\u00ed': ['Tom\u00e1s Fr\u00edas','Rafael Bustillo','Cornelio Saavedra','Chayanta','Alonso de Ib\u00e1\u00f1ez','Nor Chichas','Sur Chichas','Nor L\u00edpez','Sur L\u00edpez','Modesto Omiste','Antonio Quijarro','Jos\u00e9 Mar\u00eda Linares','Daniel Campos','Enrique Baldivieso','Charcas','Saavedra'],
+    'Chuquisaca': ['Oropeza','Yampar\u00e1ez','Zud\u00e1\u00f1ez','Tomina','Hernando Siles','Nor Cinti','Belisario Boeto','Sur Cinti','Luis Calvo','Azurduy'],
+    'Tarija': ['Cercado','Avil\u00e9s','M\u00e9ndez','Aniceto Arce','O Connor','Gran Chaco'],
+    'Beni': ['Cercado','Vaca D\u00edez','General Jos\u00e9 Ballivi\u00e1n','Yacuma','Moxos','Marban','Mojos','It\u00e9nez'],
+    'Pando': ['Nicol\u00e1s Su\u00e1rez','Manuripi','Madre de Dios','Abu\u00f3n','Federico Rom\u00e1n']
+  };
+
+  function populateLocDepts() {
+    var deptSel = document.getElementById('owner-dept');
+    if (!deptSel) return;
+    deptSel.innerHTML = '<option value="">-- Departamento --</option>';
+    Object.keys(BOLIVIA_DEPTS).forEach(function(d) {
+      deptSel.innerHTML += '<option value="'+d+'">'+d+'</option>';
+    });
+  }
+
+  window.onLocCountryChange = function(country) {
+    var wrap     = document.getElementById('act-wrap-bolivia');
+    var wrapProv = document.getElementById('act-wrap-prov');
+    if (country === 'Bolivia') {
+      if (wrap) { wrap.style.display = 'grid'; wrap.style.gridTemplateColumns = '1fr 1fr'; wrap.style.gap = '16px'; }
+      populateLocDepts();
+      if (wrapProv) wrapProv.style.display = 'none';
+    } else {
+      if (wrap) wrap.style.display = 'none';
+    }
+  };
+
+  window.onLocDeptChange = function(dept) {
+    var wrapProv = document.getElementById('act-wrap-prov');
+    var provSel  = document.getElementById('owner-province');
+    var provs    = BOLIVIA_DEPTS[dept];
+    if (provs && provSel) {
+      provSel.innerHTML = '<option value="">-- Provincia --</option>';
+      provs.forEach(function(p) { provSel.innerHTML += '<option value="'+p+'">'+p+'</option>'; });
+      if (wrapProv) wrapProv.style.display = 'block';
+    }
+  };
+
+  function getPhone(fieldId, selectorId) {
+    var raw=document.getElementById(fieldId).value.trim();
+    if(!raw)return'';
+    var sel=document.getElementById(selectorId), iso=sel?sel.value:'BO', c=COUNTRIES[iso]||COUNTRIES['BO'];
+    return c.code+raw.replace(/\D/g,'');
+  }
+
+  /* ── DOMContentLoaded ── */
+  window.addEventListener('DOMContentLoaded', function() {
+    var params=new URLSearchParams(window.location.search);
+    plateId=(params.get('id')||'').trim();
+
+    /* Set max date for birthdate */
+    var bd=document.getElementById('pet-birthdate');
+    if(bd)bd.max=new Date().toISOString().split('T')[0];
+
+    setupPhotoUpload();
+
+    /* Auto-init Bolivia location if pre-selected */
+    var initCountry = document.getElementById('owner-country');
+    if (initCountry && initCountry.value === 'Bolivia') { window.onLocCountryChange('Bolivia'); }
+    /* Hide Bolivia wrap initially if not Bolivia */
+    var bWrap = document.getElementById('act-wrap-bolivia');
+    if (bWrap && (!initCountry || initCountry.value !== 'Bolivia')) { bWrap.style.display = 'none'; }
+    else if (bWrap) { bWrap.style.display = 'grid'; }
+
+    if(!plateId){
+      var steps=document.getElementById('act-steps-wrap');if(steps)steps.style.display='none';
+      var badge=document.getElementById('act-plate-badge');if(badge)badge.style.display='none';
+      var step0=document.getElementById('act-step0');if(step0){step0.style.display='none'; step0.classList.remove('active');}
+      var step1=document.getElementById('act-step1');if(step1)step1.style.display='none';
+      showErr('<strong>⚠️ ID de placa no detectado</strong><br>Accede usando el enlace QR/NFC de la placa.<br><code style="background:rgba(255,59,107,.1);padding:2px 6px;border-radius:4px">activate.html?id=TU_ID</code>');
+      hideLoading(); return;
+    }
+
+    // Ocultar Steps UI hasta que salgamos del paso 0
+    var sw = document.getElementById('act-steps-wrap');
+    if(sw) sw.style.display='none';
+
+    document.getElementById('act-plate-id').textContent=plateId;
+    showLoading('Verificando placa…');
+
+    _db.collection('pets').doc(plateId).get()
+      .then(function(docSnap){
+        if(docSnap.exists){
+          var status=(docSnap.data()||{}).status;
+          if(status==='activo'||status==='perdido'){
+            showErr('Esta placa ya fue activada. <a href="https://prueb2.dashnexpages.net/perfil-mascota-petcingo/?id='+plateId+'" style="color:#5100c0;font-weight:600">Ver perfil →</a>');
+            if(sw)sw.style.display='none';
+          } else {
+            /* reservada u otro estado → mostrar pantalla de bienvenida */
+            var s0=document.getElementById('act-step0');if(s0)s0.style.display='block';
+          }
+        } else {
+          /* placa válida pero no en DB → mostrar pantalla de bienvenida */
+          var s0=document.getElementById('act-step0');if(s0)s0.style.display='block';
+        }
+      })
+      .catch(function(e){showErr('Error al verificar: '+e.message);})
+      .finally(function(){hideLoading();});
+  });
+
+  /* ── Photo upload ── */
+  function setupPhotoUpload() {
+    var input=document.getElementById('act-photo-input');
+    var drop=document.getElementById('act-photo-drop');
+    var placeholder=document.getElementById('act-placeholder');
+    var compressing=document.getElementById('act-compressing');
+    var previewWrap=document.getElementById('act-preview-wrap');
+    var previewImg=document.getElementById('act-preview-img');
+    var previewSize=document.getElementById('act-preview-size');
+    if(!input||!drop)return;
+
+    drop.addEventListener('click',function(e){if(e.target===input)return;if(e.target.classList.contains('act-preview-change'))return;input.click();});
+
+    var crop1To1AndCompress = function(file) {
+      return new Promise(function(resolve, reject) {
+        var reader = new FileReader();
+        reader.onerror = function() { reject(new Error('Error al leer el archivo.')); };
+        reader.onload = function(evt) {
+          var img = new Image();
+          img.onerror = function() { reject(new Error('Imagen inválida o corrupta.')); };
+          img.onload = function() {
+            var canvas = document.createElement('canvas');
+            canvas.width = 800;
+            canvas.height = 800;
+            var ctx = canvas.getContext('2d');
+            
+            // 1. Fondo blanco para evitar transparencias negras en PNG -> JPEG
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, 800, 800);
+
+            // 2. Calcular recorte cuadrado perfecto (1:1) al centro
+            var size = Math.min(img.naturalWidth, img.naturalHeight);
+            if (size <= 0) { reject(new Error('Imagen vacía (0px).')); return; }
+            
+            var sx = (img.naturalWidth - size) / 2;
+            var sy = (img.naturalHeight - size) / 2;
+            
+            try {
+              ctx.drawImage(img, sx, sy, size, size, 0, 0, 800, 800);
+            } catch(e) {
+              reject(new Error('Fallo al procesar imagen: ' + e.message));
+              return;
+            }
+            
+            // 3. Comprimir hasta ~15KB iterativamente
+            var bestBlob = null;
+            var iterate = function(q) {
+              try {
+                canvas.toBlob(function(blob) {
+                  if (!blob) {
+                    if (bestBlob) resolve(bestBlob);
+                    else reject(new Error('Tu navegador no soporta esta compresión.'));
+                    return;
+                  }
+                  bestBlob = blob;
+                  // Si logramos el tamaño objetivo (~15KB) o la calidad es mínima, terminamos
+                  if (blob.size <= 15000 || q <= 0.1) {
+                    resolve(blob);
+                  } else {
+                    iterate(+(q - 0.1).toFixed(2));
+                  }
+                }, 'image/jpeg', q);
+              } catch(e) {
+                reject(new Error('Error de toBlob: ' + e.message));
+              }
+            };
+            iterate(0.8);
+          };
+          img.src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    };
+
+    var handleFile=function(file){
+      if(!file||!file.type.startsWith('image/'))return;
+      placeholder.style.display='none';previewWrap.style.display='none';
+      compressing.style.display='flex';drop.classList.remove('has-photo');
+
+      crop1To1AndCompress(file).then(function(blob){
+        compressedBlob=blob;
+        var url=URL.createObjectURL(blob);previewImg.src=url;
+        previewSize.textContent='Comprimida a '+(blob.size/1024).toFixed(1)+' KB (1:1) — lista';
+        compressing.style.display='none';previewWrap.style.display='flex';drop.classList.add('has-photo');
+        setBar(1,'done');
+      }).catch(function(e){
+        compressedBlob=null;compressing.style.display='none';placeholder.style.display='block';
+        showErr('No se pudo procesar la imagen: '+e.message);
+      });
+    };
+
+    input.addEventListener('change',function(e){if(e.target.files&&e.target.files[0])handleFile(e.target.files[0]);e.target.value='';});
+    drop.addEventListener('dragover',function(e){e.preventDefault();drop.classList.add('dragover');});
+    drop.addEventListener('dragleave',function(){drop.classList.remove('dragover');});
+    drop.addEventListener('drop',function(e){e.preventDefault();drop.classList.remove('dragover');if(e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0]);});
+  }
+
+  window.resetActPhoto=function(){
+    compressedBlob=null;
+    document.getElementById('act-photo-input').value='';
+    document.getElementById('act-preview-wrap').style.display='none';
+    document.getElementById('act-compressing').style.display='none';
+    document.getElementById('act-placeholder').style.display='block';
+    document.getElementById('act-photo-drop').classList.remove('has-photo');
+    setBar(1,'active');
+  };
+
+  /* ── Step navigation ── */
+  window.actGoStep2=function(){
+    clearAlerts();
+    var ownerName=document.getElementById('owner-name').value.trim();
+    var phone=document.getElementById('pet-phone').value.trim();
+    if(!ownerName){showErr('El nombre del propietario es obligatorio.');return;}
+    if(!phone){showErr('El número de WhatsApp principal es obligatorio.');return;}
+    switchStep(1,2,'Paso <span>2 de 3</span> — Datos de la mascota');
+  };
+
+  window.actGoStep1=function(){clearAlerts();switchStep(2,1,'Paso <span>1 de 3</span> — Propietario y foto');};
+
+  window.actGoStep3=function(){
+    clearAlerts();
+    var petName=document.getElementById('pet-name').value.trim();
+    if(!petName){showErr('El nombre de la mascota es obligatorio.');return;}
+
+    /* Validate optional fields */
+    var bd=document.getElementById('pet-birthdate').value;
+    if(bd&&new Date(bd)>new Date()){showErr('La fecha de nacimiento no puede ser en el futuro.');return;}
+    var wt=document.getElementById('pet-weight').value.trim();
+    if(wt&&(isNaN(parseFloat(wt))||parseFloat(wt)<=0)){showErr('El peso debe ser un número positivo.');return;}
+
+    /* Populate review */
+    var ownerName=document.getElementById('owner-name').value.trim();
+    var phone=getPhone('pet-phone','country-select-1');
+    var phone2=getPhone('pet-phone2','country-select-2');
+    
+    var countryEl=document.getElementById('owner-country'); var country=countryEl?countryEl.value.trim():'';
+    var cityEl=document.getElementById('owner-city'); var city=cityEl?cityEl.value.trim():'';
+    var provEl=document.getElementById('owner-province'); var prov=provEl?provEl.value.trim():'';
+    var mapsEl=document.getElementById('owner-maps'); var mapsUrl=mapsEl?mapsEl.value.trim():'';
+    
+    var speciesEl=document.getElementById('pet-species'); var species=speciesEl?speciesEl.value:'';
+    var breedEl=document.getElementById('pet-breed'); var breed=breedEl?breedEl.value.trim():'';
+    var genderEl=document.getElementById('pet-gender'); var gender=genderEl?genderEl.value:'';
+    var messageEl=document.getElementById('pet-message'); var message=messageEl?messageEl.value.trim():'';
+    var behaviorEl=document.getElementById('pet-behavior'); var behavior=behaviorEl?behaviorEl.value.trim():'';
+    var medicalEl=document.getElementById('pet-medical'); var medical=medicalEl?medicalEl.value.trim():'';
+    /* New health fields */
+    var vaccChecked=document.querySelector('input[name="vacc"]:checked');
+    var vaccVal=vaccChecked?vaccChecked.value:'';
+    var vaccDetailsEl=document.getElementById('vacc-details'); var vaccDetails=vaccDetailsEl?vaccDetailsEl.value.trim():'';
+    var rabiesCodeEl=document.getElementById('rabies-code'); var rabiesCode=rabiesCodeEl?rabiesCodeEl.value.trim():'';
+    var rabiesExpiryEl=document.getElementById('rabies-expiry'); var rabiesExpiry=rabiesExpiryEl?rabiesExpiryEl.value:'';
+    var chipChecked=document.querySelector('input[name="chip"]:checked');
+    var chipIdEl=document.getElementById('microchip-id'); var chipId=chipIdEl?chipIdEl.value.trim():'';
+    var spayChecked=document.querySelector('input[name="spay"]:checked');
+
+    document.getElementById('act-review-pet-name').textContent=petName;
+    document.getElementById('act-review-owner').textContent='Propietario/a: '+ownerName;
+
+    /* Avatar */
+    var aw=document.getElementById('act-review-avatar-wrap');
+    if(compressedBlob){
+      aw.innerHTML='<img class="act-review-avatar" src="'+URL.createObjectURL(compressedBlob)+'" alt="foto"/>';
+    } else {
+      aw.innerHTML='<div class="act-review-avatar-ph" style="font-size:3.5rem;line-height:80px;text-align:center;background:#f0f0f5;color:#5100c0;border-radius:50%;width:80px;height:80px;display:flex;align-items:center;justify-content:center;">🐶</div>';
+    }
+
+    /* Photo status */
+    document.getElementById('rval-photo').textContent=compressedBlob?'✅ Foto cargada exitosamente':'⚠️ Sin foto (se puede agregar después)';
+    document.getElementById('rval-phone').textContent=phone;
+
+    fillRRow('rrow-phone2','rval-phone2',phone2);
+    fillRRow('rrow-species','rval-species',species);
+    fillRRow('rrow-breed','rval-breed',breed);
+    fillRRow('rrow-gender','rval-gender',gender);
+    fillRRow('rrow-birth','rval-birth',bd);
+    fillRRow('rrow-weight','rval-weight',wt ? wt + ' kg' : '');
+    fillRRow('rrow-message','rval-message',message);
+    fillRRow('rrow-behavior','rval-behavior',behavior);
+    fillRRow('rrow-medical','rval-medical',medical);
+    /* New fields review */
+    var vaccDisplay=vaccVal==='yes'?('Sí'+(vaccDetails?' — '+vaccDetails:'')):vaccVal==='no'?'No':'';
+    fillRRow('rrow-vacc','rval-vacc',vaccDisplay);
+    var rabiesParts=[];if(rabiesCode)rabiesParts.push('Cód: '+rabiesCode);if(rabiesExpiry)rabiesParts.push('Vence: '+rabiesExpiry);
+    fillRRow('rrow-rabies','rval-rabies',rabiesParts.join(' · '));
+    var chipParts=[];
+    if(chipChecked){ chipParts.push('Microchip: '+(chipChecked.value==='yes'?'Sí'+(chipId?' ('+chipId+')':''):'No')); }
+    if(spayChecked){ chipParts.push('Castrado: '+(spayChecked.value==='yes'?'Sí':'No')); }
+    fillRRow('rrow-chip','rval-chip',chipParts.join(' · '));
+    var locParts=[country,city,prov].filter(Boolean);
+    var locDisplay=locParts.join(', ')+(mapsUrl?' + Link de Maps':'');
+    fillRRow('rrow-loc','rval-loc',locDisplay);
+
+    switchStep(2,3,'Paso <span>3 de 3</span> — Revisión final');
+  };
+
+  /* ── Modales de Confirmación ── */
+  window.actShowConfirmModal=function(){
+    document.getElementById('custom-confirm').classList.add('active');
+  };
+  window.actCloseConfirmModal=function(){
+    document.getElementById('custom-confirm').classList.remove('active');
+  };
+
+  window.actGoStep2=function(){
+    clearAlerts();
+    var ownerName=document.getElementById('owner-name').value.trim();
+    var phone=document.getElementById('pet-phone').value.trim();
+    if(!ownerName){showErr('El nombre del propietario es obligatorio.');return;}
+    if(!phone){showErr('El número de WhatsApp principal es obligatorio.');return;}
+    switchStep(1,2,'Paso <span>2 de 3</span> — Datos de la mascota');
+  };
+
+  /* Go back from step 3 to step 2 */
+  window.actGoStep2Back=function(){clearAlerts();switchStep(3,2,'Paso <span>2 de 3</span> — Datos de la mascota');};
+
+  /* Override the goStep2 back button in step3 */
+  document.addEventListener('DOMContentLoaded',function(){
+    var backBtn=document.querySelector('#act-step3 .act-btn-back');
+    if(backBtn)backBtn.onclick=window.actGoStep2Back||window.actGoStep2;
+  });
+
+  function switchStep(from, to, labelHtml) {
+    var step0 = document.getElementById("act-step0"); if(step0) { step0.style.display="none"; step0.classList.remove("active"); }
+    var step1 = document.getElementById("act-step1"); if(step1) { step1.style.display="none"; step1.classList.remove("active"); }
+    var step2 = document.getElementById("act-step2"); if(step2) { step2.style.display="none"; step2.classList.remove("active"); }
+    var step3 = document.getElementById("act-step3"); if(step3) { step3.style.display="none"; step3.classList.remove("active"); }
+    
+    var toEl = document.getElementById("act-step"+to);
+    if(toEl) { toEl.style.display="block"; toEl.classList.add("active"); }
+    
+    for(var i=1; i<=4; i++) {
+      var bar = document.getElementById("act-bar-"+i);
+      if(!bar) continue;
+      if(i < to) { bar.classList.add("done"); bar.classList.remove("active"); }
+      else if(i === to) { bar.classList.add("active"); bar.classList.remove("done"); }
+      else { bar.classList.remove("done","active"); }
+    }
+    var lbl=document.getElementById("act-step-label");
+    if(lbl && labelHtml) lbl.innerHTML=labelHtml;
+    var stepsWrap=document.getElementById("act-steps-wrap");
+    if(stepsWrap) stepsWrap.style.display = (to===0) ? "none" : "flex";
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+  window.actGoStep1=function(){
+    document.getElementById('act-step0').classList.remove('active');
+    switchStep(0,1,'Paso <span>1 de 3</span> — Propietario y foto');
+  };
+
+  function fillRRow(rowId, valId, text) {
+    var row=document.getElementById(rowId), val=document.getElementById(valId);
+    if(!row||!val)return;
+    if(text){val.textContent=text;row.style.display='flex';}
+    else{row.style.display='none';}
+  }
+
+  /* ── Confirm and Save ── */
+  window.actProceedConfirm=function(){
+    actCloseConfirmModal();
+    clearAlerts();
+    var petName=document.getElementById('pet-name').value.trim();
+    var ownerName=document.getElementById('owner-name').value.trim();
+    var rawPhone=document.getElementById('pet-phone').value.trim();
+    if(!petName){showErr('El nombre de la mascota es obligatorio.');window.actGoStep2Back();return;}
+    if(!ownerName||!rawPhone){showErr('Faltan datos del propietario.');actGoStep1();return;}
+
+    var phone=getPhone('pet-phone','country-select-1');
+    var phone2=getPhone('pet-phone2','country-select-2');
+
+    var btn=document.getElementById('act-btn-confirm');
+    btn.disabled=true;btn.innerHTML='<span class="act-spinner"></span>Guardando…';
+    showLoading('Iniciando activación…');
+
+    var photoUrl='';
+
+    var detectSeller=function(){
+      var parts=plateId.split('-');
+      var prefix=null;
+      if(parts.length>=3)prefix=parts.slice(0,parts.length-1).join('-');
+      else if(parts.length===2)prefix=parts[0];
+      if(!prefix)return Promise.resolve(null);
+      return _db.collection('veterinarias').where('prefix','==',prefix).limit(1).get()
+        .then(function(snap){return snap.empty?null:snap.docs[0].id;})
+        .catch(function(){return null;});
+    };
+
+    var saveToFirestore=function(sellerId){
+      setLoadingText('Guardando en Firestore…');
+      var editToken=crypto.randomUUID();
+      var wt=document.getElementById('pet-weight').value.trim();
+      var vaccChecked2=document.querySelector('input[name="vacc"]:checked');
+      var chipChecked2=document.querySelector('input[name="chip"]:checked');
+      var spayChecked2=document.querySelector('input[name="spay"]:checked');
+      
+      var ctry=document.getElementById('owner-country')?document.getElementById('owner-country').value.trim():'';
+      var cty=document.getElementById('owner-city')?document.getElementById('owner-city').value.trim():'';
+      var prv=document.getElementById('owner-province')?document.getElementById('owner-province').value.trim():'';
+      var mUrl=document.getElementById('owner-maps')?document.getElementById('owner-maps').value.trim():'';
+      
+      var ownerLocation={
+        country: ctry||null,
+        city: cty||null,
+        province: prv||null,
+        mapsUrl: mUrl||null
+      };
+      
+      var petData={
+        id:plateId,name:petName,ownerName:ownerName,phone:phone,phone2:phone2,
+        age:document.getElementById('pet-age')?document.getElementById('pet-age').value.trim():null,
+        species:document.getElementById('pet-species').value,
+        breed:document.getElementById('pet-breed')?document.getElementById('pet-breed').value.trim():null,
+        gender:document.getElementById('pet-gender').value,
+        birthdate:document.getElementById('pet-birthdate').value,
+        weight:wt?parseFloat(wt):null,
+        photoUrl:photoUrl,
+        message:document.getElementById('pet-message').value.trim(),
+        behavior:document.getElementById('pet-behavior').value.trim(),
+        medical:document.getElementById('pet-medical').value.trim(),
+        vaccinationStatus:vaccChecked2?vaccChecked2.value:null,
+        vaccinationDetails:document.getElementById('vacc-details')?document.getElementById('vacc-details').value.trim():null,
+        rabiesVaccineCode:document.getElementById('rabies-code')?document.getElementById('rabies-code').value.trim():null,
+        rabiesVaccineExpiry:document.getElementById('rabies-expiry')?document.getElementById('rabies-expiry').value:null,
+        microchipped:chipChecked2?chipChecked2.value:null,
+        microchipId:document.getElementById('microchip-id')?document.getElementById('microchip-id').value.trim():null,
+        spayNeutered:spayChecked2?spayChecked2.value:null,
+        ownerLocation:ownerLocation,
+        status:'activo',sellerId:sellerId||null,
+        subscription:{type:'annual',expiresAt:new Date(Date.now()+365*24*60*60*1000),autoDelete:true},
+        editToken:editToken,
+        createdAt:firebase.firestore.FieldValue.serverTimestamp()
+      };
+      return _db.collection('pets').doc(plateId).set(petData).then(function(){
+        var base=window.location.origin;
+        editLinkFull='https://prueb2.dashnexpages.net/cliente/?id='+plateId+'&token='+editToken;
+        publicLinkFull='https://prueb2.dashnexpages.net/perfil-mascota-petcingo/?id='+plateId;
+        document.getElementById('act-edit-link').textContent=editLinkFull;
+        document.getElementById('act-public-link').textContent=publicLinkFull;
+        document.getElementById('act-step3').style.display='none';
+        document.getElementById('act-step3').classList.remove('active');
+        document.getElementById('act-steps-wrap').style.display='none';
+        document.getElementById('act-plate-badge').style.display='none';
+        document.getElementById('act-success-view').style.display='block';
+        window.scrollTo({top:0,behavior:'smooth'});
+        if(window.confetti){
+          confetti({
+            particleCount: 150,
+            spread: 80,
+            origin: { y: 0.6 },
+            colors: ['#5100c0', '#c4a8ff', '#f0ecff'],
+            zIndex: 9999
+          });
+        }
+      });
+    };
+
+    var doUpload=function(){
+      if(!compressedBlob)return Promise.resolve();
+      setLoadingText('Subiendo foto a R2…');
+      
+      return new Promise(function(resolve,reject){
+        // Configuración de Cloudflare R2
+        AWS.config.update({
+          accessKeyId: '6496db9c407984025f99bc0dc6a23264',
+          secretAccessKey: 'b270005e8ebf9eef779db72012a0ea6206a9f281eba9d07e0b15f78016c2d94d'
+        });
+
+        var s3 = new AWS.S3({
+          endpoint: 'https://c11712fefc3437b619d76c69ecc14901.r2.cloudflarestorage.com',
+          signatureVersion: 'v4',
+          s3ForcePathStyle: true
+        });
+
+        var fileName = 'pets/' + plateId + '-' + Date.now() + '.jpg';
+        var params = {
+          Bucket: 'petcingo',
+          Key: fileName,
+          Body: compressedBlob,
+          ContentType: 'image/jpeg'
+        };
+
+        s3.upload(params, function(err, data) {
+          if (err) {
+            console.error('Cloudflare R2 upload error:', err);
+            photoUrl = '';
+            resolve(); // Continuamos sin foto para no bloquear la activación en caso de error
+          } else {
+            // IMPORTANTE: Aquí se debe usar la URL pública de tu bucket. 
+            // Si tienes un dominio personalizado o el r2.dev activado, cámbialo aquí.
+            // Por defecto intentamos construir la URL del bucket (usa tu dominio personalizado si tienes uno):
+            photoUrl = 'https://pub-cb882f9b206543b28ea81fcadac0f4b2.r2.dev/' + fileName; 
+            console.log('Upload success! Photo URL:', photoUrl);
+            resolve();
+          }
+        });
+      });
+    };
+
+    doUpload()
+      .then(function(){setLoadingText('Detectando vendedor…');return detectSeller();})
+      .then(function(sid){return saveToFirestore(sid);})
+      .catch(function(e){showErr('Error al activar: '+e.message);btn.disabled=false;btn.innerHTML='✅ Confirmar y guardar';})
+      .finally(function(){hideLoading();});
+  };
+
+  window.actCopyLink=function(type){
+    var url=type==='edit'?editLinkFull:publicLinkFull;
+    navigator.clipboard.writeText(url).then(function(){showSucc(type==='edit'?'✓ Enlace de edición copiado':'✓ Enlace público copiado');});
+  };
+
+  /* ── UI helpers ── */
+  function showErr(msg){var el=document.getElementById('act-error');el.innerHTML=msg;el.style.display='block';el.scrollIntoView({behavior:'smooth',block:'nearest'});}
+  function showSucc(msg){var el=document.getElementById('act-success');el.textContent=msg;el.style.display='block';}
+  function clearAlerts(){document.getElementById('act-error').style.display='none';document.getElementById('act-success').style.display='none';}
+  function showLoading(t){document.getElementById('act-loading-text').textContent=t;document.getElementById('act-loading').classList.add('active');}
+  function setLoadingText(t){document.getElementById('act-loading-text').textContent=t;}
+  function hideLoading(){document.getElementById('act-loading').classList.remove('active');}
+  function setBar(n,state){var el=document.getElementById('act-bar-'+n);if(!el)return;el.className='act-step-bar'+(state?' '+state:'');}
+
+
+})();
+</script>
+</body>
+</html>
+<!-- END activate.html -->

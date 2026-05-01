@@ -1,0 +1,15 @@
+# Dependencias
+node_modules/
+
+# Archivos de sistema operativo
+.DS_Store
+Thumbs.db
+*.log
+
+# Archivos temporales o de cache
+.temp/
+.cache/
+
+# Entornos virtuales (si usaras Python en el futuro)
+venv/
+env/

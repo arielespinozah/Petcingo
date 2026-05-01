@@ -1,0 +1,551 @@
+<!-- START pet.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+  <title>Perfil Mascota – Petcingo</title>
+  <meta name="theme-color" content="#5100c0" id="meta-theme"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://prueb2.dashnexpages.net/assets/css/main.css?v=20260428"/>
+  <style>
+
+    /* ─── Base ─── */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body.page-pet {
+      font-family: 'DM Sans', sans-serif;
+      background: #f7f5ff;
+      color: #1a0533;
+      min-height: 100vh;
+      padding-bottom: 120px;
+    }
+
+    /* ─── Lost banner ─── */
+    .pet-lost-banner {
+      display: none;
+      background: linear-gradient(90deg, #990030, #cc0040, #ff3b6b, #cc0040, #990030);
+      background-size: 300% 100%;
+      animation: bannerSlide 3s linear infinite, pulseBanner 1.2s ease-in-out infinite;
+      color: #fff;
+      text-align: center;
+      padding: 13px 20px;
+      font-size: .85rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    @keyframes bannerSlide { from{background-position:200% center} to{background-position:0% center} }
+    @keyframes pulseBanner { 0%,100%{opacity:1} 50%{opacity:.75} }
+
+    /* ─── Hero ─── */
+    .pet-hero {
+      background: linear-gradient(160deg, #5100c0 0%, #5151fc 100%);
+      padding: 40px 20px 74px;
+      text-align: center;
+      position: relative;
+    }
+    .pet-hero.is-lost {
+      background: linear-gradient(160deg, #990030 0%, #cc0040 50%, #ff3b6b 100%) !important;
+      animation: heroEmergency 1.8s ease-in-out infinite;
+    }
+    @keyframes heroEmergency {
+      0%,100% { filter: brightness(1); }
+      50%      { filter: brightness(1.1); }
+    }
+    .pet-hero::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 48px;
+      background: #f7f5ff;
+      border-radius: 24px 24px 0 0;
+    }
+
+    /* ─── Avatar ─── */
+    .pet-avatar-wrap {
+      position: relative;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    #pet-avatar-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .pet-avatar {
+      width: 124px;
+      height: 124px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid rgba(255,255,255,.95);
+      box-shadow: 0 14px 44px rgba(0,0,0,.3);
+      display: block;
+    }
+    .pet-avatar-placeholder {
+      width: 124px;
+      height: 124px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.18);
+      border: 4px solid rgba(255,255,255,.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 54px;
+    }
+    .pet-status-badge {
+      position: absolute;
+      bottom: 4px; right: -6px;
+      display: flex; align-items: center; gap: 4px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: .68rem; font-weight: 800;
+      letter-spacing: .04em; text-transform: uppercase;
+      border: 2px solid #fff; white-space: nowrap;
+    }
+    .pet-status-badge.activo    { background: #00c896; color: #fff; }
+    .pet-status-badge.perdido   { background: #cc0040; color: #fff; animation: blink .8s ease-in-out infinite; }
+    .pet-status-badge.reservada { background: #8878a8; color: #fff; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+    /* ─── Name ─── */
+    .pet-name {
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 0 13px;
+      line-height: 1.2;
+    }
+
+    /* ─── Chips ─── */
+    .pet-chips {
+      display: flex; align-items: center;
+      justify-content: center; gap: 7px; flex-wrap: wrap;
+    }
+    .pet-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(255,255,255,.2);
+      border: 1px solid rgba(255,255,255,.3);
+      backdrop-filter: blur(6px);
+      border-radius: 20px; padding: 5px 13px;
+      font-size: .78rem; color: rgba(255,255,255,.97); font-weight: 600;
+    }
+
+    /* ─── Content area ─── */
+    .pet-content {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 0 14px 32px;
+      position: relative; z-index: 1;
+    }
+
+    /* ─── Contact panel ─── */
+    .pet-contact-panel {
+      background: #fff;
+      border-radius: 20px;
+      border: 1px solid rgba(81,0,192,.1);
+      padding: 18px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 20px rgba(81,0,192,.08);
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .pet-content .btn {
+      display: flex; align-items: center; justify-content: center;
+      gap: 9px; padding: 13px 16px; border-radius: 13px;
+      font-size: .9rem; font-weight: 700; text-decoration: none;
+      transition: all .18s; border: none; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-wa       { background: #00906c; color: #fff !important; box-shadow: 0 4px 14px rgba(0,144,108,.3); }
+    .btn-wa:hover { background: #007a5c; transform: translateY(-1px); }
+    .btn-wa i     { color: #fff !important; }
+    .btn-wa2       { background: rgba(0,144,108,.08); color: #00906c !important; border: 1.5px solid rgba(0,144,108,.25) !important; }
+    .btn-wa2:hover { background: rgba(0,144,108,.15); }
+    .btn-wa2 i     { color: #00906c !important; }
+    .btn-call-pet       { background: rgba(81,0,192,.07); color: #5100c0 !important; border: 1.5px solid rgba(81,0,192,.18) !important; }
+    .btn-call-pet:hover { background: rgba(81,0,192,.12); }
+    .btn-call-pet i     { color: #5100c0 !important; }
+
+    /* ─── Accordion ─── */
+    .pet-accordion {
+      background: #fff;
+      border-radius: 18px;
+      border: 1px solid rgba(81,0,192,.08);
+      margin-bottom: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(81,0,192,.05);
+    }
+    .pet-acc-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 15px 18px; cursor: pointer; user-select: none;
+      transition: background .15s;
+    }
+    .pet-acc-header:hover { background: rgba(81,0,192,.02); }
+    .pet-acc-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.05rem; flex-shrink: 0;
+    }
+    .pet-acc-icon.purple { background: rgba(81,0,192,.1); }
+    .pet-acc-icon.cyan   { background: rgba(0,225,243,.12); }
+    .pet-acc-icon.red    { background: rgba(244,63,94,.1); }
+    .pet-acc-icon.green  { background: rgba(0,200,150,.12); }
+    .pet-acc-icon.orange { background: rgba(255,152,0,.12); }
+    .pet-acc-icon.gray   { background: rgba(108,117,125,.1); }
+    .pet-acc-label {
+      flex: 1; font-size: .9rem; font-weight: 600; color: #1a0533;
+    }
+    .pet-acc-arrow { color: #b0a4c8; transition: transform .25s; font-size: 1.1rem; }
+    .pet-accordion.open .pet-acc-arrow { transform: rotate(180deg); }
+    .pet-acc-body  { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+    .pet-accordion.open .pet-acc-body { max-height: 1000px; }
+    .pet-acc-content { padding: 0 18px 18px; }
+
+    /* ─── Info rows ─── */
+    .pet-info-row {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(81,0,192,.05);
+    }
+    .pet-info-row:last-child { border-bottom: none; }
+    .pet-info-icon  { color: #b0a4c8; font-size: 1rem; margin-top: 2px; flex-shrink: 0; }
+    .pet-info-label { font-size: .67rem; font-weight: 700; color: #9e90b8; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 2px; }
+    .pet-info-value { font-size: .9rem; color: #1a0533; word-break: break-word; font-weight: 500; line-height: 1.45; }
+    .pet-location-link {
+      display: inline-flex; align-items: center; gap: 5px;
+      color: #5100c0; font-size: .85rem; font-weight: 600; text-decoration: none;
+    }
+    .pet-location-link:hover { text-decoration: underline; }
+
+    /* ─── Soporte Técnico rows ─── */
+    .pet-support-item {
+      display: flex; align-items: center; gap: 13px;
+      padding: 12px 0; border-bottom: 1px solid rgba(81,0,192,.05);
+      text-decoration: none; cursor: pointer;
+    }
+    .pet-support-item:last-child { border-bottom: none; }
+    .pet-support-icon {
+      width: 38px; height: 38px; border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 1.05rem;
+    }
+    .pet-support-label { font-size: .88rem; font-weight: 600; color: #1a0533; }
+    .pet-support-sub   { font-size: .75rem; color: #9e90b8; margin-top: 2px; }
+    .pet-support-chevron { color: #d0c8e0; margin-left: auto; flex-shrink: 0; font-size: 1.1rem; }
+
+    /* ─── Pet state screens ─── */
+    .pet-state {
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 32px 20px; text-align: center; background: #f7f5ff;
+    }
+    .pet-state-icon  { font-size: 56px; margin-bottom: 16px; }
+    .pet-state-title { font-size: 1.3rem; font-weight: 700; color: #1a0533; margin-bottom: 8px; }
+    .pet-state-sub   { font-size: .88rem; color: #7a6e8a; }
+    .pulse-ring {
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 4px solid rgba(81,0,192,.15); border-top-color: #5100c0;
+      animation: petSpin .9s linear infinite; margin: 0 auto 16px;
+    }
+    @keyframes petSpin { to { transform: rotate(360deg); } }
+
+    /* ─── Footer / Logo ─── */
+    .pet-footer {
+      text-align: center; padding: 28px 0 10px;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+    }
+    .pet-footer-logo {
+      height: 36px; max-width: 140px; object-fit: contain;
+      opacity: .55; filter: grayscale(15%);
+    }
+    @media (max-width: 480px) { .pet-footer-logo { height: 30px; max-width: 120px; } }
+    .pet-footer-text { font-size: .72rem; color: #9e90b8; line-height: 1.6; }
+    .pet-footer-text a { color: #5100c0; font-weight: 600; text-decoration: none; }
+
+    /* ─── Report form ─── */
+    #pet-report-msg {
+      width: 100%; padding: 11px 13px;
+      border: 1.5px solid #e2d9f3; border-radius: 12px;
+      font-size: .88rem; font-family: 'DM Sans', sans-serif;
+      color: #1a0533; background: #f9f7ff;
+      resize: none; height: 88px; box-sizing: border-box;
+      outline: none; line-height: 1.5;
+      transition: border-color .2s;
+    }
+    #pet-report-msg:focus { border-color: #5100c0; }
+    #pet-report-send-btn {
+      width: 100%; margin-top: 8px; padding: 12px;
+      border-radius: 12px; background: #5100c0; color: #fff;
+      font-size: .9rem; font-weight: 700; border: none; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background .2s;
+    }
+    #pet-report-send-btn:hover { background: #5151fc; }
+
+    /* ─── FAB WhatsApp ─── */
+    #fab-wa {
+      position: fixed; bottom: 24px; right: 20px; z-index: 80;
+      width: 58px; height: 58px; border-radius: 50%;
+      background: #00906c; display: flex; align-items: center;
+      justify-content: center; font-size: 26px; color: #fff;
+      box-shadow: 0 6px 24px rgba(0,144,108,.5); text-decoration: none;
+      transition: transform .18s, box-shadow .18s;
+    }
+    #fab-wa:hover { transform: scale(1.08); box-shadow: 0 10px 32px rgba(0,144,108,.55); }
+    #fab-wa i { color: #fff !important; }
+
+    /* ─── Geo Modal ─── */
+    #geo-modal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(10,0,30,.65); z-index: 200;
+      align-items: flex-end; justify-content: center;
+      backdrop-filter: blur(5px); padding-bottom: 24px;
+    }
+    #geo-modal.active { display: flex; }
+    .geo-card {
+      background: #fff; border-radius: 24px 24px 20px 20px;
+      padding: 28px 24px 24px; max-width: 400px; width: 100%;
+      text-align: center;
+      animation: slideUp .35s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes slideUp { from{transform:translateY(60px);opacity:0} to{transform:translateY(0);opacity:1} }
+    .geo-icon  { font-size: 2.5rem; margin-bottom: 10px; }
+    .geo-title { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 800; color: #5100c0; margin-bottom: 6px; }
+    .geo-sub   { font-size: .85rem; color: #7a6e8a; line-height: 1.55; margin-bottom: 20px; }
+    .geo-actions { display: flex; flex-direction: column; gap: 10px; }
+    .geo-btn {
+      padding: 13px; border-radius: 13px; font-size: .9rem; font-weight: 700;
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: all .18s; font-family: 'DM Sans', sans-serif;
+    }
+    .geo-btn-yes       { background: #5100c0; color: #fff; }
+    .geo-btn-yes:hover { background: #5151fc; }
+    .geo-btn-no        { background: rgba(81,0,192,.07); color: #5100c0; }
+    .geo-btn-no:hover  { background: rgba(81,0,192,.13); }
+
+    /* ─── Toast ─── */
+    #toast {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #090909; color: #fff; padding: 11px 22px; border-radius: 10px;
+      font-size: .86rem; font-weight: 600; opacity: 0; transition: all .3s;
+      z-index: 10000; pointer-events: none; white-space: nowrap;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  </style>
+</head>
+<body class="page-pet">
+
+<!-- Lost Banner -->
+<div class="pet-lost-banner" id="pet-lost-banner">
+  🚨 ¡MASCOTA PERDIDA! — Si la encontraste, contacta al dueño de inmediato
+</div>
+
+<!-- Loading -->
+<div class="pet-state" id="pet-state-loading">
+  <div class="pulse-ring"></div>
+  <div class="pet-state-title">Cargando perfil…</div>
+  <div class="pet-state-sub">Un momento por favor</div>
+</div>
+
+<!-- Error -->
+<div class="pet-state" id="pet-state-error" style="display:none">
+  <div class="pet-state-icon">❓</div>
+  <div class="pet-state-title">Placa no encontrada</div>
+  <div class="pet-state-sub">Esta placa no está registrada en Petcingo.</div>
+</div>
+
+<!-- Profile -->
+<div id="pet-profile" style="display:none">
+
+  <!-- Hero: gradiente morado → rojo pulsante cuando perdido -->
+  <div class="pet-hero" id="pet-hero">
+    <div class="pet-avatar-wrap">
+      <div id="pet-avatar-container">
+        <div class="pet-avatar-placeholder">🐾</div>
+      </div>
+      <span class="pet-status-badge activo" id="pet-status-badge">
+        <span id="pet-status-text">Activo</span>
+      </span>
+    </div>
+    <div class="pet-name" id="pet-name">—</div>
+    <div class="pet-chips" id="pet-chips"></div>
+  </div>
+
+  <!-- Content cards -->
+  <div class="pet-content">
+
+    <!-- 1. Contacto urgente (WhatsApp + llamada) -->
+    <div class="pet-contact-panel" id="pet-contact-panel"></div>
+
+    <!-- 2. Información del propietario -->
+    <div class="pet-accordion" id="pet-acc-owner" style="display:none">
+      <div class="pet-acc-header" onclick="togglePetAcc('pet-acc-owner')">
+        <div class="pet-acc-icon purple"><i class="ri-user-3-line" style="color:#5100c0"></i></div>
+        <span class="pet-acc-label">Información del propietario</span>
+        <i class="ri-arrow-down-s-line pet-acc-arrow"></i>
+      </div>
+      <div class="pet-acc-body">
+        <div class="pet-acc-content" id="pet-acc-owner-content"></div>
+      </div>
+    </div>
+
+    <!-- 3. Mensaje al rescatista -->
+    <div class="pet-accordion" id="pet-acc-message" style="display:none">
+      <div class="pet-acc-header" onclick="togglePetAcc('pet-acc-message')">
+        <div class="pet-acc-icon orange"><i class="ri-chat-3-line" style="color:#ff9800"></i></div>
+        <span class="pet-acc-label">Mensaje al rescatista</span>
+        <i class="ri-arrow-down-s-line pet-acc-arrow"></i>
+      </div>
+      <div class="pet-acc-body">
+        <div class="pet-acc-content">
+          <div class="pet-info-row">
+            <i class="ri-double-quotes-l pet-info-icon"></i>
+            <div>
+              <div class="pet-info-value" id="pet-acc-message-val" style="font-style:italic;color:#5e5a8a;line-height:1.65;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Datos de la mascota (abierto por defecto) -->
+    <div class="pet-accordion open" id="pet-acc-pet">
+      <div class="pet-acc-header" onclick="togglePetAcc('pet-acc-pet')">
+        <div class="pet-acc-icon cyan"><i class="ri-footprint-line" style="color:#0090a8"></i></div>
+        <span class="pet-acc-label">Datos de la mascota</span>
+        <i class="ri-arrow-down-s-line pet-acc-arrow"></i>
+      </div>
+      <div class="pet-acc-body">
+        <div class="pet-acc-content" id="pet-acc-pet-content"></div>
+      </div>
+    </div>
+
+    <!-- 5. Información médica -->
+    <div class="pet-accordion" id="pet-acc-medical" style="display:none">
+      <div class="pet-acc-header" onclick="togglePetAcc('pet-acc-medical')">
+        <div class="pet-acc-icon red"><i class="ri-heart-pulse-line" style="color:#f43f5e"></i></div>
+        <span class="pet-acc-label">Información médica</span>
+        <i class="ri-arrow-down-s-line pet-acc-arrow"></i>
+      </div>
+      <div class="pet-acc-body">
+        <div class="pet-acc-content" id="pet-acc-medical-content"></div>
+      </div>
+    </div>
+
+    <!-- 6. Soporte Técnico -->
+    <div class="pet-accordion" id="pet-acc-support">
+      <div class="pet-acc-header" onclick="togglePetAcc('pet-acc-support')">
+        <div class="pet-acc-icon gray"><i class="ri-customer-service-2-line" style="color:#6c757d"></i></div>
+        <span class="pet-acc-label">Soporte Técnico</span>
+        <i class="ri-arrow-down-s-line pet-acc-arrow"></i>
+      </div>
+      <div class="pet-acc-body">
+        <div class="pet-acc-content">
+
+          <!-- Formulario de reporte -->
+          <div style="padding-bottom:6px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+              <div class="pet-support-icon" style="background:rgba(244,63,94,.1)">
+                <i class="ri-flag-line" style="color:#f43f5e"></i>
+              </div>
+              <div>
+                <div class="pet-support-label">Enviar reporte al equipo</div>
+                <div class="pet-support-sub">¿Problema con esta placa? Escríbenos aquí</div>
+              </div>
+            </div>
+            <textarea id="pet-report-msg" maxlength="400"
+              placeholder="Describe el problema: información incorrecta, no puedo contactar al dueño…"></textarea>
+            <button id="pet-report-send-btn" onclick="sendPetReport()">
+              <i class="ri-send-plane-line"></i> Enviar reporte
+            </button>
+            <div id="pet-report-sent" style="display:none;text-align:center;padding:12px 0;color:#00906c;font-weight:700;font-size:.88rem;">
+              ✅ Reporte enviado. El equipo lo revisará pronto.
+            </div>
+          </div>
+
+          <div style="height:1px;background:rgba(81,0,192,.06);margin:6px 0 8px;"></div>
+
+          <!-- Adquirir Pet ID -->
+          <a class="pet-support-item" href="https://prueb2.dashnexpages.net/home/" target="_blank" rel="noopener">
+            <div class="pet-support-icon" style="background:rgba(81,0,192,.1)">
+              <i class="ri-price-tag-3-line" style="color:#5100c0"></i>
+            </div>
+            <div>
+              <div class="pet-support-label">¿Deseas adquirir un Pet ID?</div>
+              <div class="pet-support-sub">Protege a tu mascota con Petcingo</div>
+            </div>
+            <i class="ri-arrow-right-s-line pet-support-chevron"></i>
+          </a>
+
+          <!-- Contacto directo por WhatsApp -->
+          <a class="pet-support-item" href="https://wa.me/59171040074" target="_blank" rel="noopener">
+            <div class="pet-support-icon" style="background:rgba(0,144,108,.1)">
+              <i class="ri-whatsapp-line" style="color:#00906c"></i>
+            </div>
+            <div>
+              <div class="pet-support-label">Contacto Petcingo</div>
+              <div class="pet-support-sub">+591 71040074 · WhatsApp</div>
+            </div>
+            <i class="ri-arrow-right-s-line pet-support-chevron"></i>
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer con logo -->
+    <div class="pet-footer">
+      <img src="https://prueb2.dashnexpages.net/assets/images/petcingo-logo.png"
+           alt="Petcingo" class="pet-footer-logo"
+           onerror="this.style.display='none'"/>
+      <div class="pet-footer-text">
+        Identificación garantizada por <a href="https://prueb2.dashnexpages.net/home/" target="_blank">Petcingo</a>
+      </div>
+    </div>
+
+    <!-- Gestionar: visible solo si URL tiene token válido -->
+    <div id="pet-manage-btn" style="display:none;text-align:center;margin-bottom:24px"></div>
+  </div>
+</div>
+
+<!-- FAB WhatsApp flotante -->
+<a id="fab-wa" href="#" target="_blank" rel="noopener" style="display:none" title="WhatsApp al dueño">
+  <i class="ri-whatsapp-line"></i>
+</a>
+
+<!-- Modal: compartir ubicación GPS -->
+<div id="geo-modal">
+  <div class="geo-card">
+    <div class="geo-icon">📍</div>
+    <div class="geo-title">¿Compartir ubicación?</div>
+    <div class="geo-sub">¿Deseas compartir tu ubicación actual para ayudar al dueño a encontrar a su mascota más rápido?</div>
+    <div class="geo-actions">
+      <button class="geo-btn geo-btn-yes" id="geo-yes"><i class="ri-map-pin-line"></i> Sí, compartir</button>
+      <button class="geo-btn geo-btn-no"  id="geo-no">No, gracias</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://prueb2.dashnexpages.net/assets/js/petcingo.js?v=20260501"></script>
+<script>
+  if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+  window.addEventListener('DOMContentLoaded', window.initPetPage);
+</script>
+</body>
+</html>
+<!-- END pet.html -->
