@@ -1,0 +1,847 @@
+<!-- START dashboard.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Admin – Petcingo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://prueb2.dashnexpages.net/assets/css/main.css?v=20260428"/>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body class="page-dark">
+
+<!-- Login Screen -->
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-mark">🐾</div>
+      <h1>Petcingo</h1>
+      <p>Panel de Administración</p>
+    </div>
+    <div class="login-err" id="login-err">Contraseña incorrecta. Intenta de nuevo.</div>
+    <div class="login-field">
+      <label>Contraseña de acceso</label>
+      <input type="password" id="login-pass" placeholder="••••••••••" autocomplete="current-password"
+        onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <button class="btn-login" onclick="doLogin()">Entrar al Panel</button>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div id="dashboard" style="display:none">
+
+  <!-- Mobile hamburger -->
+  <button class="hamburger" onclick="toggleSidebar()"><i class="ri-menu-line" style="font-size:18px;color:var(--text-dark)"></i></button>
+  <div id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">🐾</div>
+      <div>
+        <img id="sidebar-brand-logo" src="" alt="logo" style="display:none;height:32px;max-width:120px;object-fit:contain"/>
+        <div class="sidebar-logo-text" id="sidebar-brand-text">Petcingo</div>
+        <div class="sidebar-logo-sub">Admin Panel</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-section="overview" onclick="showSection('overview',this)">
+        <span class="nav-icon"><i class="ri-dashboard-line"></i></span> Resumen
+      </button>
+      <button class="nav-item" data-section="register" data-perm="register" onclick="showSection('register',this)">
+        <span class="nav-icon"><i class="ri-add-circle-line"></i></span> Registrar Placa
+      </button>
+      <button class="nav-item" data-section="pets" data-perm="pets" onclick="showSection('pets',this)">
+        <span class="nav-icon"><i class="ri-footprint-line"></i></span> Mascotas
+      </button>
+      <button class="nav-item" data-section="vets" data-perm="vets" onclick="showSection('vets',this)">
+        <span class="nav-icon"><i class="ri-hospital-line"></i></span> Veterinarias
+      </button>
+      <button class="nav-item" data-section="shelters" data-perm="shelters" onclick="showSection('shelters',this)">
+        <span class="nav-icon"><i class="ri-home-heart-line"></i></span> Refugios
+      </button>
+      <button class="nav-item" data-section="users" data-perm="settings" onclick="showSection('users',this)">
+        <span class="nav-icon"><i class="ri-team-line"></i></span> Usuarios
+      </button>
+      <button class="nav-item" data-section="reports" onclick="showSection('reports',this)">
+        <span class="nav-icon"><i class="ri-flag-line"></i></span> Reportes <span id="reports-nav-badge" style="margin-left:4px;background:#f43f5e;color:#fff;font-size:.65rem;padding:1px 6px;border-radius:99px;font-weight:700;display:none"></span>
+      </button>
+      <button class="nav-item" data-section="logs" data-perm="settings" onclick="showSection('logs',this)">
+        <span class="nav-icon"><i class="ri-file-list-3-line"></i></span> Auditoría
+      </button>
+      <button class="nav-item" data-section="backup" data-perm="settings" onclick="showSection('backup',this)">
+        <span class="nav-icon"><i class="ri-database-2-line"></i></span> Base de Datos
+      </button>
+      <button class="nav-item" data-section="settings" data-perm="settings" onclick="showSection('settings',this)">
+        <span class="nav-icon"><i class="ri-settings-3-line"></i></span> Configuración
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="doLogout()"><i class="ri-logout-box-line"></i> Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- ── RESUMEN ── -->
+    <section class="section active" id="sec-overview">
+      <div class="page-header">
+        <h2><i class="ri-dashboard-line"></i> Resumen</h2>
+        <p>Vista general del sistema Petcingo</p>
+      </div>
+
+      <!-- Row 1: Placas -->
+      <div class="stats-grid">
+        <div class="stat-card total">
+          <div class="stat-icon">🐾</div>
+          <div class="stat-value" id="stat-total">—</div>
+          <div class="stat-label">Placas Totales</div>
+          <div id="stat-reserved-label" style="font-size:.68rem;color:var(--muted-dark);margin-top:3px"></div>
+        </div>
+        <div class="stat-card active">
+          <div class="stat-icon">✅</div>
+          <div class="stat-value" id="stat-active">—</div>
+          <div class="stat-label">Activadas (con dueño)</div>
+        </div>
+        <div class="stat-card lost">
+          <div class="stat-icon">🚨</div>
+          <div class="stat-value" id="stat-lost">—</div>
+          <div class="stat-label">Reportadas Perdidas</div>
+        </div>
+        <div class="stat-card expired">
+          <div class="stat-icon">⏰</div>
+          <div class="stat-value" id="stat-expired">—</div>
+          <div class="stat-label">Suscripción Vencida</div>
+        </div>
+      </div>
+
+      <!-- Row 2: Red & Ventas -->
+      <div class="stats-grid" style="margin-top:0">
+        <div class="stat-card" style="background:rgba(99,102,241,.12);border-color:rgba(99,102,241,.25)">
+          <div class="stat-icon">🏥</div>
+          <div class="stat-value" id="stat-vets-count">—</div>
+          <div class="stat-label">Veterinarias aliadas</div>
+        </div>
+        <div class="stat-card" style="background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.25)">
+          <div class="stat-icon">🏠</div>
+          <div class="stat-value" id="stat-shelters-count">—</div>
+          <div class="stat-label">Refugios aliados</div>
+        </div>
+        <div class="stat-card" style="background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.25)">
+          <div class="stat-icon">📦</div>
+          <div class="stat-value" id="stat-stock">—</div>
+          <div class="stat-label">Stock disponible</div>
+          <div style="font-size:.68rem;color:var(--muted-dark);margin-top:3px">placas sin asignar</div>
+        </div>
+        <div class="stat-card" style="background:rgba(168,85,247,.08);border-color:rgba(168,85,247,.25)">
+          <div class="stat-icon">💰</div>
+          <div class="stat-value" id="stat-sold">—</div>
+          <div class="stat-label">Placas vendidas</div>
+          <div style="font-size:.68rem;color:var(--muted-dark);margin-top:3px">activadas + reservadas</div>
+        </div>
+      </div>
+
+      <!-- Recent activations + quick actions -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:0">
+        <div class="panel">
+          <div class="panel-title"><i class="ri-time-line"></i> Últimas Activaciones</div>
+          <div class="panel-sub" style="margin-bottom:10px">Placas activadas recientemente por propietarios</div>
+          <div id="recent-list"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title"><i class="ri-bookmark-line"></i> Últimas Reservadas</div>
+          <div class="panel-sub" style="margin-bottom:10px">Placas creadas pendientes de activación</div>
+          <div id="recent-reserved-list"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── REGISTRAR PLACA ── -->
+    <section class="section" id="sec-register">
+      <div class="page-header">
+        <h2><i class="ri-add-circle-line"></i> Registrar Placa</h2>
+        <p>Asigna y reserva una nueva placa en el sistema</p>
+      </div>
+      <div class="qr-layout">
+        <div>
+          <div class="panel">
+            <div class="panel-title"><i class="ri-building-line"></i> Cliente</div>
+            <div class="panel-sub">Selecciona el cliente al que pertenece esta placa</div>
+            <select class="seller-select-big" id="reg-seller-select">
+              <option value="">— Selecciona un cliente —</option>
+            </select>
+            <div class="reg-next-preview" id="reg-seller-info">
+              <div style="font-size:.72rem;color:var(--muted-dark);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Próximo ID</div>
+              <div class="reg-next-id" id="reg-next-id">—</div>
+            </div>
+            <button class="btn btn-primary" style="width:100%;padding:14px" onclick="registerPlate()">
+              <i class="ri-add-circle-line"></i> Crear y Reservar Placa
+            </button>
+
+            <div class="register-result" id="reg-result">
+              <div class="register-id-display" id="reg-result-id">—</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+                <button class="btn btn-success btn-sm" onclick="downloadRegQR()"><i class="ri-download-2-line"></i> Descargar QR</button>
+                <button class="btn btn-ghost btn-sm"   onclick="copyRegLink()"><i class="ri-link"></i> Copiar enlace</button>
+                <button class="btn btn-primary btn-sm" onclick="registerNextFast()"><i class="ri-skip-forward-line"></i> Siguiente rápido</button>
+                <button class="btn btn-ghost btn-sm"   onclick="resetRegister()"><i class="ri-refresh-line"></i> Limpiar</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Custom ID panel -->
+          <div class="panel">
+            <div class="panel-title" style="cursor:pointer" onclick="toggleCustomQR()">
+              <i class="ri-qr-code-line"></i> ID Personalizado
+              <span style="margin-left:auto;font-size:.75rem;color:var(--muted-dark);font-family:'DM Sans',sans-serif;font-weight:400">Para placas fuera del sistema ↓</span>
+            </div>
+            <div id="custom-qr-wrap" style="display:none;margin-top:14px">
+              <div class="panel-sub">Genera un QR con cualquier ID sin prefijo de cliente.</div>
+              <div style="display:flex;gap:10px;align-items:center">
+                <input type="text" class="form-input" id="qr-id-input" placeholder="Ej: DEMO-001, PROMO-25…" maxlength="60" onkeydown="if(event.key==='Enter')generateQR()"/>
+                <button class="btn btn-primary" onclick="generateQR()">Generar</button>
+              </div>
+              <div class="qr-result" id="qr-result" style="margin-top:14px">
+                <div class="qr-links" id="qr-links"></div>
+                <div class="qr-actions">
+                  <button class="btn btn-success btn-sm" onclick="downloadQR()"><i class="ri-download-2-line"></i> Descargar</button>
+                  <button class="btn btn-ghost btn-sm"   onclick="generateNew()"><i class="ri-refresh-line"></i> Limpiar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- QR display -->
+        <div style="position:sticky;top:32px;display:flex;justify-content:center">
+          <div id="reg-qr-display">
+            <div style="text-align:center;color:var(--muted-dark);padding:48px 20px">
+              <i class="ri-qr-scan-2-line" style="font-size:64px;opacity:.15;display:block;margin-bottom:12px"></i>
+              <p style="font-size:.85rem">El QR aparecerá aquí</p>
+            </div>
+          </div>
+          <div id="qr-display" style="display:none"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── MASCOTAS ── -->
+    <section class="section" id="sec-pets">
+      <div class="page-header">
+        <h2><i class="ri-footprint-line"></i> Mascotas Registradas</h2>
+        <p>Gestiona todas las placas del sistema</p>
+      </div>
+      <div class="panel">
+        <div class="table-toolbar">
+          <input type="text" class="search-input" id="search-input" placeholder="Buscar por ID, nombre o dueño…" oninput="filterTable()"/>
+          <select class="filter-select" id="filter-status" onchange="filterTable()">
+            <option value="">Todos los estados</option>
+            <option value="activo">Activos</option>
+            <option value="reservada">Reservadas</option>
+            <option value="perdido">Perdidos</option>
+          </select>
+          <select class="filter-select" id="filter-seller" onchange="filterTable()">
+            <option value="">Todos los vendedores</option>
+          </select>
+          <button class="btn btn-ghost btn-sm" onclick="loadPets()"><i class="ri-refresh-line"></i></button>
+          <button class="btn btn-ghost btn-sm" id="btn-trash" onclick="toggleTrash()" style="color:var(--error)"><i class="ri-delete-bin-line"></i> Papelera</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>ID</th><th>Mascota</th><th>Dueño</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead>
+            <tbody id="pets-tbody">
+              <tr><td colspan="6"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-count" id="table-count"></div>
+      </div>
+    </section>
+
+    <!-- ── VETERINARIAS ── -->
+    <section class="section" id="sec-vets">
+      <div class="page-header">
+        <h2><i class="ri-hospital-line"></i> Veterinarias</h2>
+        <p>Red de clínicas veterinarias aliadas a Petcingo</p>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><i class="ri-add-circle-line"></i> Registrar Veterinaria</div>
+        <div class="form-grid">
+          <div class="form-group full"><label class="form-label">Nombre *</label><input class="form-input" type="text" id="vet-name" placeholder="Ej: Clínica Veterinaria Arco Iris" maxlength="80"/></div>
+          <div class="form-group"><label class="form-label">Contacto / Responsable *</label><input class="form-input" type="text" id="vet-contact" placeholder="Ej: Dr. Juan Pérez" maxlength="60"/></div>
+          <div class="form-group"><label class="form-label">Prefijo de Placa * <span style="color:var(--error)">●</span></label><input class="form-input" type="text" id="vet-prefix" placeholder="Ej: VET-LP (sin espacios)" maxlength="20" oninput="this.value=this.value.toUpperCase().replace(/\s/g,'')"/></div>
+          <div class="form-group"><label class="form-label">Teléfono</label><input class="form-input" type="tel" id="vet-phone" placeholder="+591 76543210" maxlength="20"/></div>
+          <div class="form-group"><label class="form-label">Ciudad</label><input class="form-input" type="text" id="vet-city" placeholder="Ej: La Paz" maxlength="40"/></div>
+          <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="vet-email" placeholder="contacto@veterinaria.com" maxlength="80"/></div>
+        </div>
+        <button class="btn btn-primary" id="btn-save-vet" onclick="saveVet()">Guardar Veterinaria</button>
+      </div>
+      <div class="panel">
+        <div class="panel-title" style="margin-bottom:16px"><i class="ri-list-check-2"></i> Veterinarias Registradas<button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="loadVets()"><i class="ri-refresh-line"></i></button></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Nombre</th><th>Prefijo</th><th>Contacto</th><th>Ciudad</th><th>Teléfono</th><th>Registrado</th><th>Acciones</th></tr></thead>
+            <tbody id="vets-tbody"><tr><td colspan="7"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></td></tr></tbody>
+          </table>
+        </div>
+        <div class="table-count" id="vets-count"></div>
+      </div>
+    </section>
+
+    <!-- ── VET DETAIL ── -->
+    <section class="section" id="sec-vet-detail">
+      <div class="vet-detail-header">
+        <button class="btn-back-vet" onclick="showSection('vets',document.querySelector('[data-section=vets]'))"><i class="ri-arrow-left-line"></i> Volver</button>
+        <div>
+          <h2 style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700" id="vet-detail-title">—</h2>
+          <span class="vet-detail-badge" id="vet-detail-prefix">—</span>
+        </div>
+      </div>
+      <div class="qr-layout">
+        <div class="panel">
+          <div class="panel-title"><i class="ri-qr-code-line"></i> Crear Nueva Placa</div>
+          <div class="panel-sub">El ID se genera automáticamente con el prefijo y contador. <strong>Se creará una nueva placa reservada.</strong></div>
+          <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px">
+            <div style="flex:1;padding:11px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10);border-radius:11px;font-size:.95rem;font-weight:600;color:#c084fc" id="vet-next-id">—</div>
+            <button class="btn btn-primary" onclick="generateVetQR()">Crear y Reservar Placa</button>
+          </div>
+          <div class="qr-result" id="vet-qr-result">
+            <div class="qr-links" id="vet-qr-links"></div>
+            <div class="qr-actions" style="margin-top:14px">
+              <button class="btn btn-success btn-sm" onclick="downloadVetQR()"><i class="ri-download-2-line"></i> Descargar</button>
+              <button class="btn btn-ghost btn-sm"   onclick="refreshVetCounter()"><i class="ri-refresh-line"></i> Siguiente</button>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;align-items:flex-start;padding-top:8px"><div id="vet-qr-display"></div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title" style="margin-bottom:16px"><i class="ri-footprint-line"></i> Placas de esta Veterinaria<button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="loadVetPets()"><i class="ri-refresh-line"></i></button></div>
+        <div class="table-wrap"><table><thead><tr><th>ID</th><th>Mascota</th><th>Dueño</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody id="vet-pets-tbody"><tr><td colspan="6"><div class="empty-state"><p>Selecciona una veterinaria</p></div></td></tr></tbody></table></div>
+        <div class="table-count" id="vet-pets-count"></div>
+      </div>
+    </section>
+
+    <!-- ── REFUGIOS ── -->
+    <section class="section" id="sec-shelters">
+      <div class="page-header">
+        <h2><i class="ri-home-heart-line"></i> Refugios</h2>
+        <p>Red de refugios y protectoras aliados a Petcingo</p>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><i class="ri-add-circle-line"></i> Registrar Refugio</div>
+        <div class="form-grid">
+          <div class="form-group full"><label class="form-label">Nombre *</label><input class="form-input" type="text" id="sh-name" placeholder="Ej: Huellas Felices" maxlength="80"/></div>
+          <div class="form-group"><label class="form-label">Encargado *</label><input class="form-input" type="text" id="sh-responsible" placeholder="Ej: María López" maxlength="60"/></div>
+          <div class="form-group"><label class="form-label">Prefijo de Placa * <span style="color:var(--error)">●</span></label><input class="form-input" type="text" id="sh-prefix" placeholder="Ej: REF-HF (sin espacios)" maxlength="20" oninput="this.value=this.value.toUpperCase().replace(/\s/g,'')"/></div>
+          <div class="form-group"><label class="form-label">Teléfono</label><input class="form-input" type="tel" id="sh-phone" placeholder="+591 76543210" maxlength="20"/></div>
+          <div class="form-group full"><label class="form-label">Dirección</label><input class="form-input" type="text" id="sh-address" placeholder="Ej: Calle Potosí 123, Zona Norte" maxlength="120"/></div>
+          <!-- Acceso dashboard del refugio -->
+          <div class="form-group"><label class="form-label">Usuario (login refugio)</label><input class="form-input" type="text" id="sh-username" placeholder="Ej: huellas-felices" maxlength="40" oninput="this.value=this.value.toLowerCase().replace(/\s/g,'')"/></div>
+          <div class="form-group"><label class="form-label">Contraseña (login refugio)</label><input class="form-input" type="password" id="sh-password" placeholder="Mínimo 6 caracteres" maxlength="40"/></div>
+          <div class="form-group"><label class="form-label">Límite mascotas en adopción</label><input class="form-input" type="number" id="sh-limite" placeholder="40" min="1" max="200" value="40"/></div>
+        </div>
+        <button class="btn btn-primary" id="btn-save-shelter" onclick="saveShelter()">Guardar Refugio</button>
+      </div>
+      <div class="panel">
+        <div class="panel-title" style="margin-bottom:16px"><i class="ri-list-check-2"></i> Refugios Registrados<button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="loadShelters()"><i class="ri-refresh-line"></i></button></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Nombre</th><th>Prefijo</th><th>Encargado</th><th>Teléfono</th><th>Dirección</th><th>Registrado</th><th>Acciones</th></tr></thead>
+            <tbody id="shelters-tbody"><tr><td colspan="7"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></td></tr></tbody>
+          </table>
+        </div>
+        <div class="table-count" id="shelters-count"></div>
+      </div>
+    </section>
+
+    <!-- ── SHELTER DETAIL ── -->
+    <section class="section" id="sec-shelter-detail">
+      <div class="vet-detail-header">
+        <button class="btn-back-vet" onclick="showSection('shelters',document.querySelector('[data-section=shelters]'))"><i class="ri-arrow-left-line"></i> Volver</button>
+        <div>
+          <h2 style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700" id="sh-detail-title">—</h2>
+          <span class="vet-detail-badge" id="sh-detail-prefix">—</span>
+        </div>
+      </div>
+      <div class="qr-layout">
+        <div class="panel">
+          <div class="panel-title"><i class="ri-qr-code-line"></i> Crear Nueva Placa</div>
+          <div class="panel-sub">El ID se genera automáticamente. <strong>Se creará una nueva placa reservada.</strong></div>
+          <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px">
+            <div style="flex:1;padding:11px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10);border-radius:11px;font-size:.95rem;font-weight:600;color:#c084fc" id="sh-next-id">—</div>
+            <button class="btn btn-primary" onclick="generateShelterQR()">Crear y Reservar Placa</button>
+          </div>
+          <div class="qr-result" id="sh-qr-result">
+            <div class="qr-links" id="sh-qr-links"></div>
+            <div class="qr-actions" style="margin-top:14px">
+              <button class="btn btn-success btn-sm" onclick="downloadShelterQR()"><i class="ri-download-2-line"></i> Descargar</button>
+              <button class="btn btn-ghost btn-sm"   onclick="refreshShelterCounter()"><i class="ri-refresh-line"></i> Siguiente</button>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;align-items:flex-start;padding-top:8px"><div id="sh-qr-display"></div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title" style="margin-bottom:16px"><i class="ri-footprint-line"></i> Placas de este Refugio<button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="loadShelterPets()"><i class="ri-refresh-line"></i></button></div>
+        <div class="table-wrap"><table><thead><tr><th>ID</th><th>Mascota</th><th>Dueño</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody id="sh-pets-tbody"><tr><td colspan="6"><div class="empty-state"><p>Selecciona un refugio</p></div></td></tr></tbody></table></div>
+        <div class="table-count" id="sh-pets-count"></div>
+      </div>
+    </section>
+
+    <!-- ── USUARIOS ── -->
+    <section class="section" id="sec-users">
+      <div class="page-header">
+        <h2><i class="ri-team-line"></i> Usuarios y Permisos</h2>
+        <p>Gestiona el acceso del equipo con permisos granulares</p>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><i class="ri-user-add-line"></i> Crear Usuario</div>
+        <div class="form-grid" style="margin-bottom:14px">
+          <div class="form-group"><label class="form-label">Nombre de usuario *</label><input class="form-input" type="text" id="usr-name" placeholder="Ej: ana.garcia" maxlength="40"/></div>
+          <div class="form-group"><label class="form-label">Contraseña *</label><input class="form-input" type="password" id="usr-pass" placeholder="Mínimo 6 caracteres" maxlength="40"/></div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div class="form-label" style="margin-bottom:8px">Permisos de acceso</div>
+          <div class="perms-grid">
+            <label class="perm-check"><input type="checkbox" id="perm-dashboard" checked/> <span>Ver Resumen</span></label>
+            <label class="perm-check"><input type="checkbox" id="perm-register"  checked/> <span>Registrar Placas</span></label>
+            <label class="perm-check"><input type="checkbox" id="perm-pets"      checked/> <span>Ver Mascotas</span></label>
+            <label class="perm-check"><input type="checkbox" id="perm-vets"/>               <span>Gestionar Veterinarias</span></label>
+            <label class="perm-check"><input type="checkbox" id="perm-shelters"/>            <span>Gestionar Refugios</span></label>
+            <label class="perm-check"><input type="checkbox" id="perm-settings"/>            <span><i class="ri-lock-line"></i> Configuración</span></label>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-sm" id="btn-user-action" onclick="saveUser()"><i class="ri-user-add-line"></i> Crear Usuario</button>
+        <button class="btn btn-ghost btn-sm" style="margin-left:8px" onclick="resetUserForm()">Cancelar</button>
+      </div>
+      <div class="panel">
+        <div class="panel-title" style="margin-bottom:16px"><i class="ri-list-check-2"></i> Usuarios Registrados<button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="loadUsers()"><i class="ri-refresh-line"></i></button></div>
+        <div id="users-list"><div class="empty-state" style="padding:20px"><div class="loading-dots"><span></span><span></span><span></span></div></div></div>
+      </div>
+    </section>
+
+    <!-- ── AUDITORÍA ── -->
+    <section class="section" id="sec-logs">
+      <div class="page-header">
+        <h2><i class="ri-file-list-3-line"></i> Registro de Auditoría</h2>
+        <p>Historial de acciones del sistema — muestra 25 por página</p>
+      </div>
+      <div class="panel">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+          <button class="btn btn-ghost btn-sm" onclick="loadLogs(true)"><i class="ri-refresh-line"></i> Recargar</button>
+          <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
+            <input type="number" id="cfg-log-days" value="30" min="1" max="365" style="width:64px;padding:5px 8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:var(--text-dark);font-size:.82rem;text-align:center"/>
+            <span style="font-size:.75rem;color:var(--muted-dark)">días</span>
+            <button class="btn btn-ghost btn-sm" style="color:var(--error)" onclick="clearOldLogs()"><i class="ri-delete-bin-line"></i> Limpiar logs</button>
+          </div>
+        </div>
+        <div id="logs-list"><div class="empty-state" style="padding:24px"><div class="loading-dots"><span></span><span></span><span></span></div></div></div>
+        <div style="text-align:center;margin-top:16px">
+          <button id="btn-load-more-logs" class="btn btn-ghost btn-sm" onclick="loadMoreLogs()" style="display:none"><i class="ri-arrow-down-line"></i> Cargar más</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── BASE DE DATOS / BACKUP ── -->
+    <section class="section" id="sec-backup">
+      <div class="page-header">
+        <h2><i class="ri-database-2-line"></i> Base de Datos</h2>
+        <p>Respaldo completo y gestión de retención de datos</p>
+      </div>
+
+      <!-- Full Backup -->
+      <div class="panel" style="margin-bottom:20px;border:1.5px solid rgba(81,0,192,.3);background:rgba(81,0,192,.05)">
+        <div class="panel-title"><i class="ri-download-cloud-line" style="color:#5100c0"></i> Backup Completo del Sistema</div>
+        <div class="panel-sub">Exporta TODAS las colecciones en un solo archivo JSON: pets, usuarios, veterinarias, refugios, escaneos y logs.</div>
+        <button id="btn-full-backup" class="btn btn-primary" onclick="exportFullBackup()" style="margin-top:12px;padding:12px 28px">
+          <i class="ri-download-cloud-line"></i> Exportar Backup Completo
+        </button>
+      </div>
+
+      <!-- Scan retention -->
+      <div class="panel" style="margin-bottom:20px;border:1.5px solid rgba(255,59,107,.2);background:rgba(255,59,107,.03)">
+        <div class="panel-title"><i class="ri-delete-bin-2-line" style="color:var(--error)"></i> Retención de Escaneos</div>
+        <div class="panel-sub">Elimina escaneos antiguos (scan_logs) para mantener la base de datos liviana. Se recomienda purgar cada 90 días.</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap">
+          <input type="number" id="cfg-scan-days" value="90" min="7" max="365" style="width:80px;padding:8px 10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:10px;color:var(--text-dark);font-size:.9rem;text-align:center"/>
+          <span style="font-size:.85rem;color:var(--muted-dark)">días de retención</span>
+          <button class="btn btn-ghost btn-sm" style="color:var(--error);margin-left:auto" onclick="purgeScanLogs()"><i class="ri-delete-bin-line"></i> Purgar escaneos antiguos</button>
+        </div>
+      </div>
+
+      <!-- Individual collections -->
+      <div class="panel">
+        <div class="panel-title"><i class="ri-archive-line"></i> Exportar / Importar por Colección</div>
+        <div class="panel-sub">Descarga o restaura colecciones individuales en formato JSON.</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:16px">
+          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:18px 16px">
+            <div style="font-size:28px;margin-bottom:8px">🐾</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:6px">Mascotas (pets)</div>
+            <div style="font-size:.78rem;color:var(--muted-dark);margin-bottom:12px">Todos los perfiles y placas</div>
+            <button class="btn btn-primary btn-sm" style="width:100%;margin-bottom:6px" onclick="exportDatabase('pets')"><i class="ri-download-line"></i> Exportar</button>
+            <button class="btn btn-ghost btn-sm" style="width:100%" onclick="importDatabase('pets')"><i class="ri-upload-line"></i> Importar</button>
+          </div>
+          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:18px 16px">
+            <div style="font-size:28px;margin-bottom:8px">🏥</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:6px">Veterinarias</div>
+            <div style="font-size:.78rem;color:var(--muted-dark);margin-bottom:12px">Red de clínicas aliadas</div>
+            <button class="btn btn-primary btn-sm" style="width:100%;margin-bottom:6px" onclick="exportDatabase('veterinarias')"><i class="ri-download-line"></i> Exportar</button>
+            <button class="btn btn-ghost btn-sm" style="width:100%" onclick="importDatabase('veterinarias')"><i class="ri-upload-line"></i> Importar</button>
+          </div>
+          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:18px 16px">
+            <div style="font-size:28px;margin-bottom:8px">🏠</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:6px">Refugios</div>
+            <div style="font-size:.78rem;color:var(--muted-dark);margin-bottom:12px">Red de refugios aliados</div>
+            <button class="btn btn-primary btn-sm" style="width:100%;margin-bottom:6px" onclick="exportDatabase('shelters')"><i class="ri-download-line"></i> Exportar</button>
+            <button class="btn btn-ghost btn-sm" style="width:100%" onclick="importDatabase('shelters')"><i class="ri-upload-line"></i> Importar</button>
+          </div>
+          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:18px 16px">
+            <div style="font-size:28px;margin-bottom:8px">📡</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:6px">Escaneos (scan_logs)</div>
+            <div style="font-size:.78rem;color:var(--muted-dark);margin-bottom:12px">Historial de ubicaciones</div>
+            <button class="btn btn-primary btn-sm" style="width:100%;margin-bottom:6px" onclick="exportDatabase('scan_logs')"><i class="ri-download-line"></i> Exportar</button>
+          </div>
+          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:18px 16px">
+            <div style="font-size:28px;margin-bottom:8px">👥</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:6px">Usuarios</div>
+            <div style="font-size:.78rem;color:var(--muted-dark);margin-bottom:12px">Cuentas de empleados</div>
+            <button class="btn btn-primary btn-sm" style="width:100%;margin-bottom:6px" onclick="exportDatabase('users')"><i class="ri-download-line"></i> Exportar</button>
+            <button class="btn btn-ghost btn-sm" style="width:100%" onclick="importDatabase('users')"><i class="ri-upload-line"></i> Importar</button>
+          </div>
+          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:18px 16px">
+            <div style="font-size:28px;margin-bottom:8px">📋</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:6px">Auditoría (logs)</div>
+            <div style="font-size:.78rem;color:var(--muted-dark);margin-bottom:12px">Registro de acciones</div>
+            <button class="btn btn-primary btn-sm" style="width:100%;margin-bottom:6px" onclick="exportDatabase('logs')"><i class="ri-download-line"></i> Exportar</button>
+          </div>
+        </div>
+        <div style="margin-top:18px;padding:14px 16px;background:rgba(255,176,32,.06);border:1px solid rgba(255,176,32,.2);border-radius:12px;font-size:.8rem;color:#b8860b;line-height:1.6">
+          <strong>ℹ️ Importación:</strong> Carga un JSON exportado desde esta sección. IDs existentes son sobreescritos (merge). Fechas ISO se convierten automáticamente a Timestamp de Firestore.
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CONFIGURACIÓN ── -->
+    <section class="section" id="sec-settings">
+      <div class="page-header">
+        <h2><i class="ri-settings-3-line"></i> Configuración</h2>
+        <p>Personalización y ajustes del panel</p>
+      </div>
+      <div class="settings-grid">
+        <!-- Logo -->
+        <div class="panel">
+          <div class="panel-title"><i class="ri-image-line"></i> Logo del Panel</div>
+          <div class="panel-sub">URL de imagen para el logo del sidebar (PNG/SVG recomendado)</div>
+          <div class="form-group">
+            <label class="form-label">URL del logo</label>
+            <input class="form-input" type="url" id="cfg-logo-url" placeholder="https://ejemplo.com/logo.png"/>
+            <img id="cfg-logo-preview" class="logo-preview" alt="preview logo"/>
+          </div>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-primary btn-sm" onclick="saveLogo()"><i class="ri-save-line"></i> Guardar logo</button>
+            <button class="btn btn-ghost btn-sm"   onclick="removeLogo()"><i class="ri-delete-bin-line"></i> Quitar logo</button>
+          </div>
+        </div>
+        <!-- Theme -->
+        <div class="panel">
+          <div class="panel-title"><i class="ri-palette-line"></i> Tema del Panel</div>
+          <div class="panel-sub">Elige el esquema de colores de la interfaz</div>
+          <div class="theme-grid">
+            <button class="theme-btn active" id="theme-btn-dark" onclick="applyTheme('dark')">
+              <div class="theme-swatch" style="background:#1a0533"></div> Oscuro
+            </button>
+            <button class="theme-btn" id="theme-btn-light" onclick="applyTheme('light')">
+              <div class="theme-swatch" style="background:#f4f2fb;border-color:rgba(81,0,192,.2)"></div> Claro
+            </button>
+            <button class="theme-btn" id="theme-btn-cyan" onclick="applyTheme('cyan')">
+              <div class="theme-swatch" style="background:#00e1f3"></div> Cyan
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── REPORTES ── -->
+    <section class="section" id="sec-reports">
+      <div class="page-header">
+        <h2><i class="ri-flag-line"></i> Reportes</h2>
+        <p>Mensajes recibidos desde perfiles de mascotas, propietarios y refugios</p>
+      </div>
+
+      <!-- Filter bar -->
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:18px">
+        <button class="btn btn-primary btn-sm reports-filter-btn active" id="rep-filter-all"     onclick="filterReports('all',this)"    >Todos</button>
+        <button class="btn btn-ghost  btn-sm reports-filter-btn" id="rep-filter-open"    onclick="filterReports('open',this)"    style="color:#f43f5e;border-color:#f43f5e">Abiertos</button>
+        <button class="btn btn-ghost  btn-sm reports-filter-btn" id="rep-filter-replied" onclick="filterReports('replied',this)" style="color:#5151fc;border-color:#5151fc">Respondidos</button>
+        <button class="btn btn-ghost  btn-sm reports-filter-btn" id="rep-filter-closed"  onclick="filterReports('closed',this)"  style="color:var(--muted-dark)">Cerrados</button>
+        <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="loadReports()"><i class="ri-refresh-line"></i> Recargar</button>
+      </div>
+
+      <div id="reports-list">
+        <div class="empty-state" style="padding:32px">
+          <div class="loading-dots"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Vet Edit Modal -->
+<div id="vet-edit-modal" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.80);align-items:center;justify-content:center;padding:16px">
+  <div style="background:#1e1535;border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:26px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.5)">
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between;color:#f0ecff">
+      <span><i class="ri-edit-line"></i> Editar Veterinaria</span>
+      <button onclick="closeVetModal()" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#f0ecff;font-size:1rem;cursor:pointer;padding:6px 10px;border-radius:8px;line-height:1;transition:.15s" onmouseover="this.style.background='rgba(255,59,107,.2)'" onmouseout="this.style.background='rgba(255,255,255,.08)'"><i class="ri-close-line"></i></button>
+    </div>
+    <div style="font-size:.78rem;color:var(--muted-dark);margin-bottom:18px">Actualiza los datos de la clínica o veterinaria.</div>
+    <input type="hidden" id="ev-vet-id"/>
+    <div class="form-grid" style="margin-bottom:12px">
+      <div class="form-group full"><label class="form-label">Nombre *</label><input class="form-input" type="text" id="ev-name" maxlength="80"/></div>
+      <div class="form-group"><label class="form-label">Contacto</label><input class="form-input" type="text" id="ev-contact" maxlength="60"/></div>
+      <div class="form-group"><label class="form-label">Ciudad</label><input class="form-input" type="text" id="ev-city" maxlength="40"/></div>
+      <div class="form-group"><label class="form-label">Teléfono</label><input class="form-input" type="tel" id="ev-phone" maxlength="20"/></div>
+      <div class="form-group"><label class="form-label">Dirección</label><input class="form-input" type="text" id="ev-address" maxlength="120"/></div>
+      <div class="form-group"><label class="form-label">Prefijo QR</label><input class="form-input" type="text" id="ev-prefix" maxlength="10" oninput="this.value=this.value.toUpperCase()"/></div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-ghost" onclick="closeVetModal()" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#f0ecff;flex:1;padding:11px;font-weight:700">Cancelar</button>
+      <button class="btn btn-primary" id="btn-update-vet" onclick="updateVet()" style="flex:2"><i class="ri-save-line"></i> Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
+<!-- Shelter Edit Modal -->
+<div id="shelter-edit-modal" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.80);align-items:center;justify-content:center;padding:16px">
+  <div style="background:#1e1535;border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:26px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.5)">
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between;color:#f0ecff">
+      <span><i class="ri-edit-line"></i> Editar Refugio</span>
+      <button onclick="closeShelterModal()" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#f0ecff;font-size:1rem;cursor:pointer;padding:6px 10px;border-radius:8px;line-height:1;transition:.15s" onmouseover="this.style.background='rgba(255,59,107,.2)'" onmouseout="this.style.background='rgba(255,255,255,.08)'"><i class="ri-close-line"></i></button>
+    </div>
+    <div style="font-size:.78rem;color:var(--muted-dark);margin-bottom:18px">Actualiza los datos del refugio y sus credenciales de acceso.</div>
+    <input type="hidden" id="es-shelter-id"/>
+    <div class="form-grid" style="margin-bottom:12px">
+      <div class="form-group full"><label class="form-label">Nombre *</label><input class="form-input" type="text" id="es-name" maxlength="80"/></div>
+      <div class="form-group"><label class="form-label">Encargado</label><input class="form-input" type="text" id="es-responsible" maxlength="60"/></div>
+      <div class="form-group"><label class="form-label">Ciudad</label><input class="form-input" type="text" id="es-city" maxlength="40"/></div>
+      <div class="form-group"><label class="form-label">Teléfono</label><input class="form-input" type="tel" id="es-phone" maxlength="20"/></div>
+      <div class="form-group"><label class="form-label">Dirección</label><input class="form-input" type="text" id="es-address" maxlength="120"/></div>
+      <div class="form-group"><label class="form-label">Límite mascotas</label><input class="form-input" type="number" id="es-limite" min="1" max="200"/></div>
+      <div style="grid-column:1/-1;border-top:1px solid rgba(255,255,255,.08);padding-top:12px;margin-top:4px">
+        <div style="font-size:.72rem;font-weight:600;color:var(--muted-dark);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Credenciales de acceso al panel del refugio</div>
+      </div>
+      <div class="form-group"><label class="form-label">Usuario (login)</label><input class="form-input" type="text" id="es-username" maxlength="40" oninput="this.value=this.value.toLowerCase().replace(/\s/g,'')"/></div>
+      <div class="form-group"><label class="form-label">Contraseña <span style="font-weight:400;font-size:.68rem;color:var(--muted-dark)">(dejar vacío = no cambiar)</span></label><input class="form-input" type="password" id="es-password" maxlength="40"/></div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-ghost" onclick="closeShelterModal()" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#f0ecff;flex:1;padding:11px;font-weight:700">Cancelar</button>
+      <button class="btn btn-primary" id="btn-update-shelter" onclick="updateShelter()" style="flex:2"><i class="ri-save-line"></i> Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- FUNCIONES DE NAVEGACIÓN INLINE: independientes de petcingo.js -->
+<script>
+(function() {
+  'use strict';
+
+  /* ── Firebase Config ─────────────────────────── */
+  var FIREBASE_CONFIG = {
+    apiKey:'AIzaSyAEE3yLFFsJTMORNFLYZWW2_DNHwzF0hE8',
+    authDomain:'petcingo-43096.firebaseapp.com',
+    projectId:'petcingo-43096',
+    storageBucket:'petcingo-43096.firebasestorage.app',
+    messagingSenderId:'679546185536',
+    appId:'1:679546185536:web:ceccd210b7c73b296f7ca5'
+  };
+  var MASTER_PASSWORD = 'Petcingo2024';
+
+  function getDb() {
+    if (typeof firebase === 'undefined') return null;
+    try {
+      if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+      return firebase.firestore();
+    } catch(e) { return null; }
+  }
+
+  /* ── Login ───────────────────────────────────── */
+  window.doLogin = function() {
+    var pass = (document.getElementById('login-pass') || {}).value || '';
+    pass = pass.trim();
+    var errEl = document.getElementById('login-err');
+    var btn   = document.querySelector('.btn-login');
+    if (errEl) errEl.style.display = 'none';
+
+    if (pass === MASTER_PASSWORD) {
+      if (btn) btn.disabled = true;
+      sessionStorage.setItem('pc_auth','master');
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      _runInitDashboard('master', 'Admin');
+      return;
+    }
+
+    if (btn) { btn.disabled = true; btn.textContent = 'Verificando…'; }
+    var db = getDb();
+    if (!db) {
+      if (errEl) { errEl.textContent = 'Error de conexión. Recarga la página.'; errEl.style.display = 'block'; }
+      if (btn)   { btn.disabled = false; btn.textContent = 'Entrar al Panel'; }
+      return;
+    }
+    db.collection('users').where('password','==',pass).limit(1).get()
+      .then(function(snap) {
+        if (!snap.empty) {
+          var u = snap.docs[0].data();
+          sessionStorage.setItem('pc_auth', u.role || 'staff');
+          sessionStorage.setItem('pc_user', JSON.stringify(u));
+          document.getElementById('login-screen').style.display = 'none';
+          document.getElementById('dashboard').style.display = 'block';
+          _runInitDashboard(u.role, u.name);
+        } else {
+          if (errEl) { errEl.textContent = 'Contraseña incorrecta.'; errEl.style.display = 'block'; }
+        }
+      })
+      .catch(function(e) {
+        if (errEl) { errEl.textContent = 'Error: ' + e.message; errEl.style.display = 'block'; }
+      })
+      .finally(function() {
+        if (btn) { btn.disabled = false; btn.textContent = 'Entrar al Panel'; }
+      });
+  };
+
+  /* ── Post-login init: run petcingo.js initDashboard when ready ─ */
+  function _runInitDashboard(role, name) {
+    if (typeof initDashboard === 'function') {
+      try { initDashboard(); } catch(e) { console.error('initDashboard err:', e); }
+      return;
+    }
+    /* petcingo.js might not have loaded yet — poll for 3 seconds */
+    var tries = 0;
+    var poll = setInterval(function() {
+      tries++;
+      if (typeof initDashboard === 'function') {
+        clearInterval(poll);
+        try { initDashboard(); } catch(e) { console.error('initDashboard err:', e); }
+      }
+      if (tries > 15) { clearInterval(poll); console.warn('petcingo.js initDashboard never defined'); }
+    }, 200);
+  }
+
+  /* ── Navegación ─────────────────────────────── */
+  window.showSection = function(name, btn) {
+    document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+    document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+    var sec = document.getElementById('sec-' + name);
+    if (sec) sec.classList.add('active');
+    if (btn) btn.classList.add('active');
+    window.closeSidebar();
+    if (name === 'logs'    && typeof loadLogs     === 'function') loadLogs();
+    if (name === 'users'   && typeof loadUsers    === 'function') loadUsers();
+    if (name === 'reports' && typeof loadReports  === 'function') loadReports(window._rCurrentFilter || 'all');
+  };
+
+  window.toggleSidebar = function() {
+    var s = document.getElementById('sidebar');
+    var o = document.getElementById('sidebar-overlay');
+    if (s) s.classList.toggle('open');
+    if (o) o.classList.toggle('show');
+  };
+
+  window.closeSidebar = function() {
+    var s = document.getElementById('sidebar');
+    var o = document.getElementById('sidebar-overlay');
+    if (s) s.classList.remove('open');
+    if (o) o.classList.remove('show');
+  };
+
+  window.toggleNavMenu = function() {
+    var m = document.getElementById('nav-mobile');
+    if (m) m.classList.toggle('open');
+  };
+
+  window.doLogout = function() {
+    document.getElementById('dashboard').style.display    = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+    var inp = document.getElementById('login-pass');
+    if (inp) { inp.value = ''; inp.focus(); }
+    sessionStorage.removeItem('pc_auth');
+    sessionStorage.removeItem('pc_user');
+  };
+
+  /* ── exportFullBackup inline fallback (also defined in petcingo.js) ── */
+  window.exportFullBackup = function() {
+    /* Prefer the richer version from petcingo.js if loaded */
+    if (window._petcingoExportFullBackup) { window._petcingoExportFullBackup(); return; }
+    var COLS = ['pets','users','veterinarias','shelters','scan_logs','logs','staff'];
+    var backup = { version:1, exportedAt: new Date().toISOString(), data:{} };
+    var btn = document.getElementById('btn-full-backup');
+    if(btn){btn.disabled=true;btn.innerHTML='<i class="ri-loader-4-line"></i> Exportando…';}
+    var db2 = (typeof db === 'function') ? db() : (typeof _db !== 'undefined' ? _db : null);
+    if (!db2) { alert('Error: Firebase no está listo.'); if(btn){btn.disabled=false;btn.innerHTML='<i class="ri-download-cloud-line"></i> Exportar Backup Completo';} return; }
+    var promises = COLS.map(function(col) {
+      return db2.collection(col).get().then(function(snap){
+        backup.data[col]=[];
+        snap.forEach(function(doc){
+          var d=doc.data();
+          Object.keys(d).forEach(function(k){ if(d[k]&&typeof d[k].toDate==='function') d[k]=d[k].toDate().toISOString(); });
+          backup.data[col].push(Object.assign({_id:doc.id},d));
+        });
+      }).catch(function(){backup.data[col]=[];});
+    });
+    Promise.all(promises).then(function(){
+      var json=JSON.stringify(backup,null,2);
+      var blob=new Blob([json],{type:'application/json'});
+      var url=URL.createObjectURL(blob);
+      var a=document.createElement('a');a.href=url;
+      a.download='petcingo-backup-'+new Date().toISOString().slice(0,10)+'.json';
+      document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+      if(btn){btn.disabled=false;btn.innerHTML='<i class="ri-download-cloud-line"></i> Exportar Backup Completo';}
+    });
+  };
+
+  window.purgeScanLogs = function() {
+    if (typeof _purgeScanLogsNative === 'function') { _purgeScanLogsNative(); return; }
+    var inp=document.getElementById('cfg-scan-days');
+    var days=inp?parseInt(inp.value,10):90;
+    if(!days||days<7)days=90;
+    if(!confirm('¿Eliminar escaneos con más de '+days+' días?'))return;
+    var cutoff=new Date(Date.now()-days*24*60*60*1000);
+    var db2=(typeof db==='function')?db():null;
+    if(!db2){alert('Error: Firebase no listo.');return;}
+    db2.collection('scan_logs').where('scannedAt','<',cutoff).get()
+      .then(function(snap){
+        if(snap.empty){alert('No hay escaneos tan antiguos.');return;}
+        var batch=db2.batch();
+        snap.forEach(function(doc){batch.delete(doc.ref);});
+        return batch.commit().then(function(){alert('✅ '+snap.size+' escaneos eliminados.');});
+      }).catch(function(e){alert('Error: '+e.message);});
+  };
+
+  /* ── Focus on load ─────────────────────────── */
+  document.addEventListener('DOMContentLoaded', function() {
+    var inp = document.getElementById('login-pass');
+    if (inp) inp.focus();
+  });
+
+})();
+</script>
+
+<script src="https://prueb2.dashnexpages.net/assets/js/petcingo.js?v=20260501"></script>
+</body>
+
+</html>
+<!-- END dashboard.html -->
