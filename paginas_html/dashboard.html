@@ -355,6 +355,29 @@
       pointer-events: none;
       user-select: none;
     }
+
+    /* ── Alertas: blindaje final de alta especificidad ── */
+    #dashboard-alerts .dash-alert {
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+      background: #fff !important;
+      border-radius: 12px !important;
+      padding: 12px 18px !important;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08) !important;
+      border-left: 3px solid #4552CC !important;
+      color: #212121 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      font-size: 0.85rem !important;
+      font-weight: 600 !important;
+    }
+    #dashboard-alerts .dash-alert i { font-size: 1.1rem !important; color: #4552CC !important; }
+    #dashboard-alerts .dash-alert.warning { border-left-color: #F39C12 !important; }
+    #dashboard-alerts .dash-alert.warning i { color: #F39C12 !important; }
+    #dashboard-alerts .dash-alert.danger  { border-left-color: #E74C3C !important; }
+    #dashboard-alerts .dash-alert.danger i { color: #E74C3C !important; }
+    #dashboard-alerts .dash-alert.success { border-left-color: #2ECC71 !important; }
+    #dashboard-alerts .dash-alert.success i { color: #2ECC71 !important; }
   </style>
 </head>
 <body>
@@ -2796,7 +2819,7 @@
       if (d.message) html += '<div style="background:#FFF9E6;border-radius:12px;padding:12px 14px;margin-bottom:16px;font-style:italic;color:#616161;font-size:0.88rem;">"' + escFn(d.message) + '"</div>';
 
       /* Acción: recuperar clave */
-      html += '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="sendPasswordReset(\'' + safe + '\')" style="width:100%;margin-top:4px;">';
+      html += '<button class="ptcg-index__btn ptcg-index__btn--primary" onclick="sendPasswordReset(\'' + safe + '\')" style="width:100%;margin-top:8px;padding:12px;font-size:0.9rem;font-weight:700;">';
       html += '<i class="ri-key-2-line"></i> Enviar recuperación de contraseña</button>';
 
       content.innerHTML = html;
