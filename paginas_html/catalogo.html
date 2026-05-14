@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo — Petcingo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  <link href="https://assets.petcingo.com/css/petcingo-core.css" rel="stylesheet">
+  <style>
+    /* ============================================================
+       ENCAPSULADO PARA DASHNEX: .ptcg-catalogo aísla todos los
+       estilos del catálogo del CSS global inyectado por Dashnex.
+       Cada selector inicia con este prefijo — sin excepción.
+       ============================================================ */
+
+    .ptcg-catalogo, .ptcg-catalogo * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      color: #1D1D1F;
+      -webkit-font-smoothing: antialiased;
+    }
+    .ptcg-catalogo a { text-decoration: none; }
+    .ptcg-catalogo img { display: block; max-width: 100%; }
+    .ptcg-catalogo button, .ptcg-catalogo select, .ptcg-catalogo input {
+      cursor: pointer; font-family: inherit;
+    }
+
+    .ptcg-catalogo {
+      min-height: 100vh;
+      background-color: #F5F5F7;
+      background-image:
+        radial-gradient(ellipse 60% 40% at 90% 10%, rgba(81,0,192,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 10% 90%, rgba(0,225,243,0.06) 0%, transparent 55%);
+    }
+
+    /* == Hero del catálogo == */
+    .ptcg-catalogo .cat-hero {
+      background: linear-gradient(135deg, rgba(81,0,192,0.08) 0%, rgba(0,225,243,0.06) 100%);
+      border-bottom: 1px solid rgba(255,255,255,0.5);
+      padding: 48px 0 40px;
+    }
+    .ptcg-catalogo .cat-hero__inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 24px;
+    }
+    .ptcg-catalogo .cat-hero__breadcrumb {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.8rem; color: #86868B; margin-bottom: 16px;
+    }
+    .ptcg-catalogo .cat-hero__breadcrumb a { color: #5100C0; }
+    .ptcg-catalogo .cat-hero__breadcrumb a:hover { color: #320078; }
+    .ptcg-catalogo .cat-hero__title {
+      font-family: 'Syne', sans-serif; font-size: 2.2rem; font-weight: 800;
+      color: #1D1D1F; letter-spacing: -0.025em; margin-bottom: 8px;
+    }
+    .ptcg-catalogo .cat-hero__sub { font-size: 0.95rem; color: #86868B; }
+
+    /* == Layout principal (sidebar + grid) == */
+    .ptcg-catalogo .cat-layout {
+      max-width: 1200px; margin: 0 auto;
+      padding: 40px 24px;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* == Sidebar de filtros == */
+    .ptcg-catalogo .cat-filters {
+      position: sticky; top: 80px;
+    }
+    .ptcg-catalogo .filter-card {
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+    .ptcg-catalogo .filter-card .lg-body { padding: 20px; }
+    .ptcg-catalogo .filter-title {
+      font-size: 0.78rem; font-weight: 700; color: #86868B;
+      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px;
+    }
+    .ptcg-catalogo .filter-cats {
+      list-style: none; padding: 0; margin: 0;
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .ptcg-catalogo .filter-cats li a {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 9px 12px; border-radius: 10px;
+      font-size: 0.88rem; font-weight: 500; color: #515154;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+    .ptcg-catalogo .filter-cats li a:hover,
+    .ptcg-catalogo .filter-cats li a.active {
+      background-color: rgba(81,0,192,0.07); color: #5100C0;
+    }
+    .ptcg-catalogo .filter-cats li a .count {
+      font-size: 0.75rem; color: #86868B;
+      background-color: rgba(0,0,0,0.05);
+      padding: 2px 7px; border-radius: 999px;
+    }
+    .ptcg-catalogo .filter-cats li a.active .count {
+      background-color: rgba(81,0,192,0.12); color: #5100C0;
+    }
+
+    /* Filtro precio */
+    .ptcg-catalogo .price-range { display: flex; flex-direction: column; gap: 10px; }
+    .ptcg-catalogo .price-inputs { display: flex; gap: 8px; align-items: center; }
+    .ptcg-catalogo .price-input {
+      flex: 1; padding: 8px 10px; border-radius: 10px;
+      border: 1.5px solid rgba(0,0,0,0.10) !important;
+      background-color: rgba(255,255,255,0.7) !important;
+      color: #1D1D1F !important;
+      font-size: 0.85rem; outline: none;
+      -webkit-appearance: none;
+      transition: border-color 0.2s ease;
+    }
+    .ptcg-catalogo .price-input:focus {
+      border-color: #5100C0 !important;
+      color: #1D1D1F !important;
+    }
+    .ptcg-catalogo .price-sep { font-size: 0.8rem; color: #86868B; }
+    .ptcg-catalogo .filter-apply {
+      width: 100%; padding: 10px;
+      border-radius: 10px;
+      background-color: #5100C0 !important;
+      color: #FFFFFF !important;
+      font-size: 0.85rem; font-weight: 600;
+      border: none;
+      transition: background-color 0.25s ease;
+    }
+    .ptcg-catalogo .filter-apply:hover { background-color: #320078 !important; color: #FFFFFF !important; }
+
+    /* Filtro checkbox */
+    .ptcg-catalogo .filter-checks {
+      list-style: none; padding: 0; margin: 0;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .ptcg-catalogo .filter-checks label {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.87rem; color: #515154; cursor: pointer;
+      padding: 4px 0;
+    }
+    .ptcg-catalogo .filter-checks input[type="checkbox"] {
+      width: 16px; height: 16px;
+      border-radius: 4px;
+      accent-color: #5100C0;
+      cursor: pointer;
+    }
+
+    /* Botón filtros móvil */
+    .ptcg-catalogo .filter-mobile-btn {
+      display: none;
+      align-items: center; gap: 8px;
+      padding: 10px 18px; border-radius: 999px;
+      background-color: #FFFFFF;
+      color: #1D1D1F !important;
+      font-size: 0.88rem; font-weight: 600;
+      border: 1.5px solid rgba(0,0,0,0.12);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      transition: border-color 0.2s ease;
+    }
+    .ptcg-catalogo .filter-mobile-btn:hover { border-color: #5100C0; color: #5100C0 !important; }
+
+    /* == Área de productos == */
+    .ptcg-catalogo .cat-main {}
+    .ptcg-catalogo .cat-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .ptcg-catalogo .cat-toolbar__count {
+      font-size: 0.88rem; color: #86868B; font-weight: 500;
+    }
+    .ptcg-catalogo .cat-toolbar__count strong { color: #1D1D1F; }
+    .ptcg-catalogo .cat-toolbar__right {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .ptcg-catalogo .cat-sort {
+      padding: 9px 14px; border-radius: 12px;
+      border: 1.5px solid rgba(0,0,0,0.10) !important;
+      background-color: #FFFFFF !important;
+      color: #1D1D1F !important;
+      font-size: 0.85rem; font-weight: 500;
+      outline: none; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2386868B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+      cursor: pointer;
+    }
+    .ptcg-catalogo .view-btns { display: flex; gap: 4px; }
+    .ptcg-catalogo .view-btn {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      background-color: transparent;
+      color: #86868B;
+      border: 1.5px solid rgba(0,0,0,0.10);
+      font-size: 1rem; cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .ptcg-catalogo .view-btn.active {
+      background-color: #5100C0 !important;
+      color: #FFFFFF !important;
+      border-color: #5100C0 !important;
+    }
+
+    /* == Grid de productos == */
+    .ptcg-catalogo .prod-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .ptcg-catalogo .prod-grid.list-view {
+      grid-template-columns: 1fr;
+    }
+
+    /* Tarjeta de producto — Liquid Glass */
+    .ptcg-catalogo .prod-card {
+      border-radius: 22px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .ptcg-catalogo .prod-card:hover { transform: translateY(-3px); }
+    .ptcg-catalogo .prod-card .lg-body { padding: 0; }
+    .ptcg-catalogo .prod-card__img {
+      height: 200px;
+      background: linear-gradient(135deg, #EBE3FF 0%, #DDFBFE 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3.5rem;
+      border-radius: 21px 21px 0 0;
+      position: relative; overflow: hidden;
+    }
+    .ptcg-catalogo .prod-card__fav {
+      position: absolute; top: 10px; right: 10px;
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background-color: rgba(255,255,255,0.85);
+      color: #86868B; font-size: 0.95rem;
+      border: none; cursor: pointer;
+      transition: color 0.2s ease, background-color 0.2s ease;
+      backdrop-filter: blur(8px);
+    }
+    .ptcg-catalogo .prod-card__fav:hover { color: #FF3B30; background-color: #FFFFFF; }
+    .ptcg-catalogo .prod-card__fav.active { color: #FF3B30 !important; }
+    .ptcg-catalogo .prod-card__badge {
+      position: absolute; top: 10px; left: 10px;
+      padding: 3px 9px; border-radius: 999px;
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+      background-color: #5100C0; color: #FFFFFF;
+    }
+    .ptcg-catalogo .prod-card__badge.new  { background-color: #34C759; }
+    .ptcg-catalogo .prod-card__badge.hot  { background-color: #FF3B30; }
+    .ptcg-catalogo .prod-card__badge.sale { background-color: #FF9500; color: #1D1D1F; }
+    .ptcg-catalogo .prod-card__info { padding: 16px; }
+    .ptcg-catalogo .prod-card__cat {
+      font-size: 0.72rem; font-weight: 700; color: #5100C0;
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px;
+    }
+    .ptcg-catalogo .prod-card__name {
+      font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700;
+      color: #1D1D1F; margin-bottom: 6px; line-height: 1.35;
+    }
+    .ptcg-catalogo .prod-card__stars {
+      color: #FF9500; font-size: 0.75rem; margin-bottom: 10px;
+    }
+    .ptcg-catalogo .prod-card__stars span { color: #86868B; }
+    .ptcg-catalogo .prod-card__bottom {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    }
+    .ptcg-catalogo .prod-card__prices {}
+    .ptcg-catalogo .prod-card__price {
+      font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800;
+      color: #5100C0; display: block;
+    }
+    .ptcg-catalogo .prod-card__old {
+      font-size: 0.78rem; color: #86868B; text-decoration: line-through;
+    }
+    .ptcg-catalogo .prod-card__add {
+      width: 34px; height: 34px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background-color: #5100C0 !important; color: #FFFFFF !important;
+      border: none; font-size: 1.1rem;
+      transition: background-color 0.2s ease, transform 0.15s ease;
+      flex-shrink: 0;
+    }
+    .ptcg-catalogo .prod-card__add:hover {
+      background-color: #320078 !important; color: #FFFFFF !important;
+      transform: scale(1.1);
+    }
+
+    /* Vista lista */
+    .ptcg-catalogo .prod-grid.list-view .prod-card .lg-body {
+      display: flex;
+    }
+    .ptcg-catalogo .prod-grid.list-view .prod-card__img {
+      width: 160px; height: 140px; flex-shrink: 0;
+      border-radius: 21px 0 0 21px;
+    }
+    .ptcg-catalogo .prod-grid.list-view .prod-card__info {
+      flex: 1; padding: 20px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+
+    /* == Paginación == */
+    .ptcg-catalogo .pagination {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; margin-top: 40px;
+    }
+    .ptcg-catalogo .page-btn {
+      width: 40px; height: 40px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.88rem; font-weight: 600; color: #515154;
+      background-color: #FFFFFF; border: 1.5px solid rgba(0,0,0,0.10);
+      cursor: pointer; transition: all 0.2s ease;
+    }
+    .ptcg-catalogo .page-btn:hover {
+      border-color: #5100C0; color: #5100C0;
+    }
+    .ptcg-catalogo .page-btn.active {
+      background-color: #5100C0 !important; color: #FFFFFF !important;
+      border-color: #5100C0 !important;
+    }
+    .ptcg-catalogo .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* == Responsive == */
+    @media (max-width: 767px) {
+      .ptcg-catalogo .cat-layout { grid-template-columns: 1fr; padding: 24px 16px; gap: 20px; }
+      .ptcg-catalogo .cat-filters { display: none; position: static; }
+      .ptcg-catalogo .cat-filters.mobile-open { display: block; }
+      .ptcg-catalogo .filter-mobile-btn { display: inline-flex; }
+      .ptcg-catalogo .prod-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .ptcg-catalogo .prod-card__img { height: 150px; font-size: 2.8rem; }
+      .ptcg-catalogo .cat-hero { padding: 32px 0 28px; }
+      .ptcg-catalogo .cat-hero__title { font-size: 1.6rem; }
+    }
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .ptcg-catalogo .cat-layout { grid-template-columns: 200px 1fr; gap: 24px; }
+      .ptcg-catalogo .prod-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+<svg style="display:none;position:absolute;width:0;height:0" aria-hidden="true">
+  <defs>
+    <filter id="lg-dist" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.008" numOctaves="2" seed="92" result="noise"/>
+      <feGaussianBlur in="noise" stdDeviation="2" result="blurred"/>
+      <feDisplacementMap in="SourceGraphic" in2="blurred" scale="70" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
+<div class="ptcg-catalogo">
+
+  <!-- NAVBAR -->
+  <nav class="ptcg-navbar">
+    <div class="ptcg-navbar__inner">
+      <a href="index.html" class="ptcg-navbar__logo">🐾 <span>Petcingo</span></a>
+      <div class="ptcg-navbar__links">
+        <a href="catalogo.html"><i class="ri-grid-line"></i> Catálogo</a>
+        <a href="store.html"><i class="ri-store-2-line"></i> Tienda</a>
+        <a href="cart.html" class="ptcg-navbar__cart">
+          <i class="ri-shopping-cart-line"></i> Carrito
+          <span class="ptcg-navbar__cart-badge">0</span>
+        </a>
+        <a href="login.html" class="ptcg-nav-cta"><i class="ri-user-line"></i> Ingresar</a>
+      </div>
+      <button class="ptcg-navbar__hamburger" aria-label="Menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="ptcg-navbar__mobile">
+      <a href="catalogo.html"><i class="ri-grid-line"></i> Catálogo</a>
+      <a href="store.html"><i class="ri-store-2-line"></i> Tienda</a>
+      <a href="cart.html"><i class="ri-shopping-cart-line"></i> Carrito</a>
+      <a href="login.html" class="ptcg-nav-cta-mobile"><i class="ri-user-line"></i> Ingresar</a>
+    </div>
+  </nav>
+
+  <!-- Hero catálogo -->
+  <div class="cat-hero">
+    <div class="cat-hero__inner">
+      <div class="cat-hero__breadcrumb">
+        <a href="index.html">Inicio</a>
+        <i class="ri-arrow-right-s-line"></i>
+        <span>Catálogo</span>
+      </div>
+      <h1 class="cat-hero__title">Catálogo de productos</h1>
+      <p class="cat-hero__sub">Descubre nuestra selección de productos premium para mascotas</p>
+    </div>
+  </div>
+
+  <!-- Layout principal -->
+  <div class="cat-layout">
+
+    <!-- SIDEBAR FILTROS -->
+    <aside class="cat-filters" aria-label="Filtros">
+      <!-- Filtro: Categoría -->
+      <div class="filter-card lg-card">
+        <div class="lg-base" aria-hidden="true"></div>
+        <div class="lg-body">
+          <div class="filter-title">Categoría</div>
+          <ul class="filter-cats">
+            <li><a href="?cat=todos" class="active">Todos <span class="count">150</span></a></li>
+            <li><a href="?cat=collares">Collares GPS <span class="count">24</span></a></li>
+            <li><a href="?cat=alimentos">Alimentos <span class="count">47</span></a></li>
+            <li><a href="?cat=juguetes">Juguetes <span class="count">31</span></a></li>
+            <li><a href="?cat=salud">Salud <span class="count">18</span></a></li>
+            <li><a href="?cat=higiene">Higiene <span class="count">22</span></a></li>
+            <li><a href="?cat=camas">Camas <span class="count">8</span></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Filtro: Precio -->
+      <div class="filter-card lg-card">
+        <div class="lg-base" aria-hidden="true"></div>
+        <div class="lg-body">
+          <div class="filter-title">Precio (Bs.)</div>
+          <div class="price-range">
+            <div class="price-inputs">
+              <input class="price-input" type="number" placeholder="Min" id="price-min" min="0">
+              <span class="price-sep">—</span>
+              <input class="price-input" type="number" placeholder="Máx" id="price-max" min="0">
+            </div>
+            <button class="filter-apply" onclick="applyFilters()">Aplicar filtro</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filtro: Mascota -->
+      <div class="filter-card lg-card">
+        <div class="lg-base" aria-hidden="true"></div>
+        <div class="lg-body">
+          <div class="filter-title">Para</div>
+          <ul class="filter-checks">
+            <li><label><input type="checkbox" checked> Perros</label></li>
+            <li><label><input type="checkbox"> Gatos</label></li>
+            <li><label><input type="checkbox"> Aves</label></li>
+            <li><label><input type="checkbox"> Otros</label></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL -->
+    <main class="cat-main">
+
+      <!-- Toolbar -->
+      <div class="cat-toolbar">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button class="filter-mobile-btn" onclick="toggleMobileFilters()">
+            <i class="ri-filter-3-line"></i> Filtros
+          </button>
+          <span class="cat-toolbar__count"><strong id="prod-count">150</strong> productos</span>
+        </div>
+        <div class="cat-toolbar__right">
+          <select class="cat-sort" onchange="sortProducts(this.value)" aria-label="Ordenar por">
+            <option value="popular">Más populares</option>
+            <option value="price-asc">Precio: menor a mayor</option>
+            <option value="price-desc">Precio: mayor a menor</option>
+            <option value="newest">Más recientes</option>
+            <option value="rating">Mejor valorados</option>
+          </select>
+          <div class="view-btns" role="group" aria-label="Vista">
+            <button class="view-btn active" onclick="setView('grid')" aria-label="Vista cuadrícula">
+              <i class="ri-grid-fill"></i>
+            </button>
+            <button class="view-btn" onclick="setView('list')" aria-label="Vista lista">
+              <i class="ri-list-check"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid de productos -->
+      <div class="prod-grid" id="prod-grid">
+
+        <!-- Producto 1 -->
+        <div class="prod-card lg-card" data-ptcg-anim>
+          <div class="lg-base" aria-hidden="true"></div>
+          <div class="lg-body">
+            <div class="prod-card__img">
+              🦮
+              <span class="prod-card__badge new">Nuevo</span>
+              <button class="prod-card__fav" aria-label="Favorito"><i class="ri-heart-line"></i></button>
+            </div>
+            <div class="prod-card__info">
+              <div class="prod-card__cat">Collares GPS</div>
+              <div class="prod-card__name">Collar GPS Pro Tracker</div>
+              <div class="prod-card__stars">★★★★★ <span>(128)</span></div>
+              <div class="prod-card__bottom">
+                <div class="prod-card__prices">
+                  <span class="prod-card__price">Bs. 349</span>
+                  <span class="prod-card__old">Bs. 420</span>
+                </div>
+                <button class="prod-card__add" aria-label="Agregar al carrito"
+                  onclick="Ptcg.Cart.add({id:'gps-001',name:'Collar GPS Pro',price:349,variant:''})">
+                  <i class="ri-add-line"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Producto 2 -->
+        <div class="prod-card lg-card" data-ptcg-anim data-ptcg-delay="60">
+          <div class="lg-base" aria-hidden="true"></div>
+          <div class="lg-body">
+            <div class="prod-card__img">
+              🍗
+              <span class="prod-card__badge hot">Hot</span>
+              <button class="prod-card__fav" aria-label="Favorito"><i class="ri-heart-line"></i></button>
+            </div>
+            <div class="prod-card__info">
+              <div class="prod-card__cat">Alimentos</div>
+              <div class="prod-card__name">Snacks Naturales Premium</div>
+              <div class="prod-card__stars">★★★★☆ <span>(84)</span></div>
+              <div class="prod-card__bottom">
+                <div class="prod-card__prices">
+                  <span class="prod-card__price">Bs. 89</span>
+                </div>
+                <button class="prod-card__add" aria-label="Agregar al carrito"
+                  onclick="Ptcg.Cart.add({id:'sna-001',name:'Snacks Naturales',price:89,variant:''})">
+                  <i class="ri-add-line"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Producto 3 -->
+        <div class="prod-card lg-card" data-ptcg-anim data-ptcg-delay="120">
+          <div class="lg-base" aria-hidden="true"></div>
+          <div class="lg-body">
+            <div class="prod-card__img">
+              🎾
+              <span class="prod-card__badge sale">-20%</span>
+              <button class="prod-card__fav" aria-label="Favorito"><i class="ri-heart-line"></i></button>
+            </div>
+            <div class="prod-card__info">
+              <div class="prod-card__cat">Juguetes</div>
+              <div class="prod-card__name">Kit Juguetes Interactivos</div>
+              <div class="prod-card__stars">★★★★★ <span>(61)</span></div>
+              <div class="prod-card__bottom">
+                <div class="prod-card__prices">
+                  <span class="prod-card__price">Bs. 129</span>
+                  <span class="prod-card__old">Bs. 159</span>
+                </div>
+                <button class="prod-card__add" aria-label="Agregar al carrito"
+                  onclick="Ptcg.Cart.add({id:'toy-001',name:'Kit Juguetes',price:129,variant:''})">
+                  <i class="ri-add-line"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Producto 4 -->
+        <div class="prod-card lg-card" data-ptcg-anim data-ptcg-delay="180">
+          <div class="lg-base" aria-hidden="true"></div>
+          <div class="lg-body">
+            <div class="prod-card__img">
+              🛁
+              <button class="prod-card__fav" aria-label="Favorito"><i class="ri-heart-line"></i></button>
+            </div>
+            <div class="prod-card__info">
+              <div class="prod-card__cat">Higiene</div>
+              <div class="prod-card__name">Shampoo Perros Sensibles</div>
+              <div class="prod-card__stars">★★★★☆ <span>(45)</span></div>
+              <div class="prod-card__bottom">
+                <div class="prod-card__prices">
+                  <span class="prod-card__price">Bs. 65</span>
+                </div>
+                <button class="prod-card__add" aria-label="Agregar al carrito"
+                  onclick="Ptcg.Cart.add({id:'hyg-001',name:'Shampoo Sensible',price:65,variant:''})">
+                  <i class="ri-add-line"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Producto 5 -->
+        <div class="prod-card lg-card" data-ptcg-anim data-ptcg-delay="240">
+          <div class="lg-base" aria-hidden="true"></div>
+          <div class="lg-body">
+            <div class="prod-card__img">
+              💊
+              <button class="prod-card__fav" aria-label="Favorito"><i class="ri-heart-line"></i></button>
+            </div>
+            <div class="prod-card__info">
+              <div class="prod-card__cat">Salud</div>
+              <div class="prod-card__name">Vitaminas & Minerales Caninos</div>
+              <div class="prod-card__stars">★★★★★ <span>(92)</span></div>
+              <div class="prod-card__bottom">
+                <div class="prod-card__prices">
+                  <span class="prod-card__price">Bs. 145</span>
+                </div>
+                <button class="prod-card__add" aria-label="Agregar al carrito"
+                  onclick="Ptcg.Cart.add({id:'sal-001',name:'Vitaminas Caninas',price:145,variant:''})">
+                  <i class="ri-add-line"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Producto 6 -->
+        <div class="prod-card lg-card" data-ptcg-anim data-ptcg-delay="300">
+          <div class="lg-base" aria-hidden="true"></div>
+          <div class="lg-body">
+            <div class="prod-card__img">
+              🛏️
+              <span class="prod-card__badge new">Nuevo</span>
+              <button class="prod-card__fav" aria-label="Favorito"><i class="ri-heart-line"></i></button>
+            </div>
+            <div class="prod-card__info">
+              <div class="prod-card__cat">Camas</div>
+              <div class="prod-card__name">Cama Ortopédica Premium</div>
+              <div class="prod-card__stars">★★★★★ <span>(37)</span></div>
+              <div class="prod-card__bottom">
+                <div class="prod-card__prices">
+                  <span class="prod-card__price">Bs. 289</span>
+                  <span class="prod-card__old">Bs. 349</span>
+                </div>
+                <button class="prod-card__add" aria-label="Agregar al carrito"
+                  onclick="Ptcg.Cart.add({id:'bed-001',name:'Cama Ortopédica',price:289,variant:''})">
+                  <i class="ri-add-line"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /#prod-grid -->
+
+      <!-- Paginación -->
+      <div class="pagination" aria-label="Paginación">
+        <button class="page-btn" onclick="changePage(-1)" aria-label="Anterior" disabled>
+          <i class="ri-arrow-left-s-line"></i>
+        </button>
+        <button class="page-btn active" onclick="goPage(1)">1</button>
+        <button class="page-btn" onclick="goPage(2)">2</button>
+        <button class="page-btn" onclick="goPage(3)">3</button>
+        <span style="color:#86868B;font-size:0.9rem;padding:0 4px">…</span>
+        <button class="page-btn" onclick="goPage(15)">15</button>
+        <button class="page-btn" onclick="changePage(1)" aria-label="Siguiente">
+          <i class="ri-arrow-right-s-line"></i>
+        </button>
+      </div>
+
+    </main>
+  </div><!-- /.cat-layout -->
+
+  <!-- FOOTER -->
+  <footer class="ptcg-footer">
+    <div class="ptcg-footer__inner">
+      <div class="ptcg-footer__grid">
+        <div>
+          <div class="ptcg-footer__logo">🐾 Petcingo</div>
+          <p class="ptcg-footer__desc">La plataforma de mascotas más completa de Bolivia.</p>
+          <div class="ptcg-footer__socials">
+            <a href="#" aria-label="Instagram"><i class="ri-instagram-line"></i></a>
+            <a href="#" aria-label="Facebook"><i class="ri-facebook-fill"></i></a>
+            <a href="#" aria-label="WhatsApp"><i class="ri-whatsapp-line"></i></a>
+          </div>
+        </div>
+        <div>
+          <div class="ptcg-footer__col-title">Categorías</div>
+          <ul class="ptcg-footer__col-links">
+            <li><a href="?cat=collares">Collares GPS</a></li>
+            <li><a href="?cat=alimentos">Alimentos</a></li>
+            <li><a href="?cat=juguetes">Juguetes</a></li>
+            <li><a href="?cat=salud">Salud</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="ptcg-footer__col-title">Tienda</div>
+          <ul class="ptcg-footer__col-links">
+            <li><a href="store.html">Ver tienda</a></li>
+            <li><a href="cart.html">Carrito</a></li>
+            <li><a href="login.html">Mi cuenta</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="ptcg-footer__col-title">Legal</div>
+          <ul class="ptcg-footer__col-links">
+            <li><a href="#">Privacidad</a></li>
+            <li><a href="#">Términos</a></li>
+            <li><a href="#">Contacto</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="ptcg-footer__bottom">
+        <span>© 2025 Petcingo · Bolivia</span>
+        <span>Todos los derechos reservados</span>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /.ptcg-catalogo -->
+
+<div id="ptcg-toast-wrap" aria-live="polite"></div>
+
+<script src="https://assets.petcingo.com/js/petcingo-core.js"></script>
+<script>
+  let currentView = 'grid';
+  let currentPage = 1;
+
+  function setView(v) {
+    currentView = v;
+    const grid = document.getElementById('prod-grid');
+    const btns = document.querySelectorAll('.view-btn');
+    grid.classList.toggle('list-view', v === 'list');
+    btns.forEach(b => b.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+  }
+
+  function applyFilters() {
+    const min = document.getElementById('price-min').value;
+    const max = document.getElementById('price-max').value;
+    Ptcg.toast('Filtros aplicados' + (min || max ? ': Bs. ' + (min||'0') + ' – ' + (max||'∞') : ''));
+  }
+
+  function sortProducts(val) {
+    Ptcg.toast('Ordenado por: ' + event.target.selectedOptions[0].text);
+  }
+
+  function goPage(n) {
+    currentPage = n;
+    document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+    Ptcg.toast('Página ' + n);
+  }
+  function changePage(delta) {
+    goPage(Math.max(1, currentPage + delta));
+  }
+
+  function toggleMobileFilters() {
+    document.querySelector('.cat-filters').classList.toggle('mobile-open');
+  }
+
+  // Favoritos
+  document.querySelectorAll('.prod-card__fav').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      btn.classList.toggle('active');
+      const icon = btn.querySelector('i');
+      icon.className = btn.classList.contains('active') ? 'ri-heart-fill' : 'ri-heart-line';
+      Ptcg.toast(btn.classList.contains('active') ? 'Agregado a favoritos ♥' : 'Eliminado de favoritos');
+    });
+  });
+</script>
+</body>
+</html>

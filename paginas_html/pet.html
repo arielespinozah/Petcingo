@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Perfil Mascota — Petcingo</title>
+  <meta name="theme-color" content="#4552CC">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://prueb2.dashnexpages.net/assets/css/petcingo-index.css">
+
+  <style>
+    body {
+      background: #F8F9FB;
+      min-height: 100vh;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .ptcg-pet-container {
+      padding-top: calc(var(--ptcg-topbar-h, 68px) + 32px);
+      padding-bottom: 100px;
+      max-width: 520px;
+      margin: 0 auto;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+    
+    .pet-lost-banner {
+      display: none;
+      background: linear-gradient(90deg, #990030, #cc0040, #ff3b6b, #cc0040, #990030);
+      background-size: 300% 100%;
+      animation: ptcg-marquee 3s linear infinite, pulseBanner 1.2s ease-in-out infinite;
+      color: #fff;
+      text-align: center;
+      padding: 13px 20px;
+      font-size: .85rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      position: sticky;
+      top: 68px; /* Below topbar */
+      z-index: 100;
+    }
+    @keyframes pulseBanner { 0%,100%{opacity:1} 50%{opacity:.75} }
+
+    /* State Screens */
+    .pet-state {
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .pet-state-title { font-family: 'Sora', sans-serif; font-size: 1.5rem; font-weight: 800; margin-bottom: 8px; color: #212121; }
+    .pet-state-sub { font-size: 0.9rem; color: #757575; max-width: 300px; margin: 0 auto; }
+    
+    .pulse-ring {
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 4px solid rgba(69,82,204,.15); border-top-color: #4552CC;
+      animation: ptcg-spin .9s linear infinite; margin: 0 auto 16px;
+    }
+    @keyframes ptcg-spin { to { transform: rotate(360deg); } }
+
+    /* Hero */
+    .pet-hero {
+      background: linear-gradient(160deg, #4552CC 0%, #2EA8D0 100%);
+      padding: 56px 24px 32px !important;
+      text-align: center;
+      border-radius: 32px 32px 0 0 !important;
+      margin-bottom: 0 !important;
+      color: white;
+      position: relative;
+      box-shadow: 0 16px 40px rgba(69,82,204,0.25);
+      overflow: visible;
+    }
+    .pet-hero.is-lost {
+      background: linear-gradient(160deg, #990030 0%, #cc0040 50%, #ff3b6b 100%) !important;
+      animation: heroEmergency 1.8s ease-in-out infinite;
+    }
+    @keyframes heroEmergency {
+      0%,100% { filter: brightness(1); }
+      50%      { filter: brightness(1.1); }
+    }
+
+    .pet-avatar-wrap {
+      position: relative;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .pet-avatar {
+      width: 148px; height: 148px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid rgba(255,255,255,.98);
+      box-shadow: 0 12px 40px rgba(0,0,0,.28), 0 0 0 3px rgba(255,255,255,.25);
+      display: block;
+    }
+    .pet-avatar-placeholder {
+      width: 148px; height: 148px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.18);
+      border: 5px solid rgba(255,255,255,.5);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 68px;
+    }
+
+    .pet-status-badge {
+      position: absolute; bottom: 4px; right: -10px;
+      display: flex; align-items: center; gap: 4px;
+      padding: 5px 12px; border-radius: 24px;
+      font-size: .72rem; font-weight: 800;
+      letter-spacing: .05em; text-transform: uppercase;
+      border: 2.5px solid #fff; white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+    }
+    .pet-status-badge.activo  { background: #2ECC71; color: #fff; }
+    .pet-status-badge.perdido { background: #E74C3C; color: #fff; animation: blink .8s ease-in-out infinite; }
+    .pet-status-badge.reservada { background: #8878a8; color: #fff; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+    .pet-name {
+      font-family: 'Sora', sans-serif;
+      font-size: 2.2rem; font-weight: 800;
+      margin: 0 0 14px; line-height: 1.15;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+    .pet-chips { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 24px !important; }
+    .pet-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.35);
+      backdrop-filter: blur(8px); border-radius: 24px;
+      padding: 6px 14px; font-size: .85rem; font-weight: 600;
+    }
+
+    @media (max-width: 767px) {
+      .pet-hero { padding: 44px 18px 32px !important; border-radius: 24px 24px 0 0 !important; }
+      .pet-avatar, .pet-avatar-placeholder { width: 124px; height: 124px; }
+      .pet-name { font-size: 1.75rem; }
+    }
+
+    /* Contact Panel */
+    .pet-contact-panel {
+      background: #fff;
+      border-radius: 0 0 24px 24px !important;
+      border: 1px solid rgba(69,82,204,0.08) !important;
+      border-top: none !important;
+      padding: 20px;
+      margin-top: 0 !important;
+      margin-bottom: 12px;
+      box-shadow: 0 6px 20px rgba(69,82,204,0.04) !important;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    #pet-report-form-wrap.active { display: block !important; }
+    .pet-contact-panel .btn {
+      display: flex; align-items: center; justify-content: center; gap: 9px; padding: 14px 16px; border-radius: 12px; font-size: .9rem; font-weight: 700; text-decoration: none; transition: all .18s; border: none; cursor: pointer;
+    }
+    .btn-wa { background: #25D366; color: #fff !important; box-shadow: 0 4px 14px rgba(37,211,102,.3); }
+    .btn-wa:hover { background: #128C7E; transform: translateY(-1px); }
+    .btn-wa2 { background: rgba(37,211,102,.08); color: #128C7E !important; border: 1.5px solid rgba(37,211,102,.25) !important; }
+    .btn-wa2:hover { background: rgba(37,211,102,.15); }
+    .btn-call-pet { background: rgba(69,82,204,.07); color: #4552CC !important; border: 1.5px solid rgba(69,82,204,.18) !important; }
+    .btn-call-pet:hover { background: rgba(69,82,204,.12); }
+
+    /* Accordion */
+    .pet-accordion {
+      background: #fff; border-radius: 24px;
+      border: 1px solid rgba(69,82,204,0.08);
+      margin-bottom: 10px; overflow: hidden;
+      box-shadow: 0 4px 16px rgba(69,82,204,0.04);
+      transition: box-shadow .2s;
+    }
+    .pet-accordion.open { box-shadow: 0 8px 28px rgba(69,82,204,0.09); }
+    .pet-acc-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px; cursor: pointer;
+      user-select: none; transition: background .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pet-acc-header:hover { background: rgba(69,82,204,.025); }
+    .pet-acc-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+    .pet-acc-icon.purple { background: rgba(69,82,204,.1); color: #4552CC; }
+    .pet-acc-icon.cyan   { background: rgba(81,203,245,.12); color: #2EA8D0; }
+    .pet-acc-icon.red    { background: rgba(244,63,94,.1); color: #e74c3c; }
+    .pet-acc-icon.green  { background: rgba(0,200,150,.12); color: #2ecc71; }
+    .pet-acc-icon.orange { background: rgba(255,152,0,.12); color: #f39c12; }
+    .pet-acc-icon.gray   { background: rgba(108,117,125,.1); color: #757575; }
+    .pet-acc-label { flex: 1; font-size: .9rem; font-weight: 700; color: #212121; }
+    .pet-acc-arrow { color: #9E9E9E; transition: transform .3s cubic-bezier(0.4,0,0.2,1); font-size: 1.2rem; flex-shrink: 0; }
+    .pet-accordion.open .pet-acc-arrow { transform: rotate(180deg); }
+    /* Body usa height real calculado por JS para evitar el salto */
+    .pet-acc-body {
+      overflow: hidden;
+      height: 0;
+      transition: height .32s cubic-bezier(0.4,0,0.2,1);
+    }
+    .pet-acc-content { padding: 0 20px 20px; }
+
+    .pet-info-row { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(69,82,204,.05); }
+    .pet-info-row:last-child { border-bottom: none; }
+    .pet-info-icon { color: #9E9E9E; font-size: 1.1rem; margin-top: 2px; flex-shrink: 0; }
+    .pet-info-label { font-size: .67rem; font-weight: 800; color: #757575; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 2px; }
+    .pet-info-value { font-size: .95rem; color: #212121; word-break: break-word; font-weight: 600; line-height: 1.45; }
+    .pet-location-link { display: inline-flex; align-items: center; gap: 5px; color: #4552CC; font-size: .85rem; font-weight: 700; text-decoration: none; }
+
+    /* Support items */
+    .pet-support-item { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid rgba(69,82,204,.05); text-decoration: none; cursor: pointer; }
+    .pet-support-item:last-child { border-bottom: none; }
+    .pet-support-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.15rem; }
+    .pet-support-label { font-size: .9rem; font-weight: 700; color: #212121; }
+    .pet-support-sub { font-size: .75rem; color: #757575; margin-top: 2px; }
+    .pet-support-chevron { color: #BDBDBD; margin-left: auto; flex-shrink: 0; font-size: 1.2rem; }
+
+    /* Report form */
+    #pet-report-msg { width: 100%; padding: 14px; border: 1px solid rgba(69,82,204,.15); border-radius: 16px; font-size: .9rem; font-family: 'Plus Jakarta Sans', sans-serif; color: #212121; background: #FAFAFA; resize: none; height: 100px; box-sizing: border-box; outline: none; transition: border-color .2s; }
+    #pet-report-msg:focus { border-color: #4552CC; background: #fff; }
+    #pet-report-send-btn { width: 100%; margin-top: 10px; padding: 14px; border-radius: 12px; background: #4552CC; color: #fff; font-size: .9rem; font-weight: 700; border: none; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+    /* Footer */
+    .pet-footer { text-align: center; padding: 40px 0 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .pet-footer-logo { height: 36px; object-fit: contain; opacity: 0.8; }
+    .pet-footer-text { font-size: .75rem; color: #757575; }
+    .pet-footer-text a { color: #4552CC; font-weight: 700; text-decoration: none; }
+
+    /* FAB WA */
+    #fab-wa { position: fixed; bottom: 24px; right: 20px; z-index: 80; width: 60px; height: 60px; border-radius: 50%; background: #25D366; display: flex; align-items: center; justify-content: center; font-size: 28px; color: #fff; box-shadow: 0 6px 24px rgba(37,211,102,.4); text-decoration: none; transition: transform .2s; }
+    #fab-wa:hover { transform: scale(1.05); }
+
+    /* Geo modal */
+    #geo-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(8px); padding: 20px; }
+    #geo-modal.active { display: flex; }
+    .geo-card { background: #fff; border-radius: 24px; padding: 32px 24px; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 24px 64px rgba(0,0,0,.2); }
+    .geo-icon { font-size: 3rem; margin-bottom: 12px; }
+    .geo-title { font-family: 'Sora', sans-serif; font-size: 1.25rem; font-weight: 800; color: #212121; margin-bottom: 8px; }
+    .geo-sub { font-size: .9rem; color: #757575; line-height: 1.5; margin-bottom: 24px; }
+    .geo-actions { display: flex; flex-direction: column; gap: 12px; }
+    .geo-btn { padding: 14px; border-radius: 14px; font-size: .95rem; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .geo-btn-yes { background: #4552CC; color: #fff; }
+    .geo-btn-no { background: #EEF1FB; color: #4552CC; }
+
+    #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: #212121; color: #fff; padding: 12px 24px; border-radius: 12px; font-size: .9rem; font-weight: 600; opacity: 0; transition: all .3s; z-index: 10000; pointer-events: none; }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    
+    .ptcg-index__card {
+      position: relative; overflow: hidden; isolation: isolate; border-radius: 24px; border: 1px solid rgba(255,255,255,.95);
+      box-shadow: 0 8px 40px rgba(69,82,204,.1), 0 2px 8px rgba(69,82,204,.04), inset 0 1px 0 rgba(255,255,255,1);
+      padding: 32px 24px; transition: transform .25s ease, box-shadow .25s ease;
+    }
+    .ptcg-index__card::before {
+      content: ''; position: absolute; inset: 0; backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%);
+      background: rgba(255,255,255,.72); z-index: 0;
+    }
+    .ptcg-index__card::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 42%;
+      background: linear-gradient(180deg, rgba(255,255,255,.52) 0%, rgba(255,255,255,0) 100%); z-index: 1; pointer-events: none; border-radius: 24px 24px 0 0;
+    }
+    .ptcg-index__card > * { position: relative; z-index: 2; }
+  </style>
+</head>
+<body>
+
+  <!-- Topbar -->
+  <header class="ptcg-index__topbar" style="position:fixed;top:0;left:0;right:0;height:68px;z-index:300;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(0,0,0,0.05);display:flex;align-items:center;justify-content:space-between;padding:0 24px;">
+    <a href="https://prueb2.dashnexpages.net/home/" style="display:flex;align-items:center;">
+      <img src="https://prueb2.dashnexpages.net/assets/images/logo/PETCINGO_DARK.svg" alt="Petcingo" style="height:40px;">
+    </a>
+    <a href="https://prueb2.dashnexpages.net/home/" class="ptcg-index__btn-account" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;font-weight:700;color:#4552CC;padding:8px 16px;background:rgba(69,82,204,0.08);border-radius:12px;">
+      <i class="ri-home-4-line"></i> Inicio
+    </a>
+  </header>
+
+  <!-- Lost Banner -->
+  <div class="pet-lost-banner" id="pet-lost-banner">
+    🚨 ¡MASCOTA PERDIDA! — Si la encontraste, contacta al dueño de inmediato
+  </div>
+
+  <div class="ptcg-pet-container">
+
+    <!-- Loading -->
+    <div class="pet-state" id="pet-state-loading">
+      <div class="pulse-ring"></div>
+      <div class="pet-state-title">Cargando perfil…</div>
+      <div class="pet-state-sub">Un momento por favor</div>
+    </div>
+
+    <!-- Error -->
+    <div class="pet-state" id="pet-state-error" style="display:none;">
+      <div class="ptcg-index__card">
+        <i class="ri-error-warning-fill" style="font-size:3rem;color:#E74C3C;margin-bottom:12px;display:inline-block;"></i>
+        <div class="pet-state-title">Placa no encontrada</div>
+        <div class="pet-state-sub" style="margin-bottom:24px;">Esta placa no está registrada en Petcingo. Si crees que es un error, verifica el enlace.</div>
+        <a href="index.html" style="display:inline-block;padding:12px 24px;background:#4552CC;color:#fff;border-radius:12px;text-decoration:none;font-weight:700;">Volver al inicio</a>
+      </div>
+    </div>
+
+    <!-- Profile -->
+    <div id="pet-profile" style="display:none;">
+
+      <div class="pet-hero" id="pet-hero">
+        <div class="pet-avatar-wrap">
+          <div id="pet-avatar-container">
+            <div class="pet-avatar-placeholder">🐾</div>
+          </div>
+          <span class="pet-status-badge activo" id="pet-status-badge">
+            <span id="pet-status-text">Activo</span>
+          </span>
+        </div>
+        <div class="pet-name" id="pet-name">—</div>
+        <div class="pet-chips" id="pet-chips"></div>
+      </div>
+
+      <div class="pet-contact-panel" id="pet-contact-panel"></div>
+
+      <div class="pet-accordion open" id="pet-acc-owner" style="display:none">
+        <div class="pet-acc-header" onclick="togglePetAcc('pet-acc-owner')">
+          <div class="pet-acc-icon purple"><i class="ri-user-3-line"></i></div>
+          <span class="pet-acc-label">Información del propietario</span>
+          <i class="ri-arrow-down-s-line pet-acc-arrow"></i>
+        </div>
+        <div class="pet-acc-body">
+          <div class="pet-acc-content" id="pet-acc-owner-content"></div>
+        </div>
+      </div>
+
+      <div class="pet-accordion" id="pet-acc-message" style="display:none">
+        <div class="pet-acc-header" onclick="togglePetAcc('pet-acc-message')">
+          <div class="pet-acc-icon orange"><i class="ri-chat-3-line"></i></div>
+          <span class="pet-acc-label">Mensaje al rescatista</span>
+          <i class="ri-arrow-down-s-line pet-acc-arrow"></i>
+        </div>
+        <div class="pet-acc-body">
+          <div class="pet-acc-content">
+            <div class="pet-info-row">
+              <i class="ri-double-quotes-l pet-info-icon"></i>
+              <div>
+                <div class="pet-info-value" id="pet-acc-message-val" style="font-style:italic;color:#757575;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pet-accordion" id="pet-acc-pet">
+        <div class="pet-acc-header" onclick="togglePetAcc('pet-acc-pet')">
+          <div class="pet-acc-icon cyan"><i class="ri-footprint-line"></i></div>
+          <span class="pet-acc-label">Datos de la mascota</span>
+          <i class="ri-arrow-down-s-line pet-acc-arrow"></i>
+        </div>
+        <div class="pet-acc-body">
+          <div class="pet-acc-content" id="pet-acc-pet-content"></div>
+        </div>
+      </div>
+
+      <div class="pet-accordion" id="pet-acc-medical" style="display:none">
+        <div class="pet-acc-header" onclick="togglePetAcc('pet-acc-medical')">
+          <div class="pet-acc-icon red"><i class="ri-heart-pulse-line"></i></div>
+          <span class="pet-acc-label">Información médica</span>
+          <i class="ri-arrow-down-s-line pet-acc-arrow"></i>
+        </div>
+        <div class="pet-acc-body">
+          <div class="pet-acc-content" id="pet-acc-medical-content"></div>
+        </div>
+      </div>
+
+      <div class="pet-accordion" id="pet-acc-support">
+        <div class="pet-acc-header" onclick="togglePetAcc('pet-acc-support')">
+          <div class="pet-acc-icon gray"><i class="ri-customer-service-2-line"></i></div>
+          <span class="pet-acc-label">Soporte Técnico</span>
+          <i class="ri-arrow-down-s-line pet-acc-arrow"></i>
+        </div>
+        <div class="pet-acc-body">
+          <div class="pet-acc-content">
+            <div style="padding-bottom:12px;">
+              <div class="pet-report-toggle" style="display:flex;align-items:center;gap:12px;margin-bottom:12px;cursor:pointer;" onclick="document.getElementById('pet-report-form-wrap').classList.toggle('active')">
+                <div class="pet-acc-icon red"><i class="ri-flag-line"></i></div>
+                <div>
+                  <div class="pet-support-label">Enviar reporte</div>
+                  <div class="pet-support-sub">¿Problema con la placa?</div>
+                </div>
+                <i class="ri-arrow-down-s-line" style="margin-left:auto;color:#9E9E9E;"></i>
+              </div>
+              <div id="pet-report-form-wrap" style="display:none;">
+                <textarea id="pet-report-msg" maxlength="400" placeholder="Describe el problema..."></textarea>
+                <button id="pet-report-send-btn" onclick="sendPetReport()"><i class="ri-send-plane-line"></i> Enviar reporte</button>
+                <div id="pet-report-sent" style="display:none;text-align:center;padding:12px 0;color:#2ECC71;font-weight:700;font-size:.9rem;">✅ Reporte enviado.</div>
+              </div>
+            </div>
+            
+            <a class="pet-support-item" href="https://prueb2.dashnexpages.net/home/" target="_blank">
+              <div class="pet-support-icon" style="background:rgba(69,82,204,.1);color:#4552CC;"><i class="ri-price-tag-3-line"></i></div>
+              <div><div class="pet-support-label">Adquirir un Pet ID</div><div class="pet-support-sub">Protege a tu mascota</div></div>
+              <i class="ri-arrow-right-s-line pet-support-chevron"></i>
+            </a>
+
+            <a class="pet-support-item" href="https://wa.me/59171040074" target="_blank">
+              <div class="pet-support-icon" style="background:rgba(37,211,102,.1);color:#25D366;"><i class="ri-whatsapp-line"></i></div>
+              <div><div class="pet-support-label">Contacto Petcingo</div><div class="pet-support-sub">+591 71040074</div></div>
+              <i class="ri-arrow-right-s-line pet-support-chevron"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pet-footer">
+        <img src="https://prueb2.dashnexpages.net/assets/images/logo/PETCINGO_DARK.svg" alt="Petcingo" style="height:52px;">
+        <p class="pet-footer-text">Sistema de Identificación <strong>Petcingo</strong></p>
+      </div>
+
+      <div id="pet-manage-btn" style="display:none;text-align:center;margin-bottom:24px;"></div>
+    </div>
+  </div>
+
+  <a id="fab-wa" href="#" target="_blank" style="display:none;"><i class="ri-whatsapp-line"></i></a>
+
+  <div id="geo-modal">
+    <div class="geo-card">
+      <div class="geo-icon">📍</div>
+      <div class="geo-title">¿Compartir ubicación?</div>
+      <div class="geo-sub">¿Deseas compartir tu ubicación para ayudar al dueño a encontrar a su mascota más rápido?</div>
+      <div class="geo-actions">
+        <button class="geo-btn geo-btn-yes" id="geo-yes"><i class="ri-map-pin-line"></i> Sí, compartir</button>
+        <button class="geo-btn geo-btn-no" id="geo-no">No, gracias</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://prueb2.dashnexpages.net/assets/js/petcingo.js?v=20260504"></script>
+  <script>
+    /* ── Accordion con altura real (sin el salto) ── */
+    function togglePetAcc(id) {
+      var acc  = document.getElementById(id);
+      if (!acc) return;
+      var body    = acc.querySelector('.pet-acc-body');
+      var content = acc.querySelector('.pet-acc-content');
+      var isOpen  = acc.classList.contains('open');
+
+      if (isOpen) {
+        /* Cerrar: fijar altura actual → 0 */
+        body.style.height = body.scrollHeight + 'px';
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            body.style.height = '0';
+            acc.classList.remove('open');
+          });
+        });
+      } else {
+        /* Abrir: 0 → altura real del contenido */
+        acc.classList.add('open');
+        body.style.height = content.scrollHeight + 'px';
+        body.addEventListener('transitionend', function onEnd() {
+          body.removeEventListener('transitionend', onEnd);
+          body.style.height = 'auto'; /* permite resize/contenido dinámico */
+        });
+      }
+    }
+
+    /* Inicializar alturas de acordeones ya abiertos */
+    function initAccordions() {
+      document.querySelectorAll('.pet-accordion').forEach(function(acc) {
+        var body    = acc.querySelector('.pet-acc-body');
+        var content = acc.querySelector('.pet-acc-content');
+        if (!body || !content) return;
+        if (acc.classList.contains('open')) {
+          body.style.height = 'auto';
+        } else {
+          body.style.height = '0';
+        }
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+      if (window.initPetPage) window.initPetPage();
+      /* initAccordions se llama después de que initPetPage
+         renderice el contenido y muestre los accordeones */
+      setTimeout(initAccordions, 600);
+    });
+  </script>
+
+  <script>
+    /* ── Inyectar Ciudad/Provincia del propietario cuando el perfil esté listo ── */
+    (function() {
+      var observer = new MutationObserver(function() {
+        var ownerContent = document.getElementById('pet-acc-owner-content');
+        if (!ownerContent || ownerContent.dataset.enhanced) return;
+        if (window.__petData && (window.__petData.ownerCity || window.__petData.ownerProvince)) {
+          var extra = document.createElement('div');
+          extra.className = 'pet-info-row';
+          extra.innerHTML =
+            '<i class="ri-map-pin-line pet-info-icon"></i>' +
+            '<div>' +
+              '<div class="pet-info-label">Ciudad / Provincia</div>' +
+              '<div class="pet-info-value">' +
+                (window.__petData.ownerCity || '—') + ', ' +
+                (window.__petData.ownerProvince || '—') +
+              '</div>' +
+            '</div>';
+          ownerContent.appendChild(extra);
+          ownerContent.dataset.enhanced = '1';
+          observer.disconnect();
+        }
+      });
+      var profile = document.getElementById('pet-profile');
+      if (profile) observer.observe(profile, { subtree: true, childList: true });
+    })();
+  </script>
+</body>
+</html>

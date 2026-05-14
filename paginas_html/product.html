@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ficha de Producto — Petcingo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  <link href="https://assets.petcingo.com/css/petcingo-core.css" rel="stylesheet">
+  <style>
+    /* ============================================================
+       ENCAPSULADO PARA DASHNEX: .ptcg-product es la plantilla maestra
+       de ficha de producto — extiende item.html con secciones de
+       descripción detallada, especificaciones y reseñas.
+       ============================================================ */
+
+    .ptcg-product, .ptcg-product * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      color: #1D1D1F;
+      -webkit-font-smoothing: antialiased;
+    }
+    .ptcg-product a { text-decoration: none; }
+    .ptcg-product img { display: block; max-width: 100%; }
+    .ptcg-product button, .ptcg-product input, .ptcg-product textarea {
+      cursor: pointer; font-family: inherit;
+    }
+
+    .ptcg-product {
+      min-height: 100vh;
+      background-color: #F5F5F7;
+      background-image: radial-gradient(ellipse 60% 40% at 80% 10%, rgba(81,0,192,0.06) 0%, transparent 60%);
+    }
+
+    /* Reutilizamos estilos de item.html — misma estructura superior */
+    .ptcg-product .item-container {
+      max-width: 1200px; margin: 0 auto; padding: 40px 24px;
+    }
+    .ptcg-product .breadcrumb {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.8rem; color: #86868B; margin-bottom: 32px;
+    }
+    .ptcg-product .breadcrumb a { color: #5100C0; }
+    .ptcg-product .item-layout {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start;
+      margin-bottom: 60px;
+    }
+    .ptcg-product .gallery-main {
+      border-radius: 28px; overflow: hidden; margin-bottom: 16px;
+    }
+    .ptcg-product .gallery-main .lg-body {
+      height: 420px; display: flex; align-items: center; justify-content: center;
+      font-size: 8rem;
+      background: linear-gradient(135deg, #EBE3FF 0%, #DDFBFE 100%);
+    }
+    .ptcg-product .gallery-thumbs { display: flex; gap: 10px; }
+    .ptcg-product .gallery-thumb {
+      flex: 1; aspect-ratio: 1; border-radius: 16px; overflow: hidden;
+      cursor: pointer; border: 2px solid transparent;
+      transition: border-color 0.2s ease;
+    }
+    .ptcg-product .gallery-thumb.active { border-color: #5100C0; }
+    .ptcg-product .gallery-thumb .lg-body {
+      height: 100%; display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; background: linear-gradient(135deg, #EBE3FF, #DDFBFE);
+    }
+    .ptcg-product .item-badges { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .ptcg-product .item-badge {
+      padding: 4px 10px; border-radius: 999px;
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+      background-color: #5100C0; color: #FFFFFF;
+    }
+    .ptcg-product .item-badge.cat { background-color: rgba(81,0,192,0.09); color: #5100C0; }
+    .ptcg-product .item-badge.new { background-color: #34C759; }
+    .ptcg-product .item-badge.stock { background-color: rgba(52,199,89,0.12); color: #34C759; }
+    .ptcg-product .item-name {
+      font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800;
+      color: #1D1D1F; letter-spacing: -0.025em; line-height: 1.2; margin-bottom: 12px;
+    }
+    .ptcg-product .item-rating { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+    .ptcg-product .rating-stars { color: #FF9500; font-size: 0.9rem; }
+    .ptcg-product .rating-num { font-size: 0.88rem; font-weight: 600; color: #1D1D1F; }
+    .ptcg-product .rating-count { font-size: 0.82rem; color: #86868B; }
+    .ptcg-product .rating-sep { width: 4px; height: 4px; border-radius: 50%; background-color: #E8E8ED; }
+    .ptcg-product .item-price {
+      font-family: 'Syne', sans-serif; font-size: 2.2rem; font-weight: 800;
+      color: #5100C0; letter-spacing: -0.03em; line-height: 1; display: block;
+    }
+    .ptcg-product .item-price-old { font-size: 1rem; color: #86868B; text-decoration: line-through; margin-left: 8px; }
+    .ptcg-product .item-price-save {
+      display: inline-block; margin-top: 6px; padding: 3px 10px; border-radius: 999px;
+      background-color: rgba(52,199,89,0.1); color: #34C759; font-size: 0.8rem; font-weight: 700;
+    }
+    .ptcg-product .selector-label {
+      font-size: 0.82rem; font-weight: 700; color: #86868B;
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px;
+    }
+    .ptcg-product .selector-options { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .ptcg-product .selector-opt {
+      padding: 8px 16px; border-radius: 10px; font-size: 0.875rem; font-weight: 600;
+      border: 1.5px solid rgba(0,0,0,0.12) !important;
+      background-color: #FFFFFF !important; color: #1D1D1F !important;
+      cursor: pointer; transition: all 0.2s ease;
+    }
+    .ptcg-product .selector-opt:hover { border-color: #5100C0 !important; color: #5100C0 !important; }
+    .ptcg-product .selector-opt.active {
+      border-color: #5100C0 !important;
+      background-color: rgba(81,0,192,0.08) !important; color: #5100C0 !important;
+    }
+    .ptcg-product .qty-row { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+    .ptcg-product .qty-label { font-size: 0.82rem; font-weight: 700; color: #86868B; text-transform: uppercase; letter-spacing: 0.06em; }
+    .ptcg-product .qty-ctrl { display: flex; align-items: center; border: 1.5px solid rgba(0,0,0,0.12); border-radius: 12px; overflow: hidden; }
+    .ptcg-product .qty-btn {
+      width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+      background-color: transparent !important; color: #1D1D1F !important;
+      border: none; font-size: 1.1rem; font-weight: 600;
+      transition: background-color 0.2s ease;
+    }
+    .ptcg-product .qty-btn:hover { background-color: rgba(81,0,192,0.07) !important; color: #5100C0 !important; }
+    .ptcg-product .qty-val {
+      width: 44px; text-align: center; font-size: 1rem; font-weight: 700; color: #1D1D1F;
+      border-left: 1.5px solid rgba(0,0,0,0.08); border-right: 1.5px solid rgba(0,0,0,0.08);
+      background: #FFFFFF; line-height: 40px;
+    }
+    .ptcg-product .item-ctas { display: flex; gap: 12px; margin-bottom: 24px; }
+    .ptcg-product .btn-add-cart {
+      flex: 1; padding: 15px 20px; border-radius: 14px;
+      background-color: #5100C0 !important; color: #FFFFFF !important;
+      font-size: 1rem; font-weight: 700; border: none;
+      box-shadow: 0 4px 20px rgba(81,0,192,0.28);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background-color 0.25s ease, transform 0.2s ease;
+    }
+    .ptcg-product .btn-add-cart:hover { background-color: #320078 !important; color: #FFFFFF !important; transform: translateY(-1px); }
+    .ptcg-product .btn-wishlist {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      background-color: #FFFFFF !important; color: #FF3B30 !important;
+      border: 1.5px solid rgba(0,0,0,0.12) !important; font-size: 1.2rem;
+      transition: all 0.2s ease;
+    }
+    .ptcg-product .btn-wishlist:hover { border-color: #FF3B30 !important; }
+    .ptcg-product .btn-wishlist.active { background-color: rgba(255,59,48,0.08) !important; }
+
+    /* == TABS DE DESCRIPCIÓN == */
+    .ptcg-product .product-tabs {
+      border-top: 1px solid rgba(0,0,0,0.07);
+      margin-bottom: 60px;
+    }
+    .ptcg-product .tabs-nav {
+      display: flex; gap: 0;
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+      margin-bottom: 36px;
+    }
+    .ptcg-product .tab-btn {
+      padding: 16px 24px;
+      font-size: 0.9rem; font-weight: 600; color: #86868B;
+      background: none; border: none; border-bottom: 2px solid transparent;
+      cursor: pointer; white-space: nowrap;
+      transition: color 0.2s ease, border-color 0.2s ease;
+      margin-bottom: -1px;
+    }
+    .ptcg-product .tab-btn:hover { color: #1D1D1F; }
+    .ptcg-product .tab-btn.active { color: #5100C0 !important; border-bottom-color: #5100C0 !important; }
+
+    .ptcg-product .tab-panel { display: none; }
+    .ptcg-product .tab-panel.active { display: block; }
+
+    /* Descripción */
+    .ptcg-product .desc-content {
+      max-width: 720px;
+    }
+    .ptcg-product .desc-content p {
+      font-size: 0.95rem; color: #515154; line-height: 1.8; margin-bottom: 16px;
+    }
+    .ptcg-product .desc-content ul {
+      list-style: none; padding: 0;
+      display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;
+    }
+    .ptcg-product .desc-content ul li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 0.92rem; color: #515154; line-height: 1.6;
+    }
+    .ptcg-product .desc-content ul li::before {
+      content: '✓'; color: #34C759; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+    }
+
+    /* Especificaciones */
+    .ptcg-product .specs-table {
+      width: 100%; max-width: 640px;
+      border-radius: 16px; overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .ptcg-product .specs-row {
+      display: grid; grid-template-columns: 40% 60%;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .ptcg-product .specs-row:last-child { border-bottom: none; }
+    .ptcg-product .specs-key {
+      padding: 12px 16px;
+      font-size: 0.85rem; font-weight: 600; color: #86868B;
+      background-color: rgba(0,0,0,0.02);
+    }
+    .ptcg-product .specs-val {
+      padding: 12px 16px;
+      font-size: 0.85rem; color: #1D1D1F;
+    }
+
+    /* Reseñas */
+    .ptcg-product .reviews-header {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; margin-bottom: 32px;
+    }
+    .ptcg-product .reviews-score {
+      display: flex; align-items: center; gap: 16px;
+    }
+    .ptcg-product .score-big {
+      font-family: 'Syne', sans-serif; font-size: 3rem; font-weight: 800;
+      color: #1D1D1F; line-height: 1;
+    }
+    .ptcg-product .score-detail { font-size: 0.88rem; color: #86868B; }
+    .ptcg-product .reviews-list { display: flex; flex-direction: column; gap: 16px; }
+    .ptcg-product .review-card { border-radius: 18px; }
+    .ptcg-product .review-card .lg-body { padding: 20px; }
+    .ptcg-product .review-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;
+    }
+    .ptcg-product .reviewer-name { font-weight: 700; font-size: 0.9rem; color: #1D1D1F; }
+    .ptcg-product .review-date { font-size: 0.78rem; color: #86868B; }
+    .ptcg-product .review-stars { color: #FF9500; font-size: 0.82rem; margin-bottom: 8px; }
+    .ptcg-product .review-text { font-size: 0.88rem; color: #515154; line-height: 1.65; }
+
+    /* Escribir reseña */
+    .ptcg-product .write-review {
+      border-radius: 20px; margin-top: 24px;
+    }
+    .ptcg-product .write-review .lg-body { padding: 24px; }
+    .ptcg-product .write-review-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: #1D1D1F; margin-bottom: 16px; }
+    .ptcg-product .review-stars-select {
+      display: flex; gap: 4px; margin-bottom: 12px;
+    }
+    .ptcg-product .star-btn {
+      font-size: 1.4rem; background: none; border: none;
+      color: #E8E8ED; cursor: pointer;
+      transition: color 0.15s ease;
+    }
+    .ptcg-product .star-btn.on { color: #FF9500; }
+    .ptcg-product .review-textarea {
+      width: 100%; padding: 12px 14px; border-radius: 12px; min-height: 100px;
+      border: 1.5px solid rgba(0,0,0,0.10) !important;
+      background-color: rgba(255,255,255,0.7) !important; color: #1D1D1F !important;
+      font-size: 0.88rem; line-height: 1.6; resize: vertical; outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .ptcg-product .review-textarea:focus { border-color: #5100C0 !important; }
+    .ptcg-product .review-submit {
+      margin-top: 12px; padding: 11px 22px; border-radius: 12px;
+      background-color: #5100C0 !important; color: #FFFFFF !important;
+      font-size: 0.88rem; font-weight: 700; border: none;
+      box-shadow: 0 3px 12px rgba(81,0,192,0.25);
+      transition: background-color 0.2s ease;
+    }
+    .ptcg-product .review-submit:hover { background-color: #320078 !important; color: #FFFFFF !important; }
+
+    /* Responsive */
+    @media (max-width: 767px) {
+      .ptcg-product .item-layout { grid-template-columns: 1fr; gap: 32px; }
+      .ptcg-product .gallery-main .lg-body { height: 280px; font-size: 5rem; }
+      .ptcg-product .item-name { font-size: 1.4rem; }
+      .ptcg-product .item-price { font-size: 1.8rem; }
+      .ptcg-product .item-container { padding: 24px 16px; }
+      .ptcg-product .tab-btn { padding: 12px 16px; font-size: 0.82rem; }
+      .ptcg-product .reviews-header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<svg style="display:none;position:absolute;width:0;height:0" aria-hidden="true">
+  <defs>
+    <filter id="lg-dist" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.008" numOctaves="2" seed="92" result="noise"/>
+      <feGaussianBlur in="noise" stdDeviation="2" result="blurred"/>
+      <feDisplacementMap in="SourceGraphic" in2="blurred" scale="70" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
+<div class="ptcg-product">
+
+  <!-- NAVBAR -->
+  <nav class="ptcg-navbar">
+    <div class="ptcg-navbar__inner">
+      <a href="index.html" class="ptcg-navbar__logo">🐾 <span>Petcingo</span></a>
+      <div class="ptcg-navbar__links">
+        <a href="catalogo.html"><i class="ri-grid-line"></i> Catálogo</a>
+        <a href="store.html"><i class="ri-store-2-line"></i> Tienda</a>
+        <a href="cart.html" class="ptcg-navbar__cart">
+          <i class="ri-shopping-cart-line"></i> Carrito
+          <span class="ptcg-navbar__cart-badge">0</span>
+        </a>
+        <a href="login.html" class="ptcg-nav-cta"><i class="ri-user-line"></i> Ingresar</a>
+      </div>
+      <button class="ptcg-navbar__hamburger" aria-label="Menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="ptcg-navbar__mobile">
+      <a href="catalogo.html"><i class="ri-grid-line"></i> Catálogo</a>
+      <a href="store.html"><i class="ri-store-2-line"></i> Tienda</a>
+      <a href="cart.html"><i class="ri-shopping-cart-line"></i> Carrito</a>
+      <a href="login.html" class="ptcg-nav-cta-mobile"><i class="ri-user-line"></i> Ingresar</a>
+    </div>
+  </nav>
+
+  <div class="item-container">
+
+    <div class="breadcrumb">
+      <a href="index.html">Inicio</a>
+      <i class="ri-arrow-right-s-line"></i>
+      <a href="catalogo.html">Catálogo</a>
+      <i class="ri-arrow-right-s-line"></i>
+      <span>Collar GPS Pro</span>
+    </div>
+
+    <!-- Sección superior (galería + info) -->
+    <div class="item-layout">
+      <div>
+        <div class="gallery-main lg-card">
+          <div class="lg-base" aria-hidden="true"></div>
+          <div class="lg-body" id="main-img">🦮</div>
+        </div>
+        <div class="gallery-thumbs">
+          <div class="gallery-thumb lg-card active" onclick="selectThumb(this,'🦮')">
+            <div class="lg-base" aria-hidden="true"></div>
+            <div class="lg-body">🦮</div>
+          </div>
+          <div class="gallery-thumb lg-card" onclick="selectThumb(this,'📡')">
+            <div class="lg-base" aria-hidden="true"></div>
+            <div class="lg-body">📡</div>
+          </div>
+          <div class="gallery-thumb lg-card" onclick="selectThumb(this,'📱')">
+            <div class="lg-base" aria-hidden="true"></div>
+            <div class="lg-body">📱</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="item-badges">
+          <span class="item-badge cat">Collares GPS</span>
+          <span class="item-badge new">Nuevo</span>
+          <span class="item-badge stock">✓ En stock (43)</span>
+        </div>
+        <h1 class="item-name">Collar GPS Pro Tracker — Edición Premium</h1>
+        <div class="item-rating">
+          <span class="rating-stars">★★★★★</span>
+          <span class="rating-num">4.9</span>
+          <div class="rating-sep"></div>
+          <span class="rating-count">128 reseñas</span>
+          <div class="rating-sep"></div>
+          <span style="font-size:0.82rem;color:#34C759;font-weight:600">+247 vendidos</span>
+        </div>
+        <div style="margin-bottom:24px">
+          <div>
+            <span class="item-price">Bs. 349</span>
+            <span class="item-price-old">Bs. 420</span>
+          </div>
+          <span class="item-price-save">Ahorras Bs. 71 — 17% OFF</span>
+        </div>
+
+        <div>
+          <div class="selector-label">Talla</div>
+          <div class="selector-options" id="size-opts">
+            <button class="selector-opt active" onclick="sel('size-opts',this)">XS (2–5kg)</button>
+            <button class="selector-opt" onclick="sel('size-opts',this)">S (5–15kg)</button>
+            <button class="selector-opt" onclick="sel('size-opts',this)">M (15–30kg)</button>
+            <button class="selector-opt" onclick="sel('size-opts',this)">L (30+kg)</button>
+          </div>
+        </div>
+        <div>
+          <div class="selector-label">Color</div>
+          <div class="selector-options" id="color-opts">
+            <button class="selector-opt active" onclick="sel('color-opts',this)">Negro</button>
+            <button class="selector-opt" onclick="sel('color-opts',this)">Azul</button>
+            <button class="selector-opt" onclick="sel('color-opts',this)">Rojo</button>
+          </div>
+        </div>
+
+        <div class="qty-row">
+          <span class="qty-label">Cantidad</span>
+          <div class="qty-ctrl">
+            <button class="qty-btn" onclick="changeQty(-1)">−</button>
+            <span class="qty-val" id="qty-val">1</span>
+            <button class="qty-btn" onclick="changeQty(1)">+</button>
+          </div>
+        </div>
+
+        <div class="item-ctas">
+          <button class="btn-add-cart" onclick="addToCart()">
+            <i class="ri-shopping-cart-add-line"></i> Agregar al carrito
+          </button>
+          <button class="btn-wishlist" id="wish-btn" onclick="toggleWish()">
+            <i class="ri-heart-line"></i>
+          </button>
+        </div>
+
+        <div style="display:flex;gap:16px;flex-wrap:wrap">
+          <span style="font-size:0.82rem;color:#515154;display:flex;align-items:center;gap:6px">
+            <i class="ri-truck-line" style="color:#5100C0"></i> Envío en 24h
+          </span>
+          <span style="font-size:0.82rem;color:#515154;display:flex;align-items:center;gap:6px">
+            <i class="ri-refresh-line" style="color:#5100C0"></i> 30 días para devolver
+          </span>
+          <span style="font-size:0.82rem;color:#515154;display:flex;align-items:center;gap:6px">
+            <i class="ri-shield-check-line" style="color:#5100C0"></i> 1 año de garantía
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="product-tabs">
+      <div class="tabs-nav" role="tablist">
+        <button class="tab-btn active" role="tab" onclick="openTab('desc',this)">Descripción</button>
+        <button class="tab-btn" role="tab" onclick="openTab('specs',this)">Especificaciones</button>
+        <button class="tab-btn" role="tab" onclick="openTab('reviews',this)">Reseñas (128)</button>
+      </div>
+
+      <!-- Descripción -->
+      <div id="tab-desc" class="tab-panel active" role="tabpanel">
+        <div class="desc-content">
+          <p>
+            El <strong>Collar GPS Pro Tracker</strong> es la solución definitiva para la seguridad de tu mascota. Combinando tecnología GPS de alta precisión, conectividad LTE y WiFi, te permite localizar a tu perro en tiempo real desde cualquier lugar del mundo.
+          </p>
+          <p>Principales características:</p>
+          <ul>
+            <li>Localización GPS en tiempo real con precisión de 3 metros</li>
+            <li>Conectividad triple: GPS + WiFi + LTE para máxima cobertura</li>
+            <li>Batería de 7 días con uso normal (15 días en modo ahorro)</li>
+            <li>Resistente al agua IP67 — ideal para aventuras al aire libre</li>
+            <li>Geovallas configurables con alertas instantáneas</li>
+            <li>Historial de rutas de los últimos 30 días</li>
+            <li>App gratuita para iOS y Android incluida</li>
+            <li>Sensor de temperatura corporal integrado</li>
+          </ul>
+          <p>
+            Compatible con la plataforma Petcingo: activa tu placa GPS y centraliza toda la información de salud de tu mascota en un solo lugar.
+          </p>
+        </div>
+      </div>
+
+      <!-- Especificaciones -->
+      <div id="tab-specs" class="tab-panel" role="tabpanel">
+        <div class="specs-table">
+          <div class="specs-row"><div class="specs-key">Tecnología</div><div class="specs-val">GPS + LTE + WiFi + Bluetooth</div></div>
+          <div class="specs-row"><div class="specs-key">Precisión GPS</div><div class="specs-val">±3 metros</div></div>
+          <div class="specs-row"><div class="specs-key">Batería</div><div class="specs-val">1500 mAh — 7 días de autonomía</div></div>
+          <div class="specs-row"><div class="specs-key">Resistencia al agua</div><div class="specs-val">IP67 (1m durante 30 min)</div></div>
+          <div class="specs-row"><div class="specs-key">Peso</div><div class="specs-val">45g (XS) — 65g (L)</div></div>
+          <div class="specs-row"><div class="specs-key">Material</div><div class="specs-val">Nylon reforzado + ABS premium</div></div>
+          <div class="specs-row"><div class="specs-key">Compatibilidad</div><div class="specs-val">iOS 13+ · Android 8+</div></div>
+          <div class="specs-row"><div class="specs-key">Carga</div><div class="specs-val">USB-C — 2 horas carga completa</div></div>
+          <div class="specs-row"><div class="specs-key">Garantía</div><div class="specs-val">12 meses (fabricante)</div></div>
+          <div class="specs-row"><div class="specs-key">Historial</div><div class="specs-val">30 días de rutas</div></div>
+        </div>
+      </div>
+
+      <!-- Reseñas -->
+      <div id="tab-reviews" class="tab-panel" role="tabpanel">
+        <div class="reviews-header">
+          <div class="reviews-score">
+            <span class="score-big">4.9</span>
+            <div>
+              <div style="color:#FF9500;font-size:1.1rem">★★★★★</div>
+              <div class="score-detail">128 reseñas verificadas</div>
+            </div>
+          </div>
+          <div style="font-size:0.85rem;color:#86868B">
+            Filtrar: <a href="#" style="color:#5100C0;font-weight:600">Todas ▾</a>
+          </div>
+        </div>
+
+        <div class="reviews-list">
+          <div class="review-card lg-card">
+            <div class="lg-base" aria-hidden="true"></div>
+            <div class="lg-body">
+              <div class="review-header">
+                <span class="reviewer-name">María G.</span>
+                <span class="review-date">15 ene 2025</span>
+              </div>
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">Excelente producto. Mi perro se escapó dos veces y con el collar lo encontré en minutos. La app es muy intuitiva y la geovalla funciona perfectamente. Super recomendado.</p>
+            </div>
+          </div>
+          <div class="review-card lg-card">
+            <div class="lg-base" aria-hidden="true"></div>
+            <div class="lg-body">
+              <div class="review-header">
+                <span class="reviewer-name">Carlos P.</span>
+                <span class="review-date">28 dic 2024</span>
+              </div>
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">La batería realmente dura 7 días como dicen. La calidad del material es excelente, mi Golden lo usa todo el día y aguanta perfectamente el agua y el barro.</p>
+            </div>
+          </div>
+          <div class="review-card lg-card">
+            <div class="lg-base" aria-hidden="true"></div>
+            <div class="lg-body">
+              <div class="review-header">
+                <span class="reviewer-name">Ana R.</span>
+                <span class="review-date">10 dic 2024</span>
+              </div>
+              <div class="review-stars">★★★★☆</div>
+              <p class="review-text">Muy buen collar, la geolocalización es rápida. Le quito una estrella porque el proceso de activación inicial fue un poco confuso. Pero el soporte de Petcingo me ayudó enseguida.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Escribir reseña -->
+        <div class="write-review lg-card">
+          <div class="lg-base" aria-hidden="true"></div>
+          <div class="lg-body">
+            <div class="write-review-title">Escribe tu reseña</div>
+            <div class="review-stars-select" id="star-select">
+              <button class="star-btn" onclick="setStars(1)">★</button>
+              <button class="star-btn" onclick="setStars(2)">★</button>
+              <button class="star-btn" onclick="setStars(3)">★</button>
+              <button class="star-btn" onclick="setStars(4)">★</button>
+              <button class="star-btn" onclick="setStars(5)">★</button>
+            </div>
+            <textarea class="review-textarea" placeholder="¿Qué te pareció el producto?" id="review-text"></textarea>
+            <button class="review-submit" onclick="submitReview()">
+              <i class="ri-send-plane-line"></i> Enviar reseña
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /.item-container -->
+
+  <!-- FOOTER -->
+  <footer class="ptcg-footer">
+    <div class="ptcg-footer__inner">
+      <div class="ptcg-footer__grid">
+        <div>
+          <div class="ptcg-footer__logo">🐾 Petcingo</div>
+          <p class="ptcg-footer__desc">La plataforma de mascotas más completa de Bolivia.</p>
+        </div>
+        <div>
+          <div class="ptcg-footer__col-title">Tienda</div>
+          <ul class="ptcg-footer__col-links">
+            <li><a href="catalogo.html">Catálogo</a></li>
+            <li><a href="store.html">Tienda</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="ptcg-footer__col-title">Cuenta</div>
+          <ul class="ptcg-footer__col-links">
+            <li><a href="login.html">Ingresar</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="ptcg-footer__col-title">Legal</div>
+          <ul class="ptcg-footer__col-links">
+            <li><a href="#">Privacidad</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="ptcg-footer__bottom"><span>© 2025 Petcingo · Bolivia</span></div>
+    </div>
+  </footer>
+
+</div><!-- /.ptcg-product -->
+
+<div id="ptcg-toast-wrap" aria-live="polite"></div>
+
+<script src="https://assets.petcingo.com/js/petcingo-core.js"></script>
+<script>
+  let qty = 1;
+  let selectedStars = 0;
+
+  function changeQty(d) {
+    qty = Math.max(1, Math.min(10, qty + d));
+    document.getElementById('qty-val').textContent = qty;
+  }
+
+  function sel(groupId, btn) {
+    document.querySelectorAll('#' + groupId + ' .selector-opt').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function selectThumb(thumb, emoji) {
+    document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
+    thumb.classList.add('active');
+    document.getElementById('main-img').textContent = emoji;
+  }
+
+  function addToCart() {
+    const size = document.querySelector('#size-opts .selector-opt.active')?.textContent || '';
+    const color = document.querySelector('#color-opts .selector-opt.active')?.textContent || '';
+    const variant = [size, color].filter(Boolean).join(' · ');
+    for (let i = 0; i < qty; i++) {
+      Ptcg.Cart.add({ id: 'gps-001', name: 'Collar GPS Pro Tracker', price: 349, variant });
+    }
+  }
+
+  function toggleWish() {
+    const btn = document.getElementById('wish-btn');
+    btn.classList.toggle('active');
+    btn.querySelector('i').className = btn.classList.contains('active') ? 'ri-heart-fill' : 'ri-heart-line';
+    Ptcg.toast(btn.classList.contains('active') ? 'Agregado a favoritos ♥' : 'Eliminado de favoritos');
+  }
+
+  function openTab(id, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function setStars(n) {
+    selectedStars = n;
+    document.querySelectorAll('.star-btn').forEach((b, i) => {
+      b.classList.toggle('on', i < n);
+    });
+  }
+
+  function submitReview() {
+    const text = document.getElementById('review-text').value.trim();
+    if (!selectedStars) { Ptcg.toast('Selecciona una puntuación', 'error'); return; }
+    if (!text) { Ptcg.toast('Escribe tu reseña', 'error'); return; }
+    Ptcg.toast('Reseña enviada. ¡Gracias! ✓', 'success');
+    document.getElementById('review-text').value = '';
+    setStars(0);
+  }
+</script>
+</body>
+</html>

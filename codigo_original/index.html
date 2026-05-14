@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Petcingo – La Placa Inteligente que Protege a tu Mascota</title>
+  <meta name="description" content="NFC + QR que conecta a quien encuentre a tu mascota contigo en segundos. Con cada compra apoyas a un refugio en Bolivia."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet"/>
+<style>
+/* ══ PETCINGO — index.html — self-contained styles ══ */
+:root{
+  --p:#5100c0;--s:#5151fc;--a:#00e1f3;--g:#10b981;
+  --ink:#0d0b12;--cream:#fdfaf4;--warm:#f5f0e8;--muted:#6b7280;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+.lc{max-width:1120px;margin:0 auto;padding:0 clamp(16px,4vw,32px)}
+.h-serif{font-family:'Fraunces',serif;font-weight:900;letter-spacing:-.03em;line-height:1.08;color:var(--ink)}
+.fade-up{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.fade-up.vis{opacity:1;transform:none}
+/* ── Navbar ── */
+.lnav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;height:66px;padding:0 clamp(16px,4vw,48px);background:rgba(253,250,244,.92);backdrop-filter:blur(22px);border-bottom:1px solid rgba(0,0,0,.07);transition:box-shadow .3s}
+.lnav.scrolled{box-shadow:0 4px 28px rgba(0,0,0,.09)}
+.lnav-logo{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:900;font-size:1.25rem;letter-spacing:-.02em;color:var(--ink)}
+.lnav-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--p),var(--s));display:flex;align-items:center;justify-content:center;font-size:18px}
+.lnav-links{display:flex;align-items:center;gap:28px;margin:0 auto;list-style:none}
+.lnav-links a{font-size:.88rem;font-weight:500;color:var(--muted);transition:color .18s}
+.lnav-links a:hover{color:var(--ink)}
+.lnav-right{display:flex;align-items:center;gap:10px}
+.lnav-admin{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:9px;border:1.5px solid rgba(0,0,0,.12);font-size:.82rem;font-weight:600;color:var(--muted);transition:all .18s}
+.lnav-admin:hover{border-color:var(--p);color:var(--p)}
+.lnav-buy{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:10px;background:var(--ink);color:#fff;font-size:.88rem;font-weight:700;transition:all .18s}
+.lnav-buy:hover{background:var(--p)}
+.lnav-ham{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;margin-left:auto}
+.lnav-ham span{width:22px;height:2px;background:var(--ink);border-radius:2px}
+.lnav-mobile{display:none;flex-direction:column;border-top:1px solid rgba(0,0,0,.07);background:rgba(253,250,244,.98)}
+.lnav-mobile.open{display:flex}
+.lnav-mobile a{padding:14px 24px;font-size:.95rem;font-weight:500;border-bottom:1px solid rgba(0,0,0,.05);color:var(--ink)}
+/* ── Hero ── */
+.lhero{min-height:100vh;display:flex;align-items:center;background:var(--ink);position:relative;overflow:hidden;padding:100px 0 60px}
+.lhero-bg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 80% at 75% 50%,rgba(81,0,192,.38),transparent 65%),radial-gradient(ellipse 40% 40% at 15% 85%,rgba(0,225,243,.12),transparent 55%)}
+.lhero-grain{position:absolute;inset:0;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px}
+.lhero-inner{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;position:relative;z-index:1}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:6px 14px;font-size:.75rem;font-weight:600;color:rgba(255,255,255,.7);letter-spacing:.06em;text-transform:uppercase;margin-bottom:22px}
+.eyebrow-dot{width:7px;height:7px;border-radius:50%;background:var(--a);animation:pd 2s ease-in-out infinite}
+@keyframes pd{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}}
+.lhero h1{font-family:'Fraunces',serif;font-size:clamp(3rem,6vw,5.2rem);font-weight:900;line-height:1.0;letter-spacing:-.04em;color:#fff;margin-bottom:22px}
+.lhero h1 em{font-style:italic;color:var(--a)}
+.lhero-sub{font-size:1.05rem;color:rgba(255,255,255,.65);line-height:1.75;max-width:440px;margin-bottom:34px}
+.lhero-actions{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:38px}
+.btn-ha{display:inline-flex;align-items:center;gap:9px;padding:15px 28px;border-radius:14px;background:var(--a);color:var(--ink);font-family:'Fraunces',serif;font-size:1rem;font-weight:700;transition:all .2s}
+.btn-ha:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(0,225,243,.4)}
+.btn-hb{display:inline-flex;align-items:center;gap:8px;padding:14px 26px;border-radius:14px;border:1.5px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);font-size:.95rem;font-weight:600;transition:all .2s}
+.btn-hb:hover{border-color:rgba(255,255,255,.5);color:#fff}
+.hero-stats{display:flex;gap:28px;flex-wrap:wrap}
+.hstat{border-left:2px solid rgba(255,255,255,.12);padding-left:14px}
+.hstat-n{font-family:'Fraunces',serif;font-size:1.5rem;font-weight:900;color:#fff;letter-spacing:-.03em}
+.hstat-l{font-size:.7rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+/* Phone mockup */
+.hero-phone{width:238px;height:440px;border-radius:40px;background:linear-gradient(160deg,#1e1233,#0d0b12);border:1px solid rgba(255,255,255,.12);box-shadow:0 40px 100px rgba(0,0,0,.6);display:flex;flex-direction:column;align-items:center;padding:38px 18px 26px;position:relative;overflow:hidden;margin:0 auto}
+.hero-phone::before{content:'';position:absolute;top:14px;width:70px;height:4px;border-radius:2px;background:rgba(255,255,255,.15)}
+.hp-av{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,rgba(81,0,192,.5),rgba(0,225,243,.3));border:3px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:10px}
+.hp-name{font-family:'Fraunces',serif;font-size:1.1rem;font-weight:900;color:#fff;margin-bottom:3px}
+.hp-st{font-size:.65rem;color:var(--a);text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px}
+.hp-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;border-radius:12px;font-weight:700;font-size:.82rem;margin-bottom:8px}
+.hp-wa{background:#25D366;color:#fff}
+.hp-call{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.hp-geo{background:rgba(0,225,243,.08);border:1px solid rgba(0,225,243,.18);border-radius:9px;padding:8px 11px;display:flex;align-items:center;gap:7px;width:100%}
+.hp-geo-txt{font-size:.66rem;color:var(--a);font-weight:600}
+.fc{position:absolute;background:#fff;border-radius:13px;padding:10px 13px;box-shadow:0 8px 28px rgba(0,0,0,.25);animation:flt 3.2s ease-in-out infinite;display:flex;align-items:center;gap:9px}
+@keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.fc.a{top:42px;right:-24px}.fc.b{bottom:64px;left:-24px;animation-delay:1.6s}
+.fc-lbl{font-size:.7rem;font-weight:700;color:var(--ink)}.fc-sub{font-size:.6rem;color:var(--muted)}
+/* ── Sections ── */
+.emo{padding:100px 0;background:var(--cream)}
+.emo-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.emo-quote{border-left:3px solid var(--a);padding:14px 18px;background:rgba(0,225,243,.04);border-radius:0 12px 12px 0;font-style:italic;font-size:.95rem;line-height:1.75;margin-bottom:24px;color:var(--ink)}
+.tl{display:flex;flex-direction:column}
+.tl-row{display:flex;gap:18px;padding:18px 0;border-bottom:1px solid rgba(0,0,0,.06)}
+.tl-row:last-child{border-bottom:none}
+.tl-n{width:38px;height:38px;border-radius:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:.95rem;font-weight:900;color:#fff;background:linear-gradient(135deg,var(--p),var(--s))}
+.tl-title{font-family:'Fraunces',serif;font-weight:700;font-size:.93rem;margin-bottom:4px;color:var(--ink)}
+.tl-desc{font-size:.82rem;color:var(--muted);line-height:1.6}
+.sh-sec{padding:100px 0;background:var(--ink);position:relative;overflow:hidden}
+.sh-bg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 50% 60% at 80% 50%,rgba(0,225,243,.08),transparent 60%)}
+.sh-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;z-index:1}
+.sh-title{font-family:'Fraunces',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;line-height:1.1;letter-spacing:-.03em;color:#fff;margin-bottom:18px}
+.sh-title em{font-style:italic;color:var(--a)}
+.sh-body{font-size:1rem;color:rgba(255,255,255,.55);line-height:1.8;margin-bottom:26px}
+.sh-cards{display:flex;flex-direction:column;gap:12px}
+.shc{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:16px 18px;display:flex;align-items:flex-start;gap:12px;transition:all .2s}
+.shc:hover{background:rgba(255,255,255,.09);transform:translateX(4px)}
+.shc-icon{width:42px;height:42px;border-radius:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:19px}
+.shc-title{font-weight:700;font-size:.87rem;color:#fff;margin-bottom:3px}
+.shc-desc{font-size:.79rem;color:rgba(255,255,255,.45);line-height:1.55}
+.sh-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.btn-sha{display:inline-flex;align-items:center;gap:7px;padding:11px 20px;border-radius:12px;font-weight:700;font-size:.88rem;background:var(--a);color:var(--ink);transition:all .2s}
+.btn-sha:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,225,243,.35)}
+.btn-shb{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.75);font-size:.88rem;font-weight:600;transition:all .2s}
+.btn-shb:hover{background:rgba(255,255,255,.12);color:#fff}
+.sh-vis{display:flex;flex-direction:column;gap:13px}
+.sv{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:18px}
+.sv-top{display:flex;align-items:center;gap:11px;margin-bottom:11px}
+.sv-av{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(81,0,192,.4),rgba(0,225,243,.25));display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.sv-name{font-family:'Fraunces',serif;font-weight:700;color:#fff;font-size:.9rem}
+.sv-city{font-size:.68rem;color:rgba(255,255,255,.35)}
+.sv-chips{display:flex;gap:7px;flex-wrap:wrap}
+.sv-chip{background:rgba(0,225,243,.08);border:1px solid rgba(0,225,243,.14);border-radius:20px;padding:3px 9px;font-size:.67rem;color:var(--a);font-weight:600}
+.sv-stats{display:flex;gap:16px;margin-top:11px;padding-top:11px;border-top:1px solid rgba(255,255,255,.06)}
+.sv-sn{font-family:'Fraunces',serif;font-size:1.15rem;font-weight:900;color:#fff}
+.sv-sl{font-size:.62rem;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.05em}
+.vet-sec{padding:100px 0;background:var(--warm)}
+.vet-inner{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+.vb-list{display:flex;flex-direction:column;gap:12px;margin-bottom:26px}
+.vb{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:#fff;border-radius:13px;border:1px solid rgba(0,0,0,.06)}
+.vb-ic{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--p),var(--s));display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;flex-shrink:0}
+.vb-txt{font-size:.83rem;color:var(--ink);line-height:1.55}
+.vb-txt strong{display:block;font-weight:700;margin-bottom:2px;color:var(--ink)}
+.vet-vis{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.vv{border-radius:17px;padding:22px;text-align:center}
+.vv.a{background:linear-gradient(135deg,var(--p),var(--s));color:#fff}
+.vv.b{background:var(--ink);color:#fff}
+.vv.c{background:linear-gradient(135deg,#10b981,#0d9488);color:#fff}
+.vv.d{background:rgba(0,0,0,.05);border:1px solid rgba(0,0,0,.08);color:var(--ink)}
+.vv-big{font-family:'Fraunces',serif;font-size:2rem;font-weight:900;margin-bottom:5px}
+.vv-lbl{font-size:.72rem;font-weight:600;opacity:.7;text-transform:uppercase;letter-spacing:.05em}
+.how{padding:100px 0;background:var(--cream)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:52px;position:relative}
+.steps::before{content:'';position:absolute;top:28px;left:18%;right:18%;height:1px;background:linear-gradient(90deg,transparent,var(--p),transparent);opacity:.2}
+.step{background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:20px;padding:28px 22px;text-align:center;transition:all .2s}
+.step:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.08)}
+.step-n{width:52px;height:52px;border-radius:15px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:1.3rem;font-weight:900;color:#fff;background:linear-gradient(135deg,var(--p),var(--s));box-shadow:0 6px 20px rgba(81,0,192,.35)}
+.step-i{font-size:28px;margin-bottom:11px}
+.step-t{font-family:'Fraunces',serif;font-weight:700;font-size:.97rem;margin-bottom:7px;color:var(--ink)}
+.step-d{font-size:.82rem;color:var(--muted);line-height:1.65}
+.shop{padding:100px 0;background:var(--ink);position:relative;overflow:hidden}
+.shop-bg2{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 50% 70% at 50% 100%,rgba(81,0,192,.22),transparent 60%)}
+.shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;position:relative;z-index:1}
+.pc{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:20px;overflow:hidden;transition:all .2s}
+.pc:hover{background:rgba(255,255,255,.08);transform:translateY(-4px)}
+.pc.f{border-color:rgba(0,225,243,.3)}
+.pc-img{height:155px;display:flex;align-items:center;justify-content:center;font-size:58px;background:rgba(255,255,255,.04);position:relative}
+.pc-badge{position:absolute;top:11px;left:11px;background:var(--a);color:var(--ink);font-size:.63rem;font-weight:800;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.04em}
+.pc-body{padding:17px}
+.pc-name{font-family:'Fraunces',serif;font-weight:700;color:#fff;font-size:.97rem;margin-bottom:5px}
+.pc-desc{font-size:.78rem;color:rgba(255,255,255,.4);line-height:1.55;margin-bottom:11px}
+.pc-price{font-family:'Fraunces',serif;font-size:1.35rem;font-weight:900;color:var(--a);margin-bottom:12px}
+.pc-price span{font-size:.75rem;font-weight:400;color:rgba(255,255,255,.28);font-family:'DM Sans',sans-serif}
+.btn-wag{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;border-radius:12px;background:#25D366;color:#fff;font-weight:700;font-size:.88rem;border:none;cursor:pointer;transition:all .18s}
+.btn-wag:hover{background:#1fba58;transform:translateY(-1px)}
+.plans{padding:100px 0;background:var(--warm)}
+.plans-g{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:780px;margin:52px auto 0}
+.plan{background:#fff;border:2px solid rgba(0,0,0,.07);border-radius:24px;padding:34px 28px;position:relative;transition:all .2s}
+.plan.f{border-color:var(--p);box-shadow:0 20px 60px rgba(81,0,192,.13)}
+.plan-pill{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--p),var(--s));color:#fff;font-size:.7rem;font-weight:800;padding:4px 15px;border-radius:20px;white-space:nowrap;letter-spacing:.04em}
+.plan-icon{font-size:32px;margin-bottom:13px}
+.plan-name{font-family:'Fraunces',serif;font-weight:900;font-size:1.05rem;margin-bottom:5px;color:var(--ink)}
+.plan-sub{font-size:.82rem;color:var(--muted);margin-bottom:20px;line-height:1.55}
+.plan-price{font-family:'Fraunces',serif;font-size:2.5rem;font-weight:900;letter-spacing:-.04em;color:var(--p);margin-bottom:4px}
+.plan-note{font-size:.76rem;color:var(--muted);margin-bottom:24px}
+.plan-feats{list-style:none;margin-bottom:24px}
+.plan-feats li{display:flex;align-items:flex-start;gap:7px;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.05);font-size:.85rem;color:var(--ink)}
+.plan-feats li:last-child{border-bottom:none}
+.plan-feats li i{color:#10b981;margin-top:2px;flex-shrink:0}
+.btn-plan{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:12px;border-radius:13px;font-family:'Fraunces',serif;font-weight:700;font-size:.9rem;border:none;cursor:pointer;transition:all .2s}
+.bpp{background:linear-gradient(135deg,var(--p),var(--s));color:#fff;box-shadow:0 6px 20px rgba(81,0,192,.3)}
+.bpp:hover{transform:translateY(-2px)}
+.bpg{background:transparent;color:var(--p);border:2px solid rgba(81,0,192,.15)}
+.bpg:hover{border-color:var(--p);background:rgba(81,0,192,.03)}
+.testi{padding:100px 0;background:var(--cream)}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:52px}
+.tc{background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:18px;padding:22px}
+.tc-stars{color:#f59e0b;font-size:.88rem;margin-bottom:9px}
+.tc-txt{font-size:.86rem;color:var(--ink);line-height:1.72;margin-bottom:14px;font-style:italic}
+.tc-auth{display:flex;align-items:center;gap:9px}
+.tc-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--a));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-family:'Fraunces',serif;font-size:.9rem}
+.tc-name{font-size:.8rem;font-weight:700;color:var(--ink)}
+.tc-loc{font-size:.7rem;color:var(--muted)}
+.dir{padding:100px 0;background:var(--warm)}
+.city-tabs{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:0 0 36px}
+.ctab{padding:7px 18px;border-radius:20px;border:1.5px solid rgba(0,0,0,.12);font-size:.83rem;font-weight:600;color:var(--muted);cursor:pointer;background:#fff;transition:all .18s}
+.ctab.on,.ctab:hover{border-color:var(--p);color:var(--p);background:rgba(81,0,192,.04)}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:20px}
+.dcard{background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:18px;overflow:hidden;transition:all .2s}
+.dcard:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,0,0,.09)}
+.dcard-img{height:130px;display:flex;align-items:center;justify-content:center;font-size:48px;position:relative}
+.dcbadge{position:absolute;top:10px;right:10px;background:var(--p);color:#fff;font-size:.62rem;font-weight:700;padding:3px 9px;border-radius:20px}
+.dcard-body{padding:16px}
+.dcard-name{font-family:'Fraunces',serif;font-weight:700;font-size:.97rem;margin-bottom:4px;color:var(--ink)}
+.dcard-desc{font-size:.78rem;color:var(--muted);line-height:1.55;margin-bottom:11px}
+.dc-chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:11px}
+.dc-chip{background:rgba(81,0,192,.07);border-radius:20px;padding:3px 9px;font-size:.68rem;color:var(--p);font-weight:600}
+.btn-dir{display:inline-flex;align-items:center;gap:6px;padding:8px 15px;border-radius:10px;background:var(--ink);color:#fff;font-size:.8rem;font-weight:700;transition:all .18s}
+.btn-dir:hover{background:var(--p)}
+.lp-cta{padding:100px 0;background:var(--ink);position:relative;overflow:hidden}
+.lp-cta-bg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(81,0,192,.28),transparent 60%)}
+.lp-cta-inner{text-align:center;position:relative;z-index:1}
+.lp-cta-inner h2{font-family:'Fraunces',serif;font-size:clamp(2.2rem,5vw,4rem);font-weight:900;color:#fff;letter-spacing:-.04em;margin-bottom:16px;line-height:1.05}
+.lp-cta-inner h2 em{font-style:italic;color:var(--a)}
+.lp-cta-inner p{font-size:1rem;color:rgba(255,255,255,.5);margin-bottom:34px;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.7}
+.cta-acts{display:flex;gap:13px;justify-content:center;flex-wrap:wrap;margin-bottom:44px}
+.btn-ca{display:inline-flex;align-items:center;gap:8px;padding:14px 26px;border-radius:14px;background:var(--a);color:var(--ink);font-family:'Fraunces',serif;font-size:1rem;font-weight:700;transition:all .2s}
+.btn-ca:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(0,225,243,.35)}
+.btn-cb{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:14px;border:1.5px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);font-size:.93rem;font-weight:600;transition:all .2s}
+.btn-cb:hover{border-color:rgba(255,255,255,.5);color:#fff}
+.cta-contact{display:flex;gap:22px;justify-content:center;flex-wrap:wrap}
+.cc{display:flex;align-items:center;gap:9px;color:rgba(255,255,255,.4);font-size:.83rem}
+.cc i{color:var(--a);font-size:15px}
+.cc a{color:rgba(255,255,255,.55);transition:color .18s}
+.cc a:hover{color:#fff}
+.lfooter{background:#080611;padding:50px 0 26px;color:rgba(255,255,255,.35)}
+.lfooter-inner{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:36px}
+.fb{font-family:'Fraunces',serif;font-weight:900;font-size:1.1rem;color:#fff;display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.fb-m{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--p),var(--s));display:flex;align-items:center;justify-content:center;font-size:15px}
+.fdesc{font-size:.8rem;line-height:1.7;max-width:220px;color:rgba(255,255,255,.35)}
+.fcol h5{font-size:.7rem;font-weight:700;color:rgba(255,255,255,.28);text-transform:uppercase;letter-spacing:.08em;margin-bottom:13px}
+.fcol ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.fcol ul li a{font-size:.81rem;color:rgba(255,255,255,.35);transition:color .15s}
+.fcol ul li a:hover{color:#fff}
+.fbot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,.07);padding-top:20px;font-size:.72rem;flex-wrap:wrap;gap:10px;color:rgba(255,255,255,.25)}
+/* ── Responsive ── */
+@media(max-width:960px){
+  .lhero-inner,.emo-inner,.sh-inner,.vet-inner{grid-template-columns:1fr}
+  .hero-phone-wrap,.vet-vis,.sh-vis{display:none}
+  .tgrid,.shop-grid{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:1fr}.steps::before{display:none}
+  .plans-g{grid-template-columns:1fr;max-width:420px}
+  .lfooter-inner{grid-template-columns:1fr 1fr;gap:28px}
+}
+@media(max-width:640px){
+  .lnav-links,.lnav-admin{display:none}.lnav-ham{display:flex}
+  .tgrid,.shop-grid,.dgrid{grid-template-columns:1fr}
+  .lfooter-inner{grid-template-columns:1fr}
+  .fbot{flex-direction:column;text-align:center}
+  .cta-contact{flex-direction:column;align-items:center;gap:10px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="lnav" id="lnav">
+  <div class="lnav-logo"><div class="lnav-mark">🐾</div><span>Petcingo</span></div>
+  <ul class="lnav-links">
+    <li><a href="#como-funciona">Cómo funciona</a></li>
+    <li><a href="#refugios">Refugios</a></li>
+    <li><a href="#veterinarias">Veterinarias</a></li>
+    <li><a href="#tienda">Tienda</a></li>
+    <li><a href="#directorio">Adopciones</a></li>
+  </ul>
+  <div class="lnav-right">
+    <a href="https://prueb2.dashnexpages.net/panel-control/" class="lnav-admin"><i class="ri-shield-check-line"></i> Admin</a>
+    <a href="#tienda" class="lnav-buy"><i class="ri-shopping-bag-3-line"></i> Comprar</a>
+  </div>
+  <div class="lnav-ham" onclick="toggleNav()"><span></span><span></span><span></span></div>
+</nav>
+<div class="lnav-mobile" id="lnav-mobile">
+  <a href="#como-funciona" onclick="toggleNav()">Cómo funciona</a>
+  <a href="#refugios" onclick="toggleNav()">Refugios</a>
+  <a href="#veterinarias" onclick="toggleNav()">Veterinarias</a>
+  <a href="#tienda" onclick="toggleNav()">Tienda</a>
+  <a href="#directorio" onclick="toggleNav()">Adopciones</a>
+  <a href="https://prueb2.dashnexpages.net/panel-control/" style="color:var(--primary);font-weight:700"><i class="ri-shield-check-line"></i> Panel Admin</a>
+</div>
+
+<!-- HERO -->
+<section class="lhero" id="inicio">
+  <div class="lhero-bg"></div>
+  <div class="lhero-grain"></div>
+  <div class="lc lhero-inner">
+    <div>
+      <div class="eyebrow"><span class="eyebrow-dot"></span>Tecnología NFC + QR · Bolivia</div>
+      <h1>Tu mascota,<br/><em>siempre</em><br/>contigo.</h1>
+      <p class="lhero-sub">Una placa inteligente que conecta a quien encuentre a tu mascota contigo en <strong style="color:#fff">segundos</strong>. Sin apps. Sin registros. Sin demoras.</p>
+      <div class="lhero-actions">
+        <a href="#tienda" class="btn-hero-a"><i class="ri-shopping-bag-3-line"></i> Proteger mi mascota</a>
+        <a href="#como-funciona" class="btn-hero-b"><i class="ri-play-circle-line"></i> Cómo funciona</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><div class="hstat-n">500+</div><div class="hstat-l">Mascotas protegidas</div></div>
+        <div class="hstat"><div class="hstat-n">3 ciudades</div><div class="hstat-l">En Bolivia</div></div>
+        <div class="hstat"><div class="hstat-n">2 seg</div><div class="hstat-l">Para contactarte</div></div>
+      </div>
+    </div>
+    <div class="hero-phone-wrap" style="display:flex;justify-content:center;position:relative">
+      <div style="position:relative">
+        <div class="hero-phone">
+          <div class="hp-av">🐕</div>
+          <div class="hp-name">Max</div>
+          <div class="hp-st">● En casa · Activo</div>
+          <div class="hp-btn hp-wa"><i class="ri-whatsapp-line"></i> WhatsApp al dueño</div>
+          <div class="hp-btn hp-call"><i class="ri-phone-line"></i> Llamar directamente</div>
+          <div class="hp-geo"><i class="ri-map-pin-line" style="color:var(--accent);font-size:13px"></i><div class="hp-geo-txt">📍 Santa Cruz · hace 2 min</div></div>
+        </div>
+        <div class="fc a"><span style="font-size:20px">📍</span><div><div class="fc-lbl">Escaneo detectado</div><div class="fc-sub">Santa Cruz, Bolivia</div></div></div>
+        <div class="fc b"><span style="font-size:20px">✅</span><div><div class="fc-lbl">Dueño contactado</div><div class="fc-sub">En 2 segundos</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EMOCIONAL -->
+<section class="emo" id="historia">
+  <div class="lc emo-inner">
+    <div class="fade-up">
+      <div class="tag tag-light"><i class="ri-heart-3-line"></i> La historia detrás</div>
+      <h2 class="h-serif" style="font-size:clamp(2rem,4vw,3.2rem);margin-bottom:20px">Porque perder a un<br/>compañero <em style="font-style:italic;color:var(--primary)">parte el corazón</em></h2>
+      <div class="emo-quote"><strong style="color:var(--primary);font-style:normal">Cada año, miles de mascotas se pierden en Bolivia.</strong> La mayoría nunca vuelven a casa — no porque nadie las encuentre, sino porque quien las encuentra no sabe cómo contactar al dueño.</div>
+      <p style="font-size:1rem;color:#6b7280;line-height:1.8;margin-bottom:26px">Petcingo nació con una misión simple: que nunca más una mascota se quede sin volver a casa por falta de información. Una placa. Un escaneo. Una llamada. Tu mascota en casa.</p>
+      <a href="#tienda" class="btn-hero-a" style="background:var(--primary);color:#fff;display:inline-flex"><i class="ri-shield-check-line"></i> Proteger a mi mascota hoy</a>
+    </div>
+    <div class="tl fade-up">
+      <div class="tl-row"><div class="tl-n">1</div><div><div class="tl-title">Alguien encuentra a tu mascota</div><div class="tl-desc">Sin saber qué hacer, acerca el teléfono a la placa o escanea el código QR. No necesita ninguna app.</div></div></div>
+      <div class="tl-row"><div class="tl-n">2</div><div><div class="tl-title">Ve el perfil completo</div><div class="tl-desc">Foto, nombre, información médica y tus datos de contacto. Todo visible en la pantalla de su teléfono.</div></div></div>
+      <div class="tl-row"><div class="tl-n">3</div><div><div class="tl-title">Te contacta en 2 segundos</div><div class="tl-desc">Un clic abre WhatsApp con un mensaje predefinido. Sin apps. Sin registros. Sin complicaciones.</div></div></div>
+      <div class="tl-row"><div class="tl-n">4</div><div><div class="tl-title">Tu mascota vuelve a casa</div><div class="tl-desc">Y tú sabes exactamente dónde fue encontrada gracias al rastreo GPS opcional y voluntario.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- REFUGIOS -->
+<section class="sh-sec" id="refugios">
+  <div class="sh-bg"></div>
+  <div class="lc sh-inner">
+    <div class="fade-up">
+      <div class="tag tag-dark"><i class="ri-home-heart-line"></i> Impacto Social</div>
+      <h2 class="sh-title">Cada placa que compras<br/><em>apoya a un refugio</em></h2>
+      <p class="sh-body">Trabajamos en alianza con refugios y protectoras de Bolivia. Cuando compras tu placa a través de un refugio aliado, parte del precio va directamente a financiar su trabajo. Porque proteger a tu mascota no debería ser solo para ti.</p>
+      <div class="sh-cards">
+        <div class="shc"><div class="shc-icon" style="background:rgba(16,185,129,.15)">♻️</div><div><div class="shc-title">Ventas con propósito</div><div class="shc-desc">Al comprar en un refugio aliado, un porcentaje se destina al cuidado de animales en riesgo. Tú proteges a tu mascota, ellos protegen a más animales.</div></div></div>
+        <div class="shc"><div class="shc-icon" style="background:rgba(0,225,243,.12)">📍</div><div><div class="shc-title">Placas para animales adoptados</div><div class="shc-desc">Las mascotas que salen del refugio llevan su placa ID Petcingo para que nunca vuelvan a perderse con su nueva familia.</div></div></div>
+        <div class="shc"><div class="shc-icon" style="background:rgba(245,158,11,.12)">🤝</div><div><div class="shc-title">Red de refugios activa</div><div class="shc-desc">Cada refugio tiene su perfil donde puedes ver animales en adopción, enviar apoyo y comprar placas directamente.</div></div></div>
+      </div>
+      <div class="sh-cta">
+        <a href="#directorio" class="btn-sh btn-sh-a"><i class="ri-home-heart-line"></i> Ver refugios</a>
+        <a href="https://wa.me/59171040074?text=Hola%20Ariel%2C%20quiero%20unir%20mi%20refugio%20a%20Petcingo" target="_blank" class="btn-sh btn-sh-b"><i class="ri-mail-line"></i> Unir mi refugio</a>
+      </div>
+    </div>
+    <div class="sh-vis fade-up">
+      <div class="sv">
+        <div class="sv-top"><div class="sv-av">🐾</div><div><div class="sv-name">Huellas Felices</div><div class="sv-city">📍 Santa Cruz de la Sierra</div></div></div>
+        <div class="sv-chips"><span class="sv-chip">🐕 Perros</span><span class="sv-chip">🐈 Gatos</span><span class="sv-chip">🐇 Conejos</span></div>
+        <div class="sv-stats"><div><div class="sv-sn">23</div><div class="sv-sl">En adopción</div></div><div><div class="sv-sn">147</div><div class="sv-sl">Adoptados</div></div><div><div class="sv-sn">Bs 85</div><div class="sv-sl">Placa aliada</div></div></div>
+      </div>
+      <div class="sv">
+        <div class="sv-top"><div class="sv-av" style="background:linear-gradient(135deg,rgba(245,158,11,.4),rgba(16,185,129,.3))">💛</div><div><div class="sv-name">Patitas sin Hogar</div><div class="sv-city">📍 Cochabamba</div></div></div>
+        <div class="sv-chips"><span class="sv-chip">🐕 Perros</span><span class="sv-chip">♻️ Placas Petcingo</span></div>
+        <div class="sv-stats"><div><div class="sv-sn">18</div><div class="sv-sl">En adopción</div></div><div><div class="sv-sn">89</div><div class="sv-sl">Adoptados</div></div><div><div class="sv-sn">+12%</div><div class="sv-sl">Apoyo mensual</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VETERINARIAS -->
+<section class="vet-sec" id="veterinarias">
+  <div class="lc vet-inner">
+    <div class="fade-up">
+      <div class="tag tag-light"><i class="ri-hospital-line"></i> Para Clínicas</div>
+      <h2 class="h-serif" style="font-size:clamp(2rem,4vw,3rem);margin-bottom:18px">Sé parte de la red<br/>veterinaria Petcingo</h2>
+      <p style="font-size:1rem;color:#6b7280;line-height:1.8;margin-bottom:22px">Las clínicas veterinarias aliadas ofrecen Petcingo a sus clientes como servicio de valor agregado. Tú manejas el registro de placas, Petcingo pone la tecnología.</p>
+      <div class="vb-list">
+        <div class="vb"><div class="vb-ic"><i class="ri-store-2-line"></i></div><div class="vb-txt"><strong>Producto diferenciador</strong>Ofrece placas inteligentes a tus clientes. Nuevo ingreso, sin inversión extra.</div></div>
+        <div class="vb"><div class="vb-ic"><i class="ri-qr-code-line"></i></div><div class="vb-txt"><strong>Panel de gestión propio</strong>Genera y registra placas con tu prefijo desde tu panel privado en minutos.</div></div>
+        <div class="vb"><div class="vb-ic"><i class="ri-heart-line"></i></div><div class="vb-txt"><strong>Fidelización de clientes</strong>Una placa Petcingo mantiene el nombre de tu clínica vinculado a la mascota para siempre.</div></div>
+      </div>
+      <a href="https://wa.me/59171040074?text=Hola%20Ariel%2C%20me%20interesa%20unir%20mi%20clínica%20veterinaria%20a%20la%20red%20Petcingo" target="_blank" class="btn-hero-a" style="background:var(--ink);color:#fff;display:inline-flex"><i class="ri-whatsapp-line"></i> Hablar con Ariel</a>
+    </div>
+    <div class="vet-vis fade-up">
+      <div class="vv a"><div class="vv-big">∞</div><div class="vv-lbl">Placas sin límite</div></div>
+      <div class="vv b"><div class="vv-big">0</div><div class="vv-lbl">Inversión inicial</div></div>
+      <div class="vv c"><div class="vv-big">%</div><div class="vv-lbl">Comisión por venta</div></div>
+      <div class="vv d"><div class="vv-big">24/7</div><div class="vv-lbl">Panel disponible</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="como-funciona">
+  <div class="lc">
+    <h2 class="h-serif fade-up" style="font-size:clamp(2rem,4vw,3rem);text-align:center;margin-bottom:10px">3 pasos para proteger a tu mascota</h2>
+    <p class="fade-up" style="text-align:center;color:#6b7280;max-width:480px;margin:0 auto;line-height:1.7">En menos de 5 minutos tu mascota tiene identificación inteligente activa.</p>
+    <div class="steps">
+      <div class="step fade-up"><div class="step-n">1</div><div class="step-i">🛒</div><div class="step-t">Compra tu placa</div><p class="step-d">Elige tarjeta PVC, dije circular o placa flexible. Disponible con nosotros, en veterinarias aliadas y refugios.</p></div>
+      <div class="step fade-up"><div class="step-n">2</div><div class="step-i">📱</div><div class="step-t">Activa en 2 minutos</div><p class="step-d">Escanea el QR, sube la foto de tu mascota y agrega tu WhatsApp. Sin apps. Sin contraseñas. Sin complicaciones.</p></div>
+      <div class="step fade-up"><div class="step-n">3</div><div class="step-i">🛡️</div><div class="step-t">Mascota protegida</div><p class="step-d">Quien la encuentre escanea, ve tu contacto y te llama en segundos. Tú sabes dónde y cuándo fue encontrada.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- TIENDA -->
+<section class="shop" id="tienda">
+  <div class="shop-bg2"></div>
+  <div class="lc">
+    <h2 class="h-serif fade-up" style="font-size:clamp(2rem,4vw,3rem);color:#fff;text-align:center;margin-bottom:10px">Elige tu placa Petcingo</h2>
+    <p class="fade-up" style="text-align:center;color:rgba(255,255,255,.4);margin-bottom:50px;line-height:1.7">Pedidos al WhatsApp · <a href="https://wa.me/59171040074" target="_blank" style="color:var(--accent)">+591 71040074</a> · Ariel Espinoza</p>
+    <div class="shop-grid">
+      <div class="pc fade-up"><div class="pc-img">💳<span class="pc-badge">Popular</span></div><div class="pc-body"><div class="pc-name">Tarjeta PVC Pet ID</div><p class="pc-desc">Tamaño tarjeta de crédito. Resistente al agua. Perfecta para collares y correas.</p><div class="pc-price">Bs. 85 <span>/ unidad</span></div><a class="btn-wa-green" href="https://wa.me/59171040074?text=Hola%20Ariel%2C%20quiero%20comprar%20la%20Tarjeta%20PVC%20Pet%20ID%20de%20Petcingo.%20%C2%BFC%C3%B3mo%20procedo%3F" target="_blank"><i class="ri-whatsapp-line"></i> Pedir por WhatsApp</a></div></div>
+      <div class="pc f fade-up"><div class="pc-img" style="background:linear-gradient(135deg,rgba(81,0,192,.15),rgba(0,225,243,.12))">🔵<span class="pc-badge" style="background:var(--accent);color:var(--ink)">⭐ Premium</span></div><div class="pc-body"><div class="pc-name">Dije Circular Acero</div><p class="pc-desc">Acero inoxidable grabado con láser. Duradero y resistente a la intemperie.</p><div class="pc-price" style="color:var(--accent)">Bs. 120 <span style="color:rgba(255,255,255,.28)">/ unidad</span></div><a class="btn-wa-green" href="https://wa.me/59171040074?text=Hola%20Ariel%2C%20quiero%20comprar%20el%20Dije%20Circular%20Acero%20de%20Petcingo.%20%C2%BFC%C3%B3mo%20procedo%3F" target="_blank"><i class="ri-whatsapp-line"></i> Pedir por WhatsApp</a></div></div>
+      <div class="pc fade-up"><div class="pc-img">🦮</div><div class="pc-body"><div class="pc-name">Placa Collar Flexible</div><p class="pc-desc">Silicona especial para collares. Liviana, silenciosa. Ideal para mascotas activas.</p><div class="pc-price">Bs. 95 <span>/ unidad</span></div><a class="btn-wa-green" href="https://wa.me/59171040074?text=Hola%20Ariel%2C%20quiero%20comprar%20la%20Placa%20Collar%20Flexible%20de%20Petcingo.%20%C2%BFC%C3%B3mo%20procedo%3F" target="_blank"><i class="ri-whatsapp-line"></i> Pedir por WhatsApp</a></div></div>
+    </div>
+    <p style="text-align:center;margin-top:20px;font-size:.8rem;color:rgba(255,255,255,.28)"><i class="ri-truck-line"></i> Envíos a toda Bolivia &nbsp;·&nbsp; <i class="ri-store-2-line"></i> Retiro en Calle 27 de Mayo 113, Santa Cruz &nbsp;·&nbsp; <a href="https://maps.app.goo.gl/SdRJUckmWVKPZy9i9" target="_blank" style="color:rgba(255,255,255,.35)"><i class="ri-map-pin-line"></i> Ver ubicación</a></p>
+  </div>
+</section>
+
+<!-- PLANES -->
+<section class="plans" id="planes">
+  <div class="lc">
+    <h2 class="h-serif fade-up" style="font-size:clamp(2rem,4vw,3rem);text-align:center;margin-bottom:10px">Elige tu plan de protección</h2>
+    <p class="fade-up" style="text-align:center;color:#6b7280;line-height:1.7">El plan activa el perfil digital de tu mascota. La placa física se compra por separado.</p>
+    <div class="plans-grid-lp">
+      <div class="plan-lp fade-up"><div class="plan-icon-lp">📅</div><div class="plan-name-lp">Plan Anual</div><p class="plan-sub-lp">Protección por 12 meses. Renueva cuando quieras.</p><div class="plan-price-lp">Bs. 60</div><div class="plan-note-lp">por año · incluido al comprar la placa</div><ul class="plan-feats-lp"><li><i class="ri-check-line"></i> Perfil público activo 12 meses</li><li><i class="ri-check-line"></i> WhatsApp + llamada directa</li><li><i class="ri-check-line"></i> Modo "Perdido" activable</li><li><i class="ri-check-line"></i> Foto + datos médicos visibles</li><li><i class="ri-check-line"></i> Edición ilimitada de datos</li></ul><a class="btn-plan-lp bpg" href="https://wa.me/59171040074?text=Hola%20Ariel%2C%20me%20interesa%20el%20Plan%20Anual%20de%20Petcingo." target="_blank"><i class="ri-arrow-right-line"></i> Elegir Plan Anual</a></div>
+      <div class="plan-lp f fade-up"><div class="plan-pill">⭐ RECOMENDADO</div><div class="plan-icon-lp">♾️</div><div class="plan-name-lp">Plan Vitalicio</div><p class="plan-sub-lp">Paga una vez. Tu mascota protegida para siempre.</p><div class="plan-price-lp">Bs. 180</div><div class="plan-note-lp">pago único · sin renovaciones</div><ul class="plan-feats-lp"><li><i class="ri-check-line"></i> Todo lo del plan anual</li><li><i class="ri-check-line"></i> Perfil activo de por vida</li><li><i class="ri-check-line"></i> Soporte prioritario</li><li><i class="ri-check-line"></i> Transferible si cambias de dueño</li><li><i class="ri-check-line"></i> Actualizaciones futuras incluidas</li></ul><a class="btn-plan-lp bpp" href="https://wa.me/59171040074?text=Hola%20Ariel%2C%20quiero%20el%20Plan%20Vitalicio%20de%20Petcingo." target="_blank"><i class="ri-vip-crown-line"></i> Elegir Plan Vitalicio</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section class="testi">
+  <div class="lc">
+    <h2 class="h-serif fade-up" style="font-size:clamp(2rem,3.5vw,2.8rem);text-align:center;margin-bottom:10px">Lo que dicen las familias</h2>
+    <p class="fade-up" style="text-align:center;color:#6b7280;margin-bottom:0">Historias reales de Bolivia</p>
+    <div class="tgrid">
+      <div class="tc fade-up"><div class="tc-stars">★★★★★</div><p class="tc-txt">"Max se escapó por la reja. A los 20 minutos me llamó una señora del barrio — había escaneado la placa. Gracias a Petcingo lo recuperé ese mismo día."</p><div class="tc-auth"><div class="tc-av">M</div><div><div class="tc-name">María González</div><div class="tc-loc">Santa Cruz · Dueña de Max, Golden Retriever</div></div></div></div>
+      <div class="tc fade-up"><div class="tc-stars">★★★★★</div><p class="tc-txt">"Como veterinaria, recomiendo Petcingo a todos mis clientes. Es un producto que realmente salva vidas y da una tranquilidad que no tiene precio."</p><div class="tc-auth"><div class="tc-av">C</div><div><div class="tc-name">Dra. Carmen Ríos</div><div class="tc-loc">La Paz · Clínica Veterinaria Ríos</div></div></div></div>
+      <div class="tc fade-up"><div class="tc-stars">★★★★★</div><p class="tc-txt">"Compramos placas para todas las mascotas de nuestro refugio. Ya ha funcionado dos veces para reunir perros con sus nuevas familias después de adoptarlos."</p><div class="tc-auth"><div class="tc-av">L</div><div><div class="tc-name">Lucía Méndez</div><div class="tc-loc">Santa Cruz · Directora Huellas Felices</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- DIRECTORIO REFUGIOS -->
+<section class="dir" id="directorio">
+  <div class="lc">
+    <h2 class="h-serif fade-up" style="font-size:clamp(2rem,4vw,3rem);text-align:center;margin-bottom:14px">Refugios en Bolivia</h2>
+    <p class="fade-up" style="text-align:center;color:#6b7280;max-width:500px;margin:0 auto 36px;line-height:1.7">Encuentra una mascota para adoptar. Cada adopción libera espacio para otro animal que necesita ayuda.</p>
+    <div class="city-tabs fade-up">
+      <button class="ctab on" onclick="fc('all',this)">Todos</button>
+      <button class="ctab" onclick="fc('scz',this)">Santa Cruz</button>
+      <button class="ctab" onclick="fc('cbba',this)">Cochabamba</button>
+      <button class="ctab" onclick="fc('lpz',this)">La Paz</button>
+    </div>
+    <div class="dgrid">
+      <div class="dcard fade-up" data-city="scz"><div class="dcard-img" style="background:linear-gradient(135deg,#f0e6ff,#e0f4ff)">🐕<span class="dcbadge">Santa Cruz</span></div><div class="dcard-body"><div class="dcard-name">Huellas Felices</div><p class="dcard-desc">Refugio independiente dedicado a rescatar y rehabilitar animales en situación de calle desde 2018.</p><div class="dc-chips"><span class="dc-chip">🐕 Perros</span><span class="dc-chip">🐈 Gatos</span><span class="dc-chip">23 en adopción</span></div><a href="https://prueb2.dashnexpages.net/refugio/?id=huellas-felices" class="btn-dir"><i class="ri-home-heart-line"></i> Ver refugio</a></div></div>
+      <div class="dcard fade-up" data-city="scz"><div class="dcard-img" style="background:linear-gradient(135deg,#ffecd2,#fcb69f)">🐈<span class="dcbadge">Santa Cruz</span></div><div class="dcard-body"><div class="dcard-name">Gatitos Cruceños</div><p class="dcard-desc">Protectora felina especializada en rescate, castración y adopción responsable.</p><div class="dc-chips"><span class="dc-chip">🐈 Gatos</span><span class="dc-chip">15 en adopción</span></div><a href="https://prueb2.dashnexpages.net/refugio/?id=gatitos-crucenos" class="btn-dir"><i class="ri-home-heart-line"></i> Ver refugio</a></div></div>
+      <div class="dcard fade-up" data-city="cbba"><div class="dcard-img" style="background:linear-gradient(135deg,#d4edda,#b8dfc4)">🐕<span class="dcbadge">Cochabamba</span></div><div class="dcard-body"><div class="dcard-name">Patitas sin Hogar</div><p class="dcard-desc">Fundación con 10 años rescatando animales maltratados y encontrándoles familia.</p><div class="dc-chips"><span class="dc-chip">🐕 Perros</span><span class="dc-chip">🐇 Conejos</span><span class="dc-chip">18 en adopción</span></div><a href="https://prueb2.dashnexpages.net/refugio/?id=patitas-sin-hogar" class="btn-dir"><i class="ri-home-heart-line"></i> Ver refugio</a></div></div>
+      <div class="dcard fade-up" style="border:1.5px dashed rgba(81,0,192,.2);background:transparent"><div class="dcard-img" style="background:rgba(81,0,192,.04)">🏠</div><div class="dcard-body"><div class="dcard-name" style="color:var(--primary)">¿Tienes un refugio?</div><p class="dcard-desc">Únete a la red Petcingo. Gestiona adopciones, recibe apoyo de la comunidad y vende placas ID con comisión.</p><a href="https://wa.me/59171040074?text=Hola%20Ariel%2C%20quiero%20unir%20mi%20refugio%20a%20la%20red%20Petcingo" target="_blank" class="btn-dir" style="background:var(--primary)"><i class="ri-add-circle-line"></i> Registrar mi refugio</a></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="lp-cta">
+  <div class="lp-cta-bg"></div>
+  <div class="lc lp-cta-inner">
+    <h2 class="fade-up">¿Listo para darle <em>seguridad</em><br/>a tu mejor amigo?</h2>
+    <p class="fade-up">Una inversión pequeña. Una tranquilidad enorme. Y de paso, apoyas a un refugio en Bolivia.</p>
+    <div class="cta-acts fade-up">
+      <a href="#tienda" class="btn-ca"><i class="ri-shopping-bag-3-line"></i> Comprar mi placa</a>
+      <a href="https://wa.me/59171040074?text=Hola%20Ariel%2C%20necesito%20información%20sobre%20Petcingo" target="_blank" class="btn-cb"><i class="ri-whatsapp-line"></i> Hablar con nosotros</a>
+    </div>
+    <div class="cta-contact fade-up">
+      <div class="cc"><i class="ri-whatsapp-line"></i><span>Ariel Espinoza · <a href="https://wa.me/59171040074">+591 71040074</a></span></div>
+      <div class="cc"><i class="ri-map-pin-line"></i><span><a href="https://maps.app.goo.gl/SdRJUckmWVKPZy9i9" target="_blank">Calle 27 de Mayo 113, Santa Cruz</a></span></div>
+      <div class="cc"><i class="ri-mail-line"></i><span><a href="mailto:hola@petcingo.com">hola@petcingo.com</a></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="lfooter">
+  <div class="lc">
+    <div class="lfooter-inner">
+      <div><div class="fb"><div class="fb-m">🐾</div>Petcingo</div><p class="fdesc">Identificación inteligente para mascotas. NFC + QR diseñado en Bolivia.</p></div>
+      <div class="fcol"><h5>Plataforma</h5><ul><li><a href="#como-funciona">Cómo funciona</a></li><li><a href="#tienda">Tienda</a></li><li><a href="#planes">Planes</a></li><li><a href="#directorio">Adopciones</a></li></ul></div>
+      <div class="fcol"><h5>Aliados</h5><ul><li><a href="#refugios">Para Refugios</a></li><li><a href="#veterinarias">Para Veterinarias</a></li><li><a href="https://wa.me/59171040074?text=Quiero%20ser%20aliado%20Petcingo">Ser aliado</a></li></ul></div>
+      <div class="fcol"><h5>Contacto</h5><ul><li><a href="https://wa.me/59171040074" target="_blank"><i class="ri-whatsapp-line"></i> +591 71040074</a></li><li><a href="mailto:hola@petcingo.com"><i class="ri-mail-line"></i> hola@petcingo.com</a></li><li><a href="https://prueb2.dashnexpages.net/panel-control/"><i class="ri-shield-check-line"></i> Panel Admin</a></li></ul></div>
+    </div>
+    <div class="fbot"><span>© 2025 Petcingo. Todos los derechos reservados.</span><span>Hecho con ❤️ en Bolivia 🇧🇴</span></div>
+  </div>
+</footer>
+
+<script>
+var lnav = document.getElementById('lnav');
+window.addEventListener('scroll', function(){ lnav.classList.toggle('scrolled', window.scrollY > 20); });
+function toggleNav(){ document.getElementById('lnav-mobile').classList.toggle('open'); }
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click', function(e){ var t=document.querySelector(this.getAttribute('href')); if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});} });
+});
+var io = new IntersectionObserver(function(entries){ entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('vis'); io.unobserve(en.target); } }); }, { threshold:0.1 });
+document.querySelectorAll('.fade-up').forEach(function(el){ io.observe(el); });
+function fc(city, btn){ document.querySelectorAll('.ctab').forEach(function(b){ b.classList.remove('on'); }); btn.classList.add('on'); document.querySelectorAll('.dcard').forEach(function(c){ c.style.display=(city==='all'||c.getAttribute('data-city')===city||!c.getAttribute('data-city'))?'':'none'; }); }
+</script>
+</body>
+</html>

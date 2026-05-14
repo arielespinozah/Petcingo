@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Panel Refugio – Petcingo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://prueb2.dashnexpages.net/assets/css/main.css"/>
+  <style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#0e0a1a;color:#f0ecff;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 70% 50% at 65% -5%,rgba(81,0,192,.25) 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 0% 90%,rgba(0,225,243,.08) 0%,transparent 55%)}
+/* LOGIN */
+.rlogin{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:#0e0a1a;padding:20px}
+.rlogin::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 60% 0%,rgba(81,0,192,.28) 0%,transparent 60%);pointer-events:none}
+.rlogin-card{position:relative;z-index:1;width:100%;max-width:400px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10);border-radius:24px;padding:40px 32px;backdrop-filter:blur(24px);animation:fadeUp .4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.rlogin-logo{text-align:center;margin-bottom:28px}
+.rlogin-mark{display:inline-flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:16px;background:linear-gradient(135deg,#5100c0,#5151fc);font-size:26px;margin-bottom:10px;box-shadow:0 8px 24px rgba(81,0,192,.45)}
+.rlogin-logo h1{font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;letter-spacing:-.03em;background:linear-gradient(90deg,#c084fc,#00e1f3);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.rlogin-logo p{font-size:.75rem;color:#8878a8;margin-top:3px;text-transform:uppercase;letter-spacing:.08em}
+.rlogin-err{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.25);border-radius:10px;padding:10px 14px;font-size:.83rem;color:#f43f5e;margin-bottom:14px;display:none}
+.rlogin-field{margin-bottom:14px}
+.rlogin-field label{display:block;font-size:.7rem;font-weight:600;color:#8878a8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+.rlogin-field input{width:100%;padding:12px 15px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px;color:#f0ecff;font-size:.95rem;font-family:inherit;outline:none;transition:border-color .2s}
+.rlogin-field input:focus{border-color:rgba(81,0,192,.6)}
+.btn-rlogin{width:100%;padding:13px;background:linear-gradient(135deg,#5100c0,#5151fc);color:#fff;border:none;border-radius:13px;font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-rlogin:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(81,0,192,.45)}
+/* APP */
+#rdash{display:none;position:relative;z-index:1;min-height:100vh}
+/* TOPBAR */
+.rtopbar{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);backdrop-filter:blur(12px);position:sticky;top:0;z-index:50}
+.rtop-name{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;flex:1}
+.rtop-sub{font-size:.7rem;color:#8878a8}
+.btn-rtopout{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:9px;background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.2);color:#f43f5e;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-rtopout:hover{background:rgba(244,63,94,.16)}
+/* TABS */
+.rdash-tabs{display:flex;gap:4px;overflow-x:auto;padding:14px 16px 0;border-bottom:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.02)}
+.rdash-tab{padding:8px 15px;border-radius:10px 10px 0 0;border:none;background:none;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:500;color:#8878a8;cursor:pointer;white-space:nowrap;transition:all .18s;border-bottom:2px solid transparent}
+.rdash-tab.on{color:#c084fc;border-bottom-color:#c084fc;font-weight:700}
+.rdash-panel{display:none;padding:20px 16px 60px;max-width:900px;margin:0 auto}
+.rdash-panel.on{display:block;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+/* STATS SMALL */
+.rdash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.rst{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px;text-align:center}
+.rst-n{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;margin-bottom:4px}
+.rst-l{font-size:.68rem;color:#8878a8;text-transform:uppercase;letter-spacing:.05em}
+/* PANEL */
+.rpanel-box{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:20px;margin-bottom:18px;backdrop-filter:blur(12px)}
+.rpanel-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.rpanel-sub{font-size:.78rem;color:#8878a8;margin-bottom:16px}
+/* FORMS */
+.rfield{margin-bottom:13px}
+.rfield label{display:block;font-size:.7rem;font-weight:600;color:#8878a8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.rinput{width:100%;padding:10px 13px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.10);border-radius:11px;color:#f0ecff;font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;-webkit-appearance:none}
+.rinput:focus{border-color:rgba(81,0,192,.6)}
+.rinput-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+textarea.rinput{resize:vertical;min-height:72px}
+.btn-rprimary{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:11px;background:linear-gradient(135deg,#5100c0,#5151fc);color:#fff;font-weight:700;font-size:.88rem;border:none;cursor:pointer;transition:all .18s}
+.btn-rprimary:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(81,0,192,.4)}
+.btn-rprimary:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.btn-rghost{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:11px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#f0ecff;font-size:.85rem;font-weight:500;cursor:pointer;transition:all .18s}
+.btn-rghost:hover{background:rgba(255,255,255,.12)}
+.btn-rdanger{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:9px;background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.22);color:#f43f5e;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-rdanger:hover{background:rgba(244,63,94,.2)}
+/* PETS TABLE */
+.rptable{width:100%;border-collapse:collapse;font-size:.82rem;margin-top:4px}
+.rptable th{text-align:left;padding:9px 12px;font-size:.68rem;font-weight:600;color:#8878a8;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid rgba(255,255,255,.07)}
+.rptable td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+.rptable tr:hover td{background:rgba(255,255,255,.03)}
+.rptable-wrap{overflow-x:auto;border-radius:12px;border:1px solid rgba(255,255,255,.07)}
+.rbadge{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:20px;font-size:.7rem;font-weight:600}
+.rbadge-ok{background:rgba(16,185,129,.12);color:#10b981;border:1px solid rgba(16,185,129,.22)}
+.rbadge-adopted{background:rgba(96,165,250,.1);color:#60a5fa;border:1px solid rgba(96,165,250,.2)}
+/* LIMIT BAR */
+.limit-bar{background:rgba(255,255,255,.07);border-radius:8px;height:8px;margin-top:6px;overflow:hidden}
+.limit-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,#10b981,#00e1f3);transition:width .5s}
+/* SOLICITUDES */
+.sol-item{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.sol-name{font-weight:600;font-size:.9rem;margin-bottom:3px}
+.sol-pet{font-size:.78rem;color:#8878a8;margin-bottom:6px}
+.sol-msg{font-size:.83rem;color:#f0ecff;line-height:1.6}
+.sol-date{font-size:.7rem;color:#8878a8;margin-top:6px}
+/* TOAST */
+#rtoast{position:fixed;bottom:20px;right:20px;z-index:500;background:rgba(13,11,18,.95);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:11px 16px;font-size:.84rem;color:#f0ecff;box-shadow:0 8px 28px rgba(0,0,0,.4);transform:translateY(70px);opacity:0;transition:all .3s;pointer-events:none}
+#rtoast.show{transform:translateY(0);opacity:1}
+/* Pet form modal */
+#pet-form-modal{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.75);align-items:center;justify-content:center;padding:16px}
+#pet-form-modal.show{display:flex}
+.pfm-card{background:#16102a;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:26px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto}
+.pfm-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.pfm-close{font-size:1.2rem;cursor:pointer;color:#8878a8;background:none;border:none;padding:4px}
+@media(max-width:640px){
+  .rdash-stats{grid-template-columns:1fr 1fr}
+  .rinput-2col{grid-template-columns:1fr}
+  .rptable{font-size:.78rem}
+}
+  </style>
+</head>
+<body>
+
+<!-- Login -->
+<div class="rlogin" id="rlogin">
+  <div class="rlogin-card">
+    <div class="rlogin-logo">
+      <div class="rlogin-mark">🏠</div>
+      <h1>Panel del Refugio</h1>
+      <p>Petcingo · Refugios Aliados</p>
+    </div>
+    <div class="rlogin-err" id="rlogin-err">Usuario o contraseña incorrectos.</div>
+    <div class="rlogin-field"><label>Usuario del refugio</label><input type="text" id="rlogin-user" placeholder="Ej: huellas-felices" autocomplete="username"/></div>
+    <div class="rlogin-field"><label>Contraseña</label><input type="password" id="rlogin-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doRLogin()"/></div>
+    <button class="btn-rlogin" onclick="doRLogin()">Ingresar al Panel</button>
+    <p style="text-align:center;margin-top:14px;font-size:.74rem;color:#8878a8">¿Eres el administrador? <a href="https://prueb2.dashnexpages.net/panel-control/" style="color:#c084fc">Panel Admin →</a></p>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div id="rdash">
+  <div class="rtopbar">
+    <div>
+      <div class="rtop-name" id="rtop-name">Mi Refugio</div>
+      <div class="rtop-sub">Panel de Gestión · Petcingo</div>
+    </div>
+    <button class="btn-rtopout" onclick="doRLogout()"><i class="ri-logout-box-line"></i> Salir</button>
+  </div>
+
+  <div class="rdash-tabs">
+    <button class="rdash-tab on" id="rtab-overview" onclick="showRTab('overview',this)"><i class="ri-dashboard-line"></i> Resumen</button>
+    <button class="rdash-tab" id="rtab-pets" onclick="showRTab('pets',this)"><i class="ri-footprint-line"></i> Mascotas</button>
+    <button class="rdash-tab" id="rtab-needs" onclick="showRTab('needs',this)"><i class="ri-megaphone-line"></i> Publicar</button>
+    <button class="rdash-tab" id="rtab-solicitudes" onclick="showRTab('solicitudes',this)"><i class="ri-mail-line"></i> Solicitudes</button>
+    <button class="rdash-tab" id="rtab-info" onclick="showRTab('info',this)"><i class="ri-settings-3-line"></i> Mi Información</button>
+  </div>
+
+  <!-- RESUMEN -->
+  <div class="rdash-panel on" id="rpanel-overview">
+    <div class="rdash-stats">
+      <div class="rst"><div class="rst-n" id="r-avail">—</div><div class="rst-l">En adopción</div></div>
+      <div class="rst"><div class="rst-n" id="r-adopted">—</div><div class="rst-l">Adoptados</div></div>
+      <div class="rst"><div class="rst-n" id="r-solicitudes-cnt">—</div><div class="rst-l">Solicitudes</div></div>
+    </div>
+    <div class="rpanel-box">
+      <div class="rpanel-title"><i class="ri-bar-chart-box-line"></i> Límite de Mascotas</div>
+      <div class="rpanel-sub" id="limit-desc">Cargando…</div>
+      <div class="limit-bar"><div class="limit-fill" id="limit-fill" style="width:0%"></div></div>
+    </div>
+    <div class="rpanel-box">
+      <div class="rpanel-title"><i class="ri-time-line"></i> Últimas Solicitudes</div>
+      <div id="recent-solicitudes"><p style="color:#8878a8;font-size:.85rem">Cargando…</p></div>
+    </div>
+  </div>
+
+  <!-- MASCOTAS -->
+  <div class="rdash-panel" id="rpanel-pets">
+    <div class="rpanel-box">
+      <div class="rpanel-title"><i class="ri-add-circle-line"></i> Agregar Mascota</div>
+      <div class="rpanel-sub">Puedes agregar hasta el límite asignado por el administrador. Las fotos solo se guardan como URL externa.</div>
+      <div class="rinput-2col">
+        <div class="rfield"><label>Nombre *</label><input type="text" class="rinput" id="p-nombre" placeholder="Ej: Luna" maxlength="40"/></div>
+        <div class="rfield"><label>Especie *</label><select class="rinput" id="p-especie"><option value="">— Seleccionar —</option><option>Perro</option><option>Gato</option><option>Conejo</option><option>Ave</option><option>Otro</option></select></div>
+        <div class="rfield"><label>Género</label><select class="rinput" id="p-genero"><option value="">— Seleccionar —</option><option>Macho</option><option>Hembra</option></select></div>
+        <div class="rfield"><label>Edad aproximada</label><input type="text" class="rinput" id="p-edad" placeholder="Ej: 2 años, 6 meses" maxlength="30"/></div>
+      </div>
+      <div class="rfield"><label>URL de la foto <span style="font-size:.68rem;font-weight:400;color:#8878a8">(imagen alojada externamente)</span></label><input type="url" class="rinput" id="p-foto" placeholder="https://ejemplo.com/foto.jpg" maxlength="300"/></div>
+      <div class="rfield"><label>Historia</label><textarea class="rinput" id="p-historia" placeholder="Cuenta la historia de esta mascota, su carácter, lo que busca en su nueva familia…" maxlength="600"></textarea></div>
+      <button class="btn-rprimary" id="btn-add-pet" onclick="addPet()"><i class="ri-add-line"></i> Agregar mascota</button>
+    </div>
+
+    <div class="rpanel-box">
+      <div class="rpanel-title"><i class="ri-list-check-2"></i> Mascotas Registradas</div>
+      <div style="overflow-x:auto">
+        <table class="rptable">
+          <thead><tr><th>Foto</th><th>Nombre</th><th>Especie</th><th>Edad</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="pets-tbody"></tbody>
+        </table>
+      </div>
+      <div id="pets-count" style="font-size:.74rem;color:#8878a8;margin-top:8px"></div>
+    </div>
+  </div>
+
+  <!-- PUBLICAR NECESIDADES -->
+  <div class="rdash-panel" id="rpanel-needs">
+    <div class="rpanel-box">
+      <div class="rpanel-title"><i class="ri-megaphone-line"></i> Publicar Actualización o Necesidad</div>
+      <div class="rpanel-sub">Informa a la comunidad sobre necesidades urgentes, logros, agradecimientos o noticias del refugio.</div>
+      <div class="rfield"><label>Mensaje *</label><textarea class="rinput" id="need-text" placeholder="Ej: Necesitamos alimento urgente para 30 perros. Puedes donarlo directamente en nuestra dirección…" maxlength="600"></textarea></div>
+      <button class="btn-rprimary" id="btn-publish-need" onclick="publishNeed()"><i class="ri-send-plane-line"></i> Publicar</button>
+    </div>
+    <div class="rpanel-box">
+      <div class="rpanel-title"><i class="ri-history-line"></i> Publicaciones anteriores</div>
+      <div id="needs-list-dash"><p style="color:#8878a8;font-size:.85rem">Cargando…</p></div>
+    </div>
+  </div>
+
+  <!-- SOLICITUDES -->
+  <div class="rdash-panel" id="rpanel-solicitudes">
+    <div class="rpanel-box">
+      <div class="rpanel-title"><i class="ri-mail-line"></i> Solicitudes de Adopción</div>
+      <div class="rpanel-sub">Personas interesadas en adoptar mascotas de tu refugio. Contáctalas directamente.</div>
+      <div id="solicitudes-list"><p style="color:#8878a8;font-size:.85rem">Cargando…</p></div>
+    </div>
+  </div>
+
+  <!-- MI INFORMACIÓN -->
+  <div class="rdash-panel" id="rpanel-info">
+    <div class="rpanel-box">
+      <div class="rpanel-title"><i class="ri-settings-3-line"></i> Información del Refugio</div>
+      <div class="rpanel-sub">Esta información aparece en tu perfil público.</div>
+      <div class="rinput-2col">
+        <div class="rfield"><label>Nombre del refugio</label><input type="text" class="rinput" id="info-name" maxlength="80"/></div>
+        <div class="rfield"><label>Ciudad</label><input type="text" class="rinput" id="info-city" maxlength="40"/></div>
+        <div class="rfield"><label>Teléfono / WhatsApp</label><input type="tel" class="rinput" id="info-phone" maxlength="20"/></div>
+        <div class="rfield"><label>Persona responsable</label><input type="text" class="rinput" id="info-responsible" maxlength="60"/></div>
+      </div>
+      <div class="rfield"><label>URL del QR de pago <span style="font-size:.68rem;font-weight:400;color:#8878a8">(para recibir aportes)</span></label><input type="url" class="rinput" id="info-qr" placeholder="https://ejemplo.com/mi-qr.jpg" maxlength="300"/></div>
+      <div style="margin-top:4px">
+        <div id="qr-preview-wrap"></div>
+      </div>
+      <button class="btn-rprimary" id="btn-save-info" onclick="saveInfo()" style="margin-top:14px"><i class="ri-save-line"></i> Guardar información</button>
+    </div>
+    <div class="rpanel-box">
+      <div class="rpanel-title"><i class="ri-eye-line"></i> Ver mi perfil público</div>
+      <div class="rpanel-sub">Así ven tu refugio las personas en Petcingo.</div>
+      <a id="btn-view-public" href="#" target="_blank" class="btn-rghost"><i class="ri-external-link-line"></i> Abrir perfil público</a>
+    </div>
+  </div>
+
+</div>
+
+<div id="rtoast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://prueb2.dashnexpages.net/assets/js/app.js"></script>
+<script>
+(function(){
+  'use strict';
+  if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+  var fdb = firebase.firestore();
+  var shelterData = null;
+  var shelterId = null;
+  var petsLimit = 40;
+
+  /* ── LOGIN ── */
+  /* Support ?auto=shelterId from admin (bypasses login for admin-opened links) */
+  var autoId = new URLSearchParams(window.location.search).get('auto');
+
+  window.doRLogin = function(){
+    var user = document.getElementById('rlogin-user').value.trim();
+    var pass = document.getElementById('rlogin-pass').value; /* No trim: preserve exact password */
+    var err  = document.getElementById('rlogin-err');
+    err.style.display = 'none';
+    if (!user||!pass) { err.textContent='Ingresa usuario y contraseña.'; err.style.display='block'; return; }
+
+    /* Query: find shelter where username matches */
+    fdb.collection('shelters')
+      .where('username','==',user)
+      .limit(1).get()
+      .then(function(snap){
+        if (snap.empty) {
+          err.textContent='Usuario no encontrado. Verifica que el administrador haya creado tus credenciales.';
+          err.style.display='block'; return;
+        }
+        var doc = snap.docs[0];
+        var d   = doc.data();
+        /* Compare password exactly as stored */
+        if (d.password !== pass) {
+          err.textContent='Contraseña incorrecta. Si no recuerdas tu contraseña, contacta al administrador Petcingo.';
+          err.style.display='block'; return;
+        }
+        shelterId   = doc.id;
+        shelterData = d;
+        shelterData._id = doc.id;
+        petsLimit   = shelterData.limite_mascotas || 40;
+        enterRDash();
+      })
+      .catch(function(e){ err.textContent='Error de conexión: '+e.message; err.style.display='block'; });
+  };
+
+  function enterRDash(){
+    document.getElementById('rlogin').style.display = 'none';
+    document.getElementById('rdash').style.display  = 'block';
+    document.getElementById('rtop-name').textContent = shelterData.name || 'Mi Refugio';
+    document.getElementById('btn-view-public').href = 'refugio.html?id=' + shelterId;
+    loadInfo();
+    loadOverview();
+    loadPets();
+    loadNeeds();
+    loadSolicitudes();
+  }
+
+  window.doRLogout = function(){
+    document.getElementById('rdash').style.display  = 'none';
+    document.getElementById('rlogin').style.display = 'flex';
+    document.getElementById('rlogin-user').value = '';
+    document.getElementById('rlogin-pass').value = '';
+    shelterData = null; shelterId = null;
+  };
+
+  /* ── OVERVIEW ── */
+  function loadOverview(){
+    fdb.collection('refugio_mascotas').where('shelterId','==',shelterId).get()
+      .then(function(snap){
+        var avail=0, adopted=0;
+        snap.forEach(function(d){ if(d.data().estado==='adoptado')adopted++; else avail++; });
+        setEl('r-avail', avail); setEl('r-adopted', adopted);
+        var pct = Math.round((snap.size/petsLimit)*100);
+        setEl('limit-desc','Usando '+snap.size+' de '+petsLimit+' mascotas permitidas.');
+        var fill = document.getElementById('limit-fill');
+        if (fill) fill.style.width = Math.min(pct,100)+'%';
+      }).catch(function(){});
+    fdb.collection('solicitudes_adopcion').where('shelterId','==',shelterId).limit(3).get()
+      .then(function(snap){
+        setEl('r-solicitudes-cnt', snap.size);
+        var html = '';
+        snap.forEach(function(doc){
+          var s = doc.data();
+          html += '<div class="sol-item"><div class="sol-name">'+esc(s.aplicante||'—')+'</div><div class="sol-pet">Para: '+esc(s.petName||'—')+'</div><div class="sol-date">'+esc(s.telefono||'')+'</div></div>';
+        });
+        setEl('recent-solicitudes', html||'<p style="color:#8878a8;font-size:.85rem">Sin solicitudes aún.</p>');
+        document.getElementById('recent-solicitudes').innerHTML = html||'<p style="color:#8878a8;font-size:.85rem">Sin solicitudes aún.</p>';
+      }).catch(function(){});
+  }
+
+  /* ── PETS ── */
+  function loadPets(){
+    var tbody = document.getElementById('pets-tbody');
+    var cntEl = document.getElementById('pets-count');
+    fdb.collection('refugio_mascotas').where('shelterId','==',shelterId).orderBy('createdAt','desc').limit(50).get()
+      .then(function(snap){
+        if (cntEl) cntEl.textContent = snap.size+' de '+petsLimit+' mascotas.';
+        if (snap.empty) { tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:24px;color:#8878a8">Sin mascotas aún. Agrega la primera arriba.</td></tr>'; return; }
+        var html = '';
+        snap.forEach(function(doc){
+          var p = doc.data(), id = doc.id;
+          var foto = p.fotoUrl ? '<img src="'+esc(p.fotoUrl)+'" style="width:40px;height:40px;border-radius:8px;object-fit:cover" onerror="this.style.display=\'none\'"/>' : '<span style="font-size:22px">🐾</span>';
+          var badge = p.estado==='adoptado' ? '<span class="rbadge rbadge-adopted">Adoptado</span>' : '<span class="rbadge rbadge-ok">Disponible</span>';
+          var toggleBtn = p.estado==='adoptado'
+            ? '<button class="btn-rghost" style="font-size:.72rem;padding:5px 10px" onclick="toggleAdopted(\''+id+'\',false)"><i class="ri-refresh-line"></i> Reactivar</button>'
+            : '<button class="btn-rprimary" style="font-size:.72rem;padding:5px 10px" onclick="toggleAdopted(\''+id+'\',true)"><i class="ri-check-line"></i> Marcar adoptado</button>';
+          html += '<tr><td>'+foto+'</td><td style="font-weight:600">'+esc(p.nombre||'—')+'</td><td>'+esc(p.especie||'—')+'</td><td>'+esc(p.edadAprox||'—')+'</td><td>'+badge+'</td>'+
+            '<td style="display:flex;gap:6px;flex-wrap:wrap">'+toggleBtn+
+            '<button class="btn-rdanger" onclick="deletePet(\''+id+'\')"><i class="ri-delete-bin-line"></i></button></td></tr>';
+        });
+        tbody.innerHTML = html;
+      }).catch(function(e){
+        tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:24px;color:#f43f5e">Configura el índice de Firebase para ver mascotas.</td></tr>';
+      });
+  }
+
+  window.addPet = function(){
+    var nombre = document.getElementById('p-nombre').value.trim();
+    var especie = document.getElementById('p-especie').value;
+    var genero  = document.getElementById('p-genero').value;
+    var edad    = document.getElementById('p-edad').value.trim();
+    var foto    = document.getElementById('p-foto').value.trim();
+    var historia= document.getElementById('p-historia').value.trim();
+    if (!nombre) { rtoast('⚠️ El nombre es obligatorio.'); return; }
+    if (!especie) { rtoast('⚠️ La especie es obligatoria.'); return; }
+
+    /* Check limit */
+    fdb.collection('refugio_mascotas').where('shelterId','==',shelterId).where('estado','==','disponible').get()
+      .then(function(snap){
+        if (snap.size >= petsLimit) { rtoast('⚠️ Límite de mascotas alcanzado ('+petsLimit+'). Contacta al administrador para aumentarlo.'); return; }
+        var btn = document.getElementById('btn-add-pet');
+        btn.disabled=true; btn.innerHTML='<i class="ri-loader-4-line"></i> Guardando…';
+        return fdb.collection('refugio_mascotas').add({
+          shelterId:shelterId, shelterName:shelterData.name||'',
+          nombre:nombre, especie:especie, genero:genero, edadAprox:edad,
+          fotoUrl:foto, historia:historia,
+          estado:'disponible',
+          createdAt:firebase.firestore.FieldValue.serverTimestamp()
+        }).then(function(){
+          rtoast('✅ Mascota agregada: '+nombre);
+          ['p-nombre','p-especie','p-genero','p-edad','p-foto','p-historia'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+          loadPets(); loadOverview();
+        });
+      })
+      .catch(function(e){ rtoast('❌ Error: '+e.message); })
+      .finally(function(){ var btn=document.getElementById('btn-add-pet');btn.disabled=false;btn.innerHTML='<i class="ri-add-line"></i> Agregar mascota'; });
+  };
+
+  window.toggleAdopted = function(petId, adopted){
+    fdb.collection('refugio_mascotas').doc(petId).update({ estado: adopted?'adoptado':'disponible' })
+      .then(function(){ rtoast(adopted?'🎉 Marcada como adoptada':'✅ Reactivada como disponible'); loadPets(); loadOverview(); })
+      .catch(function(e){ rtoast('❌ '+e.message); });
+  };
+
+  window.deletePet = function(petId){
+    if (!confirm('¿Eliminar esta mascota del sistema?')) return;
+    fdb.collection('refugio_mascotas').doc(petId).delete()
+      .then(function(){ rtoast('🗑 Mascota eliminada.'); loadPets(); loadOverview(); })
+      .catch(function(e){ rtoast('❌ '+e.message); });
+  };
+
+  /* ── NECESIDADES ── */
+  function loadNeeds(){
+    fdb.collection('refugio_necesidades').where('shelterId','==',shelterId).orderBy('createdAt','desc').limit(10).get()
+      .then(function(snap){
+        var el = document.getElementById('needs-list-dash');
+        if (snap.empty) { el.innerHTML='<p style="color:#8878a8;font-size:.85rem">Sin publicaciones aún.</p>'; return; }
+        var html = '';
+        snap.forEach(function(doc){
+          var n=doc.data();
+          var fecha = n.createdAt&&n.createdAt.toDate ? n.createdAt.toDate().toLocaleDateString('es-BO') : '—';
+          html += '<div class="sol-item"><div class="sol-msg">'+esc(n.texto||'')+'</div><div class="sol-date">'+fecha+' · '+esc(n.autor||'')+'</div></div>';
+        });
+        el.innerHTML = html;
+      }).catch(function(){});
+  }
+
+  window.publishNeed = function(){
+    var text = document.getElementById('need-text').value.trim();
+    if (!text) { rtoast('⚠️ Escribe un mensaje.'); return; }
+    var btn = document.getElementById('btn-publish-need');
+    btn.disabled=true; btn.innerHTML='<i class="ri-loader-4-line"></i> Publicando…';
+    fdb.collection('refugio_necesidades').add({
+      shelterId:shelterId, shelterName:shelterData.name||'',
+      texto:text, autor:shelterData.responsible||shelterData.name||'Refugio',
+      createdAt:firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function(){
+      rtoast('✅ Publicado correctamente.');
+      document.getElementById('need-text').value='';
+      loadNeeds();
+    }).catch(function(e){ rtoast('❌ '+e.message); })
+      .finally(function(){ btn.disabled=false; btn.innerHTML='<i class="ri-send-plane-line"></i> Publicar'; });
+  };
+
+  /* ── SOLICITUDES ── */
+  function loadSolicitudes(){
+    fdb.collection('solicitudes_adopcion').where('shelterId','==',shelterId).orderBy('createdAt','desc').limit(20).get()
+      .then(function(snap){
+        var el = document.getElementById('solicitudes-list');
+        if (snap.empty) { el.innerHTML='<p style="color:#8878a8;font-size:.85rem">Sin solicitudes todavía.</p>'; return; }
+        var html = '';
+        snap.forEach(function(doc){
+          var s=doc.data();
+          var fecha = s.createdAt&&s.createdAt.toDate ? s.createdAt.toDate().toLocaleDateString('es-BO',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+          var waNum = (s.telefono||'').replace(/\D/g,'');
+          var waLink = waNum ? '<a href="https://wa.me/'+waNum+'" target="_blank" style="color:#00e1f3;font-size:.78rem"><i class="ri-whatsapp-line"></i> Contactar</a>' : '';
+          html += '<div class="sol-item"><div class="sol-name">'+esc(s.aplicante||'—')+'</div>'+
+            '<div class="sol-pet">Para: <strong>'+esc(s.petName||'—')+'</strong> · '+esc(s.telefono||'')+'</div>'+
+            '<div class="sol-msg">'+esc(s.mensaje||'')+'</div>'+
+            '<div class="sol-date" style="display:flex;align-items:center;gap:12px">'+fecha+' '+waLink+'</div></div>';
+        });
+        el.innerHTML = html;
+        setEl('r-solicitudes-cnt', snap.size);
+      }).catch(function(e){ document.getElementById('solicitudes-list').innerHTML='<p style="color:#f43f5e;font-size:.85rem">Configura el índice de Firebase.</p>'; });
+  }
+
+  /* ── INFO ── */
+  function loadInfo(){
+    if (!shelterData) return;
+    var fields = {name:'info-name',city:'info-city',phone:'info-phone',responsible:'info-responsible',qrPagoUrl:'info-qr'};
+    Object.keys(fields).forEach(function(k){ var el=document.getElementById(fields[k]); if(el)el.value=shelterData[k]||''; });
+    var qrWrap = document.getElementById('qr-preview-wrap');
+    if (qrWrap && shelterData.qrPagoUrl) qrWrap.innerHTML='<img src="'+esc(shelterData.qrPagoUrl)+'" style="max-width:120px;border-radius:8px;margin-top:8px"/>';
+  }
+
+  window.saveInfo = function(){
+    var updates = {
+      name:        document.getElementById('info-name').value.trim(),
+      city:        document.getElementById('info-city').value.trim(),
+      phone:       document.getElementById('info-phone').value.trim(),
+      responsible: document.getElementById('info-responsible').value.trim(),
+      qrPagoUrl:   document.getElementById('info-qr').value.trim()
+    };
+    if (!updates.name) { rtoast('⚠️ El nombre es obligatorio.'); return; }
+    var btn = document.getElementById('btn-save-info');
+    btn.disabled=true; btn.innerHTML='<i class="ri-loader-4-line"></i> Guardando…';
+    fdb.collection('shelters').doc(shelterId).update(updates)
+      .then(function(){
+        Object.assign(shelterData, updates);
+        rtoast('✅ Información guardada.');
+        document.getElementById('rtop-name').textContent = updates.name||'Mi Refugio';
+        loadInfo();
+      })
+      .catch(function(e){ rtoast('❌ '+e.message); })
+      .finally(function(){ btn.disabled=false; btn.innerHTML='<i class="ri-save-line"></i> Guardar información'; });
+  };
+
+  /* ── TABS ── */
+  window.showRTab = function(name, btn){
+    document.querySelectorAll('.rdash-tab').forEach(function(b){ b.classList.remove('on'); });
+    document.querySelectorAll('.rdash-panel').forEach(function(p){ p.classList.remove('on'); });
+    var panel = document.getElementById('rpanel-'+name);
+    if (panel) panel.classList.add('on');
+    if (btn) btn.classList.add('on');
+  };
+
+  /* ── UTILS ── */
+  function esc(s){ if(!s&&s!==0)return''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+  function setEl(id,val){ var el=document.getElementById(id); if(el) el.textContent=val; }
+  var rtoastTimer;
+  function rtoast(msg){ var el=document.getElementById('rtoast');el.textContent=msg;el.classList.add('show');clearTimeout(rtoastTimer);rtoastTimer=setTimeout(function(){el.classList.remove('show');},2800); }
+  window.rtoast = rtoast;
+})();
+</script>
+</body>
+</html>

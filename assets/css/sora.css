@@ -1,0 +1,127 @@
+/* ============================================================
+   SORA FONT FAMILY — Unified for Petcingo
+   Only .woff2 format (modern & Dashnex compatible)
+   All weights registered under a single 'Sora' font-family
+   ============================================================ */
+
+@font-face {
+  font-family: 'Sora';
+  src: url('https://prueb2.dashnexpages.net/assets/fonts/Sora-Thin.woff2') format('woff2');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Sora';
+  src: url('https://prueb2.dashnexpages.net/assets/fonts/Sora-ThinItalic.woff2') format('woff2');
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sora';
+  src: url('https://prueb2.dashnexpages.net/assets/fonts/Sora-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Sora';
+  src: url('https://prueb2.dashnexpages.net/assets/fonts/Sora-LightItalic.woff2') format('woff2');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sora';
+  src: url('https://prueb2.dashnexpages.net/assets/fonts/Sora-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Sora';
+  src: url('https://prueb2.dashnexpages.net/assets/fonts/Sora-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sora';
+  src: url('https://prueb2.dashnexpages.net/assets/fonts/Sora-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Sora';
+  src: url('https://prueb2.dashnexpages.net/assets/fonts/Sora-MediumItalic.woff2') format('woff2');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sora';
+  src: url('https://prueb2.dashnexpages.net/assets/fonts/Sora-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Sora';
+  src: url('https://prueb2.dashnexpages.net/assets/fonts/Sora-SemiBoldItalic.woff2') format('woff2');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ── Pesos que probablemente tengas en tu carpeta (si no, sube los archivos) ── */
+@font-face {
+  font-family: 'Sora';
+  src: url('https://prueb2.dashnexpages.net/assets/fonts/Sora-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Sora';
+  src: url('https://prueb2.dashnexpages.net/assets/fonts/Sora-BoldItalic.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sora';
+  src: url('https://prueb2.dashnexpages.net/assets/fonts/Sora-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Sora';
+  src: url('https://prueb2.dashnexpages.net/assets/fonts/Sora-ExtraBoldItalic.woff2') format('woff2');
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Variables (opcional, útil para animaciones o logos) */
+@font-face {
+  font-family: 'SoraVariable';
+  src: url('https://prueb2.dashnexpages.net/assets/fonts/Sora-Variable.woff2') format('woff2');
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'SoraVariableItalic';
+  src: url('https://prueb2.dashnexpages.net/assets/fonts/Sora-VariableItalic.woff2') format('woff2');
+  font-weight: 100 800;
+  font-style: italic;
+  font-display: swap;
+}

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — Página no encontrada · Petcingo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  <link href="https://assets.petcingo.com/css/petcingo-core.css" rel="stylesheet">
+  <style>
+    /* ============================================================
+       ENCAPSULADO PARA DASHNEX: .ptcg-404 aísla todos los estilos
+       de esta página de error del CSS global de la plataforma.
+       ============================================================ */
+
+    .ptcg-404, .ptcg-404 * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      color: #1D1D1F;
+      -webkit-font-smoothing: antialiased;
+    }
+    .ptcg-404 a { text-decoration: none; }
+    .ptcg-404 button { cursor: pointer; font-family: inherit; }
+
+    .ptcg-404 {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #F5F0FF 0%, #F5F5F7 50%, #EEFEFF 100%);
+    }
+
+    .ptcg-404__orb {
+      position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
+    }
+    .ptcg-404__orb-1 {
+      width: 500px; height: 500px; top: -150px; right: -100px;
+      background: radial-gradient(circle, rgba(81,0,192,0.10) 0%, transparent 70%);
+      animation: ptcg-orb-float 18s ease-in-out infinite;
+    }
+    .ptcg-404__orb-2 {
+      width: 400px; height: 400px; bottom: -100px; left: -100px;
+      background: radial-gradient(circle, rgba(0,225,243,0.09) 0%, transparent 70%);
+      animation: ptcg-orb-float 24s ease-in-out infinite reverse;
+    }
+
+    /* Topbar link */
+    .ptcg-404__top {
+      position: fixed; top: 0; left: 0; right: 0;
+      display: flex; align-items: center; padding: 20px 24px;
+      z-index: 10;
+    }
+    .ptcg-404__logo {
+      display: flex; align-items: center; gap: 8px;
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem;
+      color: #5100C0; text-decoration: none;
+    }
+
+    /* Contenido central */
+    .ptcg-404__content {
+      position: relative; z-index: 1;
+      width: 100%; max-width: 520px;
+      text-align: center;
+      animation: ptcg-scale-in 0.45s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+
+    /* Número 404 con Liquid Glass */
+    .ptcg-404__number-wrap {
+      margin-bottom: 32px;
+    }
+    .ptcg-404__number-card {
+      display: inline-block;
+      border-radius: 28px;
+    }
+    .ptcg-404__number-card .lg-body {
+      padding: 32px 48px;
+    }
+    .ptcg-404__number {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(5rem, 15vw, 9rem);
+      font-weight: 800;
+      color: #5100C0;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      display: block;
+    }
+    .ptcg-404__icon {
+      font-size: 2.5rem;
+      display: block;
+      margin-top: 4px;
+    }
+
+    .ptcg-404__title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 800;
+      color: #1D1D1F;
+      letter-spacing: -0.025em;
+      margin-bottom: 12px;
+    }
+    .ptcg-404__sub {
+      font-size: 1rem; color: #86868B; line-height: 1.65;
+      max-width: 400px; margin: 0 auto 36px;
+    }
+
+    .ptcg-404__actions {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    }
+
+    /* Botones locales — colores explícitos, nunca heredados */
+    .ptcg-404 .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 24px; border-radius: 999px;
+      background-color: #5100C0 !important;
+      color: #FFFFFF !important;
+      font-size: 0.9rem; font-weight: 600;
+      border: none;
+      box-shadow: 0 4px 16px rgba(81,0,192,0.28);
+      transition: background-color 0.25s ease, transform 0.2s ease;
+    }
+    .ptcg-404 .btn-primary:hover {
+      background-color: #320078 !important; color: #FFFFFF !important;
+      transform: translateY(-1px);
+    }
+    .ptcg-404 .btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 24px; border-radius: 999px;
+      background-color: transparent !important;
+      color: #515154 !important;
+      font-size: 0.9rem; font-weight: 600;
+      border: 1.5px solid rgba(0,0,0,0.12) !important;
+      transition: border-color 0.25s ease, color 0.25s ease;
+    }
+    .ptcg-404 .btn-ghost:hover {
+      border-color: #5100C0 !important;
+      color: #5100C0 !important;
+    }
+
+    /* Links rápidos */
+    .ptcg-404__quick {
+      margin-top: 48px;
+      display: flex; flex-direction: column; gap: 8px; align-items: center;
+    }
+    .ptcg-404__quick-label {
+      font-size: 0.78rem; color: #86868B; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .ptcg-404__quick-links {
+      display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+    }
+    .ptcg-404__quick-links a {
+      padding: 7px 14px; border-radius: 999px;
+      background-color: rgba(81,0,192,0.07);
+      color: #5100C0; font-size: 0.82rem; font-weight: 600;
+      text-decoration: none;
+      transition: background-color 0.25s ease;
+    }
+    .ptcg-404__quick-links a:hover {
+      background-color: rgba(81,0,192,0.14);
+    }
+
+    @media (max-width: 479px) {
+      .ptcg-404__number-card .lg-body { padding: 24px 32px; }
+      .ptcg-404__actions { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+<svg style="display:none;position:absolute;width:0;height:0" aria-hidden="true">
+  <defs>
+    <filter id="lg-dist" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.008" numOctaves="2" seed="92" result="noise"/>
+      <feGaussianBlur in="noise" stdDeviation="2" result="blurred"/>
+      <feDisplacementMap in="SourceGraphic" in2="blurred" scale="70" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
+<div class="ptcg-404">
+  <div class="ptcg-404__orb ptcg-404__orb-1" aria-hidden="true"></div>
+  <div class="ptcg-404__orb ptcg-404__orb-2" aria-hidden="true"></div>
+
+  <div class="ptcg-404__top">
+    <a href="index.html" class="ptcg-404__logo">🐾 Petcingo</a>
+  </div>
+
+  <div class="ptcg-404__content">
+    <div class="ptcg-404__number-wrap">
+      <div class="ptcg-404__number-card lg-card">
+        <div class="lg-base" aria-hidden="true"></div>
+        <div class="lg-body">
+          <span class="ptcg-404__number">404</span>
+          <span class="ptcg-404__icon">🐾</span>
+        </div>
+      </div>
+    </div>
+
+    <h1 class="ptcg-404__title">¡Esta página se perdió!</h1>
+    <p class="ptcg-404__sub">
+      La página que buscas no existe, fue movida o el enlace está roto. No te preocupes, podemos ayudarte a encontrar lo que necesitas.
+    </p>
+
+    <div class="ptcg-404__actions">
+      <a href="index.html" class="btn-primary">
+        <i class="ri-home-line"></i> Ir al inicio
+      </a>
+      <a href="catalogo.html" class="btn-ghost">
+        <i class="ri-grid-line"></i> Ver catálogo
+      </a>
+    </div>
+
+    <div class="ptcg-404__quick">
+      <span class="ptcg-404__quick-label">También puedes visitar</span>
+      <div class="ptcg-404__quick-links">
+        <a href="store.html">Tienda</a>
+        <a href="cart.html">Carrito</a>
+        <a href="login.html">Mi cuenta</a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

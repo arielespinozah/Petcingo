@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito — Petcingo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  <link href="https://assets.petcingo.com/css/petcingo-core.css" rel="stylesheet">
+  <style>
+    /* ============================================================
+       ENCAPSULADO PARA DASHNEX: .ptcg-cart aísla todos los estilos
+       del carrito del CSS global de la plataforma. Los colores
+       de botones y el resumen de pedido se definen explícitamente.
+       ============================================================ */
+
+    .ptcg-cart, .ptcg-cart * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      color: #1D1D1F;
+      -webkit-font-smoothing: antialiased;
+    }
+    .ptcg-cart a { text-decoration: none; }
+    .ptcg-cart img { display: block; max-width: 100%; }
+    .ptcg-cart button { cursor: pointer; font-family: inherit; }
+
+    .ptcg-cart {
+      min-height: 100vh;
+      background-color: #F5F5F7;
+      background-image:
+        radial-gradient(ellipse 70% 50% at 80% 20%, rgba(81,0,192,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 20% 85%, rgba(0,225,243,0.05) 0%, transparent 60%);
+    }
+
+    /* == Hero mínimo == */
+    .ptcg-cart .cart-hero {
+      padding: 40px 0 32px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .ptcg-cart .cart-hero__inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 24px;
+    }
+    .ptcg-cart .cart-hero__breadcrumb {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.8rem; color: #86868B; margin-bottom: 12px;
+    }
+    .ptcg-cart .cart-hero__breadcrumb a { color: #5100C0; }
+    .ptcg-cart .cart-hero__title {
+      font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800;
+      color: #1D1D1F; letter-spacing: -0.025em;
+    }
+    .ptcg-cart .cart-hero__count {
+      font-size: 0.95rem; color: #86868B; margin-top: 4px;
+    }
+
+    /* == Layout 2 columnas == */
+    .ptcg-cart .cart-layout {
+      max-width: 1200px; margin: 0 auto;
+      padding: 40px 24px;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* == Lista de items == */
+    .ptcg-cart .cart-items { display: flex; flex-direction: column; gap: 16px; }
+
+    .ptcg-cart .cart-item {
+      border-radius: 20px;
+      transition: transform 0.25s ease;
+    }
+    .ptcg-cart .cart-item:hover { transform: translateX(3px); }
+    .ptcg-cart .cart-item .lg-body {
+      padding: 20px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    .ptcg-cart .item-img {
+      width: 88px; height: 88px; flex-shrink: 0;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #EBE3FF, #DDFBFE);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem;
+    }
+    .ptcg-cart .item-info { flex: 1; min-width: 0; }
+    .ptcg-cart .item-cat {
+      font-size: 0.72rem; font-weight: 700; color: #5100C0;
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;
+    }
+    .ptcg-cart .item-name {
+      font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700;
+      color: #1D1D1F; margin-bottom: 4px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .ptcg-cart .item-variant {
+      font-size: 0.8rem; color: #86868B;
+    }
+    .ptcg-cart .item-actions {
+      display: flex; align-items: center; gap: 12px;
+      margin-top: 12px;
+    }
+    .ptcg-cart .qty-control {
+      display: flex; align-items: center; gap: 0;
+      border: 1.5px solid rgba(0,0,0,0.10);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .ptcg-cart .qty-btn {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      background-color: rgba(0,0,0,0.03) !important; color: #1D1D1F !important;
+      border: none; font-size: 0.95rem; font-weight: 600;
+      transition: background-color 0.2s ease;
+    }
+    .ptcg-cart .qty-btn:hover { background-color: rgba(81,0,192,0.08) !important; color: #5100C0 !important; }
+    .ptcg-cart .qty-num {
+      width: 36px; text-align: center;
+      font-size: 0.9rem; font-weight: 600; color: #1D1D1F;
+      border-left: 1px solid rgba(0,0,0,0.08);
+      border-right: 1px solid rgba(0,0,0,0.08);
+      background: #FFFFFF; line-height: 32px;
+    }
+    .ptcg-cart .item-del {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 0.8rem; color: #FF3B30; font-weight: 500;
+      background: none; border: none; cursor: pointer;
+      padding: 4px 8px; border-radius: 8px;
+      transition: background-color 0.2s ease;
+    }
+    .ptcg-cart .item-del:hover { background-color: rgba(255,59,48,0.07); }
+
+    .ptcg-cart .item-price-col {
+      text-align: right; flex-shrink: 0;
+    }
+    .ptcg-cart .item-price {
+      font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800;
+      color: #5100C0; display: block;
+    }
+    .ptcg-cart .item-unit {
+      font-size: 0.78rem; color: #86868B;
+    }
+
+    /* Estado vacío */
+    .ptcg-cart .cart-empty {
+      text-align: center; padding: 80px 24px;
+      display: none;
+    }
+    .ptcg-cart .cart-empty.show { display: block; }
+    .ptcg-cart .cart-empty__icon { font-size: 4rem; margin-bottom: 16px; }
+    .ptcg-cart .cart-empty__title {
+      font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800;
+      color: #1D1D1F; margin-bottom: 8px;
+    }
+    .ptcg-cart .cart-empty__sub { font-size: 0.9rem; color: #86868B; margin-bottom: 24px; }
+
+    /* == Resumen de pedido (Liquid Glass) == */
+    .ptcg-cart .order-summary {
+      position: sticky; top: 80px;
+      border-radius: 24px;
+    }
+    .ptcg-cart .order-summary .lg-body { padding: 28px; }
+    .ptcg-cart .summary-title {
+      font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 800;
+      color: #1D1D1F; margin-bottom: 24px;
+    }
+    .ptcg-cart .summary-rows { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+    .ptcg-cart .summary-row {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.9rem; color: #515154;
+    }
+    .ptcg-cart .summary-row.total {
+      padding-top: 16px;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      font-weight: 700; color: #1D1D1F;
+    }
+    .ptcg-cart .summary-row.total .val {
+      font-family: 'Syne', sans-serif; font-size: 1.35rem; font-weight: 800; color: #5100C0;
+    }
+
+    /* Cupón */
+    .ptcg-cart .coupon-wrap {
+      display: flex; gap: 8px; margin-bottom: 20px;
+    }
+    .ptcg-cart .coupon-input {
+      flex: 1; padding: 10px 14px; border-radius: 12px;
+      border: 1.5px solid rgba(0,0,0,0.10) !important;
+      background-color: rgba(255,255,255,0.7) !important;
+      color: #1D1D1F !important;
+      font-size: 0.88rem; outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .ptcg-cart .coupon-input:focus { border-color: #5100C0 !important; }
+    .ptcg-cart .coupon-input::placeholder { color: #86868B; }
+    .ptcg-cart .coupon-btn {
+      padding: 10px 16px; border-radius: 12px;
+      background-color: rgba(81,0,192,0.09) !important;
+      color: #5100C0 !important;
+      font-size: 0.85rem; font-weight: 600;
+      border: none; cursor: pointer; white-space: nowrap;
+      transition: background-color 0.2s ease;
+    }
+    .ptcg-cart .coupon-btn:hover { background-color: rgba(81,0,192,0.15) !important; color: #320078 !important; }
+
+    /* Botón checkout — CRÍTICO: color definido explícitamente */
+    .ptcg-cart .checkout-btn {
+      width: 100%; padding: 15px;
+      border-radius: 14px;
+      background-color: #5100C0 !important; /* Anti-Dashnex: !important necesario */
+      color: #FFFFFF !important;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      border: none;
+      box-shadow: 0 4px 20px rgba(81,0,192,0.28);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background-color 0.25s ease, transform 0.2s ease;
+      margin-bottom: 12px;
+    }
+    .ptcg-cart .checkout-btn:hover {
+      background-color: #320078 !important; color: #FFFFFF !important;
+      transform: translateY(-1px);
+    }
+    .ptcg-cart .continue-btn {
+      width: 100%; padding: 12px;
+      border-radius: 14px;
+      background-color: transparent !important;
+      color: #515154 !important;
+      font-size: 0.88rem; font-weight: 600;
+      border: 1.5px solid rgba(0,0,0,0.10) !important;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+    .ptcg-cart .continue-btn:hover {
+      border-color: #5100C0 !important; color: #5100C0 !important;
+    }
+
+    /* Métodos de pago */
+    .ptcg-cart .pay-methods {
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px; margin-top: 16px; padding-top: 16px;
+      border-top: 1px solid rgba(0,0,0,0.06);
+    }
+    .ptcg-cart .pay-badge {
+      padding: 4px 10px; border-radius: 6px;
+      font-size: 0.72rem; font-weight: 700; color: #515154;
+      background-color: rgba(0,0,0,0.05);
+    }
+
+    /* == También te puede gustar == */
+    .ptcg-cart .related-section {
+      max-width: 1200px; margin: 0 auto 60px;
+      padding: 0 24px;
+    }
+    .ptcg-cart .related-title {
+      font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800;
+      color: #1D1D1F; margin-bottom: 20px;
+    }
+    .ptcg-cart .related-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    }
+    .ptcg-cart .related-card {
+      border-radius: 18px; cursor: pointer;
+    }
+    .ptcg-cart .related-card .lg-body { padding: 0; }
+    .ptcg-cart .related-card__img {
+      height: 120px; border-radius: 17px 17px 0 0;
+      background: linear-gradient(135deg, #EBE3FF, #DDFBFE);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem;
+    }
+    .ptcg-cart .related-card__name {
+      padding: 12px 12px 4px;
+      font-size: 0.82rem; font-weight: 600; color: #1D1D1F; line-height: 1.3;
+    }
+    .ptcg-cart .related-card__price {
+      padding: 0 12px 12px;
+      font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 800;
+      color: #5100C0;
+    }
+
+    /* == Responsive == */
+    @media (max-width: 767px) {
+      .ptcg-cart .cart-layout { grid-template-columns: 1fr; gap: 24px; padding: 24px 16px; }
+      .ptcg-cart .order-summary { position: static; }
+      .ptcg-cart .cart-item .lg-body { flex-wrap: wrap; }
+      .ptcg-cart .item-price-col { margin-left: auto; }
+      .ptcg-cart .related-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .ptcg-cart .cart-layout { grid-template-columns: 1fr 320px; }
+      .ptcg-cart .related-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+<svg style="display:none;position:absolute;width:0;height:0" aria-hidden="true">
+  <defs>
+    <filter id="lg-dist" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.008" numOctaves="2" seed="92" result="noise"/>
+      <feGaussianBlur in="noise" stdDeviation="2" result="blurred"/>
+      <feDisplacementMap in="SourceGraphic" in2="blurred" scale="70" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
+<div class="ptcg-cart">
+
+  <!-- NAVBAR -->
+  <nav class="ptcg-navbar">
+    <div class="ptcg-navbar__inner">
+      <a href="index.html" class="ptcg-navbar__logo">🐾 <span>Petcingo</span></a>
+      <div class="ptcg-navbar__links">
+        <a href="catalogo.html"><i class="ri-grid-line"></i> Catálogo</a>
+        <a href="store.html"><i class="ri-store-2-line"></i> Tienda</a>
+        <a href="cart.html" class="ptcg-navbar__cart">
+          <i class="ri-shopping-cart-2-fill"></i> Carrito
+          <span class="ptcg-navbar__cart-badge">0</span>
+        </a>
+        <a href="login.html" class="ptcg-nav-cta"><i class="ri-user-line"></i> Ingresar</a>
+      </div>
+      <button class="ptcg-navbar__hamburger" aria-label="Menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="ptcg-navbar__mobile">
+      <a href="catalogo.html"><i class="ri-grid-line"></i> Catálogo</a>
+      <a href="store.html"><i class="ri-store-2-line"></i> Tienda</a>
+      <a href="login.html" class="ptcg-nav-cta-mobile"><i class="ri-user-line"></i> Ingresar</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="cart-hero">
+    <div class="cart-hero__inner">
+      <div class="cart-hero__breadcrumb">
+        <a href="index.html">Inicio</a>
+        <i class="ri-arrow-right-s-line"></i>
+        <span>Carrito</span>
+      </div>
+      <h1 class="cart-hero__title">Tu carrito</h1>
+      <p class="cart-hero__count" id="cart-count-text">Cargando...</p>
+    </div>
+  </div>
+
+  <!-- Layout -->
+  <div class="cart-layout">
+
+    <!-- Items -->
+    <div>
+      <!-- Estado vacío (oculto si hay items) -->
+      <div class="cart-empty" id="cart-empty">
+        <div class="cart-empty__icon">🛒</div>
+        <div class="cart-empty__title">Tu carrito está vacío</div>
+        <p class="cart-empty__sub">Agrega productos desde el catálogo para comenzar.</p>
+        <a href="catalogo.html" style="display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:999px;background-color:#5100C0;color:#FFFFFF;font-weight:600;font-size:0.9rem">
+          <i class="ri-grid-line"></i> Explorar catálogo
+        </a>
+      </div>
+
+      <!-- Lista de items -->
+      <div class="cart-items" id="cart-items-list">
+        <!-- Renderizado por JS -->
+      </div>
+    </div>
+
+    <!-- Resumen de pedido (Liquid Glass) -->
+    <div class="order-summary lg-card" id="order-summary">
+      <div class="lg-base" aria-hidden="true"></div>
+      <div class="lg-body">
+        <div class="summary-title">Resumen de pedido</div>
+
+        <div class="summary-rows">
+          <div class="summary-row">
+            <span>Subtotal (<span id="qty-total">0</span> items)</span>
+            <span id="subtotal">Bs. 0</span>
+          </div>
+          <div class="summary-row">
+            <span>Envío</span>
+            <span id="shipping-cost">Bs. 25</span>
+          </div>
+          <div class="summary-row" id="discount-row" style="display:none;color:#34C759">
+            <span>Descuento</span>
+            <span id="discount-amt">-Bs. 0</span>
+          </div>
+          <div class="summary-row total">
+            <span>Total</span>
+            <span class="val" id="total-price">Bs. 0</span>
+          </div>
+        </div>
+
+        <div class="coupon-wrap">
+          <input class="coupon-input" type="text" id="coupon-input" placeholder="Código de cupón">
+          <button class="coupon-btn" onclick="applyCoupon()">Aplicar</button>
+        </div>
+
+        <button class="checkout-btn" onclick="handleCheckout()">
+          <i class="ri-secure-payment-line"></i> Proceder al pago
+        </button>
+        <a href="catalogo.html" class="continue-btn">
+          <i class="ri-arrow-left-line"></i> Seguir comprando
+        </a>
+
+        <div class="pay-methods">
+          <span class="pay-badge">QR</span>
+          <span class="pay-badge">Tigo</span>
+          <span class="pay-badge">Bancario</span>
+          <span class="pay-badge">Tarjeta</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.cart-layout -->
+
+  <!-- También te puede gustar -->
+  <div class="related-section">
+    <div class="related-title">También te puede gustar</div>
+    <div class="related-grid">
+      <div class="related-card lg-card">
+        <div class="lg-base" aria-hidden="true"></div>
+        <div class="lg-body">
+          <div class="related-card__img">🎾</div>
+          <div class="related-card__name">Kit Juguetes Interactivos</div>
+          <div class="related-card__price">Bs. 129</div>
+        </div>
+      </div>
+      <div class="related-card lg-card">
+        <div class="lg-base" aria-hidden="true"></div>
+        <div class="lg-body">
+          <div class="related-card__img">🛁</div>
+          <div class="related-card__name">Shampoo Premium Sensible</div>
+          <div class="related-card__price">Bs. 65</div>
+        </div>
+      </div>
+      <div class="related-card lg-card">
+        <div class="lg-base" aria-hidden="true"></div>
+        <div class="lg-body">
+          <div class="related-card__img">💊</div>
+          <div class="related-card__name">Vitaminas Caninas</div>
+          <div class="related-card__price">Bs. 145</div>
+        </div>
+      </div>
+      <div class="related-card lg-card">
+        <div class="lg-base" aria-hidden="true"></div>
+        <div class="lg-body">
+          <div class="related-card__img">🛏️</div>
+          <div class="related-card__name">Cama Ortopédica Premium</div>
+          <div class="related-card__price">Bs. 289</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="ptcg-footer">
+    <div class="ptcg-footer__inner">
+      <div class="ptcg-footer__grid">
+        <div>
+          <div class="ptcg-footer__logo">🐾 Petcingo</div>
+          <p class="ptcg-footer__desc">La plataforma de mascotas más completa de Bolivia.</p>
+        </div>
+        <div>
+          <div class="ptcg-footer__col-title">Tienda</div>
+          <ul class="ptcg-footer__col-links">
+            <li><a href="catalogo.html">Catálogo</a></li>
+            <li><a href="store.html">Tienda</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="ptcg-footer__col-title">Cuenta</div>
+          <ul class="ptcg-footer__col-links">
+            <li><a href="login.html">Ingresar</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="ptcg-footer__col-title">Legal</div>
+          <ul class="ptcg-footer__col-links">
+            <li><a href="#">Privacidad</a></li>
+            <li><a href="#">Términos</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="ptcg-footer__bottom">
+        <span>© 2025 Petcingo · Bolivia</span>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /.ptcg-cart -->
+
+<div id="ptcg-toast-wrap" aria-live="polite"></div>
+
+<script src="https://assets.petcingo.com/js/petcingo-core.js"></script>
+<script>
+  const EMOJIS = { 'gps-001':'🦮','sna-001':'🍗','toy-001':'🎾','hyg-001':'🛁','sal-001':'💊','bed-001':'🛏️' };
+  const CATEGORIES = { 'gps-001':'Collares GPS','sna-001':'Alimentos','toy-001':'Juguetes','hyg-001':'Higiene','sal-001':'Salud','bed-001':'Camas' };
+
+  function renderCart() {
+    const items = Ptcg.Cart.get();
+    const listEl = document.getElementById('cart-items-list');
+    const emptyEl = document.getElementById('cart-empty');
+    const summaryEl = document.getElementById('order-summary');
+
+    if (!items.length) {
+      listEl.style.display = 'none';
+      emptyEl.classList.add('show');
+      summaryEl.style.display = 'none';
+      document.getElementById('cart-count-text').textContent = '0 artículos';
+      return;
+    }
+
+    emptyEl.classList.remove('show');
+    summaryEl.style.display = 'block';
+    listEl.style.display = 'flex';
+
+    const totalItems = Ptcg.Cart.count();
+    document.getElementById('cart-count-text').textContent = totalItems + ' artículo' + (totalItems !== 1 ? 's' : '');
+    document.getElementById('qty-total').textContent = totalItems;
+
+    listEl.innerHTML = items.map(item => `
+      <div class="cart-item lg-card" data-id="${item.id}" data-variant="${item.variant||''}">
+        <div class="lg-base" aria-hidden="true"></div>
+        <div class="lg-body">
+          <div class="item-img">${EMOJIS[item.id] || '📦'}</div>
+          <div class="item-info">
+            <div class="item-cat">${CATEGORIES[item.id] || 'Producto'}</div>
+            <div class="item-name">${Ptcg.esc(item.name)}</div>
+            ${item.variant ? `<div class="item-variant">${Ptcg.esc(item.variant)}</div>` : ''}
+            <div class="item-actions">
+              <div class="qty-control">
+                <button class="qty-btn" aria-label="Reducir" onclick="changeQty('${item.id}','${item.variant||''}',${(item.qty||1)-1})">−</button>
+                <span class="qty-num">${item.qty||1}</span>
+                <button class="qty-btn" aria-label="Aumentar" onclick="changeQty('${item.id}','${item.variant||''}',${(item.qty||1)+1})">+</button>
+              </div>
+              <button class="item-del" onclick="removeItem('${item.id}','${item.variant||''}')">
+                <i class="ri-delete-bin-line"></i> Eliminar
+              </button>
+            </div>
+          </div>
+          <div class="item-price-col">
+            <span class="item-price">${Ptcg.formatPrice(item.price * (item.qty||1))}</span>
+            ${(item.qty||1) > 1 ? `<span class="item-unit">${Ptcg.formatPrice(item.price)} c/u</span>` : ''}
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    const sub = Ptcg.Cart.total();
+    const shipping = sub > 0 ? 25 : 0;
+    document.getElementById('subtotal').textContent = Ptcg.formatPrice(sub);
+    document.getElementById('shipping-cost').textContent = shipping > 0 ? Ptcg.formatPrice(shipping) : 'Gratis';
+    document.getElementById('total-price').textContent = Ptcg.formatPrice(sub + shipping);
+  }
+
+  function changeQty(id, variant, qty) {
+    Ptcg.Cart.updateQty(id, variant, qty);
+    renderCart();
+  }
+
+  function removeItem(id, variant) {
+    Ptcg.Cart.remove(id, variant);
+    renderCart();
+    Ptcg.toast('Producto eliminado del carrito');
+  }
+
+  function applyCoupon() {
+    const code = document.getElementById('coupon-input').value.trim().toUpperCase();
+    const valid = { 'PETCINGO10': 10, 'BIENVENIDO': 15 };
+    if (valid[code]) {
+      const sub = Ptcg.Cart.total();
+      const disc = Math.round(sub * valid[code] / 100);
+      document.getElementById('discount-row').style.display = 'flex';
+      document.getElementById('discount-amt').textContent = '-' + Ptcg.formatPrice(disc);
+      document.getElementById('total-price').textContent = Ptcg.formatPrice(sub + 25 - disc);
+      Ptcg.toast('Cupón ' + code + ' aplicado: ' + valid[code] + '% descuento ✓', 'success');
+    } else {
+      Ptcg.toast('Cupón inválido o expirado', 'error');
+    }
+  }
+
+  function handleCheckout() {
+    if (!Ptcg.Cart.count()) { Ptcg.toast('Tu carrito está vacío', 'error'); return; }
+    Ptcg.toast('Redirigiendo al pago...');
+    setTimeout(() => window.location.href = 'login.html', 1200);
+  }
+
+  document.addEventListener('DOMContentLoaded', renderCart);
+</script>
+</body>
+</html>
