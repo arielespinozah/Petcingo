@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -144,11 +144,11 @@
 
     /* ── Sistema de alertas ── */
     .dash-alert {
-      background: #fff; border-radius: 12px; padding: 10px 16px;
+      background: #fff; border-radius: 12px; padding: 12px 18px;
       box-shadow: 0 4px 16px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
       border-left: 3px solid #4552CC;
       display: flex; align-items: center; gap: 8px;
-      font-size: 0.82rem; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif !important;
+      font-size: 0.85rem; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif !important;
       color: #212121 !important; cursor: pointer; pointer-events: auto;
       animation: alertSlideInRight 0.4s ease-out;
       transition: opacity 0.3s, transform 0.3s;
@@ -313,12 +313,16 @@
       50%       { transform: scale(1.6); opacity: 0.5; }
     }
 
-    /* ── Usuarios: toque corporativo ── */
-    #sec-users .ptcg-index__card:first-child { border-left: 4px solid #4552CC; }
+    /* -- Usuarios: toque corporativo -- */
+    #sec-users .ptcg-index__card:first-child {
+      border-left: 4px solid #4552CC;
+      background: #FAFBFF;
+    }
     .perm-check {
       display: flex; align-items: center; gap: 8px;
-      padding: 8px 12px; background: #F8F9FB;
-      border-radius: 8px; border: 1px solid #E0E0E0;
+      padding: 10px 14px; background: #F8F9FB;
+      border-radius: 10px; border: 1px solid #E0E0E0;
+      transition: all 0.2s;
     }
     .perm-check:hover { border-color: #4552CC; background: #EEF1FB; }
 
@@ -1644,6 +1648,7 @@
         <div><label class="ptcg-activate__label">Límite mascotas</label><input class="ptcg-activate__input" type="number" id="es-limite" min="1" max="200" style="width:100%;box-sizing:border-box;"/></div>
       </div>
       <div><label class="ptcg-activate__label">Dirección</label><input class="ptcg-activate__input" type="text" id="es-address" maxlength="120" style="width:100%;box-sizing:border-box;"/></div>
+      <div><label class="ptcg-activate__label">Email</label><input class="ptcg-activate__input" type="email" id="es-email" maxlength="80" style="width:100%;box-sizing:border-box;"/></div>
       <div style="border-top:1px solid rgba(0,0,0,0.06);padding-top:16px;margin-top:4px;">
         <div style="font-size:0.72rem;font-weight:700;color:#9E9E9E;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;font-family:'Plus Jakarta Sans',sans-serif;">Acceso al panel del refugio</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">

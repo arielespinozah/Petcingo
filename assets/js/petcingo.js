@@ -1,4 +1,4 @@
-/* PETCINGO app.js â€” v20260504 */
+﻿/* PETCINGO app.js â€” v20260504 */
 console.log('[Petcingo] app.js v20260504 loaded OK');
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    PETCINGO â€” app.js
@@ -225,6 +225,7 @@ window.doLogin = function() {
 function enterDashboard() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('dashboard').style.display    = 'block';
+  localStorage.setItem('pc_auth', _dash.currentUser.role);
   applyPermissions();
   initDashboard();
   addLog('login', _dash.currentUser.name, 'sistema');
@@ -585,14 +586,14 @@ window.loadLostPets = function() {
   var countEl = document.getElementById('lost-pets-count');
   var badge = document.getElementById('lost-nav-badge');
   if(!tbody) return;
-  tbody.innerHTML='<tr><td colspan="6"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></td></tr>';
+  tbody.innerHTML='<tr><td colspan="5"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></td></tr>';
   db().collection('pets').where('status', '==', 'perdido').get()
     .then(function(snap) {
       var cnt = snap.size;
       if(countEl) countEl.textContent = cnt + ' mascota' + (cnt !== 1 ? 's' : '') + ' perdida' + (cnt !== 1 ? 's' : '');
       if(badge){ badge.textContent = cnt > 0 ? cnt : ''; badge.style.display = cnt > 0 ? 'inline-flex' : 'none'; }
       if(snap.empty) {
-        tbody.innerHTML='<tr><td colspan="6"><div class="empty-state" style="padding:28px">ðŸŽ‰ <p style="margin-top:8px">Ninguna mascota estÃ¡ perdida en este momento.</p></div></td></tr>';
+        tbody.innerHTML='<tr><td colspan="5"><div class="empty-state" style="padding:28px"><p style="margin-top:8px">Ninguna mascota está perdida en este momento.</p></div></td></tr>';
         return;
       }
       var html = '';
@@ -600,34 +601,40 @@ window.loadLostPets = function() {
       snap.forEach(function(doc) {
         var d = doc.data(); var id = doc.id;
         var avatar = d.photoUrl
-          ? '<img src="'+esc(d.photoUrl)+'" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid rgba(244,63,94,.35)">'
-          : '<div style="width:44px;height:44px;border-radius:50%;background:rgba(244,63,94,.12);display:flex;align-items:center;justify-content:center;font-size:1.4rem">ðŸ¾</div>';
+          ? '<img src="'+esc(d.photoUrl)+'" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid rgba(244,63,94,.35);flex-shrink:0">'
+          : '<div style="width:40px;height:40px;border-radius:50%;background:rgba(244,63,94,.12);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">🐾</div>';
         var dateLost = d.lostAt && d.lostAt.toDate ? d.lostAt.toDate() : (d.updatedAt && d.updatedAt.toDate ? d.updatedAt.toDate() : (d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : new Date()));
         var diffDays = Math.floor(Math.abs(now - dateLost) / 86400000);
-        var timeLostStr = diffDays === 0 ? '<span style="color:#f43f5e;font-weight:800">Hoy</span>' : (diffDays === 1 ? '<span style="color:#f97316;font-weight:700">Hace 1 dÃ­a</span>' : '<span style="color:'+(diffDays > 7 ? '#f43f5e':'#f97316')+';font-weight:700">Hace '+diffDays+' dÃ­as</span>');
+        var timeLostStr = diffDays === 0
+          ? '<span style="color:#f43f5e;font-weight:800">Hoy</span>'
+          : (diffDays === 1
+            ? '<span style="color:#f97316;font-weight:700">Hace 1 día</span>'
+            : '<span style="color:'+(diffDays > 7 ? '#f43f5e':'#f97316')+';font-weight:700">Hace '+diffDays+' días</span>');
+        var inIndex = d.featuredOnIndex
+          ? '<span style="color:#2ECC71;font-weight:700"><i class="ri-checkbox-circle-fill"></i> Sí</span>'
+          : '<span style="color:#BDBDBD"><i class="ri-close-circle-line"></i> No</span>';
         var phone1 = normalizeWA(d.phone||'');
-        var waMsg = encodeURIComponent('Â¡Hola! Te escribo desde Petcingo â€” vi que tu mascota '+( d.name||'')+'  (ID: '+id+') estÃ¡ reportada como perdida. Â¿Podemos coordinarnos?');
-        var contactBtn = phone1 ? '<a class="btn btn-ghost btn-sm" style="color:#00c896;border-color:rgba(0,200,150,.35)" href="https://wa.me/'+phone1+'?text='+waMsg+'" target="_blank"><i class="ri-whatsapp-line"></i> WA</a>' : '<span style="font-size:.75rem;color:var(--muted-dark)">Sin tel.</span>';
-        var profileUrl = 'https://prueb2.dashnexpages.net/perfil-mascota-petcingo/?id='+encodeURIComponent(id);
-        var postText = encodeURIComponent('ðŸš¨ MASCOTA PERDIDA ðŸš¨\n\nðŸ¾ '+( d.name||'Mascota')+(d.breed ? ' Â· '+d.breed : '')+(d.city ? ' Â· '+d.city : '')+'\nðŸ‘¤ DueÃ±o: '+(d.ownerName||'â€”')+'\nðŸ“ž Contacto: '+(d.phone||'â€”')+'\nðŸ”— Perfil: '+profileUrl+'\n\n#PetcingoBo #MascotaPerdida #Bolivia');
+        var waMsg = encodeURIComponent('¡Hola! Te escribo desde Petcingo — vi que tu mascota '+(d.name||'')+' (ID: '+id+') está reportada como perdida. ¿Podemos coordinarnos?');
+        var waBtn = phone1
+          ? '<a class="btn btn-ghost btn-sm" style="color:#25D366;border-color:rgba(37,211,102,.35)" href="https://wa.me/'+phone1+'?text='+waMsg+'" target="_blank" title="Contactar por WhatsApp"><i class="ri-whatsapp-line"></i> WA</a>'
+          : '';
+        var safeId = id.replace(/'/g, "\\'");
+        var toggleLabel = d.featuredOnIndex ? 'Quitar del index' : 'Publicar en index';
+        var toggleIcon  = d.featuredOnIndex ? 'ri-eye-off-line' : 'ri-eye-line';
+        var toggleBtn = '<button class="btn btn-ghost btn-sm" title="'+esc(toggleLabel)+'" onclick="(typeof toggleFeaturedLost===\'function\')?toggleFeaturedLost(\''+safeId+'\','+!!d.featuredOnIndex+'):toast(\'toggleFeaturedLost no disponible\')"><i class="'+esc(toggleIcon)+'"></i></button>';
         html += '<tr style="vertical-align:middle">' +
-          '<td style="padding:10px 8px">'+avatar+'</td>' +
-          '<td style="padding:8px"><div style="font-weight:700;font-size:.9rem">'+esc(d.name||'â€”')+'</div><div style="font-size:.72rem;color:var(--muted-dark)">'+esc(id)+'</div>'+(d.breed?'<div style="font-size:.72rem;color:var(--muted-dark)">'+esc(d.breed)+'</div>':'')+'</td>' +
-          '<td style="padding:8px;font-size:.85rem">'+esc(d.ownerName||'â€”')+'<br><span style="font-size:.72rem;color:var(--muted-dark)">'+esc(d.city||'')+'</span></td>' +
+          '<td style="padding:10px 8px"><div style="display:flex;align-items:center;gap:10px">'+avatar+'<div><div style="font-weight:700;font-size:.9rem">'+esc(d.name||'—')+'</div>'+(d.breed?'<div style="font-size:.72rem;color:var(--muted-dark)">'+esc(d.breed)+'</div>':'')+'</div></div></td>' +
+          '<td style="padding:8px;font-size:.85rem">'+esc(d.ownerName||'—')+'</td>' +
           '<td style="padding:8px">'+timeLostStr+'</td>' +
-          '<td style="padding:8px" class="td-actions">'+contactBtn+'</td>' +
-          '<td style="padding:8px" class="td-actions" style="display:flex;gap:4px;flex-wrap:wrap">' +
-            '<a href="'+profileUrl+'" target="_blank" class="btn btn-ghost btn-sm"><i class="ri-eye-line"></i></a>' +
-            '<button class="btn btn-ghost btn-sm" title="Copiar texto para post en redes" onclick="copyText(decodeURIComponent(\''+postText+'\'),\'âœ… Texto copiado â€” pÃ©galo en tus redes\')"><i class="ri-share-line"></i></button>' +
-          '</td>' +
+          '<td style="padding:8px;text-align:center">'+inIndex+'</td>' +
+          '<td style="padding:8px" class="td-actions">'+waBtn+' '+toggleBtn+'</td>' +
         '</tr>';
       });
       tbody.innerHTML = html;
     }).catch(function(e) {
-      tbody.innerHTML='<tr><td colspan="6"><div class="empty-state"><p>Error al cargar: '+esc(e.message)+'</p></div></td></tr>';
+      tbody.innerHTML='<tr><td colspan="5"><div class="empty-state"><p>Error al cargar: '+esc(e.message)+'</p></div></td></tr>';
     });
 };
-
 /* â”€â”€ Notifications â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 window.toggleNotifPanel = function() {
   var overlay = document.getElementById('notif-overlay');
@@ -1265,8 +1272,8 @@ window.editShelter = function(shId, dataJson) {
   var d;
   try { d = JSON.parse(dataJson); } catch(e) { d = {}; }
   var fields = { 'es-name':d.name, 'es-responsible':d.responsible, 'es-city':d.city,
-    'es-phone':d.phone, 'es-address':d.address, 'es-username':d.username,
-    'es-password':'', 'es-limite':d.limite_mascotas||40 };
+    'es-phone':d.phone, 'es-address':d.address, 'es-email':d.email,
+    'es-username':d.username, 'es-password':'', 'es-limite':d.limite_mascotas||40 };
   Object.keys(fields).forEach(function(id){ var el=document.getElementById(id); if(el) el.value=fields[id]||''; });
   document.getElementById('es-shelter-id').value = shId;
   var modal = document.getElementById('shelter-edit-modal');
@@ -1293,6 +1300,7 @@ window.updateShelter = function() {
     city:        document.getElementById('es-city').value.trim(),
     phone:       document.getElementById('es-phone').value.trim(),
     address:     document.getElementById('es-address').value.trim(),
+    email:       document.getElementById('es-email') ? document.getElementById('es-email').value.trim() : '',
     limite_mascotas: limite
   };
   if (username) update.username = username;
