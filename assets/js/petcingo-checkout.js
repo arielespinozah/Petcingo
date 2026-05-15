@@ -234,10 +234,12 @@
     var bankCard = byId('ptcg-bank-card');
 
     if (selectedMethod.key === 'qr') {
+      if (qrCard) qrCard.removeAttribute('hidden');
       if (bankCard) bankCard.setAttribute('hidden', '');
       showQR();
     } else if (selectedMethod.key === 'banco') {
       if (qrCard) qrCard.setAttribute('hidden', '');
+      if (bankCard) bankCard.removeAttribute('hidden');
       showBankCard();
     }
   };
@@ -251,7 +253,24 @@
     qrCard.removeAttribute('hidden');
     setTimeout(function () { qrCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 120);
 
-    updateTotalDisplay();
+    // Intentar cargar QR real desde Firestore
+    db.collection('config').doc('bank_info').get().then(function(snap) {
+      var data = snap.exists ? snap.data() : {};
+      var qrCanvas = document.getElementById('ptcg-qr-canvas');
+      var qrImage = data.qrImageUrl;
+      
+      if (qrImage && qrCanvas) {
+        // Mostrar imagen real en lugar del canvas
+        qrCanvas.parentElement.innerHTML = '<img src="' + qrImage + '" style="max-width:200px;border-radius:12px;" alt="QR de pago">';
+      } else if (qrCanvas) {
+        // Fallback: generar QR dinámico
+        drawQrCanvas();
+      }
+      
+      updateTotalDisplay();
+    }).catch(function() {
+      drawQrCanvas(); // fallback si Firestore falla
+    });
 
     var confirmArea = byId('ptcg-confirm-area');
     if (confirmArea) confirmArea.classList.remove('visible');
