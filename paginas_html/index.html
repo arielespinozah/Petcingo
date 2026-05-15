@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css">
+  <link rel="stylesheet" href="https://prueb2.dashnexpages.net/assets/fonts/remixicon/remixicon.css">
   <link rel="stylesheet" href="https://prueb2.dashnexpages.net/assets/css/petcingo-index.css">
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -1779,6 +1779,21 @@
     }).catch(function() {});
   })();
 
+  /* ── Geolocalización para Checkout ── */
+  (function initGeoRouting() {
+    fetch('https://ipapi.co/json/')
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        if (data.country_code && data.country_code !== 'BO') {
+          window.ptcgIsIntl = true;
+          document.querySelectorAll('a[href*="/checkout/"]').forEach(function (btn) {
+            btn.href = btn.href.replace('/checkout/', '/checkout-internacional/');
+          });
+        }
+      })
+      .catch(function (e) { console.warn('Error detectando IP:', e); });
+  })();
+
   window.ptcgGoogleLogin = function () {
     var btn = document.getElementById('ptcg-login-submit');
     ptcgSetLoading(btn, true);
@@ -1870,11 +1885,11 @@
   window.ptcgCloseModal = function () { document.getElementById('ptcg-modal').hidden = true; };
 
   window.ptcgBuyPlan = function (planKey) {
-    var lang = (navigator.language || navigator.userLanguage || '').toLowerCase();
-    var isSpanish = lang.indexOf('es') === 0;
-    var base = isSpanish
-      ? 'https://prueb2.dashnexpages.net/checkout/'
-      : 'https://prueb2.dashnexpages.net/checkout-internacional/';
+    // Determine path based on previous fetch result
+    var isIntl = window.ptcgIsIntl || false;
+    var base = isIntl
+      ? 'https://prueb2.dashnexpages.net/checkout-internacional/'
+      : 'https://prueb2.dashnexpages.net/checkout/';
     window.location.href = base + '?plan=' + planKey;
   };
 

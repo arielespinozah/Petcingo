@@ -274,6 +274,7 @@ function initDashboard() {
     if (typeof loadProducts    === 'function') loadProducts();
     if (typeof loadPromotions  === 'function') loadPromotions();
     if (typeof loadSiteConfig  === 'function') loadSiteConfig();
+    if (typeof loadBankInfo    === 'function') loadBankInfo();
     if (typeof showInitialAlerts === 'function') showInitialAlerts();
   }, 800);
 }

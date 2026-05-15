@@ -110,6 +110,9 @@
   /* PRECIOS FIRESTORE                                                     */
   /* ------------------------------------------------------------------ */
   function loadPrices() {
+    // Para internacional, por ahora usamos DEFAULT_USD directamente
+    if (isIntl) return;
+    
     db.collection('siteConfig').doc('main').get().then(function (snap) {
       if (snap.exists) {
         var p = (snap.data().prices) || {};
@@ -170,137 +173,38 @@
     var name  = getVal('ptcg-name').trim();
     var phone = getVal('ptcg-phone').trim();
     var email = getVal('ptcg-email').trim();
+    var country = getVal('ptcg-intl-country').trim();
+    var address = getVal('ptcg-intl-address').trim();
     var ok = true;
 
     if (!name)  { errOn('ptcg-err-name',  'ptcg-name');  ok = false; }
     else        { errOff('ptcg-err-name', 'ptcg-name'); }
+    
     if (!phone) { errOn('ptcg-err-phone', 'ptcg-phone'); ok = false; }
     else        { errOff('ptcg-err-phone','ptcg-phone'); }
+    
     if (!email || email.indexOf('@') < 0 || email.indexOf('.') < 0) {
       errOn('ptcg-err-email', 'ptcg-email'); ok = false;
     } else {
       errOff('ptcg-err-email', 'ptcg-email');
     }
+    
+    if (!country) { errOn('ptcg-err-intl-country', 'ptcg-intl-country'); ok = false; }
+    else          { errOff('ptcg-err-intl-country', 'ptcg-intl-country'); }
+    
+    if (!address) { errOn('ptcg-err-intl-address', 'ptcg-intl-address'); ok = false; }
+    else          { errOff('ptcg-err-intl-address', 'ptcg-intl-address'); }
 
     if (!ok) showToast('Completa los campos requeridos', 'error');
     return ok;
   }
 
   /* ------------------------------------------------------------------ */
-  /* DELIVERY (solo Bolivia)                                               */
+  /* DELIVERY (Internacional)                                              */
   /* ------------------------------------------------------------------ */
-  window.ptcgSetDelivery = function (type) {
-    var city = getVal('ptcg-city');
-    if (city && city !== 'Santa Cruz de la Sierra') return; // Bloquear si no es SCZ
-
-    deliveryType = type;
-    var pickup    = byId('ptcg-opt-pickup');
-    var delivery  = byId('ptcg-opt-delivery');
-    var addrField = byId('ptcg-address-field');
-    var shipInfo  = byId('ptcg-shipping-info');
-    var delIcon   = byId('ptcg-delivery-icon');
-    var delPrice  = byId('ptcg-del-price');
-    var msg = byId('ptcg-zone-msg');
-
-    if (pickup)   pickup.classList.toggle('is-selected',   type === 'pickup');
-    if (delivery) delivery.classList.toggle('is-selected', type === 'delivery');
-
-    if (type === 'delivery') {
-      deliveryFee = 10;
-      if (delPrice) delPrice.textContent = '10 Bs';
-      if (addrField) addrField.style.display = '';
-      if (shipInfo)  shipInfo.style.display  = 'none';
-      if (delIcon)   delIcon.className = 'ri-motorbike-line';
-      window.ptcgSimZone();
-    } else {
-      deliveryFee = 0;
-      if (delPrice) delPrice.textContent = 'Gratis';
-      if (addrField) addrField.style.display = 'none';
-      if (shipInfo)  shipInfo.style.display  = 'none';
-      if (msg) msg.setAttribute('hidden', '');
-    }
-    ptcgUpdateTotals();
-  };
-
-  window.ptcgUpdateDelivery = function () {
-    var city = getVal('ptcg-city');
-    var pickupBtn = byId('ptcg-opt-pickup');
-    var deliveryBtn = byId('ptcg-opt-delivery');
-    var shipInfo = byId('ptcg-shipping-info');
-    var addrField = byId('ptcg-address-field');
-    var delPrice = byId('ptcg-del-price');
-    var delIcon = byId('ptcg-delivery-icon');
-    var msg = byId('ptcg-zone-msg');
-
-    if (city === 'Santa Cruz de la Sierra') {
-      if (pickupBtn) { pickupBtn.style.display = ''; pickupBtn.disabled = false; pickupBtn.style.opacity = '1'; }
-      if (deliveryBtn) { deliveryBtn.style.display = ''; }
-      if (shipInfo) shipInfo.style.display = 'none';
-      if (delIcon) delIcon.className = 'ri-motorbike-line';
-      if (deliveryType === 'pickup') {
-         window.ptcgSetDelivery('pickup');
-      } else {
-         window.ptcgSetDelivery('delivery');
-      }
-    } else if (city === 'La Paz' || city === 'El Alto' || city === 'Cochabamba' || city === 'Sacaba' || city === 'Quillacollo') {
-      if (pickupBtn) { pickupBtn.style.display = 'none'; }
-      if (deliveryBtn) { deliveryBtn.classList.add('is-selected'); }
-      deliveryType = 'delivery';
-      deliveryFee = 30;
-      if (delPrice) delPrice.textContent = '30 Bs (fijo)';
-      if (addrField) addrField.style.display = '';
-      if (msg) msg.setAttribute('hidden', '');
-      if (shipInfo) {
-        shipInfo.style.display = '';
-        shipInfo.innerHTML = '<i class="ri-information-line" style="float:left;margin-right:6px;margin-top:1px;"></i><strong>Envio a domicilio:</strong> 30 Bs (precio fijo).';
-      }
-      if (delIcon) delIcon.className = 'ri-truck-line';
-    } else {
-      if (pickupBtn) { pickupBtn.style.display = 'none'; }
-      if (deliveryBtn) { deliveryBtn.classList.add('is-selected'); }
-      deliveryType = 'delivery';
-      deliveryFee = 0;
-      if (delPrice) delPrice.textContent = '0 Bs';
-      if (addrField) addrField.style.display = '';
-      if (msg) msg.setAttribute('hidden', '');
-      if (shipInfo) {
-        shipInfo.style.display = '';
-        shipInfo.innerHTML = '<i class="ri-information-line" style="float:left;margin-right:6px;margin-top:1px;"></i><strong>Envio por pagar contra entrega:</strong> El costo lo define la transportadora al recoger en la terminal.';
-      }
-      if (delIcon) delIcon.className = 'ri-box-3-line';
-    }
-    ptcgUpdateTotals();
-  };
-
-  window.ptcgSimZone = function () {
-    var txt   = getVal('ptcg-address').toLowerCase();
-    var msg   = byId('ptcg-zone-msg');
-    var txtEl = byId('ptcg-zone-text');
-    var city  = getVal('ptcg-city');
-    
-    if (city !== 'Santa Cruz de la Sierra') {
-      if (msg) msg.setAttribute('hidden', '');
-      return;
-    }
-
-    if (txt.length > 4) {
-      var fee = 10;
-      if (txt.indexOf('norte') !== -1 || txt.indexOf('4to') !== -1 || txt.indexOf('cuarto') !== -1) {
-        fee = 15;
-        if (txtEl) txtEl.textContent = 'Zona Norte: Tarifa (15 Bs)';
-      } else {
-        if (txtEl) txtEl.textContent = 'Zona estandar: 10 Bs';
-      }
-      deliveryFee = fee;
-      var dp = byId('ptcg-del-price');
-      if (dp) dp.textContent = fee + ' Bs';
-      if (msg) msg.removeAttribute('hidden');
-    } else {
-      if (msg) msg.setAttribute('hidden', '');
-      deliveryFee = deliveryType === 'delivery' ? 10 : 0;
-    }
-    ptcgUpdateTotals();
-  };
+  // Envio esta incluido o se maneja por la pasarela de pago (Stripe/PayPal)
+  deliveryFee = 0;
+  deliveryType = 'international';
 
   /* ------------------------------------------------------------------ */
   /* METODOS DE PAGO                                                       */
@@ -588,8 +492,8 @@
       var phone = getVal('ptcg-phone').trim();
       var email = getVal('ptcg-email').trim();
       var notes = getVal('ptcg-notes').trim();
-      var city  = isIntl ? getVal('ptcg-intl-country').trim() : getVal('ptcg-city');
-      var addr  = isIntl ? getVal('ptcg-intl-address').trim() : getVal('ptcg-address').trim();
+      var city  = getVal('ptcg-intl-country').trim();
+      var addr  = getVal('ptcg-intl-address').trim();
 
       var unitPrice = selectedPlan.price;
       var subtotal = unitPrice * quantity;

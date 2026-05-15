@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  <link href="https://prueb2.dashnexpages.net/assets/fonts/remixicon/remixicon.css" rel="stylesheet">
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -95,7 +95,7 @@
   gap: 6px !important;
   text-decoration: none !important;
 }
-.ptcg-checkout__logo img { height: 36px !important; width: auto !important; }
+.ptcg-checkout__logo img { height: 48px !important; width: auto !important; }
 .ptcg-checkout__back {
   display: flex !important;
   align-items: center !important;
@@ -415,7 +415,7 @@
   height: 2px !important; background: #E0E4F5 !important; z-index: 0 !important;
 }
 .ptcg-checkout__tracking-dot {
-  width: 36px !important; height: 36px !important; border-radius: 50% !important;
+  width: 36px !important; height: 48px !important; border-radius: 50% !important;
   background: #E0E4F5 !important; display: flex !important;
   align-items: center !important; justify-content: center !important;
   font-size: 0.80rem !important; color: #9E9E9E !important;
@@ -644,7 +644,7 @@
   <header class="ptcg-checkout__topbar">
     <a class="ptcg-checkout__logo" href="https://prueb2.dashnexpages.net/home/">
       <img src="https://prueb2.dashnexpages.net/assets/images/logo/PETCINGO_DARK.svg"
-           alt="Petcingo" height="36">
+           alt="Petcingo" height="48">
     </a>
     <button class="ptcg-checkout__back" onclick="ptcgPrevPhase()"
             id="ptcg-btn-back" hidden>
@@ -702,6 +702,50 @@
            FASE 1: DATOS DEL COMPRADOR + ENTREGA
            ============================================================ -->
       <div class="ptcg-checkout__phase active" id="ptcg-phase-1">
+
+        <!-- Resumen de compra -->
+        <div class="ptcg-checkout__card" id="ptcg-order-summary">
+          <div style="font-family:'Sora',sans-serif;font-size:0.92rem;font-weight:700;color:#1E255E;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(69,82,204,0.08);padding-bottom:12px;">
+            <i class="ri-shopping-bag-3-line" style="color:#4552CC;"></i> Tu pedido
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div>
+              <div style="font-weight:700;color:#1E255E;font-size:0.95rem;" id="ptcg-summary-plan-name">--</div>
+              <div style="font-size:0.75rem;color:#6C7297;" id="ptcg-summary-plan-desc">--</div>
+              <div style="font-size:0.85rem;color:#4552CC;font-weight:700;margin-top:4px;" id="ptcg-summary-unit-price">--</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;background:rgba(69,82,204,0.05);border-radius:12px;padding:6px 12px;border:1px solid rgba(69,82,204,0.15);">
+              <button type="button" onclick="ptcgUpdateQuantity(-1)" style="border:none;background:none;color:#4552CC;font-size:1.2rem;cursor:pointer;"><i class="ri-subtract-line"></i></button>
+              <span id="ptcg-summary-qty" style="font-weight:700;color:#1E255E;font-size:1rem;min-width:16px;text-align:center;">1</span>
+              <button type="button" onclick="ptcgUpdateQuantity(1)" style="border:none;background:none;color:#4552CC;font-size:1.2rem;cursor:pointer;"><i class="ri-add-line"></i></button>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+            <div style="flex:1;">
+              <input type="text" class="ptcg-checkout__input" id="ptcg-promo-input" placeholder="Codigo promocional" style="padding:8px 12px;font-size:0.8rem;">
+            </div>
+            <button class="ptcg-checkout__btn ptcg-checkout__btn--secondary" type="button" onclick="ptcgApplyPromo()" style="width:auto;padding:8px 16px;font-size:0.8rem;">Aplicar</button>
+          </div>
+          <div id="ptcg-promo-msg" style="font-size:0.75rem;font-weight:600;display:none;margin-top:-4px;"></div>
+          <div style="border-top:1px dashed rgba(69,82,204,0.15);padding-top:12px;margin-top:4px;">
+            <div style="display:flex;justify-content:space-between;font-size:0.85rem;color:#6C7297;margin-bottom:6px;">
+              <span>Subtotal</span>
+              <span id="ptcg-summary-subtotal">--</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.85rem;color:#6C7297;margin-bottom:6px;" id="ptcg-summary-discount-row" hidden>
+              <span>Descuento</span>
+              <span id="ptcg-summary-discount" style="color:#22C55E;">--</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.85rem;color:#6C7297;margin-bottom:12px;">
+              <span>Envio</span>
+              <span id="ptcg-summary-shipping">--</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-weight:800;font-size:1.1rem;color:#1E255E;">
+              <span>Total</span>
+              <span id="ptcg-summary-total">--</span>
+            </div>
+          </div>
+        </div>
 
         <div class="ptcg-checkout__card">
           <div style="font-family:'Sora',sans-serif;font-size:0.92rem;font-weight:700;color:#1E255E;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(69,82,204,0.08);padding-bottom:12px;">
@@ -878,6 +922,44 @@
                 Tienes dudas? Contactanos por WhatsApp
               </a>
             </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta de datos bancarios (aparece cuando es deposito bancario) -->
+        <div class="ptcg-checkout__card" id="ptcg-bank-card" hidden>
+          <div style="font-family:'Sora',sans-serif;font-size:0.92rem;font-weight:700;color:#1E255E;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(69,82,204,0.08);padding-bottom:12px;">
+            <i class="ri-bank-line" style="color:#4552CC;"></i> Datos para transferencia
+          </div>
+          <div style="background:rgba(69,82,204,0.05);border-radius:12px;padding:16px;border:1px solid rgba(69,82,204,0.15);">
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <span style="font-size:0.8rem;color:#6C7297;">Banco</span>
+              <span style="font-weight:700;color:#1E255E;font-size:0.85rem;" id="ptcg-bank-name">Banco Union</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <span style="font-size:0.8rem;color:#6C7297;">Tipo de cuenta</span>
+              <span style="font-weight:700;color:#1E255E;font-size:0.85rem;" id="ptcg-bank-type">Cuenta Corriente</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <span style="font-size:0.8rem;color:#6C7297;">Numero de cuenta</span>
+              <span style="font-weight:700;color:#1E255E;font-size:0.85rem;" id="ptcg-bank-account">10000000000000</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;">
+              <span style="font-size:0.8rem;color:#6C7297;">Titular</span>
+              <span style="font-weight:700;color:#1E255E;font-size:0.85rem;" id="ptcg-bank-holder">Petcingo SRL</span>
+            </div>
+          </div>
+          <p style="font-size:0.82rem;color:#6C7297;text-align:center;">
+            Monto a pagar: <strong style="color:#1E255E;" id="ptcg-bank-amount">-- Bs</strong>
+          </p>
+          <div class="ptcg-checkout__confirm-area visible">
+            <button class="ptcg-checkout__btn ptcg-checkout__btn--primary"
+                    onclick="ptcgConfirmPayment()">
+              <i class="ri-upload-cloud-2-line"></i> Ya deposite (Subir comprobante)
+            </button>
+            <a href="https://wa.me/59171040074" target="_blank"
+               style="font-size:0.80rem;color:#4552CC;font-weight:600;text-decoration:underline;">
+              Tienes dudas? Contactanos por WhatsApp
+            </a>
           </div>
         </div>
 
