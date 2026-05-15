@@ -2049,39 +2049,12 @@
     deleteBatch();
   };
 
+
   /* ═══════════════ PEDIDOS ═══════════════ */
   var _ordersCache = [];
   window._ordersListenerActive = false;
 
-  
 
-      var html = '';
-    orders.forEach(function(o) {
-      var d = o.data;
-      var status = d.status || 'pendiente';
-      var isUrgent = d.urgent === true;
-      var rowClass = isUrgent ? 'tr-urgent' : '';
-      var date = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toLocaleDateString('es-BO', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
-      var nextStatus = getNextOrderStatus(status);
-      var nextLabel = nextStatus !== status ? nextStatus : '';
-      html += '<tr class="' + rowClass + '">' +
-        '<td><strong>' + escFn(o.id) + '</strong></td>' +
-        '<td>' + escFn(d.buyerName || '—') + '<br><small style="color:#757575;">' + escFn(d.phone || '') + '</small></td>' +
-        '<td>' + escFn(d.channel || '—') + '</td>' +
-        '<td>' + escFn(d.shippingType || '—') + '<br><small style="color:#757575;">' + escFn(d.department || '') + '</small></td>' +
-        '<td><span class="status-badge ' + status + '">' + status + '</span></td>' +
-        '<td>' + date + '</td>' +
-        '<td style="white-space:nowrap;">' +
-          (nextLabel ? '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="changeOrderStatus(\'' + o.id + '\',\'' + nextStatus + '\')" title="Avanzar a ' + nextLabel + '"><i class="ri-arrow-right-line"></i></button> ' : '') +
-          '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="printGuide(\'' + o.id + '\')" title="Imprimir guía"><i class="ri-printer-line"></i></button> ' +
-          '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="color:' + (isUrgent ? '#f44336' : '#757575') + '" onclick="toggleUrgent(\'' + o.id + '\',' + isUrgent + ')" title="' + (isUrgent ? 'Quitar urgente' : 'Marcar urgente') + '"><i class="ri-flashlight-line"></i></button>' +
-        '</td>' +
-      '</tr>';
-    });
-    tbody.innerHTML = html;
-    var cnt = document.getElementById('orders-count');
-    if (cnt) cnt.textContent = orders.length + ' pedido' + (orders.length !== 1 ? 's' : '');
-  }
 
   
   
@@ -2390,10 +2363,6 @@
     tbody.innerHTML = html;
   };
 
-</script>
-</body></html>');
-    win.document.close();
-  };
 
   window.toggleUrgent = function(orderId, current) {
     var db2 = db(); if (!db2) return;
