@@ -1459,16 +1459,153 @@
     // Lógica para guardar credenciales API en Firebase
   };
 
-  /* ═══════════════ IMPRESIÓN 360 ═══════════════ */
+  /* ═══════════════ IMPRESION 360 ═══════════════ */
   window.generatePrintLayout = function() {
     var container = document.getElementById('print-layout-container');
     var canvasArea = document.getElementById('print-canvas-area');
     if (!container || !canvasArea) return;
-    
     container.style.display = 'block';
-    canvasArea.innerHTML = '<div style="padding:40px; background:#f9f9f9; border:1px dashed #ccc; width:100%; color:#888;">Renderizando pliego según Plan Maestro 360... (Próximamente)</div>';
-    
-    // Aquí se leerán las reservas/ventas no impresas, y se generarán los QRs en canvas
+    canvasArea.innerHTML = '<div style="padding:40px;background:#f9f9f9;border:1px dashed #ccc;width:100%;color:#888;">Renderizando pliego segun Plan Maestro 360... (Proximamente)</div>';
+  };
+
+  /* ═══════════════ QR DE PAGO ═══════════════ */
+  var _qrFile = null;
+
+  window.ptcgHandleQrUpload = function(file) {
+    if (!file || !file.type.match(/^image\//)) { if (typeof toast === 'function') toast('Solo se permiten imagenes.'); return; }
+    if (file.size > 2 * 1024 * 1024) { if (typeof toast === 'function') toast('Maximo 2 MB'); return; }
+    _qrFile = file;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var img = document.getElementById('ptcg-qr-preview-img');
+      var prev = document.getElementById('ptcg-qr-preview');
+      if (img) img.src = e.target.result;
+      if (prev) prev.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  };
+
+  window.ptcgSaveQr = function() {
+    if (!_qrFile) { if (typeof toast === 'function') toast('Selecciona una imagen QR primero'); return; }
+    var db2 = db(); if (!db2) { if (typeof toast === 'function') toast('Firebase no disponible'); return; }
+    var storage = (function() { try { return firebase.storage(); } catch(e) { return null; } })();
+    if (!storage) { if (typeof toast === 'function') toast('Firebase Storage no disponible'); return; }
+    var ref = storage.ref('config/qr-pago-' + Date.now() + '.png');
+    if (typeof toast === 'function') toast('Subiendo QR...');
+    ref.put(_qrFile).then(function() {
+      return ref.getDownloadURL();
+    }).then(function(url) {
+      return db2.collection('config').doc('bank_info').set({ qrImageUrl: url }, { merge: true })
+        .then(function() {
+          var img = document.getElementById('ptcg-qr-preview-img');
+          var prev = document.getElementById('ptcg-qr-preview');
+          if (img) img.src = url;
+          if (prev) prev.style.display = 'block';
+          _qrFile = null;
+          if (typeof toast === 'function') toast('QR de pago guardado correctamente');
+        });
+    }).catch(function(e) { if (typeof toast === 'function') toast('Error al guardar QR: ' + e.message); });
+  };
+
+  window.ptcgRemoveQr = function() {
+    var db2 = db(); if (!db2) return;
+    db2.collection('config').doc('bank_info').set({ qrImageUrl: '' }, { merge: true }).then(function() {
+      var prev = document.getElementById('ptcg-qr-preview');
+      var img  = document.getElementById('ptcg-qr-preview-img');
+      if (prev) prev.style.display = 'none';
+      if (img) img.src = '';
+      _qrFile = null;
+      if (typeof toast === 'function') toast('QR eliminado');
+    }).catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
+  };
+
+  /* Cargar QR guardado al iniciar */
+  (function() {
+    setTimeout(function() {
+      var db2 = (typeof db === 'function') ? db() : null;
+      if (!db2) return;
+      db2.collection('config').doc('bank_info').get().then(function(doc) {
+        if (!doc.exists) return;
+        var url = doc.data().qrImageUrl;
+        if (!url) return;
+        var img  = document.getElementById('ptcg-qr-preview-img');
+        var prev = document.getElementById('ptcg-qr-preview');
+        if (img) img.src = url;
+        if (prev) prev.style.display = 'block';
+      }).catch(function() {});
+    }, 1500);
+  })();
+
+  /* ═══════════════ DATOS BANCARIOS ═══════════════ */
+  window.saveBankInfo = function() {
+    var db2 = db(); if (!db2) { if (typeof toast === 'function') toast('Firebase no disponible'); return; }
+    var fields = ['bank-name', 'bank-account', 'bank-account-name', 'bank-account-number', 'bank-currency'];
+    var data = {};
+    fields.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) data[id.replace(/-/g, '_')] = el.value.trim();
+    });
+    /* Also capture any textarea notes */
+    var notesEl = document.getElementById('bank-notes');
+    if (notesEl) data.bank_notes = notesEl.value.trim();
+    db2.collection('config').doc('bank_info').set(data, { merge: true }).then(function() {
+      if (typeof toast === 'function') toast('Datos bancarios guardados');
+    }).catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
+  };
+
+  /* ═══════════════ MODAL MASCOTA ═══════════════ */
+  window.showPetModal = function(plateId) {
+    var modal   = document.getElementById('pet-detail-modal');
+    var content = document.getElementById('mod-pet-content');
+    var nameEl  = document.getElementById('mod-pet-name');
+    if (!modal) return;
+
+    if (content) content.innerHTML = '<div class="empty-state" style="padding:20px"><div class="loading-dots"><span></span><span></span><span></span></div></div>';
+    if (nameEl)  nameEl.textContent = '...';
+    modal.style.display = 'flex';
+
+    var db2 = db(); if (!db2) { if (typeof toast === 'function') toast('Firebase no listo'); window.closePetModal(); return; }
+    db2.collection('pets').doc(plateId).get().then(function(doc) {
+      if (!doc.exists) {
+        if (typeof toast === 'function') toast('Placa no encontrada.');
+        window.closePetModal();
+        return;
+      }
+      var d = doc.data();
+      if (nameEl) nameEl.textContent = d.name || 'Sin nombre';
+
+      var html = '';
+      if (d.photoUrl) {
+        html += '<div style="text-align:center;margin-bottom:16px"><img src="' + escFn(d.photoUrl) + '" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid rgba(69,82,204,.2);" onerror="this.style.display=\'none\'"></div>';
+      }
+      html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:.85rem">';
+      var fields = [
+        ['Especie', d.species], ['Raza', d.breed],
+        ['Dueno', d.ownerName], ['Telefono', d.phone],
+        ['Ciudad', d.city], ['Estado', d.status],
+        ['Vendedor', d.sellerName], ['Codigo', plateId]
+      ];
+      fields.forEach(function(f) {
+        html += '<div style="background:#F8F9FB;padding:8px 10px;border-radius:8px"><span style="font-size:.68rem;color:#9E9E9E;text-transform:uppercase;display:block">' + escFn(f[0]) + '</span><strong>' + escFn(f[1] || '--') + '</strong></div>';
+      });
+      html += '</div>';
+      if (d.notes) {
+        html += '<div style="margin-top:12px;background:#F8F9FB;padding:10px;border-radius:8px;font-size:.82rem"><strong>Notas:</strong> ' + escFn(d.notes) + '</div>';
+      }
+      if (d.phone) {
+        var wpNum = (d.phone || '').replace(/\D/g, '');
+        html += '<a href="https://wa.me/' + wpNum + '" target="_blank" rel="noopener" class="ptcg-index__btn ptcg-index__btn--success btn-sm" style="width:100%;margin-top:14px;display:flex;justify-content:center"><i class="ri-whatsapp-line"></i> WhatsApp al dueno</a>';
+      }
+      if (content) content.innerHTML = html;
+    }).catch(function(e) {
+      if (typeof toast === 'function') toast('Error: ' + e.message);
+      window.closePetModal();
+    });
+  };
+
+  window.closePetModal = function() {
+    var modal = document.getElementById('pet-detail-modal');
+    if (modal) modal.style.display = 'none';
   };
 
 })();
