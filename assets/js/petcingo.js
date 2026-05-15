@@ -1,13 +1,13 @@
-﻿/* PETCINGO app.js â€” v20260504 */
+/* PETCINGO app.js -- v20260504 */
 console.log('[Petcingo] app.js v20260504 loaded OK');
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   PETCINGO â€” app.js
+/* ===============================================================
+   PETCINGO -- app.js
    Unified JS for all pages. Each page calls its own init function
    after the DOM is ready.
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+=============================================================== */
 'use strict';
 
-/* â”€â”€ Firebase Config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Firebase Config -------------------------------------------- */
 var FIREBASE_CONFIG = {
   apiKey:            'AIzaSyAEE3yLFFsJTMORNFLYZWW2_DNHwzF0hE8',
   authDomain:        'petcingo-43096.firebaseapp.com',
@@ -18,7 +18,7 @@ var FIREBASE_CONFIG = {
 };
 var MASTER_PASSWORD = 'Petcingo2024';
 
-/* Named Firebase app â€” avoids conflict with Dashnex default app */
+/* Named Firebase app -- avoids conflict with Dashnex default app */
 var _pcFbApp = null;
 function _getPcApp() {
   if (_pcFbApp) return _pcFbApp;
@@ -27,7 +27,7 @@ function _getPcApp() {
   return _pcFbApp;
 }
 
-/* lazy init â€” called once on first use */
+/* lazy init -- called once on first use */
 var _db = null;
 var _storage = null;
 function db() {
@@ -39,9 +39,9 @@ function storage() {
   return _storage;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ==============================================================
    SHARED UTILITIES
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+============================================================== */
 function esc(str) {
   if (str === null || str === undefined) return '';
   return String(str)
@@ -50,18 +50,18 @@ function esc(str) {
 }
 
 function encodeData(obj) {
-  /* Safe JSON for onclick attribute â€” escapes single quotes */
+  /* Safe JSON for onclick attribute -- escapes single quotes */
   try { return JSON.stringify(obj).replace(/'/g,'&#39;').replace(/"/g,'&quot;'); }
   catch(e) { return '{}'; }
 }
 
 function formatDate(d) {
-  if (!(d instanceof Date) || isNaN(d)) return 'â€”';
+  if (!(d instanceof Date) || isNaN(d)) return '--';
   return d.toLocaleDateString('es-BO', { day:'2-digit', month:'short', year:'numeric' });
 }
 
 function formatDateTime(d) {
-  if (!(d instanceof Date) || isNaN(d)) return 'â€”';
+  if (!(d instanceof Date) || isNaN(d)) return '--';
   return d.toLocaleDateString('es-BO', { day:'2-digit', month:'short', year:'numeric' }) +
     ' ' + d.toLocaleTimeString('es-BO', { hour:'2-digit', minute:'2-digit' });
 }
@@ -70,7 +70,7 @@ var _toastTimer;
 function toast(msg, duration) {
   var el = document.getElementById('toast');
   if (!el) return;
-  el.textContent = msg;
+  el.innerHTML = msg;
   el.classList.add('show');
   clearTimeout(_toastTimer);
   _toastTimer = setTimeout(function() { el.classList.remove('show'); }, duration || 2800);
@@ -89,7 +89,7 @@ function animCount(elId, target) {
   })(performance.now());
 }
 
-/* â”€â”€ Phone normalization â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Phone normalization -------------------------------------- */
 function buildPhone(fieldId, selectorId) {
   var raw     = document.getElementById(fieldId).value.trim();
   if (!raw) return '';
@@ -108,7 +108,7 @@ function normalizeWA(raw) {
   return digits;
 }
 
-/* â”€â”€ Image compression â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Image compression --------------------------------------- */
 function compressImage(file, maxWidth, startQ, targetBytes) {
   maxWidth    = maxWidth    || 600;
   startQ      = startQ      || 0.78;
@@ -118,7 +118,7 @@ function compressImage(file, maxWidth, startQ, targetBytes) {
     reader.onerror = function() { reject(new Error('No se pudo leer el archivo.')); };
     reader.onload  = function(evt) {
       var img = new Image();
-      img.onerror = function() { reject(new Error('Imagen inválida.')); };
+      img.onerror = function() { reject(new Error('Imagen invalida.')); };
       img.onload  = function() {
         var canvas = document.createElement('canvas');
         var w = img.naturalWidth, h = img.naturalHeight;
@@ -140,9 +140,9 @@ function compressImage(file, maxWidth, startQ, targetBytes) {
   });
 }
 
-/* â”€â”€ Export / Backup â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Export / Backup ----------------------------------------- */
 function exportDatabase(collectionName) {
-  toast('Exportando ' + collectionName + '…');
+  toast('Exportando ' + collectionName + '...');
   db().collection(collectionName).get()
     .then(function(snap) {
       var arr = [];
@@ -155,7 +155,7 @@ function exportDatabase(collectionName) {
         arr.push(Object.assign({ _id: doc.id }, d));
       });
       downloadJson(JSON.stringify(arr, null, 2), collectionName + '_backup_' + new Date().toISOString().slice(0,10) + '.json');
-      toast('âœ… ' + arr.length + ' registros exportados.');
+      toast('<i class="ri-check-line"></i>  ' + arr.length + ' registros exportados.');
     })
     .catch(function(e) { toast('âŒ Error: ' + e.message); });
 }
@@ -168,9 +168,9 @@ function downloadJson(jsonStr, filename) {
   setTimeout(function() { URL.revokeObjectURL(url); }, 2000);
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   DASHBOARD â€” ADMIN
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ==============================================================
+   DASHBOARD -- ADMIN
+============================================================== */
 var _dash = {
   allPets:       [],
   allSellers:    {},
@@ -186,7 +186,7 @@ var _dash = {
   editingUserId: null
 };
 
-/* â”€â”€ Login â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Login -------------------------------------------------- */
 window.doLogin = function() {
   var pass  = document.getElementById('login-pass').value;
   var errEl = document.getElementById('login-err');
@@ -278,7 +278,7 @@ function initDashboard() {
   }, 800);
 }
 
-/* â”€â”€ Navigation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Navigation -------------------------------------------- */
 window.showSection = function(name, btn) {
   document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
   document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
@@ -308,7 +308,7 @@ window.closeSidebar = function() {
   document.getElementById('sidebar-overlay').classList.remove('show');
 };
 
-/* â”€â”€ Stats â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Stats ------------------------------------------------ */
 function loadStats() {
   db().collection('pets').get().then(function(snap) {
     var total=0, activos=0, reservadas=0, perdidos=0, vencidas=0;
@@ -337,7 +337,7 @@ function loadStats() {
     /* stock = reservadas (not yet activated) */
     var stockEl=document.getElementById('stat-stock');
     if(stockEl)animCount('stat-stock', reservadas);
-    /* sold = total assigned plates (activo+perdido+vencida+reservada) â€” excludes directSale stock */
+    /* sold = total assigned plates (activo+perdido+vencida+reservada) -- excludes directSale stock */
     var soldEl=document.getElementById('stat-sold');
     if(soldEl)animCount('stat-sold', total);
     /* Extra labels shown below each stat */
@@ -353,7 +353,7 @@ function loadRecent() {
   db().collection('pets').where('status','in',['activo','perdido']).get()
     .then(function(snap) {
       if (!el) return;
-      if (snap.empty) { el.innerHTML='<div class="empty-state"><p>No hay registros aún.</p></div>'; return; }
+      if (snap.empty) { el.innerHTML='<div class="empty-state"><p>No hay registros aun.</p></div>'; return; }
       var docs=[];
       snap.forEach(function(doc){ docs.push(doc.data()); });
       docs.sort(function(a,b){
@@ -369,10 +369,10 @@ function loadRecent() {
         '</tr></thead><tbody>';
       docs.forEach(function(d) {
         var bCls=d.status==='perdido'?'badge-lost':d.status==='reservada'?'badge-reserved':'badge-active';
-        var bTxt=d.status==='perdido'?'ðŸš¨ Perdido':d.status==='reservada'?'â³ Reservada':'âœ… Activo';
-        var fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'â€”';
+        var bTxt=d.status==='perdido'?'<i class="ri-alert-line"></i> Perdido':d.status==='reservada'?'â³ Reservada':'<i class="ri-check-line"></i>  Activo';
+        var fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'--';
         html+='<tr style="border-bottom:1px solid rgba(255,255,255,.04)">'+
-          '<td style="padding:9px 8px"><span style="font-weight:600">'+esc(d.name||'â€”')+'</span><br><span style="color:var(--muted-dark);font-size:.75rem">'+esc(d.ownerName||'')+'</span></td>'+
+          '<td style="padding:9px 8px"><span style="font-weight:600">'+esc(d.name||'--')+'</span><br><span style="color:var(--muted-dark);font-size:.75rem">'+esc(d.ownerName||'')+'</span></td>'+
           '<td style="padding:9px 8px"><span class="badge '+bCls+'">'+bTxt+'</span></td>'+
           '<td style="padding:9px 8px;color:var(--muted-dark)">'+fecha+'</td></tr>';
       });
@@ -381,11 +381,11 @@ function loadRecent() {
     }).catch(function(e) { if(el) el.innerHTML='<div class="empty-state"><p style="color:#f43f5e">Error: '+esc(e.message)+'</p></div>'; });
 }
 
-/* â”€â”€ Pets table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Pets table ------------------------------------------- */
 window.loadPets = function() {
   var tbody=document.getElementById('pets-tbody');
   if (!tbody) return;
-  tbody.innerHTML='<tr><td colspan="6"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div><p style="margin-top:10px">Cargando…</p></div></td></tr>';
+  tbody.innerHTML='<tr><td colspan="6"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div><p style="margin-top:10px">Cargando...</p></div></td></tr>';
   document.getElementById('table-count').textContent='';
   db().collection('pets').orderBy('createdAt','desc').get()
     .then(function(snap) {
@@ -518,22 +518,22 @@ function renderTable(pets) {
         var btnCopyCode = document.createElement('button');
         btnCopyCode.className = 'btn btn-ghost btn-sm';
         btnCopyCode.innerHTML = '<i class="ri-file-copy-line"></i>';
-        btnCopyCode.title = 'Copiar código de activación';
+        btnCopyCode.title = 'Copiar codigo de activacion';
         btnCopyCode.onclick = (function(pid){ return function() {
-          navigator.clipboard.writeText(pid).then(function() { toast('✅ Código copiado: ' + pid); });
+          navigator.clipboard.writeText(pid).then(function() { toast('<i class="ri-check-line"></i> Codigo copiado: ' + pid); });
         }; })(id);
 
         var btnResetPass = document.createElement('button');
         btnResetPass.className = 'btn btn-ghost btn-sm';
         btnResetPass.innerHTML = '<i class="ri-key-2-line"></i>';
-        btnResetPass.title = 'Enviar recuperación de contraseña';
+        btnResetPass.title = 'Enviar recuperacion de contrasena';
         btnResetPass.onclick = (function(petData){ return function() {
           var email = petData.ownerEmail || petData.owner_email || petData.email;
-          if (!email) { toast('⚠️ No hay email registrado para este dueño.'); return; }
-          if (!confirm('¿Enviar enlace de restablecimiento a ' + email + '?')) return;
+          if (!email) { toast('<i class="ri-alert-line"></i> No hay email registrado para este dueno.'); return; }
+          if (!confirm('?Enviar enlace de restablecimiento a ' + email + '?')) return;
           firebase.auth().sendPasswordResetEmail(email)
-            .then(function() { toast('📧 Correo enviado a ' + email); })
-            .catch(function(err) { toast('❌ Error: ' + err.message); });
+            .then(function() { toast('<i class="ri-mail-line"></i> Correo enviado a ' + email); })
+            .catch(function(err) { toast('<i class="ri-error-warning-line"></i> Error: ' + err.message); });
         }; })(d);
 
         tdAct.appendChild(btnCopyCode);
@@ -562,22 +562,22 @@ window.toggleTrash = function() {
 };
 
 window.archivePet = function(id) {
-  if (!confirm('¿Mover "'+id+'" a la papelera? Se puede restaurar después.')) return;
+  if (!confirm('?Mover "'+id+'" a la papelera? Se puede restaurar despues.')) return;
   db().collection('pets').doc(id).update({ status:'deleted', deletedAt:firebase.firestore.FieldValue.serverTimestamp() })
-    .then(function() { toast('ðŸ—‘ Placa movida a papelera.'); addLog('archived_pet',id,_dash.currentUser&&_dash.currentUser.name); loadPets(); })
+    .then(function() { toast('<i class="ri-delete-bin-line"></i> Placa movida a papelera.'); addLog('archived_pet',id,_dash.currentUser&&_dash.currentUser.name); loadPets(); })
     .catch(function(e) { toast('âŒ '+e.message); });
 };
 
 window.restorePet = function(id) {
   db().collection('pets').doc(id).update({ status:'reservada', deletedAt:null })
-    .then(function() { toast('âœ… Restaurada.'); addLog('restored_pet',id,_dash.currentUser&&_dash.currentUser.name); loadPets(); })
+    .then(function() { toast('<i class="ri-check-line"></i>  Restaurada.'); addLog('restored_pet',id,_dash.currentUser&&_dash.currentUser.name); loadPets(); })
     .catch(function(e) { toast('âŒ '+e.message); });
 };
 
 window.permanentDelete = function(id) {
-  if (!confirm('âš ï¸ ¿Eliminar PERMANENTEMENTE "'+id+'"?\n\nEsta acción NO se puede deshacer.')) return;
+  if (!confirm(' Eliminar PERMANENTEMENTE "'+id+'"?\n\nEsta accion NO se puede deshacer.')) return;
   db().collection('pets').doc(id).delete()
-    .then(function() { toast('ðŸ’¥ Eliminada permanentemente.'); addLog('permanent_delete',id,_dash.currentUser&&_dash.currentUser.name); loadPets(); })
+    .then(function() { toast('<i class="ri-delete-bin-line"></i> Eliminada permanentemente.'); addLog('permanent_delete',id,_dash.currentUser&&_dash.currentUser.name); loadPets(); })
     .catch(function(e) { toast('âŒ '+e.message); });
 };
 
@@ -593,7 +593,7 @@ window.loadLostPets = function() {
       if(countEl) countEl.textContent = cnt + ' mascota' + (cnt !== 1 ? 's' : '') + ' perdida' + (cnt !== 1 ? 's' : '');
       if(badge){ badge.textContent = cnt > 0 ? cnt : ''; badge.style.display = cnt > 0 ? 'inline-flex' : 'none'; }
       if(snap.empty) {
-        tbody.innerHTML='<tr><td colspan="5"><div class="empty-state" style="padding:28px"><p style="margin-top:8px">Ninguna mascota está perdida en este momento.</p></div></td></tr>';
+        tbody.innerHTML='<tr><td colspan="5"><div class="empty-state" style="padding:28px"><p style="margin-top:8px">Ninguna mascota esta perdida en este momento.</p></div></td></tr>';
         return;
       }
       var html = '';
@@ -602,19 +602,19 @@ window.loadLostPets = function() {
         var d = doc.data(); var id = doc.id;
         var avatar = d.photoUrl
           ? '<img src="'+esc(d.photoUrl)+'" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid rgba(244,63,94,.35);flex-shrink:0">'
-          : '<div style="width:40px;height:40px;border-radius:50%;background:rgba(244,63,94,.12);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">🐾</div>';
+          : '<div style="width:40px;height:40px;border-radius:50%;background:rgba(244,63,94,.12);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0"><i class="ri-footprint-line"></i></div>';
         var dateLost = d.lostAt && d.lostAt.toDate ? d.lostAt.toDate() : (d.updatedAt && d.updatedAt.toDate ? d.updatedAt.toDate() : (d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : new Date()));
         var diffDays = Math.floor(Math.abs(now - dateLost) / 86400000);
         var timeLostStr = diffDays === 0
           ? '<span style="color:#f43f5e;font-weight:800">Hoy</span>'
           : (diffDays === 1
-            ? '<span style="color:#f97316;font-weight:700">Hace 1 día</span>'
-            : '<span style="color:'+(diffDays > 7 ? '#f43f5e':'#f97316')+';font-weight:700">Hace '+diffDays+' días</span>');
+            ? '<span style="color:#f97316;font-weight:700">Hace 1 dia</span>'
+            : '<span style="color:'+(diffDays > 7 ? '#f43f5e':'#f97316')+';font-weight:700">Hace '+diffDays+' dias</span>');
         var inIndex = d.featuredOnIndex
-          ? '<span style="color:#2ECC71;font-weight:700"><i class="ri-checkbox-circle-fill"></i> Sí</span>'
+          ? '<span style="color:#2ECC71;font-weight:700"><i class="ri-checkbox-circle-fill"></i> Si</span>'
           : '<span style="color:#BDBDBD"><i class="ri-close-circle-line"></i> No</span>';
         var phone1 = normalizeWA(d.phone||'');
-        var waMsg = encodeURIComponent('¡Hola! Te escribo desde Petcingo — vi que tu mascota '+(d.name||'')+' (ID: '+id+') está reportada como perdida. ¿Podemos coordinarnos?');
+        var waMsg = encodeURIComponent('!Hola! Te escribo desde Petcingo -- vi que tu mascota '+(d.name||'')+' (ID: '+id+') esta reportada como perdida. ?Podemos coordinarnos?');
         var waBtn = phone1
           ? '<a class="btn btn-ghost btn-sm" style="color:#25D366;border-color:rgba(37,211,102,.35)" href="https://wa.me/'+phone1+'?text='+waMsg+'" target="_blank" title="Contactar por WhatsApp"><i class="ri-whatsapp-line"></i> WA</a>'
           : '';
@@ -623,8 +623,8 @@ window.loadLostPets = function() {
         var toggleIcon  = d.featuredOnIndex ? 'ri-eye-off-line' : 'ri-eye-line';
         var toggleBtn = '<button class="btn btn-ghost btn-sm" title="'+esc(toggleLabel)+'" onclick="(typeof toggleFeaturedLost===\'function\')?toggleFeaturedLost(\''+safeId+'\','+!!d.featuredOnIndex+'):toast(\'toggleFeaturedLost no disponible\')"><i class="'+esc(toggleIcon)+'"></i></button>';
         html += '<tr style="vertical-align:middle">' +
-          '<td style="padding:10px 8px"><div style="display:flex;align-items:center;gap:10px">'+avatar+'<div><div style="font-weight:700;font-size:.9rem">'+esc(d.name||'—')+'</div>'+(d.breed?'<div style="font-size:.72rem;color:var(--muted-dark)">'+esc(d.breed)+'</div>':'')+'</div></div></td>' +
-          '<td style="padding:8px;font-size:.85rem">'+esc(d.ownerName||'—')+'</td>' +
+          '<td style="padding:10px 8px"><div style="display:flex;align-items:center;gap:10px">'+avatar+'<div><div style="font-weight:700;font-size:.9rem">'+esc(d.name||'--')+'</div>'+(d.breed?'<div style="font-size:.72rem;color:var(--muted-dark)">'+esc(d.breed)+'</div>':'')+'</div></div></td>' +
+          '<td style="padding:8px;font-size:.85rem">'+esc(d.ownerName||'--')+'</td>' +
           '<td style="padding:8px">'+timeLostStr+'</td>' +
           '<td style="padding:8px;text-align:center">'+inIndex+'</td>' +
           '<td style="padding:8px" class="td-actions">'+waBtn+' '+toggleBtn+'</td>' +
@@ -635,7 +635,7 @@ window.loadLostPets = function() {
       tbody.innerHTML='<tr><td colspan="5"><div class="empty-state"><p>Error al cargar: '+esc(e.message)+'</p></div></td></tr>';
     });
 };
-/* â”€â”€ Notifications â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Notifications ---------------------------------------- */
 window.toggleNotifPanel = function() {
   var overlay = document.getElementById('notif-overlay');
   var panel   = document.getElementById('notif-panel');
@@ -671,7 +671,7 @@ window.loadNotifications = function() {
     var html = '';
 
     /* Lost pets */
-    html += '<div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A8B4F5;margin-bottom:10px;margin-top:4px">ðŸš¨ Mascotas Perdidas (' + lostSnap.size + ')</div>';
+    html += '<div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A8B4F5;margin-bottom:10px;margin-top:4px"><i class="ri-alert-line"></i> Mascotas Perdidas (' + lostSnap.size + ')</div>';
     if (lostSnap.empty) {
       html += '<div style="font-size:.82rem;color:#8B98D8;margin-bottom:16px">Ninguna mascota perdida.</div>';
     } else {
@@ -681,44 +681,44 @@ window.loadNotifications = function() {
         var dateLost = d.lostAt && d.lostAt.toDate ? d.lostAt.toDate() : (d.updatedAt && d.updatedAt.toDate ? d.updatedAt.toDate() : now);
         var diffDays = Math.floor(Math.abs(now - dateLost) / 86400000);
         html += '<div style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.2);border-radius:10px;margin-bottom:8px">'
-          + (d.photoUrl ? '<img src="'+esc(d.photoUrl)+'" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0">' : '<div style="width:36px;height:36px;border-radius:50%;background:rgba(244,63,94,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">ðŸ¾</div>')
-          + '<div style="min-width:0"><div style="font-weight:700;font-size:.85rem;color:#f0ecff">'+esc(d.name||'â€”')+'</div>'
-          + '<div style="font-size:.72rem;color:#f43f5e">'+(diffDays===0?'Reportada hoy':'Hace '+diffDays+' día'+(diffDays!==1?'s':''))+'</div>'
-          + '<div style="font-size:.7rem;color:#8B98D8">'+esc(d.ownerName||'â€”')+'</div></div>'
+          + (d.photoUrl ? '<img src="'+esc(d.photoUrl)+'" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0">' : '<div style="width:36px;height:36px;border-radius:50%;background:rgba(244,63,94,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">¾</div>')
+          + '<div style="min-width:0"><div style="font-weight:700;font-size:.85rem;color:#f0ecff">'+esc(d.name||'--')+'</div>'
+          + '<div style="font-size:.72rem;color:#f43f5e">'+(diffDays===0?'Reportada hoy':'Hace '+diffDays+' dia'+(diffDays!==1?'s':''))+'</div>'
+          + '<div style="font-size:.7rem;color:#8B98D8">'+esc(d.ownerName||'--')+'</div></div>'
           + '<a href="https://prueb2.dashnexpages.net/perfil-mascota-petcingo/?id='+encodeURIComponent(doc.id)+'" target="_blank" style="margin-left:auto;font-size:.7rem;color:#51CBF5;white-space:nowrap"><i class="ri-eye-line"></i> Ver</a>'
           + '</div>';
       });
     }
 
     /* Recent activations */
-    html += '<div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A8B4F5;margin:16px 0 10px">âœ… Activaciones Recientes (' + newActSnap.size + ')</div>';
+    html += '<div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A8B4F5;margin:16px 0 10px"><i class="ri-check-line"></i>  Activaciones Recientes (' + newActSnap.size + ')</div>';
     if (newActSnap.empty) {
-      html += '<div style="font-size:.82rem;color:#8B98D8;margin-bottom:16px">Sin nuevas activaciones en 3 días.</div>';
+      html += '<div style="font-size:.82rem;color:#8B98D8;margin-bottom:16px">Sin nuevas activaciones en 3 dias.</div>';
     } else {
       newActSnap.forEach(function(doc) {
         var d = doc.data();
-        var actDate = d.activatedAt && d.activatedAt.toDate ? formatDate(d.activatedAt.toDate()) : 'â€”';
+        var actDate = d.activatedAt && d.activatedAt.toDate ? formatDate(d.activatedAt.toDate()) : '--';
         html += '<div style="display:flex;align-items:center;gap:10px;padding:9px 10px;background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.18);border-radius:10px;margin-bottom:8px">'
-          + '<span style="font-size:1.2rem;flex-shrink:0">ðŸ¾</span>'
+          + '<span style="font-size:1.2rem;flex-shrink:0">¾</span>'
           + '<div style="min-width:0"><div style="font-weight:700;font-size:.85rem;color:#f0ecff">'+esc(d.name||doc.id)+'</div>'
           + '<div style="font-size:.72rem;color:#22C55E">'+actDate+'</div>'
-          + '<div style="font-size:.7rem;color:#8B98D8">'+esc(d.ownerName||'â€”')+'</div></div>'
+          + '<div style="font-size:.7rem;color:#8B98D8">'+esc(d.ownerName||'--')+'</div></div>'
           + '</div>';
       });
     }
 
     /* Open reports */
-    html += '<div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A8B4F5;margin:16px 0 10px">ðŸ“¬ Reportes Abiertos (' + openRepSnap.size + ')</div>';
+    html += '<div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A8B4F5;margin:16px 0 10px"><i class="ri-mail-line"></i> Reportes Abiertos (' + openRepSnap.size + ')</div>';
     if (openRepSnap.empty) {
       html += '<div style="font-size:.82rem;color:#8B98D8;margin-bottom:16px">Sin reportes abiertos.</div>';
     } else {
       openRepSnap.forEach(function(doc) {
         var d = doc.data();
-        var fecha = d.createdAt && d.createdAt.toDate ? formatDate(d.createdAt.toDate()) : 'â€”';
+        var fecha = d.createdAt && d.createdAt.toDate ? formatDate(d.createdAt.toDate()) : '--';
         html += '<div style="display:flex;align-items:center;gap:10px;padding:9px 10px;background:rgba(69,82,204,.08);border:1px solid rgba(69,82,204,.2);border-radius:10px;margin-bottom:8px">'
-          + '<span style="font-size:1.1rem;flex-shrink:0">ðŸ“¬</span>'
-          + '<div style="min-width:0"><div style="font-weight:700;font-size:.82rem;color:#f0ecff">'+esc((d.message||'').substring(0,40))+'…</div>'
-          + '<div style="font-size:.7rem;color:#8B98D8">'+esc(d.fromName||d.plateId||'â€”')+' · '+fecha+'</div></div>'
+          + '<span style="font-size:1.1rem;flex-shrink:0"><i class="ri-mail-line"></i></span>'
+          + '<div style="min-width:0"><div style="font-weight:700;font-size:.82rem;color:#f0ecff">'+esc((d.message||'').substring(0,40))+'...</div>'
+          + '<div style="font-size:.7rem;color:#8B98D8">'+esc(d.fromName||d.plateId||'--')+' · '+fecha+'</div></div>'
           + '</div>';
       });
     }
@@ -729,7 +729,7 @@ window.loadNotifications = function() {
   });
 };
 
-/* â”€â”€ Storage Stats â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Storage Stats ---------------------------------------- */
 window.loadStorageStats = function() {
   var el = document.getElementById('storage-content');
   if (!el) return;
@@ -794,7 +794,7 @@ window.loadStorageStats = function() {
         + '<span class="storage-label">'+label+'</span>'
         + '<span class="storage-val" style="font-weight:700">'+val+'</span></div>'
         + '<div style="display:flex;justify-content:space-between;font-size:.7rem;margin-top:3px">'
-        + '<span class="storage-label">'+pct+'% usado</span><span class="storage-label">Límite: '+limit+'</span></div>'
+        + '<span class="storage-label">'+pct+'% usado</span><span class="storage-label">Limite: '+limit+'</span></div>'
         + bar(pct);
     }
 
@@ -803,16 +803,16 @@ window.loadStorageStats = function() {
     /* Firebase Firestore */
     html += panel('<i class="ri-database-2-line" style="color:#F59E0B"></i>', 'Firebase Firestore (plan gratuito Spark)',
       row('Almacenamiento estimado', estMB+' MB', estPctFB, FB_STORAGE_GB+' GB')
-      + '<div style="margin-top:18px"><div class="storage-label" style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Documentos por colección</div>'
+      + '<div style="margin-top:18px"><div class="storage-label" style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Documentos por coleccion</div>'
       + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
       + ['Mascotas:'+petsSnap.size,'Veterinarias:'+vetsSnap.size,'Refugios:'+shSnap.size,'Reportes:'+repSnap.size,'Escaneos:'+scanSnap.size,'Usuarios:'+usrSnap.size,'Config:'+cfgSnap.size].map(function(s){
           var p=s.split(':'); return '<div class="storage-cell" style="border-radius:8px;padding:8px 10px;font-size:.8rem"><span class="storage-label">'+p[0]+'</span><br><strong class="storage-val">'+p[1]+'</strong></div>';
         }).join('')
       + '</div></div>',
       '<div class="storage-warn-box" style="margin-top:14px;padding:10px 12px;border-radius:8px;font-size:.78rem">'
-      + '<strong>Límites diarios gratuitos:</strong> 50K lecturas · 20K escrituras · 20K eliminaciones · 10 GB red/mes</div>'
+      + '<strong>Limites diarios gratuitos:</strong> 50K lecturas · 20K escrituras · 20K eliminaciones · 10 GB red/mes</div>'
       + '<div class="storage-tip-box" style="margin-top:10px;padding:10px 12px;border-radius:8px;font-size:.78rem">'
-      + 'ðŸ’¡ <strong>Para ahorrar lecturas:</strong> usa cache local (<code>_dash.allPets</code>), evita listeners en tiempo real en secciones no críticas, agrupa las consultas de stats en una sola lectura de colección.</div>'
+      + '’! <strong>Para ahorrar lecturas:</strong> usa cache local (<code>_dash.allPets</code>), evita listeners en tiempo real en secciones no criticas, agrupa las consultas de stats en una sola lectura de coleccion.</div>'
     );
 
     /* Cloudflare R2 */
@@ -824,7 +824,7 @@ window.loadStorageStats = function() {
       + '<div class="storage-cell" style="border-radius:8px;padding:8px 10px;font-size:.8rem"><span class="storage-label">Logos (vets/refugios)</span><br><strong class="storage-val">'+r2LogoCount+'</strong><br><span class="storage-label" style="font-size:.7rem">~'+(r2LogoCount*80/1024).toFixed(1)+' MB</span></div>'
       + '</div></div>',
       '<div class="storage-tip-box" style="margin-top:14px;padding:10px 12px;border-radius:8px;font-size:.78rem">'
-      + 'ðŸ’¡ <strong>R2 es muy generoso:</strong> 10 GB gratis, sin cargos por egress. Las fotos de mascotas se comprimen a JPEG â‰¤10 KB; logos a PNG â‰¤80 KB. <br>âš ï¸ Elimina fotos de mascotas borradas para liberar espacio.</div>'
+      + '’! <strong>R2 es muy generoso:</strong> 10 GB gratis, sin cargos por egress. Las fotos de mascotas se comprimen a JPEG â‰¤10 KB; logos a PNG â‰¤80 KB. <br><i class="ri-alert-line"></i> Elimina fotos de mascotas borradas para liberar espacio.</div>'
     );
 
     /* Summary */
@@ -839,23 +839,23 @@ window.loadStorageStats = function() {
 
     el.innerHTML = html;
   }).catch(function(e) {
-    el.innerHTML = '<div class="panel"><p style="color:#f43f5e">Error al obtener estadísticas: '+esc(e.message)+'</p></div>';
+    el.innerHTML = '<div class="panel"><p style="color:#f43f5e">Error al obtener estadisticas: '+esc(e.message)+'</p></div>';
   });
 };
 
-/* â”€â”€ Sellers cache (for filter) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Sellers cache (for filter) --------------------------- */
 function loadSellersCache() {
   var sel = document.getElementById('filter-seller');
   if (!sel) return;
   while (sel.options.length > 1) sel.remove(1);
   _dash.allSellers = {};
   /* Add Petcingo Directo first */
-  var directOpt = document.createElement('option'); directOpt.value='__direct__'; directOpt.textContent='â˜… Petcingo Directo [PET]'; sel.appendChild(directOpt);
+  var directOpt = document.createElement('option'); directOpt.value='__direct__'; directOpt.textContent='â˜... Petcingo Directo [PET]'; sel.appendChild(directOpt);
   Promise.all([db().collection('veterinarias').orderBy('name').get(), db().collection('shelters').orderBy('name').get()])
     .then(function(results) {
       var addGrp = function(snap, label, col) {
         if (!snap||snap.empty) return;
-        var g=document.createElement('option'); g.disabled=true; g.textContent='â”€â”€ '+label+' â”€â”€'; sel.appendChild(g);
+        var g=document.createElement('option'); g.disabled=true; g.textContent='-- '+label+' --'; sel.appendChild(g);
         snap.forEach(function(doc) {
           var d=doc.data(); _dash.allSellers[doc.id]={ name:d.name, prefix:d.prefix||'' };
           var o=document.createElement('option'); o.value=doc.id; o.textContent=d.name+(d.prefix?' ['+d.prefix+']':''); sel.appendChild(o);
@@ -866,7 +866,7 @@ function loadSellersCache() {
     }).catch(function(){});
 }
 
-/* â”€â”€ Register Plate (sec-register) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Register Plate (sec-register) ----------------------- */
 function loadRegisterSelect() {
   var sel = document.getElementById('reg-seller-select');
   if (!sel) return;
@@ -876,23 +876,23 @@ function loadRegisterSelect() {
   sel.parentNode.replaceChild(newSel, sel); sel = newSel;
 
   /* Placeholder */
-  var ph = document.createElement('option'); ph.value=''; ph.textContent='â€” Selecciona un cliente â€”'; sel.appendChild(ph);
+  var ph = document.createElement('option'); ph.value=''; ph.textContent='-- Selecciona un cliente --'; sel.appendChild(ph);
 
   /* Directo */
   db().collection('config').doc('admin_settings').get().then(function(cfgDoc) {
     var directCount = (cfgDoc.exists && cfgDoc.data().directCount) ? cfgDoc.data().directCount : 0;
     var di = document.createElement('option');
     di.value = JSON.stringify({ id:'__direct__', name:'Venta Directa', prefix:'PET', lastCount:directCount, collection:'__direct__' });
-    di.textContent = '★ Venta Directa'; sel.appendChild(di);
+    di.textContent = '* Venta Directa'; sel.appendChild(di);
 
-    var sep = document.createElement('option'); sep.disabled=true; sep.textContent='â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€'; sel.appendChild(sep);
+    var sep = document.createElement('option'); sep.disabled=true; sep.textContent='--------------'; sel.appendChild(sep);
 
     return Promise.all([db().collection('veterinarias').orderBy('name').get(), db().collection('shelters').orderBy('name').get()]);
   }).then(function(results) {
     if (!results) return;
     var addGrp = function(snap, label, col) {
       if (!snap||snap.empty) return;
-      var g=document.createElement('option'); g.disabled=true; g.textContent='â”€â”€ '+label+' â”€â”€'; sel.appendChild(g);
+      var g=document.createElement('option'); g.disabled=true; g.textContent='-- '+label+' --'; sel.appendChild(g);
       snap.forEach(function(doc) {
         var d=doc.data();
         var o=document.createElement('option');
@@ -919,13 +919,13 @@ function loadRegisterSelect() {
 
 window.registerPlate = function() {
   var sel = document.getElementById('reg-seller-select');
-  if (!sel||!sel.value) { toast('âš ï¸ Selecciona un cliente primero.'); return; }
+  if (!sel||!sel.value) { toast('<i class="ri-alert-line"></i> Selecciona un cliente primero.'); return; }
   var sellerData;
   try { sellerData=JSON.parse(sel.value); } catch(e) { toast('Error al leer el cliente.'); return; }
-  if (!sellerData.prefix) { toast('âš ï¸ Este cliente no tiene prefijo configurado.'); return; }
+  if (!sellerData.prefix) { toast('<i class="ri-alert-line"></i> Este cliente no tiene prefijo configurado.'); return; }
 
   var btn = document.querySelector('#sec-register .btn-primary');
-  if (btn) { btn.disabled=true; btn.innerHTML='<i class="ri-loader-4-line"></i> Reservando…'; }
+  if (btn) { btn.disabled=true; btn.innerHTML='<i class="ri-loader-4-line"></i> Reservando...'; }
 
   var isDirect = sellerData.collection === '__direct__';
 
@@ -949,7 +949,7 @@ window.registerPlate = function() {
   }).then(function(res) {
     _generateRegQR(res.newId, res.profileUrl, res.next, sellerData);
     addLog('reserved_plate', res.newId, _dash.currentUser&&_dash.currentUser.name);
-    toast('âœ… Placa '+res.newId+' reservada para '+sellerData.name);
+    toast('<i class="ri-check-line"></i>  Placa '+res.newId+' reservada para '+sellerData.name);
     loadSellersCache();
   }).catch(function(err) { toast('âŒ '+err.message); })
     .finally(function() { if(btn){ btn.disabled=false; btn.innerHTML='<i class="ri-add-circle-line"></i> Crear y Reservar Placa'; } });
@@ -976,7 +976,7 @@ function _generateRegQR(newId, profileUrl, next, sellerData) {
 
 window.registerNextFast = function() {
   var sel = document.getElementById('reg-seller-select');
-  if (!sel||!sel.value) { toast('âš ï¸ No hay cliente seleccionado.'); return; }
+  if (!sel||!sel.value) { toast('<i class="ri-alert-line"></i> No hay cliente seleccionado.'); return; }
   var res = document.getElementById('reg-result');
   if (res) res.style.display='none';
   window.registerPlate();
@@ -988,7 +988,7 @@ window.resetRegister = function() {
   var disp=document.getElementById('reg-qr-display');
   if(res) res.style.display='none';
   if(info) info.style.display='none';
-  if(disp) disp.innerHTML='<div style="text-align:center;color:var(--muted-dark);padding:48px 20px"><i class="ri-qr-scan-2-line" style="font-size:64px;opacity:.15;display:block;margin-bottom:12px"></i><p style="font-size:.85rem">El QR aparecerá aquí</p></div>';
+  if(disp) disp.innerHTML='<div style="text-align:center;color:var(--muted-dark);padding:48px 20px"><i class="ri-qr-scan-2-line" style="font-size:64px;opacity:.15;display:block;margin-bottom:12px"></i><p style="font-size:.85rem">El QR aparecera aqui</p></div>';
   _dash.regQr=null; loadRegisterSelect();
 };
 
@@ -1002,7 +1002,7 @@ window.copyRegLink = function() {
   var res=document.getElementById('reg-result');
   var url=res?res.getAttribute('data-url'):'';
   if (!url) { toast('No hay enlace.'); return; }
-  navigator.clipboard.writeText(url).then(function() { toast('ðŸ“‹ Enlace copiado'); });
+  navigator.clipboard.writeText(url).then(function() { toast('<i class="ri-file-copy-line"></i> Enlace copiado'); });
 };
 
 window.toggleCustomQR = function() {
@@ -1011,17 +1011,17 @@ window.toggleCustomQR = function() {
   if(d) d.style.display=d.style.display==='none'?'block':'none';
 };
 
-/* â”€â”€ Vets â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Vets ------------------------------------------------- */
 window.saveVet = function() {
   var name   =document.getElementById('vet-name').value.trim();
   var contact=document.getElementById('vet-contact').value.trim();
   var prefix =document.getElementById('vet-prefix').value.trim().toUpperCase().replace(/\s/g,'');
-  if (!name)    { toast('âš ï¸ El nombre es obligatorio.'); return; }
-  if (!contact) { toast('âš ï¸ El contacto es obligatorio.'); return; }
-  if (!prefix)  { toast('âš ï¸ El Prefijo de Placa es OBLIGATORIO (ej: VET-LP).'); return; }
+  if (!name)    { toast('<i class="ri-alert-line"></i> El nombre es obligatorio.'); return; }
+  if (!contact) { toast('<i class="ri-alert-line"></i> El contacto es obligatorio.'); return; }
+  if (!prefix)  { toast('<i class="ri-alert-line"></i> El Prefijo de Placa es OBLIGATORIO (ej: VET-LP).'); return; }
 
   var btn=document.getElementById('btn-save-vet');
-  if(btn){btn.disabled=true;btn.textContent='Guardando…';}
+  if(btn){btn.disabled=true;btn.textContent='Guardando...';}
 
   db().collection('veterinarias').add({
     name:name, contact:contact, prefix:prefix, lastCount:0,
@@ -1031,7 +1031,7 @@ window.saveVet = function() {
     logoUrl:(document.getElementById('vet-logo')||{value:''}).value.trim(),
     createdAt:firebase.firestore.FieldValue.serverTimestamp()
   }).then(function() {
-    toast('âœ… Veterinaria registrada.');
+    toast('<i class="ri-check-line"></i>  Veterinaria registrada.');
     ['vet-name','vet-contact','vet-prefix','vet-phone','vet-city','vet-email','vet-logo'].forEach(function(id){ var el=document.getElementById(id); if(el)el.value=''; });
     var cp=document.getElementById('vet-create-panel'); if(cp)cp.style.display='none';
     loadVets(); loadSellersCache(); loadRegisterSelect();
@@ -1048,13 +1048,13 @@ function loadVets() {
     .then(function(snap) {
       var countEl=document.getElementById('vets-count');
       if(countEl)countEl.textContent=snap.size+' veterinaria(s)';
-      if(snap.empty){tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><p>No hay veterinarias aún.</p></div></td></tr>';return;}
+      if(snap.empty){tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><p>No hay veterinarias aun.</p></div></td></tr>';return;}
       var html='';
       snap.forEach(function(doc){
-        var d=doc.data(), fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'â€”';
-        var prefBadge=d.prefix?'<span style="background:rgba(69,82,204,.12);border:1px solid rgba(69,82,204,.25);border-radius:6px;padding:2px 8px;font-size:.75rem;color:#7C8EE8;font-family:monospace">'+esc(d.prefix)+'</span>':'â€”';
-        html+='<tr><td class="td-name">'+esc(d.name||'â€”')+'</td><td>'+prefBadge+'</td><td>'+esc(d.contact||'â€”')+'</td>'+
-          '<td class="td-owner">'+esc(d.city||'â€”')+'</td><td class="td-owner">'+esc(d.phone||'â€”')+'</td>'+
+        var d=doc.data(), fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'--';
+        var prefBadge=d.prefix?'<span style="background:rgba(69,82,204,.12);border:1px solid rgba(69,82,204,.25);border-radius:6px;padding:2px 8px;font-size:.75rem;color:#7C8EE8;font-family:monospace">'+esc(d.prefix)+'</span>':'--';
+        html+='<tr><td class="td-name">'+esc(d.name||'--')+'</td><td>'+prefBadge+'</td><td>'+esc(d.contact||'--')+'</td>'+
+          '<td class="td-owner">'+esc(d.city||'--')+'</td><td class="td-owner">'+esc(d.phone||'--')+'</td>'+
           '<td class="td-date">'+fecha+'</td>'+
           '<td class="td-actions"><button class="btn btn-ghost btn-sm" onclick="openVetDetail(\''+doc.id+'\')"><i class="ri-settings-3-line"></i> Placas</button>'+
           '<button class="btn btn-ghost btn-sm" onclick="editVet(\''+doc.id+'\',\''+encodeData(d)+'\')"><i class="ri-edit-line"></i> Editar</button>'+
@@ -1064,7 +1064,7 @@ function loadVets() {
     }).catch(function(e){tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><p>Error: '+esc(e.message)+'</p></div></td></tr>';});
 }
 window.loadVets=loadVets;
-/* â”€â”€ Edit Vet Modal â”€â”€ */
+/* -- Edit Vet Modal -- */
 window.editVet = function(vetId, dataJson) {
   var d;
   try { d = JSON.parse(dataJson); } catch(e) { d = {}; }
@@ -1084,7 +1084,7 @@ window.closeVetModal = function() {
 window.updateVet = function() {
   var vetId = document.getElementById('ev-vet-id').value;
   var name  = document.getElementById('ev-name').value.trim();
-  if (!name) { toast('âš ï¸ El nombre es obligatorio.'); return; }
+  if (!name) { toast('<i class="ri-alert-line"></i> El nombre es obligatorio.'); return; }
   var update = {
     name:    name,
     contact: document.getElementById('ev-contact').value.trim(),
@@ -1095,10 +1095,10 @@ window.updateVet = function() {
     email:   document.getElementById('ev-email') ? document.getElementById('ev-email').value.trim() : ''
   };
   var btn = document.getElementById('btn-update-vet');
-  if (btn) { btn.disabled=true; btn.innerHTML='<i class="ri-loader-4-line"></i> Guardando…'; }
+  if (btn) { btn.disabled=true; btn.innerHTML='<i class="ri-loader-4-line"></i> Guardando...'; }
   db().collection('veterinarias').doc(vetId).update(update)
     .then(function() {
-      toast('âœ… Veterinaria actualizada: '+name);
+      toast('<i class="ri-check-line"></i>  Veterinaria actualizada: '+name);
       closeVetModal();
       loadVets();
     })
@@ -1107,7 +1107,7 @@ window.updateVet = function() {
 };
 
 
-/* â”€â”€ Vet Detail â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Vet Detail ------------------------------------------- */
 window.openVetDetail = function(vetId) {
   db().collection('veterinarias').doc(vetId).get().then(function(doc) {
     if(!doc.exists){toast('No encontrado.');return;}
@@ -1119,7 +1119,7 @@ window.openVetDetail = function(vetId) {
     if(prefEl)prefEl.textContent='Prefijo: '+(d.prefix||'sin prefijo');
     refreshVetCounter(); loadVetPets();
     var disp=document.getElementById('vet-qr-display');
-    if(disp)disp.innerHTML='<div style="text-align:center;color:var(--muted-dark);padding:48px 20px"><i class="ri-qr-code-line" style="font-size:64px;opacity:.2;display:block;margin-bottom:12px"></i><p style="font-size:.85rem">El QR aparecerá aquí</p></div>';
+    if(disp)disp.innerHTML='<div style="text-align:center;color:var(--muted-dark);padding:48px 20px"><i class="ri-qr-code-line" style="font-size:64px;opacity:.2;display:block;margin-bottom:12px"></i><p style="font-size:.85rem">El QR aparecera aqui</p></div>';
     var res=document.getElementById('vet-qr-result');
     if(res)res.style.display='none';
     _dash.vetQr=null;
@@ -1160,9 +1160,9 @@ window.generateVetQR = function() {
   /* Also reserve in pets */
   db().collection('pets').doc(newId).set({id:newId,status:'reservada',sellerId:_dash.currentVet.id,sellerName:_dash.currentVet.name,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
   var links=document.getElementById('vet-qr-links');
-  if(links){var safeUrl=profileUrl.replace(/'/g,"\\'");links.innerHTML='<div class="qr-link-row"><div class="qr-link-label">Perfil Público</div><div class="qr-link-url">'+esc(profileUrl)+'</div><button class="qr-link-copy" onclick="copyText(\''+safeUrl+'\',\'URL copiada\')">ðŸ“‹ Copiar</button></div>';}
+  if(links){var safeUrl=profileUrl.replace(/'/g,"\\'");links.innerHTML='<div class="qr-link-row"><div class="qr-link-label">Perfil Publico</div><div class="qr-link-url">'+esc(profileUrl)+'</div><button class="qr-link-copy" onclick="copyText(\''+safeUrl+'\',\'URL copiada\')"><i class="ri-file-copy-line"></i> Copiar</button></div>';}
   var res=document.getElementById('vet-qr-result');if(res)res.style.display='block';
-  toast('âœ… Placa creada: '+newId);
+  toast('<i class="ri-check-line"></i>  Placa creada: '+newId);
 };
 
 window.downloadVetQR = function() {
@@ -1185,8 +1185,8 @@ window.loadVetPets = function() {
         var d=doc.data(),id=doc.id;
         var bCls=d.status==='perdido'?'badge-lost':d.status==='reservada'?'badge-reserved':'badge-active';
         var bTxt=d.status==='perdido'?'Perdido':d.status==='reservada'?'Reservada':'Activo';
-        var fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'â€”';
-        html+='<tr><td class="td-id">'+esc(id)+'</td><td class="td-name">'+esc(d.name||'â€”')+'</td><td class="td-owner">'+esc(d.ownerName||'â€”')+'</td>'+
+        var fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'--';
+        html+='<tr><td class="td-id">'+esc(id)+'</td><td class="td-name">'+esc(d.name||'--')+'</td><td class="td-owner">'+esc(d.ownerName||'--')+'</td>'+
           '<td><span class="badge '+bCls+'">'+bTxt+'</span></td><td class="td-date">'+fecha+'</td>'+
           '<td class="td-actions"><a href="https://prueb2.dashnexpages.net/perfil-mascota-petcingo/?id='+encodeURIComponent(id)+'" target="_blank" class="btn btn-ghost btn-sm"><i class="ri-eye-line"></i></a></td></tr>';
       });
@@ -1194,30 +1194,30 @@ window.loadVetPets = function() {
     }).catch(function(){
       if(countEl)countEl.textContent='';
       tbody.innerHTML='<tr><td colspan="6"><div class="empty-state" style="color:var(--warn);padding:20px">'+
-        '<div style="font-size:28px;margin-bottom:8px">ðŸ”§</div><p><strong>Se requiere índice de Firebase.</strong></p>'+
-        '<a href="https://console.firebase.google.com/v1/r/project/petcingo-43096/firestore/indexes?create_composite=Cktwcm9qZWN0cy9wZXRjaW5nby00MzA5Ni9kYXRhYmFzZXMvKGRlZmF1bHQpL2NvbGxlY3Rpb25Hcm91cHMvcGV0cy9pbmRleGVzL18QARoMCghzZWxsZXJJZBABGg0KCWNyZWF0ZWRBdBACGgwKCF9fbmFtZV9fEAI" target="_blank" style="color:var(--primary);font-weight:600;font-size:.85rem">Haz clic aquí para crear el índice â†’</a>'+
+        '<div style="font-size:28px;margin-bottom:8px">[TOOL]</div><p><strong>Se requiere indice de Firebase.</strong></p>'+
+        '<a href="https://console.firebase.google.com/v1/r/project/petcingo-43096/firestore/indexes?create_composite=Cktwcm9qZWN0cy9wZXRjaW5nby00MzA5Ni9kYXRhYmFzZXMvKGRlZmF1bHQpL2NvbGxlY3Rpb25Hcm91cHMvcGV0cy9pbmRleGVzL18QARoMCghzZWxsZXJJZBABGg0KCWNyZWF0ZWRBdBACGgwKCF9fbmFtZV9fEAI" target="_blank" style="color:var(--primary);font-weight:600;font-size:.85rem">Haz clic aqui para crear el indice -></a>'+
         '</div></td></tr>';
     });
 };
 
-/* â”€â”€ Shelters â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Shelters --------------------------------------------- */
 window.saveShelter = function() {
   var name       =document.getElementById('sh-name').value.trim();
   var responsible=document.getElementById('sh-responsible').value.trim();
   var prefix     =document.getElementById('sh-prefix').value.trim().toUpperCase().replace(/\s/g,'');
-  if(!name)       {toast('âš ï¸ El nombre es obligatorio.');return;}
-  if(!responsible){toast('âš ï¸ El encargado es obligatorio.');return;}
-  if(!prefix)     {toast('âš ï¸ El Prefijo de Placa es OBLIGATORIO (ej: REF-LP).');return;}
+  if(!name)       {toast('<i class="ri-alert-line"></i> El nombre es obligatorio.');return;}
+  if(!responsible){toast('<i class="ri-alert-line"></i> El encargado es obligatorio.');return;}
+  if(!prefix)     {toast('<i class="ri-alert-line"></i> El Prefijo de Placa es OBLIGATORIO (ej: REF-LP).');return;}
 
   var username = (document.getElementById('sh-username')||{}).value||'';
   var password = (document.getElementById('sh-password')||{}).value||'';
   var limite   = parseInt((document.getElementById('sh-limite')||{}).value||'40',10)||40;
 
   username = username.trim().toLowerCase().replace(/\s/g,'');
-  if (password && password.length < 6) { toast('âš ï¸ La contraseña debe tener al menos 6 caracteres.'); return; }
+  if (password && password.length < 6) { toast('<i class="ri-alert-line"></i> La contrasena debe tener al menos 6 caracteres.'); return; }
 
   var btn=document.getElementById('btn-save-shelter');
-  if(btn){btn.disabled=true;btn.textContent='Guardando…';}
+  if(btn){btn.disabled=true;btn.textContent='Guardando...';}
 
   var data = {
     name:name, responsible:responsible, prefix:prefix, lastCount:0,
@@ -1232,7 +1232,7 @@ window.saveShelter = function() {
 
   db().collection('shelters').add(data)
     .then(function(){
-      toast('âœ… Refugio registrado.');
+      toast('<i class="ri-check-line"></i>  Refugio registrado.');
       ['sh-name','sh-responsible','sh-prefix','sh-phone','sh-address','sh-username','sh-password','sh-logo'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
       var lim=document.getElementById('sh-limite');if(lim)lim.value='40';
       var cp=document.getElementById('shelter-create-panel'); if(cp)cp.style.display='none';
@@ -1249,13 +1249,13 @@ function loadShelters() {
   db().collection('shelters').orderBy('createdAt','desc').get()
     .then(function(snap){
       var cEl=document.getElementById('shelters-count');if(cEl)cEl.textContent=snap.size+' refugio(s)';
-      if(snap.empty){tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><p>No hay refugios aún.</p></div></td></tr>';return;}
+      if(snap.empty){tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><p>No hay refugios aun.</p></div></td></tr>';return;}
       var html='';
       snap.forEach(function(doc){
-        var d=doc.data(),fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'â€”';
-        var prefBadge=d.prefix?'<span style="background:rgba(0,225,243,.10);border:1px solid rgba(0,225,243,.25);border-radius:6px;padding:2px 8px;font-size:.75rem;color:var(--accent);font-family:monospace">'+esc(d.prefix)+'</span>':'â€”';
-        html+='<tr><td class="td-name">'+esc(d.name||'â€”')+'</td><td>'+prefBadge+'</td><td>'+esc(d.responsible||'â€”')+'</td>'+
-          '<td class="td-owner">'+esc(d.phone||'â€”')+'</td><td class="td-owner" style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(d.address||'â€”')+'</td>'+
+        var d=doc.data(),fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'--';
+        var prefBadge=d.prefix?'<span style="background:rgba(0,225,243,.10);border:1px solid rgba(0,225,243,.25);border-radius:6px;padding:2px 8px;font-size:.75rem;color:var(--accent);font-family:monospace">'+esc(d.prefix)+'</span>':'--';
+        html+='<tr><td class="td-name">'+esc(d.name||'--')+'</td><td>'+prefBadge+'</td><td>'+esc(d.responsible||'--')+'</td>'+
+          '<td class="td-owner">'+esc(d.phone||'--')+'</td><td class="td-owner" style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(d.address||'--')+'</td>'+
           '<td class="td-date">'+fecha+'</td>'+
           '<td class="td-actions"><button class="btn btn-ghost btn-sm" onclick="openShelterDetail(\''+doc.id+'\')"><i class="ri-settings-3-line"></i> Placas</button>'+
           '<button class="btn btn-ghost btn-sm" onclick="editShelter(\''+doc.id+'\',\''+encodeData(d)+'\')"><i class="ri-edit-line"></i> Editar</button>'+
@@ -1267,7 +1267,7 @@ function loadShelters() {
 }
 window.loadShelters=loadShelters;
 
-/* â”€â”€ Edit Shelter Modal â”€â”€ */
+/* -- Edit Shelter Modal -- */
 window.editShelter = function(shId, dataJson) {
   var d;
   try { d = JSON.parse(dataJson); } catch(e) { d = {}; }
@@ -1291,8 +1291,8 @@ window.updateShelter = function() {
   var username = (document.getElementById('es-username').value||'').trim().toLowerCase().replace(/\s/g,'');
   var password = (document.getElementById('es-password').value||'').trim();
   var limite   = parseInt(document.getElementById('es-limite').value||'40',10)||40;
-  if (!name) { toast('âš ï¸ El nombre es obligatorio.'); return; }
-  if (password && password.length < 6) { toast('âš ï¸ La contraseña debe tener al menos 6 caracteres.'); return; }
+  if (!name) { toast('<i class="ri-alert-line"></i> El nombre es obligatorio.'); return; }
+  if (password && password.length < 6) { toast('<i class="ri-alert-line"></i> La contrasena debe tener al menos 6 caracteres.'); return; }
 
   var update = {
     name:        name,
@@ -1307,11 +1307,11 @@ window.updateShelter = function() {
   if (password) update.password = password;
 
   var btn = document.getElementById('btn-update-shelter');
-  if (btn) { btn.disabled=true; btn.innerHTML='<i class="ri-loader-4-line"></i> Guardando…'; }
+  if (btn) { btn.disabled=true; btn.innerHTML='<i class="ri-loader-4-line"></i> Guardando...'; }
 
   db().collection('shelters').doc(shId).update(update)
     .then(function() {
-      toast('âœ… Refugio actualizado: '+name);
+      toast('<i class="ri-check-line"></i>  Refugio actualizado: '+name);
       closeShelterModal();
       loadShelters();
       addLog('updated_shelter', name, _dash.currentUser&&_dash.currentUser.name);
@@ -1330,7 +1330,7 @@ window.openShelterDetail = function(shId) {
     if(t)t.textContent='Gestionando: '+d.name;if(p)p.textContent='Prefijo: '+(d.prefix||'sin prefijo');
     refreshShelterCounter();loadShelterPets();
     var disp=document.getElementById('sh-qr-display');
-    if(disp)disp.innerHTML='<div style="text-align:center;color:var(--muted-dark);padding:48px 20px"><i class="ri-qr-code-line" style="font-size:64px;opacity:.2;display:block;margin-bottom:12px"></i><p style="font-size:.85rem">El QR aparecerá aquí</p></div>';
+    if(disp)disp.innerHTML='<div style="text-align:center;color:var(--muted-dark);padding:48px 20px"><i class="ri-qr-code-line" style="font-size:64px;opacity:.2;display:block;margin-bottom:12px"></i><p style="font-size:.85rem">El QR aparecera aqui</p></div>';
     var res=document.getElementById('sh-qr-result');if(res)res.style.display='none';
     _dash.shelterQr=null;
     showSection('shelter-detail',null);
@@ -1367,9 +1367,9 @@ window.generateShelterQR = function() {
     .then(function(){_dash.currentShelter.lastCount=next;var el=document.getElementById('sh-next-id');if(el)el.textContent=_dash.currentShelter.prefix+'-'+Math.random().toString(36).slice(2,6).toUpperCase()+Math.random().toString(36).slice(2,4).toUpperCase();});
   db().collection('pets').doc(newId).set({id:newId,status:'reservada',sellerId:_dash.currentShelter.id,sellerName:_dash.currentShelter.name,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
   var links=document.getElementById('sh-qr-links');
-  if(links){var safeUrl=profileUrl.replace(/'/g,"\\'");links.innerHTML='<div class="qr-link-row"><div class="qr-link-label">Perfil Público</div><div class="qr-link-url">'+esc(profileUrl)+'</div><button class="qr-link-copy" onclick="copyText(\''+safeUrl+'\',\'URL copiada\')">ðŸ“‹ Copiar</button></div>';}
+  if(links){var safeUrl=profileUrl.replace(/'/g,"\\'");links.innerHTML='<div class="qr-link-row"><div class="qr-link-label">Perfil Publico</div><div class="qr-link-url">'+esc(profileUrl)+'</div><button class="qr-link-copy" onclick="copyText(\''+safeUrl+'\',\'URL copiada\')"><i class="ri-file-copy-line"></i> Copiar</button></div>';}
   var res=document.getElementById('sh-qr-result');if(res)res.style.display='block';
-  toast('âœ… Placa creada: '+newId);
+  toast('<i class="ri-check-line"></i>  Placa creada: '+newId);
 };
 
 window.downloadShelterQR = function() {
@@ -1391,19 +1391,19 @@ window.loadShelterPets = function() {
         var d=doc.data(),id=doc.id;
         var bCls=d.status==='perdido'?'badge-lost':d.status==='reservada'?'badge-reserved':'badge-active';
         var bTxt=d.status==='perdido'?'Perdido':d.status==='reservada'?'Reservada':'Activo';
-        var fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'â€”';
-        html+='<tr><td class="td-id">'+esc(id)+'</td><td class="td-name">'+esc(d.name||'â€”')+'</td><td class="td-owner">'+esc(d.ownerName||'â€”')+'</td>'+
+        var fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'--';
+        html+='<tr><td class="td-id">'+esc(id)+'</td><td class="td-name">'+esc(d.name||'--')+'</td><td class="td-owner">'+esc(d.ownerName||'--')+'</td>'+
           '<td><span class="badge '+bCls+'">'+bTxt+'</span></td><td class="td-date">'+fecha+'</td>'+
           '<td class="td-actions"><a href="https://prueb2.dashnexpages.net/perfil-mascota-petcingo/?id='+encodeURIComponent(id)+'" target="_blank" class="btn btn-ghost btn-sm"><i class="ri-eye-line"></i></a></td></tr>';
       });
       tbody.innerHTML=html;
     }).catch(function(){
       if(countEl)countEl.textContent='';
-      tbody.innerHTML='<tr><td colspan="6"><div class="empty-state" style="color:var(--warn);padding:20px"><div style="font-size:28px;margin-bottom:8px">ðŸ”§</div><p><strong>Se requiere índice de Firebase.</strong></p><a href="https://console.firebase.google.com" target="_blank" style="color:var(--primary);font-weight:600;font-size:.85rem">Abrir Firebase Console â†’</a></div></td></tr>';
+      tbody.innerHTML='<tr><td colspan="6"><div class="empty-state" style="color:var(--warn);padding:20px"><div style="font-size:28px;margin-bottom:8px">[TOOL]</div><p><strong>Se requiere indice de Firebase.</strong></p><a href="https://console.firebase.google.com" target="_blank" style="color:var(--primary);font-weight:600;font-size:.85rem">Abrir Firebase Console -></a></div></td></tr>';
     });
 };
 
-/* â”€â”€ Users CRUD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Users CRUD ------------------------------------------- */
 function readPerms() {
   return { dashboard:elCheck('perm-dashboard'), register:elCheck('perm-register'), pets:elCheck('perm-pets'), vets:elCheck('perm-vets'), shelters:elCheck('perm-shelters'), settings:elCheck('perm-settings') };
 }
@@ -1422,11 +1422,11 @@ window.resetUserForm=resetUserForm;
 window.saveUser = function() {
   var name=document.getElementById('usr-name').value.trim();
   var pass=document.getElementById('usr-pass').value.trim();
-  if(!name){toast('âš ï¸ Nombre obligatorio.');return;}
-  if(pass.length<6){toast('âš ï¸ Contraseña mínimo 6 caracteres.');return;}
-  if(pass===MASTER_PASSWORD){toast('âš ï¸ No puedes usar la contraseña maestra.');return;}
+  if(!name){toast('<i class="ri-alert-line"></i> Nombre obligatorio.');return;}
+  if(pass.length<6){toast('<i class="ri-alert-line"></i> Contrasena minimo 6 caracteres.');return;}
+  if(pass===MASTER_PASSWORD){toast('<i class="ri-alert-line"></i> No puedes usar la contrasena maestra.');return;}
   db().collection('users').add({ username:name, password:pass, role:'staff', permissions:readPerms(), createdAt:firebase.firestore.FieldValue.serverTimestamp() })
-    .then(function(){toast('âœ… Usuario creado: '+name);resetUserForm();loadUsers();addLog('created_user',name,_dash.currentUser&&_dash.currentUser.name);})
+    .then(function(){toast('<i class="ri-check-line"></i>  Usuario creado: '+name);resetUserForm();loadUsers();addLog('created_user',name,_dash.currentUser&&_dash.currentUser.name);})
     .catch(function(e){toast('âŒ '+e.message);});
 };
 
@@ -1447,30 +1447,30 @@ window.updateUser = function() {
   if(!_dash.editingUserId){window.saveUser();return;}
   var name=document.getElementById('usr-name').value.trim();
   var pass=document.getElementById('usr-pass').value.trim();
-  if(!name){toast('âš ï¸ Nombre obligatorio.');return;}
+  if(!name){toast('<i class="ri-alert-line"></i> Nombre obligatorio.');return;}
   var update={username:name,permissions:readPerms()};
-  if(pass){if(pass.length<6){toast('âš ï¸ Contraseña mínimo 6 caracteres.');return;}if(pass===MASTER_PASSWORD){toast('âš ï¸ No puedes usar la contraseña maestra.');return;}update.password=pass;}
+  if(pass){if(pass.length<6){toast('<i class="ri-alert-line"></i> Contrasena minimo 6 caracteres.');return;}if(pass===MASTER_PASSWORD){toast('<i class="ri-alert-line"></i> No puedes usar la contrasena maestra.');return;}update.password=pass;}
   db().collection('users').doc(_dash.editingUserId).update(update)
-    .then(function(){toast('âœ… Usuario actualizado: '+name);resetUserForm();loadUsers();addLog('updated_user',name,_dash.currentUser&&_dash.currentUser.name);})
+    .then(function(){toast('<i class="ri-check-line"></i>  Usuario actualizado: '+name);resetUserForm();loadUsers();addLog('updated_user',name,_dash.currentUser&&_dash.currentUser.name);})
     .catch(function(e){toast('âŒ '+e.message);});
 };
 
 function loadUsers() {
   var el=document.getElementById('users-list');
   if(!el){console.warn('loadUsers: #users-list not found');return;}
-  console.log('loadUsers: cargando…');
+  console.log('loadUsers: cargando...');
   el.innerHTML='<div class="empty-state" style="padding:20px"><div class="loading-dots"><span></span><span></span><span></span></div></div>';
   db().collection('users').orderBy('createdAt','desc').get()
     .then(function(snap){
       console.log('loadUsers: snap.size='+snap.size);
-      if(snap.empty){el.innerHTML='<p style="color:var(--muted-dark);font-size:.85rem;padding:8px 0">No hay usuarios creados aún.</p>';return;}
+      if(snap.empty){el.innerHTML='<p style="color:var(--muted-dark);font-size:.85rem;padding:8px 0">No hay usuarios creados aun.</p>';return;}
       var html='',isAdmin=_dash.currentUser&&_dash.currentUser.role==='admin';
       snap.forEach(function(doc){
         var d=doc.data();
         var permsStr=JSON.stringify(d.permissions||{}).replace(/"/g,'&quot;');
         var permList=Object.keys(d.permissions||{}).filter(function(k){return d.permissions[k];}).join(', ');
         html+='<div class="user-row"><div class="user-avatar">'+esc((d.username||'U').charAt(0).toUpperCase())+'</div>'+
-          '<div class="user-info"><div class="user-name">'+esc(d.username||'â€”')+'</div><div class="user-perms">'+esc(permList||'sin permisos')+'</div></div>'+
+          '<div class="user-info"><div class="user-name">'+esc(d.username||'--')+'</div><div class="user-perms">'+esc(permList||'sin permisos')+'</div></div>'+
           (isAdmin?'<button class="btn btn-ghost btn-sm" onclick="editUser(\''+doc.id+'\',\''+esc(d.username||'')+'\',\''+permsStr+'\',\''+esc(d.role||'')+'\')" style="margin-right:6px"><i class="ri-edit-line"></i></button>'+
             '<button class="btn-danger-outline" onclick="deleteRecord(\'users\',\''+doc.id+'\',\'loadUsers\')"><i class="ri-delete-bin-line"></i></button>':'')+
           '</div>';
@@ -1484,7 +1484,7 @@ function loadUsers() {
 }
 window.loadUsers=loadUsers;
 
-/* â”€â”€ Logs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Logs ------------------------------------------------- */
 function addLog(action, targetId, user) {
   db().collection('logs').add({ action:action, targetId:targetId||'', user:user||'sistema', date:firebase.firestore.FieldValue.serverTimestamp() })
     .catch(function(){});
@@ -1504,7 +1504,7 @@ function loadLogs(reset) {
   if(_logsLastDoc) q = q.startAfter(_logsLastDoc);
   q.get().then(function(snap){
     if(snap.empty && !_logsLastDoc){
-      el.innerHTML='<p style="color:var(--muted-dark);font-size:.85rem;padding:8px 0">No hay logs de auditoría.</p>';
+      el.innerHTML='<p style="color:var(--muted-dark);font-size:.85rem;padding:8px 0">No hay logs de auditoria.</p>';
       if(moreBtn)moreBtn.style.display='none';
       return;
     }
@@ -1517,7 +1517,7 @@ function loadLogs(reset) {
         '<th style="text-align:left;padding:7px 10px;color:var(--muted-dark);font-size:.67rem;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.07);white-space:nowrap">Fecha</th>'+
         '<th style="text-align:left;padding:7px 10px;color:var(--muted-dark);font-size:.67rem;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.07);white-space:nowrap">Hora</th>'+
         '<th style="text-align:left;padding:7px 10px;color:var(--muted-dark);font-size:.67rem;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.07)">Usuario</th>'+
-        '<th style="text-align:left;padding:7px 10px;color:var(--muted-dark);font-size:.67rem;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.07)">Acción</th>'+
+        '<th style="text-align:left;padding:7px 10px;color:var(--muted-dark);font-size:.67rem;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.07)">Accion</th>'+
         '<th style="text-align:left;padding:7px 10px;color:var(--muted-dark);font-size:.67rem;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.07)">ID Objetivo</th>'+
         '</tr></thead><tbody id="log-tbody"></tbody>';
       el.innerHTML='';el.appendChild(tbl);
@@ -1526,9 +1526,9 @@ function loadLogs(reset) {
     snap.forEach(function(doc){
       var d=doc.data();
       var dt=d.date&&d.date.toDate?d.date.toDate():null;
-      var fecha=dt?dt.toLocaleDateString('es-BO',{day:'2-digit',month:'2-digit',year:'numeric'}):'â€”';
-      var hora=dt?dt.toLocaleTimeString('es-BO',{hour:'2-digit',minute:'2-digit'}):'â€”';
-      var actionType=d.action||'â€”';
+      var fecha=dt?dt.toLocaleDateString('es-BO',{day:'2-digit',month:'2-digit',year:'numeric'}):'--';
+      var hora=dt?dt.toLocaleTimeString('es-BO',{hour:'2-digit',minute:'2-digit'}):'--';
+      var actionType=d.action||'--';
       var actColor=actionType.includes('delet')||actionType.includes('elimin')?'#ff3b6b':
                    actionType.includes('login')?'var(--accent)':
                    actionType.includes('creat')||actionType.includes('register')||actionType.includes('creo')?'#00c896':'var(--text-dark)';
@@ -1540,7 +1540,7 @@ function loadLogs(reset) {
         '<td style="padding:8px 10px;color:var(--muted-dark);white-space:nowrap;font-family:monospace;font-size:.75rem">'+esc(hora)+'</td>'+
         '<td style="padding:8px 10px;font-weight:600">'+esc(d.user||'sistema')+'</td>'+
         '<td style="padding:8px 10px"><span style="color:'+actColor+';font-size:.78rem;font-weight:600">'+esc(actionType)+'</span></td>'+
-        '<td style="padding:8px 10px;color:var(--muted-dark);font-family:monospace;font-size:.75rem">'+esc(d.targetId||'â€”')+'</td>';
+        '<td style="padding:8px 10px;color:var(--muted-dark);font-family:monospace;font-size:.75rem">'+esc(d.targetId||'--')+'</td>';
       if(logTbody)logTbody.appendChild(tr);
     });
     _logsLastDoc = snap.docs[snap.docs.length-1];
@@ -1556,23 +1556,23 @@ window.toggleAllLogs=function(checked){
 };
 window.deleteSelectedLogs=function(){
   var checkboxes=document.querySelectorAll('#log-tbody .log-check:checked');
-  if(!checkboxes.length){toast('âš ï¸ Selecciona al menos un log.');return;}
-  if(!confirm('¿Eliminar '+checkboxes.length+' log(s) seleccionado(s)? Esta acción no se puede deshacer.'))return;
+  if(!checkboxes.length){toast('<i class="ri-alert-line"></i> Selecciona al menos un log.');return;}
+  if(!confirm('Eliminar '+checkboxes.length+' log(s) seleccionado(s)? Esta accion no se puede deshacer.'))return;
   var b=db().batch();
   checkboxes.forEach(function(cb){b.delete(db().collection('logs').doc(cb.dataset.logId));});
   b.commit().then(function(){
-    toast('âœ… '+checkboxes.length+' log(s) eliminado(s).');
+    toast('<i class="ri-check-line"></i>  '+checkboxes.length+' log(s) eliminado(s).');
     loadLogs(true);
   }).catch(function(e){toast('âŒ '+e.message);});
 };
 
-/* â”€â”€ Recent Reserved â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Recent Reserved ----------------------------------------- */
 function loadRecentReserved() {
   var el = document.getElementById('recent-reserved-list');
   if (!el) return;
   db().collection('pets').where('status','==','reservada').get()
     .then(function(snap) {
-      if (snap.empty) { el.innerHTML='<div class="empty-state"><p>No hay placas reservadas aún.</p></div>'; return; }
+      if (snap.empty) { el.innerHTML='<div class="empty-state"><p>No hay placas reservadas aun.</p></div>'; return; }
       var docs=[];
       snap.forEach(function(doc){ docs.push({id:doc.id, data:doc.data()}); });
       docs.sort(function(a,b){
@@ -1588,11 +1588,11 @@ function loadRecentReserved() {
         '</tr></thead><tbody>';
       docs.forEach(function(item) {
         var d=item.data, id=item.id;
-        var fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'â€”';
+        var fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'--';
         var actUrl='https://prueb2.dashnexpages.net/activacion/?id='+encodeURIComponent(id);
         html+='<tr style="border-bottom:1px solid rgba(255,255,255,.04)">'+
           '<td style="padding:9px 8px"><a href="'+actUrl+'" target="_blank" style="color:#4552CC;font-weight:700;font-family:monospace;font-size:.82rem">'+esc(id)+'</a></td>'+
-          '<td style="padding:9px 8px;color:var(--muted-dark);font-size:.78rem">'+esc(d.sellerName||'â€”')+'</td>'+
+          '<td style="padding:9px 8px;color:var(--muted-dark);font-size:.78rem">'+esc(d.sellerName||'--')+'</td>'+
           '<td style="padding:9px 8px;color:var(--muted-dark)">'+fecha+'</td></tr>';
       });
       html+='</tbody></table>';
@@ -1607,26 +1607,26 @@ window.clearOldLogs = function() {
   var inputEl=document.getElementById('cfg-log-days');
   var days=inputEl?parseInt(inputEl.value,10):30;
   if(!days||days<1)days=30;
-  if(!confirm('¿Eliminar todos los logs de hace más de '+days+' días?'))return;
+  if(!confirm('Eliminar todos los logs de hace mas de '+days+' dias?'))return;
   var cutoff=new Date(Date.now()-days*24*60*60*1000);
   db().collection('logs').where('date','<',cutoff).get()
     .then(function(snap){
       if(snap.empty){toast('No hay logs tan antiguos.');return;}
       var batch=db().batch();
       snap.forEach(function(doc){batch.delete(doc.ref);});
-      return batch.commit().then(function(){toast('ðŸ—‘ '+snap.size+' logs eliminados.');loadLogs();});
+      return batch.commit().then(function(){toast('<i class="ri-delete-bin-line"></i> '+snap.size+' logs eliminados.');loadLogs();});
     }).catch(function(e){toast('âŒ '+e.message);});
 };
 
-/* â”€â”€ Delete record (generic) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Delete record (generic) ------------------------------ */
 window.deleteRecord = function(collection, docId, reloadFn) {
-  if(!confirm('¿Eliminar este registro permanentemente?'))return;
+  if(!confirm('Eliminar este registro permanentemente?'))return;
   db().collection(collection).doc(docId).delete()
-    .then(function(){toast('ðŸ—‘ Eliminado.');addLog('deleted_'+collection,docId,_dash.currentUser&&_dash.currentUser.name);if(window[reloadFn])window[reloadFn]();})
+    .then(function(){toast('<i class="ri-delete-bin-line"></i> Eliminado.');addLog('deleted_'+collection,docId,_dash.currentUser&&_dash.currentUser.name);if(window[reloadFn])window[reloadFn]();})
     .catch(function(e){toast('âŒ '+e.message);});
 };
 
-/* â”€â”€ Settings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Settings --------------------------------------------- */
 function _storageFb() {
   try { return _getPcApp().storage(); } catch(e) { return null; }
 }
@@ -1653,7 +1653,7 @@ window.handleLogoUpload=function(input,type){
   /* QR logo usa prefijo cfg-qr-logo en vez de cfg-logo-qr */
   var prefix=(type==='qr')?'cfg-qr-logo':'cfg-logo-'+type;
   var statusEl=document.getElementById(prefix+'-upload-status');
-  if(statusEl){statusEl.textContent='Procesando…';statusEl.style.display='block';}
+  if(statusEl){statusEl.textContent='Procesando...';statusEl.style.display='block';}
   var doStore=function(blob){
     var reader=new FileReader();
     reader.onload=function(e){
@@ -1662,7 +1662,7 @@ window.handleLogoUpload=function(input,type){
       if(urlInput)urlInput.value=dataUrl;
       var prev=document.getElementById(prefix+'-preview');
       if(prev){prev.src=dataUrl;prev.style.display='block';}
-      if(statusEl)statusEl.textContent='âœ… Listo â€” presiona Guardar para confirmar';
+      if(statusEl)statusEl.innerHTML='<i class="ri-check-line"></i>  Listo -- presiona Guardar para confirmar';
     };
     reader.readAsDataURL(blob);
   };
@@ -1670,19 +1670,19 @@ window.handleLogoUpload=function(input,type){
   else{_compressPng(file,400,doStore);}
 };
 
-/* Upload vet/shelter logo â†’ R2 logos/ prefix, PNG transparent ~80KB */
+/* Upload vet/shelter logo -> R2 logos/ prefix, PNG transparent ~80KB */
 window.handleOrgLogoUpload = function(input, urlInputId, statusId) {
   var file = input.files && input.files[0];
   if (!file) return;
   var statusEl = document.getElementById(statusId);
-  if (statusEl) { statusEl.textContent = 'Comprimiendo imagen…'; statusEl.style.display = 'block'; }
+  if (statusEl) { statusEl.textContent = 'Comprimiendo imagen...'; statusEl.style.display = 'block'; }
 
   function doUpload(blob) {
     if (typeof AWS === 'undefined') {
       if (statusEl) statusEl.textContent = 'âŒ AWS SDK no cargado.';
       return;
     }
-    if (statusEl) statusEl.textContent = 'Subiendo a Cloudflare R2…';
+    if (statusEl) statusEl.textContent = 'Subiendo a Cloudflare R2...';
     AWS.config.update({
       accessKeyId: '6496db9c407984025f99bc0dc6a23264',
       secretAccessKey: 'b270005e8ebf9eef779db72012a0ea6206a9f281eba9d07e0b15f78016c2d94d'
@@ -1699,7 +1699,7 @@ window.handleOrgLogoUpload = function(input, urlInputId, statusId) {
       var publicUrl = 'https://pub-cb882f9b206543b28ea81fcadac0f4b2.r2.dev/' + key;
       var urlEl = document.getElementById(urlInputId);
       if (urlEl) urlEl.value = publicUrl;
-      if (statusEl) statusEl.textContent = 'âœ… Logo subido â€” presiona Guardar para confirmar.';
+      if (statusEl) statusEl.innerHTML = '<i class="ri-check-line"></i>  Logo subido -- presiona Guardar para confirmar.';
     });
   }
 
@@ -1742,7 +1742,7 @@ window.saveLogo = function(type) {
   db().collection('config').doc('admin_settings').set(data,{merge:true})
     .then(function(){
       _applyLogo(url,type||'dark');
-      toast('âœ… Logo guardado.');
+      toast('<i class="ri-check-line"></i>  Logo guardado.');
     }).catch(function(e){toast('âŒ '+e.message);});
 };
 
@@ -1763,7 +1763,7 @@ window.saveQrLogo = function() {
   var url = (document.getElementById('cfg-qr-logo-url')||{}).value;
   if (url !== undefined) url = url.trim(); else url = '';
   db().collection('config').doc('admin_settings').set({qrLogoUrl: url}, {merge: true})
-    .then(function() { toast('âœ… Logo QR guardado.'); })
+    .then(function() { toast('<i class="ri-check-line"></i>  Logo QR guardado.'); })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 
@@ -1779,7 +1779,7 @@ window.removeQrLogo = function() {
 
 function _applyLogo(url, type) {
   if (type === 'light') {
-    /* Logo oscuro (para fondos claros) -> Dashboard Admin, Activación */
+    /* Logo oscuro (para fondos claros) -> Dashboard Admin, Activacion */
     var _lightIds=['act-brand-logo', 'sidebar-brand-logo'];
     _lightIds.forEach(function(id){
       var el=document.getElementById(id);
@@ -1788,7 +1788,7 @@ function _applyLogo(url, type) {
       else el.style.display='none';
     });
 
-    /* Mobile topbar logo (versión blanca invertida via CSS filter) */
+    /* Mobile topbar logo (version blanca invertida via CSS filter) */
     var mbl=document.getElementById('mobile-brand-logo');
     var mbt=document.getElementById('mobile-brand-text');
     if(mbl){ if(url){mbl.src=url;mbl.style.display='block';} else mbl.style.display='none'; }
@@ -1861,19 +1861,19 @@ window.applyTheme = function(name) {
   localStorage.setItem('petcingo_theme',name);
 };
 
-/* â”€â”€ Staff legacy â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Staff legacy ---------------------------------------- */
 window.saveStaff = function() {
   var name=document.getElementById('staff-name');var pass=document.getElementById('staff-pass');
-  if(!name||!pass||!name.value.trim()||pass.value.trim().length<6){toast('âš ï¸ Nombre y contraseña (6+ chars).');return;}
+  if(!name||!pass||!name.value.trim()||pass.value.trim().length<6){toast('<i class="ri-alert-line"></i> Nombre y contrasena (6+ chars).');return;}
   db().collection('staff').add({name:name.value.trim(),password:pass.value.trim(),role:'empleado',createdAt:firebase.firestore.FieldValue.serverTimestamp()})
-    .then(function(){toast('âœ… Empleado creado.');name.value='';pass.value='';})
+    .then(function(){toast('<i class="ri-check-line"></i>  Empleado creado.');name.value='';pass.value='';})
     .catch(function(e){toast('âŒ '+e.message);});
 };
 
-/* â”€â”€ Global QR generator (custom ID) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Global QR generator (custom ID) --------------------- */
 window.generateQR = function() {
   var inp=document.getElementById('qr-id-input');
-  if(!inp||!inp.value.trim()){toast('âš ï¸ Ingresa un ID.');return;}
+  if(!inp||!inp.value.trim()){toast('<i class="ri-alert-line"></i> Ingresa un ID.');return;}
   var rawId=inp.value.trim();
   var profileUrl='https://prueb2.dashnexpages.net/activacion/?id='+encodeURIComponent(rawId);
   var display=document.getElementById('qr-display');if(!display)return;
@@ -1888,9 +1888,9 @@ window.generateQR = function() {
   }
   catch(e){toast('Error QR: '+e.message);return;}
   var links=document.getElementById('qr-links'),res=document.getElementById('qr-result');
-  if(links){var safeUrl=profileUrl.replace(/'/g,"\\'");links.innerHTML='<div class="qr-link-row"><div class="qr-link-label">Perfil Público</div><div class="qr-link-url">'+esc(profileUrl)+'</div><button class="qr-link-copy" onclick="copyText(\''+safeUrl+'\',\'URL copiada\')">ðŸ“‹ Copiar</button></div>';}
+  if(links){var safeUrl=profileUrl.replace(/'/g,"\\'");links.innerHTML='<div class="qr-link-row"><div class="qr-link-label">Perfil Publico</div><div class="qr-link-url">'+esc(profileUrl)+'</div><button class="qr-link-copy" onclick="copyText(\''+safeUrl+'\',\'URL copiada\')"><i class="ri-file-copy-line"></i> Copiar</button></div>';}
   if(res)res.style.display='block';
-  toast('âœ… QR generado: '+rawId);
+  toast('<i class="ri-check-line"></i>  QR generado: '+rawId);
 };
 
 window.downloadQR = function() {
@@ -1958,15 +1958,15 @@ function _downloadQREl(el, filename) {
 }
 
 window.copyText = function(text, msg) {
-  navigator.clipboard.writeText(text).then(function(){toast('ðŸ“‹ '+(msg||'Copiado'));}).catch(function(){toast('No se pudo copiar.');});
+  navigator.clipboard.writeText(text).then(function(){toast('<i class="ri-file-copy-line"></i> '+(msg||'Copiado'));}).catch(function(){toast('No se pudo copiar.');});
 };
 
-/* â”€â”€ Scan Log Retention â”€â”€ */
+/* -- Scan Log Retention -- */
 window.purgeScanLogs = function() {
   var inp = document.getElementById('cfg-scan-days');
   var days = inp ? parseInt(inp.value, 10) : 90;
   if (!days || days < 7) days = 90;
-  if (!confirm('¿Eliminar escaneos con más de ' + days + ' días? Esta acción no se puede deshacer.')) return;
+  if (!confirm('Eliminar escaneos con mas de ' + days + ' dias? Esta accion no se puede deshacer.')) return;
   var cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
   db().collection('scan_logs').where('scannedAt', '<', cutoff).get()
     .then(function(snap) {
@@ -1982,18 +1982,18 @@ window.purgeScanLogs = function() {
           return batch.commit();
         });
       });
-      return seq.then(function() { toast('ðŸ—‘ ' + total + ' escaneos eliminados.'); });
+      return seq.then(function() { toast('<i class="ri-delete-bin-line"></i> ' + total + ' escaneos eliminados.'); });
     })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 
-/* â”€â”€ Full Backup â”€â”€ */
+/* -- Full Backup -- */
 window.exportFullBackup = function() {
   var COLLECTIONS = ['pets', 'users', 'veterinarias', 'shelters', 'scan_logs', 'logs', 'staff'];
   var backup = { version: 1, exportedAt: new Date().toISOString(), data: {} };
   var btn = document.getElementById('btn-full-backup');
-  if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Exportando…'; }
-  toast('Exportando backup completo…');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Exportando...'; }
+  toast('Exportando backup completo...');
 
   var promises = COLLECTIONS.map(function(col) {
     return db().collection(col).get()
@@ -2020,7 +2020,7 @@ window.exportFullBackup = function() {
     a.download = 'petcingo-backup-' + new Date().toISOString().slice(0, 10) + '.json';
     document.body.appendChild(a); a.click();
     document.body.removeChild(a); URL.revokeObjectURL(url);
-    toast('âœ… Backup completo descargado.');
+    toast('<i class="ri-check-line"></i>  Backup completo descargado.');
     if (btn) { btn.disabled = false; btn.innerHTML = '<i class="ri-download-cloud-line"></i> Exportar Backup Completo'; }
   });
 };
@@ -2028,7 +2028,7 @@ window.exportFullBackup = function() {
 window.exportDatabase = exportDatabase;
 window.downloadJson   = downloadJson;
 
-/* â”€â”€ Restaurar Backup Completo â”€â”€ */
+/* -- Restaurar Backup Completo -- */
 window.importFullBackup = function() {
   var input = document.createElement('input');
   input.type = 'file'; input.accept = '.json,application/json';
@@ -2039,13 +2039,13 @@ window.importFullBackup = function() {
     reader.onload = function(evt) {
       var backup;
       try { backup = JSON.parse(evt.target.result); }
-      catch(err) { toast('âŒ JSON inválido: ' + err.message); return; }
+      catch(err) { toast('âŒ JSON invalido: ' + err.message); return; }
       if (!backup || !backup.data || typeof backup.data !== 'object') {
-        toast('âŒ Formato de backup inválido. Se espera { version:1, data:{ colección:[...] } }.'); return;
+        toast('âŒ Formato de backup invalido. Se espera { version:1, data:{ coleccion:[...] } }.'); return;
       }
       var cols = Object.keys(backup.data);
       var totalDocs = cols.reduce(function(n, c) { return n + (Array.isArray(backup.data[c]) ? backup.data[c].length : 0); }, 0);
-      if (!confirm('¿Restaurar backup completo?\n\n' + cols.length + ' colecciones · ' + totalDocs + ' documentos\n\nSe SOBREESCRIBIRÁN documentos existentes con el mismo ID.\nEsta acción NO se puede deshacer.')) return;
+      if (!confirm('?Restaurar backup completo?\n\n' + cols.length + ' colecciones · ' + totalDocs + ' documentos\n\nSe SOBREESCRIBIRÁN documentos existentes con el mismo ID.\nEsta accion NO se puede deshacer.')) return;
       var firestoreDb = (typeof _db !== 'undefined' && _db) ? _db : _getPcApp().firestore();
       var restored = 0, errors = 0;
       function commitChunk(col, chunk) {
@@ -2065,7 +2065,7 @@ window.importFullBackup = function() {
         });
         return b.commit();
       }
-      toast('Restaurando backup completo…');
+      toast('Restaurando backup completo...');
       cols.reduce(function(chainCol, col) {
         return chainCol.then(function() {
           var records = backup.data[col];
@@ -2078,7 +2078,7 @@ window.importFullBackup = function() {
         });
       }, Promise.resolve())
         .then(function() {
-          toast('âœ… Backup restaurado: ' + restored + ' documentos en ' + cols.length + ' colecciones' + (errors ? ' · ' + errors + ' omitidos' : '') + '.');
+          toast('<i class="ri-check-line"></i>  Backup restaurado: ' + restored + ' documentos en ' + cols.length + ' colecciones' + (errors ? ' · ' + errors + ' omitidos' : '') + '.');
         })
         .catch(function(err) { toast('âŒ Error al restaurar: ' + err.message); });
     };
@@ -2087,7 +2087,7 @@ window.importFullBackup = function() {
   input.click();
 };
 
-/* â”€â”€ Importar / Restaurar colección desde JSON â”€â”€ */
+/* -- Importar / Restaurar coleccion desde JSON -- */
 window.importDatabase = function(collectionName) {
   var input = document.createElement('input');
   input.type = 'file'; input.accept = '.json,application/json';
@@ -2098,15 +2098,15 @@ window.importDatabase = function(collectionName) {
     reader.onload = function(evt) {
       var records;
       try { records = JSON.parse(evt.target.result); }
-      catch(err) { toast('âŒ JSON inválido: ' + err.message); return; }
+      catch(err) { toast('âŒ JSON invalido: ' + err.message); return; }
       if (!Array.isArray(records)) { toast('âŒ El archivo debe contener un array JSON.'); return; }
 
-      if (!confirm('¿Restaurar ' + records.length + ' registros en "' + collectionName + '"?\n\nSe SOBREESCRIBIRÁN documentos existentes con el mismo ID.\nEsta acción no se puede deshacer.')) return;
+      if (!confirm('?Restaurar ' + records.length + ' registros en "' + collectionName + '"?\n\nSe SOBREESCRIBIRÁN documentos existentes con el mismo ID.\nEsta accion no se puede deshacer.')) return;
 
       var firestoreDb = (typeof _db !== 'undefined' && _db) ? _db : _getPcApp().firestore();
       var count = 0, errors = 0;
 
-      /* Firestore batches max 500 ops â€” process in chunks */
+      /* Firestore batches max 500 ops -- process in chunks */
       function commitChunk(chunk) {
         var b = firestoreDb.batch();
         chunk.forEach(function(rec) {
@@ -2128,13 +2128,13 @@ window.importDatabase = function(collectionName) {
 
       var chunks = [];
       for (var i = 0; i < records.length; i += 400) chunks.push(records.slice(i, i + 400));
-      toast('Importando ' + records.length + ' registros en ' + chunks.length + ' lote(s)…');
+      toast('Importando ' + records.length + ' registros en ' + chunks.length + ' lote(s)...');
 
       chunks.reduce(function(p, chunk) {
         return p.then(function() { return commitChunk(chunk); });
       }, Promise.resolve())
         .then(function() {
-          toast('âœ… ' + count + ' registros restaurados en "' + collectionName + '"' + (errors ? ' · ' + errors + ' omitidos (sin ID)' : '') + '.');
+          toast('<i class="ri-check-line"></i>  ' + count + ' registros restaurados en "' + collectionName + '"' + (errors ? ' · ' + errors + ' omitidos (sin ID)' : '') + '.');
         })
         .catch(function(err) { toast('âŒ Error al importar: ' + err.message); });
     };
@@ -2143,15 +2143,15 @@ window.importDatabase = function(collectionName) {
   input.click();
 };
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   PET.HTML â€” Public Profile
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ==============================================================
+   PET.HTML -- Public Profile
+============================================================== */
 window.initPetPage = function() {
   if(typeof window._applyBrandConfig==='function')window._applyBrandConfig();
   var params  = new URLSearchParams(window.location.search);
   var plateId = (params.get('id') || '').trim();
 
-  /* â”€â”€ No ID in URL â”€â”€ */
+  /* -- No ID in URL -- */
   if (!plateId) {
     var errEl = document.getElementById('pet-state-error');
     var loadEl = document.getElementById('pet-state-loading');
@@ -2165,24 +2165,24 @@ window.initPetPage = function() {
       errEl.innerHTML =
         '<div class="pet-state-icon">â“</div>' +
         '<div class="pet-state-title">Placa no encontrada</div>' +
-        '<div class="pet-state-sub">Asegúrate de estar usando el enlace QR/NFC de la placa.</div>' +
+        '<div class="pet-state-sub">Asegurate de estar usando el enlace QR/NFC de la placa.</div>' +
         '';
     }
     return;
   }
 
-  /* â”€â”€ Fetch pet doc â”€â”€ */
+  /* -- Fetch pet doc -- */
   var firestoreDb = (typeof _db !== 'undefined' && _db) ? _db : _getPcApp().firestore();
 
   firestoreDb.collection('pets').doc(plateId).get()
     .then(function(docSnap) {
       if (!docSnap.exists) {
-        _showPetError(plateId, 'Esta placa (<strong>' + esc(plateId) + '</strong>) no tiene un perfil registrado aún.');
+        _showPetError(plateId, 'Esta placa (<strong>' + esc(plateId) + '</strong>) no tiene un perfil registrado aun.');
         return;
       }
       var d = docSnap.data();
 
-      /* Blocked states â€” show but minimal */
+      /* Blocked states -- show but minimal */
       if (d.status === 'deleted') {
         _showPetError(plateId, 'Esta placa ha sido desactivada.');
         return;
@@ -2198,8 +2198,8 @@ window.initPetPage = function() {
         if (profEl) profEl.style.display = 'none';
         if (errEl) {
           errEl.style.display = 'flex';
-          errEl.innerHTML = '<div class="pet-state-icon">ðŸ·ï¸</div><div class="pet-state-title">Placa sin activar</div><div class="pet-state-sub">Esta placa aún no ha sido activada por su dueño.</div>' +
-            '<a href="https://prueb2.dashnexpages.net/activacion/?id=' + encodeURIComponent(plateId) + '" style="margin-top:14px;display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#4552CC;color:#fff;border-radius:12px;font-weight:700;font-size:.85rem;text-decoration:none">Activar placa â†’</a>';
+          errEl.innerHTML = '<div class="pet-state-icon">·</div><div class="pet-state-title">Placa sin activar</div><div class="pet-state-sub">Esta placa aun no ha sido activada por su dueno.</div>' +
+            '<a href="https://prueb2.dashnexpages.net/activacion/?id=' + encodeURIComponent(plateId) + '" style="margin-top:14px;display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#4552CC;color:#fff;border-radius:12px;font-weight:700;font-size:.85rem;text-decoration:none">Activar placa -></a>';
         }
         return;
       }
@@ -2224,7 +2224,7 @@ function _showPetError(plateId, msg) {
       '<div class="pet-state-title">Placa no registrada</div>' +
       '<div class="pet-state-sub">' + (msg || 'No encontramos esta placa en el sistema.') + '</div>' +
       (plateId
-        ? '<a href="https://prueb2.dashnexpages.net/activacion/?id=' + encodeURIComponent(plateId) + '" style="margin-top:14px;display:inline-block;padding:10px 18px;background:#4552CC;color:#fff;border-radius:12px;font-weight:700;font-size:.85rem;text-decoration:none">Activar placa â†’</a>'
+        ? '<a href="https://prueb2.dashnexpages.net/activacion/?id=' + encodeURIComponent(plateId) + '" style="margin-top:14px;display:inline-block;padding:10px 18px;background:#4552CC;color:#fff;border-radius:12px;font-weight:700;font-size:.85rem;text-decoration:none">Activar placa -></a>'
         : '');
   }
 }
@@ -2232,7 +2232,7 @@ function _showPetError(plateId, msg) {
 function renderPetProfile(d, petId) {
   var isLost = d.status === 'perdido';
 
-  /* Apply visual theme before rendering (skip if lost â€” red banner takes precedence) */
+  /* Apply visual theme before rendering (skip if lost -- red banner takes precedence) */
   if (!isLost && window.PC_Themes) {
     window.PC_Themes.apply(d.theme || 'neutro');
   }
@@ -2246,11 +2246,11 @@ function renderPetProfile(d, petId) {
   /* Soporte: reporte dinamico */
   var reportBtn=document.getElementById('pet-report-btn');
   if(reportBtn){
-    var reportMsg='¡Hola! Quiero reportar un problema con la placa *'+petId+'* en Petcingo.';
+    var reportMsg='!Hola! Quiero reportar un problema con la placa *'+petId+'* en Petcingo.';
     reportBtn.href='https://wa.me/59171040074?text='+encodeURIComponent(reportMsg);
   }
 
-  document.title = (d.name||'Mascota') + ' â€“ Petcingo';
+  document.title = (d.name||'Mascota') + ' - Petcingo';
   var nameEl=document.getElementById('pet-name');if(nameEl)nameEl.textContent=d.name||'Mascota';
   var plateIdEl=document.getElementById('pet-plate-id');if(plateIdEl)plateIdEl.textContent='ID: '+petId;
 
@@ -2272,21 +2272,21 @@ function renderPetProfile(d, petId) {
     if(badgeTxt)badgeTxt.textContent=isLost?'Perdido':d.status==='reservada'?'Pendiente':'Activo';
   }
 
-  /* Chips â€” especie, edad (calculada), género, peso */
+  /* Chips -- especie, edad (calculada), genero, peso */
   var chips=document.getElementById('pet-chips');
   if(chips){
     var ch='';
     if(d.species) ch+='<span class="pet-chip">'+_speciesEmoji(d.species)+' '+esc(d.species)+'</span>';
-    if(d.gender)  ch+='<span class="pet-chip">'+(d.gender==='Macho'?'â™‚ Macho':'â™€ Hembra')+'</span>';
+    if(d.gender)  ch+='<span class="pet-chip">'+(d.gender==='Macho'?'[M] Macho':'[F] Hembra')+'</span>';
     /* Calcular edad si solo hay birthdate */
     var chipAge=d.age||'';
     if(!chipAge&&d.birthdate){
       var _bd=new Date(d.birthdate),_now=new Date();
       var _y=_now.getFullYear()-_bd.getFullYear(),_m=_now.getMonth()-_bd.getMonth();
       if(_m<0||(_m===0&&_now.getDate()<_bd.getDate())){_y--;_m=(_m+12)%12;}
-      chipAge=_y>0?_y+' año'+(_y>1?'s':''):_m+' mes'+(_m!==1?'es':'');
+      chipAge=_y>0?_y+' ano'+(_y>1?'s':''):_m+' mes'+(_m!==1?'es':'');
     }
-    if(chipAge) ch+='<span class="pet-chip">ðŸŽ‚ '+esc(chipAge)+'</span>';
+    if(chipAge) ch+='<span class="pet-chip">[CAKE] '+esc(chipAge)+'</span>';
     chips.innerHTML=ch;
   }
 
@@ -2306,7 +2306,7 @@ function renderPetProfile(d, petId) {
         var msgIcon=msgAcc.querySelector('.pet-acc-icon');
         if(msgIcon){msgIcon.innerHTML='<i class="ri-alarm-warning-line" style="color:#f43f5e"></i>';}
         var msgLabel=msgAcc.querySelector('.pet-acc-label');
-        if(msgLabel)msgLabel.textContent='âš ï¸ Mensaje al rescatista';
+        if(msgLabel)msgLabel.innerHTML='<i class="ri-alert-line"></i> Mensaje al rescatista';
       }
     }
     var val=document.getElementById('pet-acc-message-val');
@@ -2334,7 +2334,7 @@ function renderPetProfile(d, petId) {
     manageEl.style.display = 'block';
   }
 
-  /* â”€â”€ Footer logo: vet/shelter logo if sold through org, Petcingo logo if direct â”€â”€ */
+  /* -- Footer logo: vet/shelter logo if sold through org, Petcingo logo if direct -- */
   var _sid = d.sellerId || '';
   var _isDirect = !_sid || _sid === 'petcingo' || _sid === '__direct__';
   if (!_isDirect) {
@@ -2367,34 +2367,34 @@ function _buildPetOwnerAccordion(d) {
   if(!acc||!content)return;
   var rows='';
   if(d.ownerName) rows+=_petInfoRow('ri-user-3-line','Propietario/a',d.ownerName);
-  if(d.phone)  rows+=_petInfoRow('ri-phone-line','Teléfono principal',d.phone);
-  if(d.phone2) rows+=_petInfoRow('ri-phone-line','Teléfono alternativo',d.phone2);
+  if(d.phone)  rows+=_petInfoRow('ri-phone-line','Telefono principal',d.phone);
+  if(d.phone2) rows+=_petInfoRow('ri-phone-line','Telefono alternativo',d.phone2);
   if(d.ownerLocation){
     var loc=d.ownerLocation;
-    /* País */
-    if(loc.country) rows+=_petInfoRow('ri-global-line','País',loc.country);
+    /* Pais */
+    if(loc.country) rows+=_petInfoRow('ri-global-line','Pais',loc.country);
     /* Bolivia: Departamento + Provincia */
     if(loc.dept){
-      var deptStr=loc.dept+(loc.prov?' â€” '+loc.prov:'');
+      var deptStr=loc.dept+(loc.prov?' -- '+loc.prov:'');
       rows+=_petInfoRow('ri-map-2-line','Departamento',deptStr);
     }
     /* Internacional: Ciudad + Provincia/Estado */
     if(loc.intlCity){
-      var cityStr=loc.intlCity+(loc.intlProv?' â€” '+loc.intlProv: loc.prov?' â€” '+loc.prov:'');
+      var cityStr=loc.intlCity+(loc.intlProv?' -- '+loc.intlProv: loc.prov?' -- '+loc.prov:'');
       rows+=_petInfoRow('ri-map-pin-2-line','Ciudad',cityStr);
     } else if(!loc.dept&&loc.prov){
       rows+=_petInfoRow('ri-map-2-line','Provincia / Estado',loc.prov);
     }
-    /* Dirección escrita (soporta campo legacy 'city' de activate.html antiguo) */
+    /* Direccion escrita (soporta campo legacy 'city' de activate.html antiguo) */
     var address=loc.text||loc.city||'';
-    if(address) rows+=_petInfoRow('ri-home-4-line','Dirección',address);
+    if(address) rows+=_petInfoRow('ri-home-4-line','Direccion',address);
     /* GPS (soporta 'mapsUrl' legacy) */
     var gpsLink=loc.gpsLink||loc.mapsUrl||'';
     if(gpsLink){
-      rows+='<div class="pet-info-row"><i class="ri-navigation-line pet-info-icon"></i><div><div class="pet-info-label">Ubicación GPS</div><a href="'+esc(gpsLink)+'" target="_blank" rel="noopener" class="pet-location-link"><i class="ri-external-link-line"></i> Ver en Google Maps</a></div></div>';
+      rows+='<div class="pet-info-row"><i class="ri-navigation-line pet-info-icon"></i><div><div class="pet-info-label">Ubicacion GPS</div><a href="'+esc(gpsLink)+'" target="_blank" rel="noopener" class="pet-location-link"><i class="ri-external-link-line"></i> Ver en Google Maps</a></div></div>';
     } else if(loc.lat&&loc.lng){
       var mapsUrl='https://maps.google.com/maps?q='+loc.lat.toFixed(6)+','+loc.lng.toFixed(6);
-      rows+='<div class="pet-info-row"><i class="ri-navigation-line pet-info-icon"></i><div><div class="pet-info-label">Ubicación GPS</div><a href="'+mapsUrl+'" target="_blank" rel="noopener" class="pet-location-link"><i class="ri-external-link-line"></i> Ver en Google Maps</a></div></div>';
+      rows+='<div class="pet-info-row"><i class="ri-navigation-line pet-info-icon"></i><div><div class="pet-info-label">Ubicacion GPS</div><a href="'+mapsUrl+'" target="_blank" rel="noopener" class="pet-location-link"><i class="ri-external-link-line"></i> Ver en Google Maps</a></div></div>';
     }
   }
   if(rows){
@@ -2409,8 +2409,8 @@ function _buildPetContactPanel(d, isLost) {
   var phone2=normalizeWA(d.phone2||'');
   var pn=d.name||'tu mascota';
   var waMsg=isLost
-    ?' Encontré a *'+pn+'* que parece estar perdido/a. ¿Cómo puedo ayudar? ðŸ¾'
-    :'¡Hola! Escaneé la placa de *'+pn+'* en Petcingo.';
+    ?' Encontre a *'+pn+'* que parece estar perdido/a. ?Como puedo ayudar? ¾'
+    :'!Hola! Escanee la placa de *'+pn+'* en Petcingo.';
   var waUrl1='https://wa.me/'+phone1+'?text='+encodeURIComponent(waMsg);
   var panel=document.getElementById('pet-contact-panel');
   if(!panel)return;
@@ -2425,7 +2425,7 @@ function _buildPetContactPanel(d, isLost) {
   var fab=document.getElementById('fab-wa');
   if(fab&&phone1){fab.href=waUrl1;fab.style.display='flex';}
 
-  /* Seller logo â€” async, no-op if not found */
+  /* Seller logo -- async, no-op if not found */
   if(d.sellerPrefix){
     var _sc=(d.sellerType==='refugio'||d.sellerType==='shelter')?'shelters':'veterinarias';
     db().collection(_sc).where('prefix','==',d.sellerPrefix).limit(1).get()
@@ -2442,13 +2442,13 @@ function _buildPetContactPanel(d, isLost) {
 function _buildPetDataAccordion(d) {
   var content=document.getElementById('pet-acc-pet-content');if(!content)return;
   var rows='';
-  /* â”€â”€ Age calculation â”€â”€ */
+  /* -- Age calculation -- */
   var ageDisplay=d.age||'';
   if(!ageDisplay&&d.birthdate){
     var bd=new Date(d.birthdate),now2=new Date();
     var years=now2.getFullYear()-bd.getFullYear(),months=now2.getMonth()-bd.getMonth();
     if(months<0||(months===0&&now2.getDate()<bd.getDate())){years--;months=(months+12)%12;}
-    ageDisplay=years>0?years+' año'+(years>1?'s':'')+(months>0?' y '+months+' mes'+(months!==1?'es':''):''):months+' mes'+(months!==1?'es':'');
+    ageDisplay=years>0?years+' ano'+(years>1?'s':'')+(months>0?' y '+months+' mes'+(months!==1?'es':''):''):months+' mes'+(months!==1?'es':'');
   }
   if(d.species)   rows+=_petInfoRow('ri-footprint-line','Especie',_speciesEmoji(d.species)+' '+d.species);
   if(d.breed)     rows+=_petInfoRow('ri-award-line','Raza',d.breed);
@@ -2458,23 +2458,23 @@ function _buildPetDataAccordion(d) {
   if(d.behavior)  rows+=_petInfoRow('ri-star-line','Comportamiento',d.behavior);
   content.innerHTML=rows||'<p style="color:#7a6e8a;font-size:.85rem;padding:4px 0">Sin datos adicionales.</p>';
 
-  /* â”€â”€ Medical accordion (health data) â”€â”€ */
+  /* -- Medical accordion (health data) -- */
   var medAcc=document.getElementById('pet-acc-medical');
   var medContent=document.getElementById('pet-acc-medical-content');
   if(!medAcc||!medContent)return;
   var medRows='';
-  if(d.medical)              medRows+=_petInfoRow('ri-capsule-line','Info médica',d.medical);
+  if(d.medical)              medRows+=_petInfoRow('ri-capsule-line','Info medica',d.medical);
   if(d.vaccinationStatus==='yes') {
-    medRows+=_petInfoRow('ri-shield-check-line','Vacunado','Sí');
+    medRows+=_petInfoRow('ri-shield-check-line','Vacunado','Si');
     if(d.vaccinationDetails) medRows+=_petInfoRow('ri-file-list-3-line','Detalle vacunas',d.vaccinationDetails);
   } else if(d.vaccinationStatus==='no') {
     medRows+=_petInfoRow('ri-shield-cross-line','Vacunado','No');
   }
-  if(d.rabiesVaccineCode)   medRows+=_petInfoRow('ri-syringe-line','Código vacuna rabia',d.rabiesVaccineCode);
+  if(d.rabiesVaccineCode)   medRows+=_petInfoRow('ri-syringe-line','Codigo vacuna rabia',d.rabiesVaccineCode);
   if(d.rabiesVaccineExpiry) medRows+=_petInfoRow('ri-calendar-check-line','Venc. vacuna rabia',d.rabiesVaccineExpiry);
-  if(d.microchipped==='yes') medRows+=_petInfoRow('ri-cpu-line','Microchip','Sí âœ“');
+  if(d.microchipped==='yes') medRows+=_petInfoRow('ri-cpu-line','Microchip','Si <i class="ri-check-line"></i>');
   else if(d.microchipped==='no') medRows+=_petInfoRow('ri-cpu-line','Microchip','No');
-  if(d.spayNeutered==='yes') medRows+=_petInfoRow('ri-heart-line','Castrado/a','Sí âœ“');
+  if(d.spayNeutered==='yes') medRows+=_petInfoRow('ri-heart-line','Castrado/a','Si <i class="ri-check-line"></i>');
   else if(d.spayNeutered==='no') medRows+=_petInfoRow('ri-heart-line','Castrado/a','No');
   if(medRows){medAcc.style.display='block';medContent.innerHTML=medRows;}
 
@@ -2485,7 +2485,7 @@ function _petInfoRow(icon, label, value) {
 }
 
 function _speciesEmoji(sp) {
-  return {Perro:'ðŸ•',Gato:'ðŸˆ',Conejo:'ðŸ‡',Ave:'ðŸ¦œ'}[sp]||'ðŸ¾';
+  return {Perro:'•',Gato:'ˆ',Conejo:'‡',Ave:'[PET]'}[sp]||'¾';
 }
 
 window.togglePetAcc = function(id) {
@@ -2505,7 +2505,7 @@ window.togglePetReportForm = function() {
 /* _showPetError defined above near initPetPage */
 function showPetError() { _showPetError('', ''); }
 
-/* â”€â”€ Geo Opt-In â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* -- Geo Opt-In ------------------------------------------- */
 function initGeoOptIn(petId) {
   if (!navigator.geolocation) return;
 
@@ -2547,7 +2547,7 @@ function _showGeoModal(petId, cacheKey, today, firestoreDb) {
           localStorage.setItem(cacheKey, today);
         }).catch(function() {});
       },
-      function() { /* GPS denied â€” silent */ },
+      function() { /* GPS denied -- silent */ },
       { enableHighAccuracy: true, timeout: 10000 }
     );
   });
@@ -2558,16 +2558,16 @@ function _showGeoModal(petId, cacheKey, today, firestoreDb) {
   });
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ==============================================================
    ACTIVATE.HTML
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+============================================================== */
 window.initActivatePage = function() {
   /* Moved to activate.html for self-contained simplicity */
 };
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ==============================================================
    CLIENT DASHBOARD
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+============================================================== */
 window.initClientDashboard = function() {
   if(typeof window._applyBrandConfig==='function')window._applyBrandConfig();
   var params    = new URLSearchParams(window.location.search);
@@ -2575,7 +2575,7 @@ window.initClientDashboard = function() {
   var editToken = (params.get('token') || '').trim();
   var firestoreDb = (typeof _db !== 'undefined' && _db) ? _db : _getPcApp().firestore();
 
-  /* â”€â”€ Path 1: Token-based URL access (QR links, backward compatible) â”€â”€ */
+  /* -- Path 1: Token-based URL access (QR links, backward compatible) -- */
   if (petId && editToken) {
     firestoreDb.collection('pets').doc(petId).get()
       .then(function(doc) {
@@ -2583,7 +2583,7 @@ window.initClientDashboard = function() {
         var d = doc.data();
         window._currentPetData = d;
         _dash.currentUser = {
-          name: d.ownerName || 'Dueño', role: 'client', petId: petId,
+          name: d.ownerName || 'Dueno', role: 'client', petId: petId,
           permissions: { dashboard:true, pets:true, scan_logs:true, settings:false }
         };
         initClientApp(d, petId, editToken, firestoreDb);
@@ -2592,7 +2592,7 @@ window.initClientDashboard = function() {
     return;
   }
 
-  /* â”€â”€ Path 2: Firebase Auth â€” Google / email login â”€â”€ */
+  /* -- Path 2: Firebase Auth -- Google / email login -- */
   var authInst = (typeof firebase !== 'undefined' && typeof firebase.auth === 'function') ? _getPcApp().auth() : null;
   if (!authInst) { showClientLoginWall(); return; }
 
@@ -2608,7 +2608,7 @@ window.initClientDashboard = function() {
         _loadClientSession(d, petId, firestoreDb, user);
       }).catch(function() { showAuthWall(); });
     } else {
-      /* No petId â€” find pet(s) by ownerEmail, multi-pet: show first */
+      /* No petId -- find pet(s) by ownerEmail, multi-pet: show first */
       firestoreDb.collection('pets').where('ownerEmail','==',user.email).get()
         .then(function(snap) {
           if (snap.empty) { _showClientNoPetWall(user); return; }
@@ -2626,7 +2626,7 @@ function _loadClientSession(d, petId, firestoreDb, user) {
   window._currentPetData = d;
   window._clientUser     = user;
   _dash.currentUser = {
-    name: (user && user.displayName) || d.ownerName || 'Dueño',
+    name: (user && user.displayName) || d.ownerName || 'Dueno',
     role: 'client', petId: petId,
     email: user ? user.email : (d.ownerEmail || ''),
     permissions: { dashboard:true, pets:true, scan_logs:true, settings:false }
@@ -2662,24 +2662,24 @@ function _showClientNoPetWall(user) {
 function renderClientPlanInfo(d) {
   var el = document.getElementById('plan-info-container');
   if (!el) return;
-  var planLabels = { preventa:'Preventa', standard:'Estándar', familia:'Pack Familia', vitalicio:'Vitalicio' };
-  var planIcons  = { preventa:'â³', standard:'ðŸ›¡ï¸', familia:'ðŸ¾', vitalicio:'â™¾ï¸' };
+  var planLabels = { preventa:'Preventa', standard:'Estandar', familia:'Pack Familia', vitalicio:'Vitalicio' };
+  var planIcons  = { preventa:'â³', standard:'[CART]!', familia:'¾', vitalicio:'[VET]' };
   var plan  = d.planType || d.plan || 'standard';
   var label = planLabels[plan] || plan;
-  var icon  = planIcons[plan] || 'ðŸ›¡ï¸';
+  var icon  = planIcons[plan] || '[CART]!';
   var isLifetime = plan === 'vitalicio';
 
   var activatedAt   = d.activatedAt   ? (d.activatedAt.toDate   ? d.activatedAt.toDate()   : new Date(d.activatedAt)) : null;
   var planExpiresAt = d.planExpiresAt ? (d.planExpiresAt.toDate  ? d.planExpiresAt.toDate() : new Date(d.planExpiresAt)) : null;
 
-  var daysLeft = 'â€”';
+  var daysLeft = '--';
   var daysColor = '#22C55E';
   if (isLifetime) {
-    daysLeft = 'âˆž Vitalicio';
+    daysLeft = 'inf Vitalicio';
   } else if (planExpiresAt) {
     var diff = Math.ceil((planExpiresAt - Date.now()) / 86400000);
-    if (diff > 30)  { daysLeft = diff + ' días'; daysColor = '#22C55E'; }
-    else if (diff > 0) { daysLeft = diff + ' días'; daysColor = '#FFC837'; }
+    if (diff > 30)  { daysLeft = diff + ' dias'; daysColor = '#22C55E'; }
+    else if (diff > 0) { daysLeft = diff + ' dias'; daysColor = '#FFC837'; }
     else { daysLeft = 'Vencido'; daysColor = '#F24E4E'; }
   }
 
@@ -2690,11 +2690,11 @@ function renderClientPlanInfo(d) {
       '<div class="info-cell"><div class="info-label-sm"><i class="ri-time-line"></i> Tiempo restante</div>' +
         '<div class="info-value-sm" style="font-weight:700;color:' + daysColor + '">' + daysLeft + '</div></div>' +
       '<div class="info-cell"><div class="info-label-sm"><i class="ri-calendar-check-line"></i> Activado</div>' +
-        '<div class="info-value-sm">' + (activatedAt ? formatDate(activatedAt) : 'â€”') + '</div></div>' +
+        '<div class="info-value-sm">' + (activatedAt ? formatDate(activatedAt) : '--') + '</div></div>' +
       '<div class="info-cell"><div class="info-label-sm"><i class="ri-calendar-close-line"></i> Vence</div>' +
-        '<div class="info-value-sm">' + (isLifetime ? 'âˆž Nunca' : (planExpiresAt ? formatDate(planExpiresAt) : 'â€”')) + '</div></div>' +
+        '<div class="info-value-sm">' + (isLifetime ? 'inf Nunca' : (planExpiresAt ? formatDate(planExpiresAt) : '--')) + '</div></div>' +
     '</div>' +
-    ((!isLifetime && daysLeft !== 'â€”' && parseInt(daysLeft) < 60) ?
+    ((!isLifetime && daysLeft !== '--' && parseInt(daysLeft) < 60) ?
       '<a href="https://wa.me/59171040074?text=Quiero%20renovar%20mi%20plan%20Petcingo" target="_blank" class="btn-solid-primary" style="display:inline-flex;text-decoration:none;margin-top:4px"><i class="ri-refresh-line"></i> Renovar plan</a>' : '');
 }
 
@@ -2704,7 +2704,7 @@ function renderClientAccountInfo(d, user) {
   if (!el) return;
   var photoUrl = user && user.photoURL ? user.photoURL : '';
   var displayName = (user && user.displayName) || d.ownerName || 'Propietario';
-  var email = (user && user.email) || d.ownerEmail || 'â€”';
+  var email = (user && user.email) || d.ownerEmail || '--';
   var provider = (user && user.providerData && user.providerData[0]) ? user.providerData[0].providerId : 'password';
 
   el.innerHTML =
@@ -2712,7 +2712,7 @@ function renderClientAccountInfo(d, user) {
       (photoUrl ? '<img src="' + photoUrl + '" style="width:56px;height:56px;border-radius:50%;border:3px solid rgba(69,82,204,0.2)">' : '<div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#4552CC,#51CBF5);display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:#fff">' + displayName.charAt(0).toUpperCase() + '</div>') +
       '<div><div style="font-weight:700;font-size:1rem;color:#1E255E">' + esc(displayName) + '</div>' +
         '<div style="font-size:.83rem;color:#6C7297;margin-top:2px"><i class="ri-mail-line"></i> ' + esc(email) + '</div>' +
-        '<div style="font-size:.75rem;color:#6C7297;margin-top:4px"><i class="ri-' + (provider==='google.com'?'google':'user') + '-fill" style="color:#4552CC"></i> ' + (provider==='google.com'?'Cuenta Google':'Email y contraseña') + '</div></div>' +
+        '<div style="font-size:.75rem;color:#6C7297;margin-top:4px"><i class="ri-' + (provider==='google.com'?'google':'user') + '-fill" style="color:#4552CC"></i> ' + (provider==='google.com'?'Cuenta Google':'Email y contrasena') + '</div></div>' +
     '</div>';
 
   /* Multi-pet switcher */
@@ -2721,7 +2721,7 @@ function renderClientAccountInfo(d, user) {
     window._clientAllPets.forEach(function(p) {
       var active = p.id === window._clientPetId;
       sw += '<button onclick="window.location.href=\'client-dashboard.html?id=' + p.id + '\'" style="display:flex;align-items:center;gap:10px;width:100%;padding:10px 14px;margin-bottom:6px;border-radius:10px;border:2px solid ' + (active?'#4552CC':'rgba(69,82,204,0.15)') + ';background:' + (active?'rgba(69,82,204,0.07)':'#fff') + ';cursor:pointer;font-weight:' + (active?'700':'500') + ';color:#1E255E;font-size:.88rem">' +
-        '<span>' + (p.data.species === 'Gato' ? 'ðŸˆ' : 'ðŸ•') + '</span>' +
+        '<span>' + (p.data.species === 'Gato' ? 'ˆ' : '•') + '</span>' +
         '<span>' + esc(p.data.name || 'Sin nombre') + '</span>' +
         (active ? '<span class="badge badge-active" style="margin-left:auto">Actual</span>' : '') +
         '</button>';
@@ -2743,7 +2743,7 @@ function initClientApp(d, petId, editToken, firestoreDb) {
   var editUrl    = 'https://prueb2.dashnexpages.net/cliente/?id=' + petId + '&token=' + editToken;
   var profileUrl = 'https://prueb2.dashnexpages.net/perfil-mascota-petcingo/?id=' + petId;
 
-  /* â”€â”€ Topbar â”€â”€ */
+  /* -- Topbar -- */
   var topName = document.getElementById('top-name');
   if (topName) topName.textContent = d.name || 'Mi Mascota';
 
@@ -2763,28 +2763,28 @@ function initClientApp(d, petId, editToken, firestoreDb) {
     var cap = document.getElementById('card-avatar'); if (cap) cap.replaceWith(img2);
   }
 
-  /* â”€â”€ Pet card sync â”€â”€ */
-  var cn = document.getElementById('card-name'); if (cn) cn.textContent = d.name || 'â€”';
+  /* -- Pet card sync -- */
+  var cn = document.getElementById('card-name'); if (cn) cn.textContent = d.name || '--';
   var meta = [d.species, d.gender, d.age].filter(Boolean).join(' · ');
   var cm = document.getElementById('card-meta'); if (cm) cm.textContent = meta || (d.breed || 'Sin datos adicionales');
 
-  /* â”€â”€ Sincronizar link del menú móvil â”€â”€ */
+  /* -- Sincronizar link del menu movil -- */
   var tvpm = document.getElementById('top-view-profile-m'); if (tvpm) tvpm.href = profileUrl;
 
-  /* â”€â”€ Notificaciones de Soporte â”€â”€ */
+  /* -- Notificaciones de Soporte -- */
   checkSupportNotifications(petId, firestoreDb);
 
-  var sTxt = { activo:'âœ… Activo', perdido:'ðŸš¨ Perdido', reservada:'â³ Pendiente' };
+  var sTxt = { activo:'<i class="ri-check-line"></i>  Activo', perdido:'<i class="ri-alert-line"></i> Perdido', reservada:'â³ Pendiente' };
   var sCls = { activo:'badge-active', perdido:'badge-lost', reservada:'badge-reserved' };
   var cs   = document.getElementById('card-status');
-  if (cs) cs.innerHTML = '<span class="badge ' + (sCls[d.status] || 'badge-reserved') + '">' + (sTxt[d.status] || d.status || 'â€”') + '</span>';
+  if (cs) cs.innerHTML = '<span class="badge ' + (sCls[d.status] || 'badge-reserved') + '">' + (sTxt[d.status] || d.status || '--') + '</span>';
 
-  /* â”€â”€ Tab: Mi Mascota (Modo Lectura) â”€â”€ */
+  /* -- Tab: Mi Mascota (Modo Lectura) -- */
   renderClientPetGrid(d);
 
-  var ss = document.getElementById('stat-status'); if (ss) ss.textContent = sTxt[d.status] || d.status || 'â€”';
+  var ss = document.getElementById('stat-status'); if (ss) ss.textContent = sTxt[d.status] || d.status || '--';
 
-  /* â”€â”€ Lost card UI â”€â”€ */
+  /* -- Lost card UI -- */
   function _updateLostUI(isLost) {
     var btn = document.getElementById('btn-toggle-lost');
     var heroCard = document.getElementById('pet-hero-card');
@@ -2794,12 +2794,12 @@ function initClientApp(d, petId, editToken, firestoreDb) {
 
     if (btn) {
       if (isLost) {
-        btn.textContent = 'âœ… Mascota Encontrada â€” Desactivar alerta';
+        btn.innerHTML = '<i class="ri-check-line"></i>  Mascota Encontrada -- Desactivar alerta';
         btn.style.background = '#d1fae5';
         btn.style.color = '#065f46';
         btn.style.border = '1.5px solid #6ee7b7';
       } else {
-        btn.textContent = 'ðŸš¨ Marcar como Perdida';
+        btn.innerHTML = '<i class="ri-alert-line"></i> Marcar como Perdida';
         btn.style.background = '#fce7f3';
         btn.style.color = '#9d174d';
         btn.style.border = '1.5px solid #fbcfe8';
@@ -2808,11 +2808,11 @@ function initClientApp(d, petId, editToken, firestoreDb) {
     if (heroCard) { heroCard.classList.toggle('is-lost', isLost); }
     if (lostCard) { lostCard.classList.toggle('is-lost', isLost); }
     if (lostDesc && isLost) {
-      lostDesc.textContent = 'ðŸš¨ Modo perdido activo. El perfil de tu mascota aparece en alerta roja. Presiona el botón cuando la encuentres.';
+      lostDesc.innerHTML = '<i class="ri-alert-line"></i> Modo perdido activo. El perfil de tu mascota aparece en alerta roja. Presiona el boton cuando la encuentres.';
     } else if (lostDesc) {
-      lostDesc.textContent = 'Si tu mascota se ha extraviado, activa el modo perdido. Esto cambiará su perfil a alerta roja y notificará visualmente a quien la encuentre.';
+      lostDesc.textContent = 'Si tu mascota se ha extraviado, activa el modo perdido. Esto cambiara su perfil a alerta roja y notificara visualmente a quien la encuentre.';
     }
-    if (csEl) csEl.innerHTML = '<span class="badge ' + (sCls[isLost?'perdido':'activo'] || 'badge-reserved') + '">' + (sTxt[isLost?'perdido':'activo'] || 'â€”') + '</span>';
+    if (csEl) csEl.innerHTML = '<span class="badge ' + (sCls[isLost?'perdido':'activo'] || 'badge-reserved') + '">' + (sTxt[isLost?'perdido':'activo'] || '--') + '</span>';
   }
 
   _updateLostUI(d.status === 'perdido');
@@ -2824,13 +2824,13 @@ function initClientApp(d, petId, editToken, firestoreDb) {
       .then(function() {
         d.status = newStatus;
         var isLost = newStatus === 'perdido';
-        toast(isLost ? 'ðŸš¨ Modo perdido activado.' : 'âœ… Alerta cancelada. Mascota activa.');
+        toast(isLost ? '<i class="ri-alert-line"></i> Modo perdido activado.' : '<i class="ri-check-line"></i>  Alerta cancelada. Mascota activa.');
         _updateLostUI(isLost);
       })
       .catch(function(e) { toast('âŒ Error: ' + e.message); });
   };
 
-  /* â”€â”€ Photo Upload Logic â”€â”€ */
+  /* -- Photo Upload Logic -- */
   window._clientNewBlob = null;
   var pi=document.getElementById('edit-photo-input'), pd=document.getElementById('edit-photo-drop');
   if(pi && pd) {
@@ -2843,20 +2843,20 @@ function initClientApp(d, petId, editToken, firestoreDb) {
         reader.onerror = function() { reject(new Error('Error al leer el archivo.')); };
         reader.onload = function(evt) {
           var img = new Image();
-          img.onerror = function() { reject(new Error('Imagen inválida o corrupta.')); };
+          img.onerror = function() { reject(new Error('Imagen invalida o corrupta.')); };
           img.onload = function() {
             var canvas = document.createElement('canvas');
             canvas.width = 800; canvas.height = 800;
             var ctx = canvas.getContext('2d');
             ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, 800, 800);
             var size = Math.min(img.naturalWidth, img.naturalHeight);
-            if (size <= 0) { reject(new Error('Imagen vacía.')); return; }
+            if (size <= 0) { reject(new Error('Imagen vacia.')); return; }
             var sx = (img.naturalWidth - size) / 2, sy = (img.naturalHeight - size) / 2;
             try { ctx.drawImage(img, sx, sy, size, size, 0, 0, 800, 800); } catch(e) { reject(new Error('Fallo al procesar imagen.')); return; }
             var bestBlob = null;
             var iterate = function(q) {
               canvas.toBlob(function(blob) {
-                if (!blob) { bestBlob ? resolve(bestBlob) : reject(new Error('Tu navegador no soporta compresión.')); return; }
+                if (!blob) { bestBlob ? resolve(bestBlob) : reject(new Error('Tu navegador no soporta compresion.')); return; }
                 bestBlob = blob;
                 if (blob.size <= 15000 || q <= 0.1) resolve(blob); else iterate(+(q - 0.1).toFixed(2));
               }, 'image/jpeg', q);
@@ -2890,7 +2890,7 @@ function initClientApp(d, petId, editToken, firestoreDb) {
     pd.addEventListener('drop',function(e){e.preventDefault();pd.classList.remove('dragover');if(e.dataTransfer.files[0])handleEditFile(e.dataTransfer.files[0]);});
   }
 
-  /* â”€â”€ Pre-llenar formulario de edición con datos actuales â”€â”€ */
+  /* -- Pre-llenar formulario de edicion con datos actuales -- */
   function prefillEditForm(data) {
     var map = [
       ['edit-pet-name',      data.name],
@@ -2974,10 +2974,10 @@ function initClientApp(d, petId, editToken, firestoreDb) {
   }
   prefillEditForm(d);
 
-  /* â”€â”€ Load scan logs â”€â”€ */
+  /* -- Load scan logs -- */
   loadScanLogs(petId, firestoreDb, d.status);
 
-  /* â”€â”€ Apply dark logo to topbar â”€â”€ */
+  /* -- Apply dark logo to topbar -- */
   (function(){
     var firestoreDb2 = (typeof _db !== 'undefined' && _db) ? _db : _getPcApp().firestore();
     firestoreDb2.collection('config').doc('admin_settings').get().then(function(cfgDoc) {
@@ -2990,16 +2990,16 @@ function initClientApp(d, petId, editToken, firestoreDb) {
     }).catch(function(){});
   })();
 
-  /* â”€â”€ Check unread admin replies (bell badge) â”€â”€ */
+  /* -- Check unread admin replies (bell badge) -- */
   if (typeof window.checkOwnerUnreadReplies === 'function') {
     window.checkOwnerUnreadReplies(petId);
   }
 
-  /* â”€â”€ Plan info + account info (tabs Mi Plan / Mi Cuenta) â”€â”€ */
+  /* -- Plan info + account info (tabs Mi Plan / Mi Cuenta) -- */
   renderClientPlanInfo(d);
   renderClientAccountInfo(d, window._clientUser || null);
 
-  /* â”€â”€ Client-side auth actions â”€â”€ */
+  /* -- Client-side auth actions -- */
   window.clientLogout = function() {
     var auth = (typeof firebase !== 'undefined' && typeof firebase.auth === 'function') ? _getPcApp().auth() : null;
     if (auth) {
@@ -3023,20 +3023,20 @@ function initClientApp(d, petId, editToken, firestoreDb) {
     var user = auth ? auth.currentUser : null;
     var msgEl = document.getElementById('password-reset-msg');
     if (!user || !user.email) {
-      if (msgEl) { msgEl.style.display = 'block'; msgEl.style.color = '#F24E4E'; msgEl.textContent = 'No hay un email asociado a tu sesión.'; }
+      if (msgEl) { msgEl.style.display = 'block'; msgEl.style.color = '#F24E4E'; msgEl.textContent = 'No hay un email asociado a tu sesion.'; }
       return;
     }
     if (user.providerData && user.providerData[0] && user.providerData[0].providerId === 'google.com') {
-      if (msgEl) { msgEl.style.display = 'block'; msgEl.style.color = '#FFC837'; msgEl.textContent = 'Tu cuenta usa Google. Cambia la contraseña desde google.com/account.'; }
+      if (msgEl) { msgEl.style.display = 'block'; msgEl.style.color = '#FFC837'; msgEl.textContent = 'Tu cuenta usa Google. Cambia la contrasena desde google.com/account.'; }
       return;
     }
     auth.sendPasswordResetEmail(user.email).then(function() {
-      if (msgEl) { msgEl.style.display = 'block'; msgEl.style.color = '#22C55E'; msgEl.textContent = 'âœ… Enlace enviado a ' + user.email + '. Revisa tu correo.'; }
+      if (msgEl) { msgEl.style.display = 'block'; msgEl.style.color = '#22C55E'; msgEl.innerHTML = '<i class="ri-check-line"></i>  Enlace enviado a ' + user.email + '. Revisa tu correo.'; }
     }).catch(function(err) {
       if (msgEl) { msgEl.style.display = 'block'; msgEl.style.color = '#F24E4E'; msgEl.textContent = 'Error: ' + err.message; }
     });
   };
-} /* â”€â”€ end initClientApp â”€â”€ */
+} /* -- end initClientApp -- */
 
 /* Exposed for pages that call clientLoginGoogle before initClientApp runs */
 window.clientLoginGoogle = function() {
@@ -3048,7 +3048,7 @@ window.clientLoginGoogle = function() {
     .catch(function(err) { console.warn('Login cancelado:', err.code); });
 };
 
-/* â”€â”€ Tab: Mensajes del propietario â”€â”€ */
+/* -- Tab: Mensajes del propietario -- */
 window.loadOwnerMessages = function() {
   var listEl = document.getElementById('owner-messages-list');
   if (!listEl) return;
@@ -3058,7 +3058,7 @@ window.loadOwnerMessages = function() {
   firestoreDb.collection('reports').where('plateId','==',petId).where('fromType','==','owner')
     .get().then(function(snap) {
       if (snap.empty) {
-        listEl.innerHTML = '<div style="text-align:center;padding:24px;color:#6C7297;font-size:.85rem"><i class="ri-chat-off-line"></i><br>No hay mensajes aún.</div>';
+        listEl.innerHTML = '<div style="text-align:center;padding:24px;color:#6C7297;font-size:.85rem"><i class="ri-chat-off-line"></i><br>No hay mensajes aun.</div>';
         return;
       }
       var docs = [];
@@ -3107,7 +3107,7 @@ window.loadOwnerMessages = function() {
 
 window.sendOwnerMessage = function() {
   var inputEl = document.getElementById('owner-msg-input');
-  if (!inputEl || !inputEl.value.trim()) { toast('âš ï¸ Escribe un mensaje.'); return; }
+  if (!inputEl || !inputEl.value.trim()) { toast('<i class="ri-alert-line"></i> Escribe un mensaje.'); return; }
   var petId = (new URLSearchParams(window.location.search).get('id') || '').trim();
   if (!petId) return;
   var nameEl = document.getElementById('card-name');
@@ -3122,12 +3122,12 @@ window.sendOwnerMessage = function() {
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   }).then(function() {
     inputEl.value = '';
-    toast('âœ… Mensaje enviado.');
+    toast('<i class="ri-check-line"></i>  Mensaje enviado.');
     window.loadOwnerMessages();
   }).catch(function(e) { toast('âŒ '+e.message); });
 };
 
-/* â”€â”€ Support Panel â”€â”€ */
+/* -- Support Panel -- */
 window.openSupportPanel = function() {
   var overlay = document.getElementById('support-panel-overlay');
   var panel   = document.getElementById('support-panel');
@@ -3160,7 +3160,7 @@ window.checkOwnerUnreadReplies = function(petId) {
     }).catch(function(){});
 };
 
-/* â”€â”€ Tab: Mi Mascota (Lectura vs Edición) â”€â”€ */
+/* -- Tab: Mi Mascota (Lectura vs Edicion) -- */
 window.toggleEditMode = function(showEdit) {
   var readView = document.getElementById('read-only-view');
   var editView = document.getElementById('edit-form-view');
@@ -3183,25 +3183,25 @@ function renderClientPetGrid(d) {
     var bbd = new Date(d.birthdate), nw = new Date();
     var yy = nw.getFullYear()-bbd.getFullYear(), mm = nw.getMonth()-bbd.getMonth();
     if (mm<0||(mm===0&&nw.getDate()<bbd.getDate())){yy--;mm=(mm+12)%12;}
-    ageVal = yy>0 ? yy+' año'+(yy>1?'s':'') : mm+' mes'+(mm!==1?'es':'');
+    ageVal = yy>0 ? yy+' ano'+(yy>1?'s':'') : mm+' mes'+(mm!==1?'es':'');
   }
-  var vaccLabel = d.vaccinationStatus==='yes'?'Sí âœ“':d.vaccinationStatus==='no'?'No':null;
-  var chipLabel = d.microchipped==='yes'?'Sí âœ“':d.microchipped==='no'?'No':null;
-  var spayLabel = d.spayNeutered==='yes'?'Sí âœ“':d.spayNeutered==='no'?'No':null;
+  var vaccLabel = d.vaccinationStatus==='yes'?'Si <i class="ri-check-line"></i>':d.vaccinationStatus==='no'?'No':null;
+  var chipLabel = d.microchipped==='yes'?'Si <i class="ri-check-line"></i>':d.microchipped==='no'?'No':null;
+  var spayLabel = d.spayNeutered==='yes'?'Si <i class="ri-check-line"></i>':d.spayNeutered==='no'?'No':null;
   var locLabel  = d.ownerLocation ? (d.ownerLocation.text || null) : null;
   
   var cells = [
-    ['Nombre', d.name], ['Dueño/a', d.ownerName], ['Especie', d.species], ['Raza', d.breed], ['Género', d.gender],
+    ['Nombre', d.name], ['Dueno/a', d.ownerName], ['Especie', d.species], ['Raza', d.breed], ['Genero', d.gender],
     ['Edad', ageVal||null], ['Nacimiento', d.birthdate], ['Peso', d.weight ? d.weight + ' kg' : null],
-    ['Teléfono', d.phone], ['Mensaje', d.message], ['Comportamiento', d.behavior], ['Info médica', d.medical],
+    ['Telefono', d.phone], ['Mensaje', d.message], ['Comportamiento', d.behavior], ['Info medica', d.medical],
     ['Vacunado', vaccLabel], ['Vacunas detalle', d.vaccinationDetails||null],
-    ['Cód. vacuna rabia', d.rabiesVaccineCode||null], ['Venc. rabia', d.rabiesVaccineExpiry||null],
-    ['Microchip', chipLabel], ['Castrado/a', spayLabel], ['Zona del dueño', locLabel]
-  ].filter(function(c) { return c[1] && c[1].trim() !== ''; }); // Oculta los vacíos
+    ['Cod. vacuna rabia', d.rabiesVaccineCode||null], ['Venc. rabia', d.rabiesVaccineExpiry||null],
+    ['Microchip', chipLabel], ['Castrado/a', spayLabel], ['Zona del dueno', locLabel]
+  ].filter(function(c) { return c[1] && c[1].trim() !== ''; }); // Oculta los vacios
   
   grid.innerHTML = cells.map(function(c) {
     return '<div class="info-cell"><div class="info-label-sm">' + esc(c[0]) + '</div><div class="info-value-sm">' + esc(String(c[1])) + '</div></div>';
-  }).join('') || '<div class="info-cell" style="grid-column:1/-1"><div class="info-value-sm" style="color:#6c757d">Sin datos registrados aún.</div></div>';
+  }).join('') || '<div class="info-cell" style="grid-column:1/-1"><div class="info-value-sm" style="color:#6c757d">Sin datos registrados aun.</div></div>';
 }
 
 /* Exposed as window.loadScanLogs for use by both client-dashboard and pet.html */
@@ -3212,8 +3212,8 @@ window.loadScanLogs = function(petId, firestoreDb, petStatus) {
   var mapEl   = document.getElementById('last-map-container');
 
   /* Show loading state */
-  if (listEl) listEl.innerHTML = '<div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div><p style="margin-top:10px;font-size:.85rem">Cargando historial…</p></div>';
-  if (mapEl)  mapEl.innerHTML  = '<div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div><p style="margin-top:10px;font-size:.85rem">Cargando mapa…</p></div>';
+  if (listEl) listEl.innerHTML = '<div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div><p style="margin-top:10px;font-size:.85rem">Cargando historial...</p></div>';
+  if (mapEl)  mapEl.innerHTML  = '<div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div><p style="margin-top:10px;font-size:.85rem">Cargando mapa...</p></div>';
 
   firestoreDb.collection('scan_logs')
     .where('petId', '==', petId)
@@ -3228,16 +3228,16 @@ window.loadScanLogs = function(petId, firestoreDb, petStatus) {
         return tb - ta;
       });
       
-      /* â”€â”€ Stats â”€â”€ */
+      /* -- Stats -- */
       var withGeo = 0, lastWithCoords = null;
-      var lastDate = 'â€”'; // Declarar la variable para evitar el error 'is not defined'
+      var lastDate = '--'; // Declarar la variable para evitar el error 'is not defined'
       docsArray.forEach(function(s) {
         if (s.latitude && s.longitude) { withGeo++; if (!lastWithCoords) lastWithCoords = s; }
       });
 
       var totalSize = snap.size;
       var sScans   = document.getElementById('stat-scans');    if (sScans)   sScans.textContent   = totalSize;
-      var sGeo     = document.getElementById('stat-with-geo'); if (sGeo)     sGeo.textContent     = withGeo > 0 ? 'âœ… ' + withGeo + ' con ubicación' : 'Sin ubicación';
+      var sGeo     = document.getElementById('stat-with-geo'); if (sGeo)     sGeo.innerHTML     = withGeo > 0 ? '<i class="ri-check-line"></i>  ' + withGeo + ' con ubicacion' : 'Sin ubicacion';
       var sLast    = document.getElementById('stat-last-scan');
 
       if (docsArray.length > 0 && docsArray[0].scannedAt && docsArray[0].scannedAt.toDate) {
@@ -3245,7 +3245,7 @@ window.loadScanLogs = function(petId, firestoreDb, petStatus) {
       }
       if (sLast) sLast.textContent = lastDate;
 
-      /* â”€â”€ Map: most recent with coords â”€â”€ */
+      /* -- Map: most recent with coords -- */
       if (mapEl) {
         if (lastWithCoords) {
           var lat = lastWithCoords.latitude.toFixed(6);
@@ -3253,28 +3253,28 @@ window.loadScanLogs = function(petId, firestoreDb, petStatus) {
           var mUrl = 'https://maps.google.com/maps?q=' + lat + ',' + lng;
           mapEl.innerHTML =
             '<div class="map-container">' +
-              '<iframe loading="lazy" src="https://maps.google.com/maps?q=' + lat + ',' + lng + '&z=15&output=embed" title="Ubicación del escaneo"></iframe>' +
+              '<iframe loading="lazy" src="https://maps.google.com/maps?q=' + lat + ',' + lng + '&z=15&output=embed" title="Ubicacion del escaneo"></iframe>' +
             '</div>' +
             '<div class="scan-actions">' +
               '<a href="' + mUrl + '" target="_blank" rel="noopener" class="scan-action-btn map"><i class="ri-map-pin-line"></i> Abrir en Google Maps</a>' +
-              '<button class="scan-action-btn" onclick="navigator.clipboard.writeText(\''+mUrl+'\').then(()=>toast(\'ðŸ“‹ Enlace copiado\'))"><i class="ri-links-line"></i> Copiar link</button>' +
-              '<a href="https://api.whatsapp.com/send?text=' + encodeURIComponent('ðŸ“ Ubicación del último escaneo de la mascota: ' + mUrl) + '" target="_blank" rel="noopener" class="scan-action-btn wa"><i class="ri-whatsapp-line"></i> Compartir</a>' +
+              '<button class="scan-action-btn" onclick="navigator.clipboard.writeText(\''+mUrl+'\').then(()=>toast(\'<i class="ri-file-copy-line"></i> Enlace copiado\'))"><i class="ri-links-line"></i> Copiar link</button>' +
+              '<a href="https://api.whatsapp.com/send?text=' + encodeURIComponent('“ Ubicacion del ultimo escaneo de la mascota: ' + mUrl) + '" target="_blank" rel="noopener" class="scan-action-btn wa"><i class="ri-whatsapp-line"></i> Compartir</a>' +
             '</div>';
         } else {
-          mapEl.innerHTML = '<div class="empty-state"><div style="font-size:32px;margin-bottom:10px">ðŸ“</div><p style="font-size:.85rem">Sin escaneos con ubicación compartida aún.</p></div>';
+          mapEl.innerHTML = '<div class="empty-state"><div style="font-size:32px;margin-bottom:10px">“</div><p style="font-size:.85rem">Sin escaneos con ubicacion compartida aun.</p></div>';
         }
       }
 
-      /* â”€â”€ Scan list â”€â”€ */
+      /* -- Scan list -- */
       if (listEl) {
         if (snap.empty) {
-          listEl.innerHTML = '<div class="empty-state"><div style="font-size:32px;margin-bottom:10px">ðŸ“¡</div><p style="font-size:.85rem;color:#6c757d">Todavía no hay escaneos registrados.</p></div>';
+          listEl.innerHTML = '<div class="empty-state"><div style="font-size:32px;margin-bottom:10px">“!</div><p style="font-size:.85rem;color:#6c757d">Todavia no hay escaneos registrados.</p></div>';
           return;
         }
         var html = '';
         
-        /* Mensaje de Retención */
-        html += '<div class="retention-alert"><i class="ri-error-warning-fill" style="font-size:1.2rem;margin-top:2px;"></i><div><strong>Aviso de retención:</strong> El historial de escaneos solo se almacenará por 3 meses desde su registro, a menos que sea reportado/a como perdido/a cuyo caso se mantiene todo el historial de su plan contratado.</div></div>';
+        /* Mensaje de Retencion */
+        html += '<div class="retention-alert"><i class="ri-error-warning-fill" style="font-size:1.2rem;margin-top:2px;"></i><div><strong>Aviso de retencion:</strong> El historial de escaneos solo se almacenara por 3 meses desde su registro, a menos que sea reportado/a como perdido/a cuyo caso se mantiene todo el historial de su plan contratado.</div></div>';
 
         /* Rastreo de Ruta (Modo Perdido) */
         if (petStatus === 'perdido') {
@@ -3283,7 +3283,7 @@ window.loadScanLogs = function(petId, firestoreDb, petStatus) {
             html += '<div style="margin-bottom:24px;border-left:3px solid #f43f5e;padding-left:16px;">';
             html += '<div style="color:#f43f5e;font-weight:700;margin-bottom:10px;"><i class="ri-route-line"></i> Ruta de Rastreo (Modo Perdido)</div>';
             geoScans.forEach(function(s, index) {
-              var f = s.scannedAt && s.scannedAt.toDate ? formatDateTime(s.scannedAt.toDate()) : 'â€”';
+              var f = s.scannedAt && s.scannedAt.toDate ? formatDateTime(s.scannedAt.toDate()) : '--';
               var u = 'https://maps.google.com/maps?q=' + s.latitude.toFixed(6) + ',' + s.longitude.toFixed(6);
               html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">';
               html += '<div style="background:#f43f5e;color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;">'+(geoScans.length - index)+'</div>';
@@ -3297,17 +3297,17 @@ window.loadScanLogs = function(petId, firestoreDb, petStatus) {
         var tableRows = '';
         snap.forEach(function(doc) {
           var s = doc.data();
-          var fecha = s.scannedAt && s.scannedAt.toDate ? formatDateTime(s.scannedAt.toDate()) : 'â€”';
+          var fecha = s.scannedAt && s.scannedAt.toDate ? formatDateTime(s.scannedAt.toDate()) : '--';
           var coordsTxt = (s.latitude && s.longitude)
-            ? s.latitude.toFixed(4) + ', ' + s.longitude.toFixed(4) + (s.accuracy ? ' Â±' + Math.round(s.accuracy) + 'm' : '')
-            : 'Sin ubicación';
+            ? s.latitude.toFixed(4) + ', ' + s.longitude.toFixed(4) + (s.accuracy ? ' +/-' + Math.round(s.accuracy) + 'm' : '')
+            : 'Sin ubicacion';
           var actionsCell = '';
           if (s.latitude && s.longitude) {
             var mu2 = 'https://maps.google.com/maps?q=' + s.latitude.toFixed(6) + ',' + s.longitude.toFixed(6);
-            var waUrl = 'https://api.whatsapp.com/send?text=' + encodeURIComponent('ðŸ“ Ubicación: ' + mu2);
+            var waUrl = 'https://api.whatsapp.com/send?text=' + encodeURIComponent('“ Ubicacion: ' + mu2);
             actionsCell = '<div class="scan-actions">' +
               '<a href="' + mu2 + '" target="_blank" class="scan-action-btn map"><i class="ri-map-pin-line"></i> Mapa</a>' +
-              '<button class="scan-action-btn copy" onclick="navigator.clipboard.writeText(\'' + mu2 + '\').then(function(){toast(\'ðŸ“‹ Copiado\')})"><i class="ri-links-line"></i> Copiar</button>' +
+              '<button class="scan-action-btn copy" onclick="navigator.clipboard.writeText(\'' + mu2 + '\').then(function(){toast(\'<i class="ri-file-copy-line"></i> Copiado\')})"><i class="ri-links-line"></i> Copiar</button>' +
               '<a href="' + waUrl + '" target="_blank" class="scan-action-btn wa"><i class="ri-whatsapp-line"></i> WhatsApp</a>' +
             '</div>';
           }
@@ -3323,12 +3323,12 @@ window.loadScanLogs = function(petId, firestoreDb, petStatus) {
     .catch(function(e) {
       var isIndex = e.message && e.message.toLowerCase().includes('index');
       var errMsg  = isIndex
-        ? '<p style="color:#6c757d;font-size:.82rem">Se requiere un índice de Firebase. Se configura automáticamente en unos minutos, recarga después.</p>'
+        ? '<p style="color:#6c757d;font-size:.82rem">Se requiere un indice de Firebase. Se configura automaticamente en unos minutos, recarga despues.</p>'
         : '<p style="color:#fc032d;font-size:.82rem">Error al cargar escaneos: ' + esc(e.message) + '</p>';
       if (listEl) listEl.innerHTML = errMsg;
       if (mapEl)  mapEl.innerHTML  = errMsg;
       ['stat-scans','stat-with-geo','stat-last-scan'].forEach(function(id) {
-        var el = document.getElementById(id); if (el) el.textContent = 'â€”';
+        var el = document.getElementById(id); if (el) el.textContent = '--';
       });
     });
 };
@@ -3346,15 +3346,15 @@ window.showClientTab = function(tabId, btn) {
 window.copyEditUrl = function() {
   var el = document.getElementById('edit-url-display');
   if (!el) return;
-  navigator.clipboard.writeText(el.textContent).then(function() { toast('ðŸ“‹ Enlace copiado'); });
+  navigator.clipboard.writeText(el.innerHTML).then(function() { toast('<i class="ri-file-copy-line"></i> Enlace copiado'); });
 };
 
-/* â”€â”€ Update pet profile from client dashboard â”€â”€ */
+/* -- Update pet profile from client dashboard -- */
 window.updatePetData = function() {
   var clientPetId = window._clientPetId || (_dash.currentUser && _dash.currentUser.petId);
-  if (!clientPetId) { toast('âš ï¸ ID de mascota no encontrado.'); return; }
+  if (!clientPetId) { toast('<i class="ri-alert-line"></i> ID de mascota no encontrado.'); return; }
   var petId = clientPetId;
-  if (!petId) { toast('âš ï¸ ID de mascota no encontrado.'); return; }
+  if (!petId) { toast('<i class="ri-alert-line"></i> ID de mascota no encontrado.'); return; }
   var firestoreDb = (typeof _db !== 'undefined' && _db) ? _db : _getPcApp().firestore();
 
   var fields = [
@@ -3409,10 +3409,10 @@ window.updatePetData = function() {
     var checked = document.querySelector('input[name="'+r[0]+'"]:checked');
     if (checked) updates[r[1]] = checked.value;
   });
-  if (!Object.keys(updates).length) { toast('âš ï¸ No hay cambios para guardar.'); return; }
+  if (!Object.keys(updates).length) { toast('<i class="ri-alert-line"></i> No hay cambios para guardar.'); return; }
 
   var btn = document.getElementById('btn-update-pet');
-  if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line"></i> Guardando…'; }
+  if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line"></i> Guardando...'; }
 
   var doUploadIfNew = function() {
     if (!window._clientNewBlob) return Promise.resolve(null);
@@ -3435,7 +3435,7 @@ window.updatePetData = function() {
     if (newPhotoUrl) updates['photoUrl'] = newPhotoUrl;
     return firestoreDb.collection('pets').doc(petId).update(updates);
   }).then(function() {
-    toast('âœ… Perfil actualizado correctamente.');
+    toast('<i class="ri-check-line"></i>  Perfil actualizado correctamente.');
     
     // Actualizar datos locales y re-renderizar
     if (window._currentPetData) {
@@ -3459,21 +3459,21 @@ window.updatePetData = function() {
   });
 };
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   REPORTS â€” Envío desde pet.html y gestión en dashboard
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ==============================================================
+   REPORTS -- Envio desde pet.html y gestion en dashboard
+============================================================== */
 
-/* Envío desde perfil público (pet.html) */
+/* Envio desde perfil publico (pet.html) */
 window.sendPetReport = function() {
   var msgEl  = document.getElementById('pet-report-msg');
   var sentEl = document.getElementById('pet-report-sent');
   var btnEl  = document.getElementById('pet-report-send-btn');
-  if (!msgEl || !msgEl.value.trim()) { toast('âš ï¸ Escribe un mensaje antes de enviar.'); return; }
+  if (!msgEl || !msgEl.value.trim()) { toast('<i class="ri-alert-line"></i> Escribe un mensaje antes de enviar.'); return; }
   var plateId  = new URLSearchParams(window.location.search).get('id') || '';
   var nameEl   = document.getElementById('pet-name');
   var petName  = nameEl ? nameEl.textContent.trim() : '';
   var db2      = (typeof _db !== 'undefined' && _db) ? _db : _getPcApp().firestore();
-  if (btnEl) { btnEl.disabled = true; btnEl.innerHTML = '<i class="ri-loader-4-line"></i> Enviando…'; }
+  if (btnEl) { btnEl.disabled = true; btnEl.innerHTML = '<i class="ri-loader-4-line"></i> Enviando...'; }
   db2.collection('reports').add({
     fromType:  'pet_profile',
     plateId:   plateId,
@@ -3485,7 +3485,7 @@ window.sendPetReport = function() {
     if (msgEl)  msgEl.style.display = 'none';
     if (btnEl)  btnEl.style.display = 'none';
     if (sentEl) sentEl.style.display = 'block';
-    toast('âœ… Reporte enviado correctamente.');
+    toast('<i class="ri-check-line"></i>  Reporte enviado correctamente.');
   }).catch(function(e) {
     if (btnEl) { btnEl.disabled = false; btnEl.innerHTML = '<i class="ri-send-plane-line"></i> Enviar reporte'; }
     toast('âŒ Error al enviar: ' + e.message);
@@ -3500,7 +3500,7 @@ window.loadReports = function(filterStatus) {
   listEl.innerHTML = '<div class="empty-state" style="padding:28px"><div class="loading-dots"><span></span><span></span><span></span></div></div>';
   var db2 = (typeof _db !== 'undefined' && _db) ? _db : _getPcApp().firestore();
 
-  /* Auto-eliminar reportes con más de 21 días */
+  /* Auto-eliminar reportes con mas de 21 dias */
   var cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 21);
   db2.collection('reports').where('createdAt','<',firebase.firestore.Timestamp.fromDate(cutoff)).get()
     .then(function(old){
@@ -3510,7 +3510,7 @@ window.loadReports = function(filterStatus) {
 
   db2.collection('reports').get().then(function(snap) {
     if (snap.empty) {
-      listEl.innerHTML = '<div class="empty-state" style="padding:28px"><div style="font-size:32px;margin-bottom:8px">ðŸ“­</div><p style="color:#6c757d">No hay reportes registrados aún.</p></div>';
+      listEl.innerHTML = '<div class="empty-state" style="padding:28px"><div style="font-size:32px;margin-bottom:8px">[MAIL]</div><p style="color:#6c757d">No hay reportes registrados aun.</p></div>';
       if (cntEl) cntEl.textContent = '0 reportes';
       return;
     }
@@ -3529,7 +3529,7 @@ window.loadReports = function(filterStatus) {
     listEl.innerHTML = filtered.map(function(r) {
       var d = r.d;
       var canReply = d.fromType !== 'pet_profile';
-      var fecha = d.createdAt && d.createdAt.toDate ? formatDate(d.createdAt.toDate()) : 'â€”';
+      var fecha = d.createdAt && d.createdAt.toDate ? formatDate(d.createdAt.toDate()) : '--';
       var replyAt = d.replyAt && d.replyAt.toDate ? formatDate(d.replyAt.toDate()) : '';
       var typeMap = { pet_profile: { label:'Perfil mascota', color:'#f43f5e', bg:'rgba(244,63,94,.1)' }, owner: { label:'Propietario', color:'#4552CC', bg:'rgba(69,82,204,.1)' }, refugio: { label:'Refugio', color:'#ff9800', bg:'rgba(255,152,0,.12)' } };
       var tp = typeMap[d.fromType] || { label: d.fromType || '?', color:'#6c757d', bg:'rgba(108,117,125,.1)' };
@@ -3546,7 +3546,7 @@ window.loadReports = function(filterStatus) {
         : '';
       var replyForm = canReply
         ? '<div id="reply-form-'+r.id+'" style="display:none;margin-top:12px;">'
-          + '<textarea id="reply-msg-'+r.id+'" placeholder="Escribe tu respuesta al reporte…" maxlength="500" style="width:100%;padding:10px 12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;color:#f0ecff;font-size:.85rem;font-family:\'DM Sans\',sans-serif;resize:none;height:80px;box-sizing:border-box;outline:none;line-height:1.5;"></textarea>'
+          + '<textarea id="reply-msg-'+r.id+'" placeholder="Escribe tu respuesta al reporte..." maxlength="500" style="width:100%;padding:10px 12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;color:#f0ecff;font-size:.85rem;font-family:\'DM Sans\',sans-serif;resize:none;height:80px;box-sizing:border-box;outline:none;line-height:1.5;"></textarea>'
           + '<div style="display:flex;gap:8px;margin-top:8px;">'
           + '<button onclick="replyToReport(\''+r.id+'\')" style="background:#4552CC;color:#fff;border:none;padding:9px 18px;border-radius:9px;font-weight:700;font-size:.82rem;cursor:pointer;flex:1;transition:background .2s;" onmouseover="this.style.background=\'#3A45B0\'" onmouseout="this.style.background=\'#4552CC\'"><i class="ri-send-plane-line"></i> Enviar respuesta</button>'
           + '<button onclick="closeReportById(\''+r.id+'\')" style="background:rgba(108,117,125,.15);color:#a0a0b0;border:none;padding:9px 14px;border-radius:9px;font-weight:700;font-size:.82rem;cursor:pointer;transition:background .2s;" title="Cerrar reporte"><i class="ri-check-line"></i></button>'
@@ -3557,15 +3557,15 @@ window.loadReports = function(filterStatus) {
           + '<button onclick="toggleReplyForm(\''+r.id+'\')" style="background:rgba(69,82,204,.15);color:#A8B4F5;border:1px solid rgba(69,82,204,.3);padding:7px 14px;border-radius:9px;font-size:.8rem;font-weight:600;cursor:pointer;"><i class="ri-reply-line"></i> '+(d.adminReply?'Editar respuesta':'Responder')+'</button>'
           + '<button onclick="closeReportById(\''+r.id+'\')" style="background:rgba(108,117,125,.12);color:#6c757d;border:1px solid rgba(108,117,125,.2);padding:7px 12px;border-radius:9px;font-size:.8rem;cursor:pointer;" title="Cerrar reporte"><i class="ri-check-line"></i> Cerrar</button>'
           + '</div>'
-        : '<div style="margin-top:12px;"><span style="font-size:.75rem;color:#6c757d;font-style:italic"><i class="ri-lock-line"></i> Reporte anónimo â€” sin respuesta disponible</span></div>';
+        : '<div style="margin-top:12px;"><span style="font-size:.75rem;color:#6c757d;font-style:italic"><i class="ri-lock-line"></i> Reporte anonimo -- sin respuesta disponible</span></div>';
       return '<div id="report-card-'+r.id+'" class="rep-card" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px 18px;margin-bottom:12px;">'
         + '<div style="display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:10px;">'
         + '<span style="background:'+tp.bg+';color:'+tp.color+';padding:3px 9px;border-radius:12px;font-size:.7rem;font-weight:700;">'+tp.label+'</span>'
         + statusHtml
         + '<span class="rep-meta" style="font-size:.75rem;margin-left:auto;">'+fecha+'</span>'
         + '</div>'
-        + (d.plateId ? '<div class="rep-plate" style="font-size:.78rem;margin-bottom:6px;font-family:monospace;">ðŸ· '+esc(d.plateId)+(d.petName?' · '+esc(d.petName):'')+'</div>' : '')
-        + (d.fromName ? '<div class="rep-meta" style="font-size:.78rem;margin-bottom:6px;">ðŸ‘¤ '+esc(d.fromName)+'</div>' : '')
+        + (d.plateId ? '<div class="rep-plate" style="font-size:.78rem;margin-bottom:6px;font-family:monospace;">· '+esc(d.plateId)+(d.petName?' · '+esc(d.petName):'')+'</div>' : '')
+        + (d.fromName ? '<div class="rep-meta" style="font-size:.78rem;margin-bottom:6px;"><i class="ri-user-line"></i> '+esc(d.fromName)+'</div>' : '')
         + '<div class="rep-msg" style="font-size:.9rem;line-height:1.6;white-space:pre-wrap;">'+esc(d.message)+'</div>'
         + replySection
         + replyForm
@@ -3584,14 +3584,14 @@ window.toggleReplyForm = function(id) {
 
 window.replyToReport = function(id) {
   var msgEl = document.getElementById('reply-msg-'+id);
-  if (!msgEl || !msgEl.value.trim()) { toast('âš ï¸ Escribe una respuesta antes de enviar.'); return; }
+  if (!msgEl || !msgEl.value.trim()) { toast('<i class="ri-alert-line"></i> Escribe una respuesta antes de enviar.'); return; }
   var db2 = (typeof _db !== 'undefined' && _db) ? _db : _getPcApp().firestore();
   db2.collection('reports').doc(id).update({
     adminReply: msgEl.value.trim(),
     status:     'replied',
     replyAt:    firebase.firestore.FieldValue.serverTimestamp()
   }).then(function() {
-    toast('âœ… Respuesta enviada.');
+    toast('<i class="ri-check-line"></i>  Respuesta enviada.');
     loadReports(_rCurrentFilter || 'all');
   }).catch(function(e) { toast('âŒ Error: ' + e.message); });
 };
@@ -3599,7 +3599,7 @@ window.replyToReport = function(id) {
 window.closeReportById = function(id) {
   var db2 = (typeof _db !== 'undefined' && _db) ? _db : _getPcApp().firestore();
   db2.collection('reports').doc(id).update({ status: 'closed' }).then(function() {
-    toast('âœ… Reporte cerrado.');
+    toast('<i class="ri-check-line"></i>  Reporte cerrado.');
     loadReports(_rCurrentFilter || 'all');
   }).catch(function(e) { toast('âŒ Error: ' + e.message); });
 };
@@ -3612,9 +3612,9 @@ window.filterReports = function(status, btn) {
   loadReports(status);
 };
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ==============================================================
    LANDING PAGE
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+============================================================== */
 window.initLanding = function() {
   var navbar=document.getElementById('navbar');
   if(navbar) window.addEventListener('scroll',function(){navbar.classList.toggle('scrolled',window.scrollY>20);});
@@ -3631,7 +3631,7 @@ window.toggleNavMenu = function() {
   var m=document.getElementById('nav-mobile');if(m)m.classList.toggle('open');
 };
 
-/* â”€â”€ Soporte Propietario â”€â”€ */
+/* -- Soporte Propietario -- */
 window.openSupportPanel = function() {
   var ov = document.getElementById('support-panel-overlay');
   var sp = document.getElementById('support-panel');
@@ -3642,7 +3642,7 @@ window.openSupportPanel = function() {
     /* Ocultar badge al abrir */
     var badge = document.getElementById('support-bell-badge');
     if (badge) badge.style.display = 'none';
-    /* Quitar animación */
+    /* Quitar animacion */
     var bell = document.getElementById('support-bell-btn');
     if (bell) { bell.style.animation = 'none'; }
   }
@@ -3655,7 +3655,7 @@ window.closeSupportPanel = function() {
 };
 window.sendOwnerMessage = function() {
   var inp = document.getElementById('owner-msg-input');
-  if (!inp || !inp.value.trim()) { toast('âš ï¸ Escribe un mensaje.'); return; }
+  if (!inp || !inp.value.trim()) { toast('<i class="ri-alert-line"></i> Escribe un mensaje.'); return; }
   var petId = window._clientPetId;
   var d = window._currentPetData || {};
   var db2 = window._clientFirestore || ((typeof _db !== 'undefined' && _db) ? _db : _getPcApp().firestore());
@@ -3669,7 +3669,7 @@ window.sendOwnerMessage = function() {
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   }).then(function() {
     inp.value = '';
-    toast('âœ… Mensaje enviado.');
+    toast('<i class="ri-check-line"></i>  Mensaje enviado.');
     loadOwnerMessages();
   }).catch(function(e) { toast('âŒ Error: ' + e.message); });
 };
@@ -3691,10 +3691,10 @@ function loadOwnerMessages() {
       });
       var html = '';
       docs.forEach(function(d) {
-        var fecha = d.createdAt && d.createdAt.toDate ? formatDate(d.createdAt.toDate()) : 'â€”';
+        var fecha = d.createdAt && d.createdAt.toDate ? formatDate(d.createdAt.toDate()) : '--';
         var reply = d.adminReply ? '<div style="margin-top:8px;padding:10px;background:#F5F6FC;border-radius:8px;font-size:.82rem;color:#1E255E;border-left:3px solid #4552CC"><strong>Equipo Petcingo:</strong><br>'+esc(d.adminReply)+'</div>' : '';
         html += '<div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #f0f0f5">'
-          + '<div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:.7rem;font-weight:700;color:#4552CC;text-transform:uppercase">Tú</span><span style="font-size:.65rem;color:#7a6e8a">'+fecha+'</span></div>'
+          + '<div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:.7rem;font-weight:700;color:#4552CC;text-transform:uppercase">Tu</span><span style="font-size:.65rem;color:#7a6e8a">'+fecha+'</span></div>'
           + '<div style="font-size:.85rem;color:#333959;line-height:1.4">'+esc(d.message)+'</div>'
           + reply + '</div>';
       });
@@ -3717,7 +3717,7 @@ function checkSupportNotifications(petId, db2) {
 }
 
 /* ============================================================
-   TIENDA ADMIN â€” Productos y Á“rdenes
+   TIENDA ADMIN -- Productos y Á“rdenes
    ============================================================ */
 window.loadProducts = function() {
   var wrap = document.getElementById('products-table-wrap');
@@ -3728,7 +3728,7 @@ window.loadProducts = function() {
     var html = '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.82rem">'
       + '<thead><tr style="border-bottom:2px solid rgba(69,82,204,.12)">'
       + '<th style="padding:10px 8px;text-align:left;color:#6C7297;font-weight:700">Producto</th>'
-      + '<th style="padding:10px 8px;text-align:left;color:#6C7297;font-weight:700">Categoría</th>'
+      + '<th style="padding:10px 8px;text-align:left;color:#6C7297;font-weight:700">Categoria</th>'
       + '<th style="padding:10px 8px;text-align:right;color:#6C7297;font-weight:700">USD</th>'
       + '<th style="padding:10px 8px;text-align:right;color:#6C7297;font-weight:700">BOB</th>'
       + '<th style="padding:10px 8px;text-align:center;color:#6C7297;font-weight:700">Activo</th>'
@@ -3738,11 +3738,11 @@ window.loadProducts = function() {
       var d = doc.data(), id = doc.id;
       var activeColor = d.active ? '#22C55E' : '#f43f5e';
       html += '<tr style="border-bottom:1px solid rgba(69,82,204,.07)">'
-        + '<td style="padding:10px 8px;color:#1E255E;font-weight:600">' + esc(d.name || 'â€”') + '</td>'
-        + '<td style="padding:10px 8px;color:#6C7297">' + esc(d.category || 'â€”') + '</td>'
+        + '<td style="padding:10px 8px;color:#1E255E;font-weight:600">' + esc(d.name || '--') + '</td>'
+        + '<td style="padding:10px 8px;color:#6C7297">' + esc(d.category || '--') + '</td>'
         + '<td style="padding:10px 8px;text-align:right;color:#1E255E">$' + (d.priceUSD || 0).toFixed(2) + '</td>'
         + '<td style="padding:10px 8px;text-align:right;color:#6C7297">Bs.' + (d.priceBOB || 0).toFixed(0) + '</td>'
-        + '<td style="padding:10px 8px;text-align:center"><span style="background:' + activeColor + '22;color:' + activeColor + ';border-radius:99px;padding:2px 10px;font-size:.72rem;font-weight:700">' + (d.active ? 'Sí' : 'No') + '</span></td>'
+        + '<td style="padding:10px 8px;text-align:center"><span style="background:' + activeColor + '22;color:' + activeColor + ';border-radius:99px;padding:2px 10px;font-size:.72rem;font-weight:700">' + (d.active ? 'Si' : 'No') + '</span></td>'
         + '<td style="padding:10px 8px;text-align:center;display:flex;gap:6px;justify-content:center">'
         + '<button onclick="editProduct(\'' + id + '\')" style="padding:5px 10px;background:rgba(69,82,204,.1);color:#4552CC;border:none;border-radius:7px;font-size:.75rem;cursor:pointer;font-weight:600">Editar</button>'
         + '<button onclick="toggleProductActive(\'' + id + '\',' + !!d.active + ')" style="padding:5px 10px;background:rgba(244,63,94,.1);color:#f43f5e;border:none;border-radius:7px;font-size:.75rem;cursor:pointer;font-weight:600">' + (d.active ? 'Desactivar' : 'Activar') + '</button>'
@@ -3761,7 +3761,7 @@ window.loadOrders = function() {
   var q = db().collection('orders').orderBy('createdAt','desc').limit(50);
   if (statusFilter && statusFilter.value) q = db().collection('orders').where('status','==',statusFilter.value).orderBy('createdAt','desc').limit(50);
   q.get().then(function(snap) {
-    if (snap.empty) { wrap.innerHTML = '<p style="color:#6C7297;padding:16px;font-size:.85rem">No hay órdenes aún.</p>'; return; }
+    if (snap.empty) { wrap.innerHTML = '<p style="color:#6C7297;padding:16px;font-size:.85rem">No hay ordenes aun.</p>'; return; }
     var html = '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.82rem">'
       + '<thead><tr style="border-bottom:2px solid rgba(69,82,204,.12)">'
       + '<th style="padding:10px 8px;text-align:left;color:#6C7297;font-weight:700">Comprador</th>'
@@ -3769,18 +3769,18 @@ window.loadOrders = function() {
       + '<th style="padding:10px 8px;text-align:left;color:#6C7297;font-weight:700">Pago</th>'
       + '<th style="padding:10px 8px;text-align:left;color:#6C7297;font-weight:700">Estado</th>'
       + '<th style="padding:10px 8px;text-align:left;color:#6C7297;font-weight:700">Fecha</th>'
-      + '<th style="padding:10px 8px;text-align:center;color:#6C7297;font-weight:700">Acción</th>'
+      + '<th style="padding:10px 8px;text-align:center;color:#6C7297;font-weight:700">Accion</th>'
       + '</tr></thead><tbody>';
     snap.forEach(function(doc) {
       var d = doc.data(), id = doc.id;
-      var fecha = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toLocaleDateString('es-BO') : 'â€”';
+      var fecha = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toLocaleDateString('es-BO') : '--';
       var statusColors = { pending_verification:'#FFC837', paid:'#22C55E', shipped:'#4552CC', delivered:'#1E255E' };
       var sc = statusColors[d.status] || '#6C7297';
       html += '<tr style="border-bottom:1px solid rgba(69,82,204,.07)">'
-        + '<td style="padding:10px 8px;color:#1E255E;font-weight:600">' + esc(d.buyerName || 'â€”') + '<br><span style="color:#6C7297;font-size:.72rem">' + esc(d.buyerEmail || '') + '</span></td>'
+        + '<td style="padding:10px 8px;color:#1E255E;font-weight:600">' + esc(d.buyerName || '--') + '<br><span style="color:#6C7297;font-size:.72rem">' + esc(d.buyerEmail || '') + '</span></td>'
         + '<td style="padding:10px 8px;color:#1E255E;font-weight:700">$' + (d.totalUSD || 0).toFixed(2) + '</td>'
-        + '<td style="padding:10px 8px;color:#6C7297">' + esc(d.paymentMethod || 'â€”') + '</td>'
-        + '<td style="padding:10px 8px"><span style="background:' + sc + '22;color:' + sc + ';border-radius:99px;padding:2px 10px;font-size:.72rem;font-weight:700">' + esc(d.status || 'â€”') + '</span></td>'
+        + '<td style="padding:10px 8px;color:#6C7297">' + esc(d.paymentMethod || '--') + '</td>'
+        + '<td style="padding:10px 8px"><span style="background:' + sc + '22;color:' + sc + ';border-radius:99px;padding:2px 10px;font-size:.72rem;font-weight:700">' + esc(d.status || '--') + '</span></td>'
         + '<td style="padding:10px 8px;color:#6C7297">' + fecha + '</td>'
         + '<td style="padding:10px 8px;text-align:center"><button onclick="updateOrderStatus(\'' + id + '\')" style="padding:5px 10px;background:rgba(69,82,204,.1);color:#4552CC;border:none;border-radius:7px;font-size:.75rem;cursor:pointer;font-weight:600">Actualizar</button></td>'
         + '</tr>';
@@ -3796,7 +3796,7 @@ window.openProductModal = function(productId) {
     + '<div style="background:#fff;border-radius:20px;padding:24px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto">'
     + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">'
     + '<h3 style="margin:0;color:#1E255E;font-family:Syne,sans-serif">' + name + '</h3>'
-    + '<button onclick="document.getElementById(\'product-modal-overlay\').remove()" style="background:transparent;border:none;font-size:1.4rem;cursor:pointer;color:#6C7297">âœ•</button>'
+    + '<button onclick="document.getElementById(\'product-modal-overlay\').remove()" style="background:transparent;border:none;font-size:1.4rem;cursor:pointer;color:#6C7297"><i class="ri-delete-bin-line"></i></button>'
     + '</div>'
     + _productFormHtml(productId)
     + '</div></div>';
@@ -3807,13 +3807,13 @@ window.openProductModal = function(productId) {
 function _productFormHtml() {
   return '<div style="display:grid;gap:14px">'
     + '<div><label style="font-size:.75rem;font-weight:700;color:#6C7297;text-transform:uppercase;display:block;margin-bottom:5px">Nombre</label><input id="pf-name" type="text" style="width:100%;padding:10px 12px;border:1.5px solid rgba(69,82,204,.25);border-radius:10px;font-size:.88rem;color:#1E255E;background:#fff;box-sizing:border-box"></div>'
-    + '<div><label style="font-size:.75rem;font-weight:700;color:#6C7297;text-transform:uppercase;display:block;margin-bottom:5px">Categoría</label><select id="pf-cat" style="width:100%;padding:10px 12px;border:1.5px solid rgba(69,82,204,.25);border-radius:10px;font-size:.88rem;color:#1E255E;background:#fff"><option value="placas">Placas ID</option><option value="collares">Collares</option><option value="accesorios">Accesorios</option></select></div>'
+    + '<div><label style="font-size:.75rem;font-weight:700;color:#6C7297;text-transform:uppercase;display:block;margin-bottom:5px">Categoria</label><select id="pf-cat" style="width:100%;padding:10px 12px;border:1.5px solid rgba(69,82,204,.25);border-radius:10px;font-size:.88rem;color:#1E255E;background:#fff"><option value="placas">Placas ID</option><option value="collares">Collares</option><option value="accesorios">Accesorios</option></select></div>'
     + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'
     + '<div><label style="font-size:.75rem;font-weight:700;color:#6C7297;text-transform:uppercase;display:block;margin-bottom:5px">Precio USD</label><input id="pf-usd" type="number" min="0" step="0.01" style="width:100%;padding:10px 12px;border:1.5px solid rgba(69,82,204,.25);border-radius:10px;font-size:.88rem;color:#1E255E;background:#fff;box-sizing:border-box"></div>'
     + '<div><label style="font-size:.75rem;font-weight:700;color:#6C7297;text-transform:uppercase;display:block;margin-bottom:5px">Precio BOB</label><input id="pf-bob" type="number" min="0" step="1" style="width:100%;padding:10px 12px;border:1.5px solid rgba(69,82,204,.25);border-radius:10px;font-size:.88rem;color:#1E255E;background:#fff;box-sizing:border-box"></div>'
     + '</div>'
-    + '<div><label style="font-size:.75rem;font-weight:700;color:#6C7297;text-transform:uppercase;display:block;margin-bottom:5px">Comisión afiliados (%)</label><input id="pf-comm" type="number" min="0" max="100" step="1" value="10" style="width:100%;padding:10px 12px;border:1.5px solid rgba(69,82,204,.25);border-radius:10px;font-size:.88rem;color:#1E255E;background:#fff;box-sizing:border-box"></div>'
-    + '<div><label style="font-size:.75rem;font-weight:700;color:#6C7297;text-transform:uppercase;display:block;margin-bottom:5px">Descripción</label><textarea id="pf-desc" rows="3" style="width:100%;padding:10px 12px;border:1.5px solid rgba(69,82,204,.25);border-radius:10px;font-size:.88rem;color:#1E255E;background:#fff;box-sizing:border-box;resize:vertical"></textarea></div>'
+    + '<div><label style="font-size:.75rem;font-weight:700;color:#6C7297;text-transform:uppercase;display:block;margin-bottom:5px">Comision afiliados (%)</label><input id="pf-comm" type="number" min="0" max="100" step="1" value="10" style="width:100%;padding:10px 12px;border:1.5px solid rgba(69,82,204,.25);border-radius:10px;font-size:.88rem;color:#1E255E;background:#fff;box-sizing:border-box"></div>'
+    + '<div><label style="font-size:.75rem;font-weight:700;color:#6C7297;text-transform:uppercase;display:block;margin-bottom:5px">Descripcion</label><textarea id="pf-desc" rows="3" style="width:100%;padding:10px 12px;border:1.5px solid rgba(69,82,204,.25);border-radius:10px;font-size:.88rem;color:#1E255E;background:#fff;box-sizing:border-box;resize:vertical"></textarea></div>'
     + '<div style="display:flex;align-items:center;gap:10px"><input type="checkbox" id="pf-active" checked style="accent-color:#4552CC"><label for="pf-active" style="font-size:.88rem;color:#1E255E">Producto activo</label></div>'
     + '<div style="display:flex;align-items:center;gap:10px"><input type="checkbox" id="pf-featured" style="accent-color:#4552CC"><label for="pf-featured" style="font-size:.88rem;color:#1E255E">Destacado en inicio</label></div>'
     + '<button onclick="saveProduct()" style="padding:12px 24px;background:#4552CC;color:#fff;border:none;border-radius:12px;font-size:.9rem;cursor:pointer;font-weight:700;width:100%">Guardar producto</button>'
@@ -3838,13 +3838,13 @@ window.saveProduct = function() {
     featured: document.getElementById('pf-featured').checked,
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
   };
-  if (!data.name) { toast('âš ï¸ El nombre es obligatorio'); return; }
+  if (!data.name) { toast('<i class="ri-alert-line"></i> El nombre es obligatorio'); return; }
   var ref = window._editingProductId
     ? db().collection('products').doc(window._editingProductId)
     : db().collection('products').doc();
   if (!window._editingProductId) data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
   ref.set(data, { merge: true }).then(function() {
-    toast('âœ… Producto guardado');
+    toast('<i class="ri-check-line"></i>  Producto guardado');
     var overlay = document.getElementById('product-modal-overlay');
     if (overlay) overlay.remove();
     window._editingProductId = null;
@@ -3866,7 +3866,7 @@ window._fillProductForm = function(id) {
 
 window.toggleProductActive = function(id, current) {
   db().collection('products').doc(id).update({ active: !current })
-    .then(function() { toast('âœ… Estado actualizado'); loadProducts(); })
+    .then(function() { toast('<i class="ri-check-line"></i>  Estado actualizado'); loadProducts(); })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 
@@ -3874,7 +3874,7 @@ window.updateOrderStatus = function(id) {
   var newStatus = prompt('Nuevo estado:\npending_verification | paid | shipped | delivered');
   if (!newStatus) return;
   db().collection('orders').doc(id).update({ status: newStatus })
-    .then(function() { toast('âœ… Estado de orden actualizado'); loadOrders(); })
+    .then(function() { toast('<i class="ri-check-line"></i>  Estado de orden actualizado'); loadOrders(); })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 
@@ -3886,10 +3886,10 @@ window.loadDiscounts = function() {
   if (!wrap) return;
   wrap.innerHTML = '<div class="empty-state" style="padding:20px"><div class="loading-dots"><span></span><span></span><span></span></div></div>';
   db().collection('discountCodes').orderBy('createdAt','desc').limit(50).get().then(function(snap) {
-    if (snap.empty) { wrap.innerHTML = '<p style="color:#6C7297;padding:16px;font-size:.85rem">No hay códigos. Crea el primero.</p>'; return; }
+    if (snap.empty) { wrap.innerHTML = '<p style="color:#6C7297;padding:16px;font-size:.85rem">No hay codigos. Crea el primero.</p>'; return; }
     var html = '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.82rem">'
       + '<thead><tr style="border-bottom:2px solid rgba(69,82,204,.12)">'
-      + '<th style="padding:10px 8px;text-align:left;color:#6C7297;font-weight:700">Código</th>'
+      + '<th style="padding:10px 8px;text-align:left;color:#6C7297;font-weight:700">Codigo</th>'
       + '<th style="padding:10px 8px;text-align:left;color:#6C7297;font-weight:700">Tipo</th>'
       + '<th style="padding:10px 8px;text-align:right;color:#6C7297;font-weight:700">Valor</th>'
       + '<th style="padding:10px 8px;text-align:center;color:#6C7297;font-weight:700">Usos</th>'
@@ -3904,8 +3904,8 @@ window.loadDiscounts = function() {
         + '<td style="padding:10px 8px;font-family:monospace;font-weight:700;color:#4552CC;font-size:.92rem">' + esc(id) + '</td>'
         + '<td style="padding:10px 8px;color:#6C7297">' + (d.type === 'percent' ? 'Porcentaje' : 'Fijo') + '</td>'
         + '<td style="padding:10px 8px;text-align:right;color:#1E255E;font-weight:700">' + val + '</td>'
-        + '<td style="padding:10px 8px;text-align:center;color:#1E255E">' + (d.usageCount || 0) + ' / ' + (d.maxUses || 'âˆž') + '</td>'
-        + '<td style="padding:10px 8px;text-align:center"><span style="background:' + ac + '22;color:' + ac + ';border-radius:99px;padding:2px 10px;font-size:.72rem;font-weight:700">' + (d.active ? 'Sí' : 'No') + '</span></td>'
+        + '<td style="padding:10px 8px;text-align:center;color:#1E255E">' + (d.usageCount || 0) + ' / ' + (d.maxUses || 'inf') + '</td>'
+        + '<td style="padding:10px 8px;text-align:center"><span style="background:' + ac + '22;color:' + ac + ';border-radius:99px;padding:2px 10px;font-size:.72rem;font-weight:700">' + (d.active ? 'Si' : 'No') + '</span></td>'
         + '<td style="padding:10px 8px;text-align:center;display:flex;gap:6px;justify-content:center">'
         + '<button onclick="toggleDiscount(\'' + id + '\',' + !!d.active + ')" style="padding:5px 10px;background:rgba(244,63,94,.1);color:#f43f5e;border:none;border-radius:7px;font-size:.75rem;cursor:pointer;font-weight:600">' + (d.active ? 'Desactivar' : 'Activar') + '</button>'
         + '<button onclick="deleteDiscount(\'' + id + '\')" style="padding:5px 10px;background:#fee2e2;color:#b91c1c;border:none;border-radius:7px;font-size:.75rem;cursor:pointer;font-weight:600">Eliminar</button>'
@@ -3920,16 +3920,16 @@ window.openDiscountModal = function() {
   var html = '<div style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px" id="discount-modal-overlay">'
     + '<div style="background:#fff;border-radius:20px;padding:24px;width:100%;max-width:420px">'
     + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">'
-    + '<h3 style="margin:0;color:#1E255E;font-family:Syne,sans-serif">Nuevo código</h3>'
-    + '<button onclick="document.getElementById(\'discount-modal-overlay\').remove()" style="background:transparent;border:none;font-size:1.4rem;cursor:pointer;color:#6C7297">âœ•</button>'
+    + '<h3 style="margin:0;color:#1E255E;font-family:Syne,sans-serif">Nuevo codigo</h3>'
+    + '<button onclick="document.getElementById(\'discount-modal-overlay\').remove()" style="background:transparent;border:none;font-size:1.4rem;cursor:pointer;color:#6C7297"><i class="ri-delete-bin-line"></i></button>'
     + '</div>'
     + '<div style="display:grid;gap:14px">'
-    + '<div><label style="font-size:.75rem;font-weight:700;color:#6C7297;text-transform:uppercase;display:block;margin-bottom:5px">Código</label><input id="dc-code" type="text" placeholder="NAVIDAD25 (dejar vacío para auto)" style="width:100%;padding:10px 12px;border:1.5px solid rgba(69,82,204,.25);border-radius:10px;font-size:.88rem;color:#1E255E;background:#fff;box-sizing:border-box;text-transform:uppercase"></div>'
+    + '<div><label style="font-size:.75rem;font-weight:700;color:#6C7297;text-transform:uppercase;display:block;margin-bottom:5px">Codigo</label><input id="dc-code" type="text" placeholder="NAVIDAD25 (dejar vacio para auto)" style="width:100%;padding:10px 12px;border:1.5px solid rgba(69,82,204,.25);border-radius:10px;font-size:.88rem;color:#1E255E;background:#fff;box-sizing:border-box;text-transform:uppercase"></div>'
     + '<div><label style="font-size:.75rem;font-weight:700;color:#6C7297;text-transform:uppercase;display:block;margin-bottom:5px">Tipo</label><select id="dc-type" style="width:100%;padding:10px 12px;border:1.5px solid rgba(69,82,204,.25);border-radius:10px;font-size:.88rem;color:#1E255E;background:#fff"><option value="percent">Porcentaje (%)</option><option value="fixed">Monto fijo (USD)</option></select></div>'
     + '<div><label style="font-size:.75rem;font-weight:700;color:#6C7297;text-transform:uppercase;display:block;margin-bottom:5px">Valor</label><input id="dc-value" type="number" min="0" step="0.01" placeholder="10" style="width:100%;padding:10px 12px;border:1.5px solid rgba(69,82,204,.25);border-radius:10px;font-size:.88rem;color:#1E255E;background:#fff;box-sizing:border-box"></div>'
-    + '<div><label style="font-size:.75rem;font-weight:700;color:#6C7297;text-transform:uppercase;display:block;margin-bottom:5px">Máx. usos (vacío = ilimitado)</label><input id="dc-max" type="number" min="1" step="1" style="width:100%;padding:10px 12px;border:1.5px solid rgba(69,82,204,.25);border-radius:10px;font-size:.88rem;color:#1E255E;background:#fff;box-sizing:border-box"></div>'
-    + '<div><label style="font-size:.75rem;font-weight:700;color:#6C7297;text-transform:uppercase;display:block;margin-bottom:5px">Fecha de expiración</label><input id="dc-expiry" type="date" style="width:100%;padding:10px 12px;border:1.5px solid rgba(69,82,204,.25);border-radius:10px;font-size:.88rem;color:#1E255E;background:#fff;box-sizing:border-box"></div>'
-    + '<button onclick="saveDiscount()" style="padding:12px 24px;background:#4552CC;color:#fff;border:none;border-radius:12px;font-size:.9rem;cursor:pointer;font-weight:700;width:100%">Crear código</button>'
+    + '<div><label style="font-size:.75rem;font-weight:700;color:#6C7297;text-transform:uppercase;display:block;margin-bottom:5px">Max. usos (vacio = ilimitado)</label><input id="dc-max" type="number" min="1" step="1" style="width:100%;padding:10px 12px;border:1.5px solid rgba(69,82,204,.25);border-radius:10px;font-size:.88rem;color:#1E255E;background:#fff;box-sizing:border-box"></div>'
+    + '<div><label style="font-size:.75rem;font-weight:700;color:#6C7297;text-transform:uppercase;display:block;margin-bottom:5px">Fecha de expiracion</label><input id="dc-expiry" type="date" style="width:100%;padding:10px 12px;border:1.5px solid rgba(69,82,204,.25);border-radius:10px;font-size:.88rem;color:#1E255E;background:#fff;box-sizing:border-box"></div>'
+    + '<button onclick="saveDiscount()" style="padding:12px 24px;background:#4552CC;color:#fff;border:none;border-radius:12px;font-size:.9rem;cursor:pointer;font-weight:700;width:100%">Crear codigo</button>'
     + '</div></div></div>';
   document.body.insertAdjacentHTML('beforeend', html);
 };
@@ -3941,12 +3941,12 @@ window.saveDiscount = function() {
   var value = parseFloat(document.getElementById('dc-value').value) || 0;
   var maxUses = parseInt(document.getElementById('dc-max').value) || null;
   var expiry = document.getElementById('dc-expiry').value;
-  if (!value) { toast('âš ï¸ El valor es obligatorio'); return; }
+  if (!value) { toast('<i class="ri-alert-line"></i> El valor es obligatorio'); return; }
   var data = { type: type, value: value, active: true, usageCount: 0,
     maxUses: maxUses, expiresAt: expiry ? new Date(expiry) : null,
     createdAt: firebase.firestore.FieldValue.serverTimestamp() };
   db().collection('discountCodes').doc(code).set(data).then(function() {
-    toast('âœ… Código ' + code + ' creado');
+    toast('<i class="ri-check-line"></i>  Codigo ' + code + ' creado');
     var o = document.getElementById('discount-modal-overlay'); if (o) o.remove();
     loadDiscounts();
   }).catch(function(e) { toast('âŒ ' + e.message); });
@@ -3954,19 +3954,19 @@ window.saveDiscount = function() {
 
 window.quickDiscount = function(code, type, value) {
   db().collection('discountCodes').doc(code).set({ type: type, value: value, active: true, usageCount: 0, maxUses: null, expiresAt: null, createdAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true })
-    .then(function() { toast('âœ… Código ' + code + ' listo'); loadDiscounts(); })
+    .then(function() { toast('<i class="ri-check-line"></i>  Codigo ' + code + ' listo'); loadDiscounts(); })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 
 window.toggleDiscount = function(id, current) {
   db().collection('discountCodes').doc(id).update({ active: !current })
-    .then(function() { toast('âœ… Estado actualizado'); loadDiscounts(); });
+    .then(function() { toast('<i class="ri-check-line"></i>  Estado actualizado'); loadDiscounts(); });
 };
 
 window.deleteDiscount = function(id) {
-  if (!confirm('¿Eliminar código ' + id + '?')) return;
+  if (!confirm('Eliminar codigo ' + id + '?')) return;
   db().collection('discountCodes').doc(id).delete()
-    .then(function() { toast('ðŸ—‘ï¸ Código eliminado'); loadDiscounts(); });
+    .then(function() { toast('<i class="ri-delete-bin-line"></i> Codigo eliminado'); loadDiscounts(); });
 };
 
 function _randomCode(len) {
@@ -4002,7 +4002,7 @@ window.loadAffiliates = function() {
 
     /* Pending */
     if (pendWrap) {
-      if (!pending.length) { pendWrap.innerHTML = '<p style="color:#22C55E;font-size:.85rem;padding:12px">âœ… Sin solicitudes pendientes.</p>'; }
+      if (!pending.length) { pendWrap.innerHTML = '<p style="color:#22C55E;font-size:.85rem;padding:12px"><i class="ri-check-line"></i>  Sin solicitudes pendientes.</p>'; }
       else {
         pendWrap.innerHTML = pending.map(function(a) {
           return '<div style="padding:14px;background:#f8f9ff;border-radius:12px;margin-bottom:10px;border:1px solid rgba(69,82,204,.1)">'
@@ -4020,21 +4020,21 @@ window.loadAffiliates = function() {
 
     /* Active table */
     if (actWrap) {
-      if (!active.length) { actWrap.innerHTML = '<p style="color:#6C7297;font-size:.85rem;padding:12px">No hay afiliados aprobados aún.</p>'; }
+      if (!active.length) { actWrap.innerHTML = '<p style="color:#6C7297;font-size:.85rem;padding:12px">No hay afiliados aprobados aun.</p>'; }
       else {
         actWrap.innerHTML = '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.82rem">'
           + '<thead><tr style="border-bottom:2px solid rgba(69,82,204,.12)">'
           + '<th style="padding:10px 8px;text-align:left;color:#6C7297;font-weight:700">Nombre</th>'
-          + '<th style="padding:10px 8px;text-align:left;color:#6C7297;font-weight:700">Código</th>'
+          + '<th style="padding:10px 8px;text-align:left;color:#6C7297;font-weight:700">Codigo</th>'
           + '<th style="padding:10px 8px;text-align:right;color:#6C7297;font-weight:700">Ventas</th>'
           + '<th style="padding:10px 8px;text-align:right;color:#6C7297;font-weight:700">Ganado</th>'
           + '<th style="padding:10px 8px;text-align:right;color:#6C7297;font-weight:700">Pendiente</th>'
-          + '<th style="padding:10px 8px;text-align:center;color:#6C7297;font-weight:700">Acción</th>'
+          + '<th style="padding:10px 8px;text-align:center;color:#6C7297;font-weight:700">Accion</th>'
           + '</tr></thead><tbody>'
           + active.map(function(a) {
             return '<tr style="border-bottom:1px solid rgba(69,82,204,.07)">'
               + '<td style="padding:10px 8px;color:#1E255E;font-weight:600">' + esc(a.name) + '<br><span style="color:#6C7297;font-size:.72rem">' + esc(a.email) + '</span></td>'
-              + '<td style="padding:10px 8px;font-family:monospace;font-weight:700;color:#4552CC">' + esc(a.promoCode || 'â€”') + '</td>'
+              + '<td style="padding:10px 8px;font-family:monospace;font-weight:700;color:#4552CC">' + esc(a.promoCode || '--') + '</td>'
               + '<td style="padding:10px 8px;text-align:right;color:#1E255E">$' + (a.totalSales || 0).toFixed(2) + '</td>'
               + '<td style="padding:10px 8px;text-align:right;color:#22C55E;font-weight:700">$' + (a.totalEarned || 0).toFixed(2) + '</td>'
               + '<td style="padding:10px 8px;text-align:right;color:#FFC837;font-weight:700">$' + (a.pendingPayout || 0).toFixed(2) + '</td>'
@@ -4046,7 +4046,7 @@ window.loadAffiliates = function() {
 
     /* Payouts ready */
     if (payWrap) {
-      if (!withPayout.length) { payWrap.innerHTML = '<p style="color:#6C7297;font-size:.85rem">Ningún afiliado supera el mínimo de $15 USD.</p>'; }
+      if (!withPayout.length) { payWrap.innerHTML = '<p style="color:#6C7297;font-size:.85rem">Ningun afiliado supera el minimo de $15 USD.</p>'; }
       else { payWrap.innerHTML = withPayout.map(function(a) {
         return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#fffbeb;border:1px solid #fcd34d;border-radius:12px;margin-bottom:8px">'
           + '<div><div style="font-weight:700;color:#1E255E">' + esc(a.name) + '</div><div style="font-size:.75rem;color:#6C7297">' + esc(a.email) + '</div></div>'
@@ -4065,26 +4065,26 @@ window.approveAffiliate = function(id) {
     status: 'approved', promoCode: code, commissionPct: comm,
     approvedAt: firebase.firestore.FieldValue.serverTimestamp()
   }).then(function() {
-    toast('âœ… Afiliado aprobado â€” código: ' + code);
+    toast('<i class="ri-check-line"></i>  Afiliado aprobado -- codigo: ' + code);
     loadAffiliates();
   }).catch(function(e) { toast('âŒ ' + e.message); });
 };
 
 window.rejectAffiliate = function(id) {
-  if (!confirm('¿Rechazar esta solicitud?')) return;
+  if (!confirm('?Rechazar esta solicitud?')) return;
   db().collection('affiliates').doc(id).update({ status: 'rejected' })
     .then(function() { toast('Solicitud rechazada'); loadAffiliates(); });
 };
 
 window.markAffPaid = function(id, amount) {
-  if (!confirm('¿Marcar como pagado $' + parseFloat(amount).toFixed(2) + ' USD?')) return;
+  if (!confirm('?Marcar como pagado $' + parseFloat(amount).toFixed(2) + ' USD?')) return;
   var batch = db().batch();
   batch.update(db().collection('affiliates').doc(id), { pendingPayout: 0 });
   batch.set(db().collection('affiliatePayouts').doc(), {
     affiliateId: id, amount: amount,
     paidAt: firebase.firestore.FieldValue.serverTimestamp()
   });
-  batch.commit().then(function() { toast('âœ… Pago registrado'); loadAffiliates(); })
+  batch.commit().then(function() { toast('<i class="ri-check-line"></i>  Pago registrado'); loadAffiliates(); })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 
@@ -4111,26 +4111,26 @@ window.loadSecurityAlerts = function() {
     if (cntVel) cntVel.textContent = velCount;
 
     if (!wrap) return;
-    if (snap.empty) { wrap.innerHTML = '<p style="color:#22C55E;font-size:.85rem;padding:12px">âœ… Sin alertas activas.</p>'; return; }
+    if (snap.empty) { wrap.innerHTML = '<p style="color:#22C55E;font-size:.85rem;padding:12px"><i class="ri-check-line"></i>  Sin alertas activas.</p>'; return; }
     var typeColors = { velocity:'#FFC837', geo_anomaly:'#f43f5e', unauthorized:'#7c3aed' };
-    var typeLabels = { velocity:'Alta velocidad', geo_anomaly:'Anomalía geográfica', unauthorized:'No autorizado' };
+    var typeLabels = { velocity:'Alta velocidad', geo_anomaly:'Anomalia geografica', unauthorized:'No autorizado' };
     var html = '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.82rem">'
       + '<thead><tr style="border-bottom:2px solid rgba(69,82,204,.12)">'
       + '<th style="padding:10px 8px;text-align:left;color:#6C7297;font-weight:700">Placa</th>'
       + '<th style="padding:10px 8px;text-align:left;color:#6C7297;font-weight:700">Tipo</th>'
       + '<th style="padding:10px 8px;text-align:left;color:#6C7297;font-weight:700">Detalle</th>'
       + '<th style="padding:10px 8px;text-align:left;color:#6C7297;font-weight:700">Fecha</th>'
-      + '<th style="padding:10px 8px;text-align:center;color:#6C7297;font-weight:700">Acción</th>'
+      + '<th style="padding:10px 8px;text-align:center;color:#6C7297;font-weight:700">Accion</th>'
       + '</tr></thead><tbody>';
     snap.forEach(function(doc) {
       var d = doc.data(), docId = doc.id;
-      var fecha = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toLocaleString('es-BO') : 'â€”';
+      var fecha = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toLocaleString('es-BO') : '--';
       var tc = typeColors[d.type] || '#6C7297';
       var tl = typeLabels[d.type] || d.type;
       html += '<tr style="border-bottom:1px solid rgba(69,82,204,.07)">'
-        + '<td style="padding:10px 8px;font-family:monospace;font-weight:700;color:#4552CC">' + esc(d.plateId || 'â€”') + '</td>'
+        + '<td style="padding:10px 8px;font-family:monospace;font-weight:700;color:#4552CC">' + esc(d.plateId || '--') + '</td>'
         + '<td style="padding:10px 8px"><span style="background:' + tc + '22;color:' + tc + ';border-radius:99px;padding:2px 10px;font-size:.72rem;font-weight:700">' + esc(tl) + '</span></td>'
-        + '<td style="padding:10px 8px;color:#6C7297;font-size:.78rem">' + esc(d.detail || 'â€”') + '</td>'
+        + '<td style="padding:10px 8px;color:#6C7297;font-size:.78rem">' + esc(d.detail || '--') + '</td>'
         + '<td style="padding:10px 8px;color:#6C7297;font-size:.75rem">' + fecha + '</td>'
         + '<td style="padding:10px 8px;text-align:center">'
         + '<button onclick="blockPlateFromAlert(\'' + esc(d.plateId || '') + '\')" style="padding:5px 10px;background:rgba(244,63,94,.1);color:#f43f5e;border:none;border-radius:7px;font-size:.75rem;cursor:pointer;font-weight:600;margin-right:4px">Bloquear</button>'
@@ -4146,7 +4146,7 @@ window.loadSecurityAlerts = function() {
     var blocked = (doc.exists && doc.data().blockedPlates) ? doc.data().blockedPlates : [];
     if (cntBlocked) cntBlocked.textContent = blocked.length;
     if (!blockedWrap) return;
-    if (!blocked.length) { blockedWrap.innerHTML = '<p style="color:#6C7297;font-size:.85rem">La lista negra está vacía.</p>'; return; }
+    if (!blocked.length) { blockedWrap.innerHTML = '<p style="color:#6C7297;font-size:.85rem">La lista negra esta vacia.</p>'; return; }
     blockedWrap.innerHTML = blocked.map(function(pid) {
       return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#fee2e2;border-radius:8px;margin-bottom:6px">'
         + '<span style="font-family:monospace;font-weight:700;color:#b91c1c">' + esc(pid) + '</span>'
@@ -4159,27 +4159,27 @@ window.loadSecurityAlerts = function() {
 window.blockPlate = function() {
   var input = document.getElementById('block-plate-input');
   var pid = input ? input.value.trim() : '';
-  if (!pid) { toast('âš ï¸ Ingresa un ID de placa'); return; }
+  if (!pid) { toast('<i class="ri-alert-line"></i> Ingresa un ID de placa'); return; }
   db().collection('config').doc('admin_settings').update({
     blockedPlates: firebase.firestore.FieldValue.arrayUnion(pid)
   }).then(function() {
-    toast('ðŸš« Placa ' + pid + ' bloqueada');
+    toast('[NO] Placa ' + pid + ' bloqueada');
     if (input) input.value = '';
     loadSecurityAlerts();
   }).catch(function(e) { toast('âŒ ' + e.message); });
 };
 
 window.blockPlateFromAlert = function(pid) {
-  if (!pid || !confirm('¿Bloquear placa ' + pid + '?')) return;
+  if (!pid || !confirm('?Bloquear placa ' + pid + '?')) return;
   db().collection('config').doc('admin_settings').update({
     blockedPlates: firebase.firestore.FieldValue.arrayUnion(pid)
-  }).then(function() { toast('ðŸš« Placa bloqueada'); loadSecurityAlerts(); });
+  }).then(function() { toast('[NO] Placa bloqueada'); loadSecurityAlerts(); });
 };
 
 window.unblockPlate = function(pid) {
   db().collection('config').doc('admin_settings').update({
     blockedPlates: firebase.firestore.FieldValue.arrayRemove(pid)
-  }).then(function() { toast('âœ… Placa desbloqueada'); loadSecurityAlerts(); });
+  }).then(function() { toast('<i class="ri-check-line"></i>  Placa desbloqueada'); loadSecurityAlerts(); });
 };
 
 window.dismissAlert = function(docId) {
@@ -4209,7 +4209,7 @@ window.loadIndexContent = function() {
     if (!featuredListEl) return;
     db().collection('config').doc('index_content').get().then(function(cfgDoc) {
       var featured = cfgDoc.exists && cfgDoc.data().featuredProducts ? cfgDoc.data().featuredProducts : [];
-      if (snap.empty) { featuredListEl.innerHTML = '<p style="color:#6C7297;font-size:.85rem">No hay productos activos aún.</p>'; return; }
+      if (snap.empty) { featuredListEl.innerHTML = '<p style="color:#6C7297;font-size:.85rem">No hay productos activos aun.</p>'; return; }
       var html = '<div style="display:grid;gap:8px">';
       snap.forEach(function(doc) {
         var d = doc.data(), id = doc.id;
@@ -4236,7 +4236,7 @@ window.saveIndexContent = function() {
     headline: headline.trim(), subheadline: subheadline.trim(),
     bannerActive: bannerActive, bannerMessage: bannerMessage.trim(), bannerColor: bannerColor,
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-  }, { merge: true }).then(function() { toast('âœ… Contenido guardado'); })
+  }, { merge: true }).then(function() { toast('<i class="ri-check-line"></i>  Contenido guardado'); })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 
@@ -4244,14 +4244,14 @@ window.saveFeaturedProducts = function() {
   var boxes = document.querySelectorAll('input[name="featured-product"]:checked');
   var ids = [];
   boxes.forEach(function(b) { ids.push(b.value); });
-  if (ids.length > 4) { toast('âš ï¸ Máximo 4 productos destacados'); return; }
+  if (ids.length > 4) { toast('<i class="ri-alert-line"></i> Maximo 4 productos destacados'); return; }
   db().collection('config').doc('index_content').set({ featuredProducts: ids }, { merge: true })
-    .then(function() { toast('âœ… Destacados guardados (' + ids.length + ')'); })
+    .then(function() { toast('<i class="ri-check-line"></i>  Destacados guardados (' + ids.length + ')'); })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 
 /* ============================================================
-   PC_Themes â€” Sistema de temas para perfiles de mascotas
+   PC_Themes -- Sistema de temas para perfiles de mascotas
    ============================================================ */
 window.PC_Themes = (function() {
   'use strict';
@@ -4260,7 +4260,7 @@ window.PC_Themes = (function() {
     neutro: {
       id: 'neutro',
       name: 'Neutro',
-      emoji: 'âœ¨',
+      emoji: '[SPARKLE]',
       heroBg: 'linear-gradient(135deg,#4552CC 0%,#3A45B0 100%)',
       heroAccent: '#51CBF5',
       cardBg: '#FFFFFF',
@@ -4272,7 +4272,7 @@ window.PC_Themes = (function() {
     princesa: {
       id: 'princesa',
       name: 'Princesa',
-      emoji: 'ðŸ‘‘',
+      emoji: '[CROWN]',
       heroBg: 'linear-gradient(135deg,#C2185B 0%,#E91E8C 60%,#F48FB1 100%)',
       heroAccent: '#F8BBD9',
       cardBg: '#FFF5F9',
@@ -4283,8 +4283,8 @@ window.PC_Themes = (function() {
     },
     campeon: {
       id: 'campeon',
-      name: 'Campeón',
-      emoji: 'ðŸ†',
+      name: 'Campeon',
+      emoji: '†',
       heroBg: 'linear-gradient(135deg,#1565C0 0%,#1976D2 60%,#42A5F5 100%)',
       heroAccent: '#90CAF9',
       cardBg: '#F5F9FF',
@@ -4295,8 +4295,8 @@ window.PC_Themes = (function() {
     },
     selvatico: {
       id: 'selvatico',
-      name: 'Selvático',
-      emoji: 'ðŸŒ¿',
+      name: 'Selvatico',
+      emoji: '[GLOBE]?',
       heroBg: 'linear-gradient(135deg,#1B5E20 0%,#2E7D32 60%,#66BB6A 100%)',
       heroAccent: '#A5D6A7',
       cardBg: '#F5FFF6',
@@ -4308,7 +4308,7 @@ window.PC_Themes = (function() {
     galaxia: {
       id: 'galaxia',
       name: 'Galaxia',
-      emoji: 'ðŸŒŒ',
+      emoji: '[NIGHT]',
       heroBg: 'linear-gradient(135deg,#0D0221 0%,#1A0533 50%,#4A148C 100%)',
       heroAccent: '#CE93D8',
       cardBg: '#FAF5FF',
@@ -4320,7 +4320,7 @@ window.PC_Themes = (function() {
     tropical: {
       id: 'tropical',
       name: 'Tropical',
-      emoji: 'ðŸŒº',
+      emoji: '[FLOWER]',
       heroBg: 'linear-gradient(135deg,#E65100 0%,#F57C00 60%,#FFA726 100%)',
       heroAccent: '#FFCC80',
       cardBg: '#FFFAF5',
@@ -4400,9 +4400,9 @@ window.PC_Themes = (function() {
     if (typeof window.__PC_ThemeCb === 'function') window.__PC_ThemeCb(themeId);
   }
 
-/* ── Auto-restore de sesión al recargar (F5) ─────────────────────────────────
-   dashboard.html ya mostró el div #dashboard. Aquí completamos la restauración:
-   seteamos _dash.currentUser e iniciamos todos los módulos. */
+/* -- Auto-restore de sesion al recargar (F5) ---------------------------------
+   dashboard.html ya mostro el div #dashboard. Aqui completamos la restauracion:
+   seteamos _dash.currentUser e iniciamos todos los modulos. */
 (function() {
   var auth = localStorage.getItem('pc_auth');
   var dashEl = document.getElementById('dashboard');

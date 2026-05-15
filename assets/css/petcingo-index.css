@@ -2360,3 +2360,8 @@
   .ptcg-index__aff-inner { grid-template-columns: 1fr; gap: 48px; }
   .ptcg-index__aff-tiers { display: grid; grid-template-columns: repeat(3, 1fr); }
 }
+
+/* Blindaje global para Remixicon */
+[class^="ri-"], [class*=" ri-"] {
+  font-family: 'remixicon' !important;
+}
