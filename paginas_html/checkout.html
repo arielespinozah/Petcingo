@@ -721,10 +721,8 @@
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
-            <div style="flex:1;">
-              <input type="text" class="ptcg-checkout__input" id="ptcg-promo-input" placeholder="Codigo promocional" style="padding:8px 12px;font-size:0.8rem;">
-            </div>
-            <button class="ptcg-checkout__btn ptcg-checkout__btn--secondary" type="button" onclick="ptcgApplyPromo()" style="width:auto;padding:8px 16px;font-size:0.8rem;">Aplicar</button>
+            <input type="text" class="ptcg-checkout__input" id="ptcg-promo-input" placeholder="Codigo promocional" style="flex:1;min-width:130px;padding:10px 14px;font-size:0.8rem;">
+            <button class="ptcg-checkout__btn ptcg-checkout__btn--secondary" type="button" onclick="ptcgApplyPromo()" style="flex-shrink:0;white-space:nowrap;width:auto;padding:10px 16px;font-size:0.8rem;">Aplicar</button>
           </div>
           <div id="ptcg-promo-msg" style="font-size:0.75rem;font-weight:600;display:none;margin-top:-4px;"></div>
           <div style="border-top:1px dashed rgba(69,82,204,0.15);padding-top:12px;margin-top:4px;">
@@ -1029,5 +1027,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://prueb2.dashnexpages.net/assets/js/petcingo-checkout.js?v=20260515"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>lucide.createIcons();</script>
 </body>
 </html>

@@ -1884,23 +1884,28 @@
 
   window.ptcgCloseModal = function () { document.getElementById('ptcg-modal').hidden = true; };
 
-  window.ptcgBuyPlan = async function (planKey) {
-    var isIntl = window.ptcgIsIntl;
-    if (isIntl === undefined) {
-      try {
-        var res = await fetch('https://ipapi.co/json/');
-        var data = await res.json();
-        isIntl = (data.country_code && data.country_code !== 'BO');
-        window.ptcgIsIntl = isIntl;
-      } catch(e) { 
-        console.warn('IP detect error');
-        isIntl = false; 
+  window.ptcgBuyPlan = function(planKey) {
+    // Intentar detectar país por IP, con fallback a idioma y default Bolivia
+    fetch('https://ipapi.co/json/')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var isBO = (data.country_code === 'BO');
+        redirectToCheckout(planKey, isBO);
+      })
+      .catch(function() {
+        // Fallback: idioma del navegador
+        var lang = navigator.language || '';
+        var isBO = (lang.indexOf('es') === 0);
+        redirectToCheckout(planKey, isBO);
+      });
+    
+    function redirectToCheckout(planKey, isBO) {
+      if (isBO) {
+        window.location.href = 'https://prueb2.dashnexpages.net/finalizar-compra/?plan=' + planKey;
+      } else {
+        window.location.href = 'https://prueb2.dashnexpages.net/checkout/?plan=' + planKey + '&intl=1';
       }
     }
-    var base = isIntl
-      ? 'https://prueb2.dashnexpages.net/checkout-internacional/'
-      : 'https://prueb2.dashnexpages.net/checkout/';
-    window.location.href = base + '?plan=' + planKey + (isIntl ? '&intl=1' : '');
   };
 
   window.ptcgShowView = function (view) {
@@ -2044,5 +2049,7 @@
     }
   });
 </script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>lucide.createIcons();</script>
 </body>
 </html>

@@ -402,7 +402,10 @@
   font-family: 'remixicon' !important;
   font-style: normal !important;
 }
-</style>
+
+    .lucide { width: 1.2em; height: 1.2em; stroke-width: 2; }
+    .lucide.text-success { color: #2ECC71; }
+  </style>
 </head>
 <body>
 
@@ -462,7 +465,7 @@
         <span class="nav-icon"><i class="ri-dashboard-line"></i></span> Resumen
       </button>
       <button class="nav-item" data-section="pets" data-perm="pets" onclick="showSection('pets',this)">
-        <span class="nav-icon"><i class="ri-footprint-line"></i></span> Mascotas
+        <span class="nav-icon"><i class="data-lucide="paw-print""></i></span> Mascotas
       </button>
       <button class="nav-item" data-section="lost-pets" onclick="showSection('lost-pets',this)">
         <span class="nav-icon"><i class="ri-emotion-sad-line"></i></span> Mascotas Perdidas
@@ -547,7 +550,7 @@
       <!-- Row 1: Placas -->
       <div class="stats-grid">
         <div class="stat-card total">
-          <div class="stat-icon"><i class="ri-footprint-line"></i></div>
+          <div class="stat-icon"><i class="data-lucide="paw-print""></i></div>
           <div class="stat-value" id="stat-total">—</div>
           <div class="stat-label">Placas Totales</div>
           <div id="stat-reserved-label" style="font-size:.68rem;color:var(--muted-dark);margin-top:3px"></div>
@@ -685,7 +688,7 @@
     <!-- ── MASCOTAS ── -->
     <section class="section" id="sec-pets">
       <div class="page-header">
-        <h2><i class="ri-footprint-line"></i> Mascotas Registradas</h2>
+        <h2><i class="data-lucide="paw-print""></i> Mascotas Registradas</h2>
         <p>Gestiona todas las placas del sistema</p>
       </div>
       <div class="ptcg-index__card">
@@ -778,7 +781,7 @@
         <div style="display:flex;justify-content:center;align-items:flex-start;padding-top:8px"><div id="vet-qr-display"></div></div>
       </div>
       <div class="ptcg-index__card">
-        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px" style="margin-bottom:16px"><i class="ri-footprint-line"></i> Placas de esta Veterinaria<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="margin-left:auto" onclick="loadVetPets()"><i class="ri-refresh-line"></i></button></div>
+        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px" style="margin-bottom:16px"><i class="data-lucide="paw-print""></i> Placas de esta Veterinaria<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="margin-left:auto" onclick="loadVetPets()"><i class="ri-refresh-line"></i></button></div>
         <div class="table-wrap"><table><thead><tr><th>ID</th><th>Mascota</th><th>Dueño</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody id="vet-pets-tbody"><tr><td colspan="6"><div class="empty-state"><p>Selecciona una veterinaria</p></div></td></tr></tbody></table></div>
         <div class="table-count" id="vet-pets-count"></div>
       </div>
@@ -849,7 +852,7 @@
         <div style="display:flex;justify-content:center;align-items:flex-start;padding-top:8px"><div id="sh-qr-display"></div></div>
       </div>
       <div class="ptcg-index__card">
-        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px" style="margin-bottom:16px"><i class="ri-footprint-line"></i> Placas de este Refugio<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="margin-left:auto" onclick="loadShelterPets()"><i class="ri-refresh-line"></i></button></div>
+        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px" style="margin-bottom:16px"><i class="data-lucide="paw-print""></i> Placas de este Refugio<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="margin-left:auto" onclick="loadShelterPets()"><i class="ri-refresh-line"></i></button></div>
         <div class="table-wrap"><table><thead><tr><th>ID</th><th>Mascota</th><th>Dueño</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody id="sh-pets-tbody"><tr><td colspan="6"><div class="empty-state"><p>Selecciona un refugio</p></div></td></tr></tbody></table></div>
         <div class="table-count" id="sh-pets-count"></div>
       </div>
@@ -1799,7 +1802,7 @@
   <div style="background:#fff;border-radius:24px;padding:28px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 50px rgba(69,82,204,0.15),0 0 0 1px rgba(69,82,204,0.06);">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
       <h3 style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.1rem;color:#212121;margin:0;display:flex;align-items:center;gap:8px;"><i class="ri-hospital-line" style="color:#4552CC;"></i> Editar Veterinaria</h3>
-      <button onclick="closeVetModal()" style="background:rgba(69,82,204,0.06);border:1px solid rgba(69,82,204,0.12);color:#616161;font-size:1rem;cursor:pointer;padding:6px 10px;border-radius:10px;line-height:1;transition:background 0.15s;" onmouseover="this.style.background='rgba(231,76,60,0.08)';this.style.color='#E74C3C'" onmouseout="this.style.background='rgba(69,82,204,0.06)';this.style.color='#616161'"><i class="ri-close-line"></i></button>
+      <button onclick="closeVetModal()" style="background:rgba(69,82,204,0.06);border:1px solid rgba(69,82,204,0.12);color:#616161;font-size:1rem;cursor:pointer;padding:6px 10px;border-radius:10px;line-height:1;transition:background 0.15s;" onmouseover="this.style.background='rgba(231,76,60,0.08)';this.style.color='#E74C3C'" onmouseout="this.style.background='rgba(69,82,204,0.06)';this.style.color='#616161'"><i data-lucide="x"></i></button>
     </div>
     <p style="font-size:0.82rem;color:#757575;margin:0 0 20px;font-family:'Plus Jakarta Sans',sans-serif;">Actualiza los datos de la clínica o veterinaria.</p>
     <input type="hidden" id="ev-vet-id"/>
@@ -1826,7 +1829,7 @@
   <div style="background:#fff;border-radius:24px;padding:28px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 50px rgba(69,82,204,0.15),0 0 0 1px rgba(69,82,204,0.06);">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
       <h3 style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.1rem;color:#212121;margin:0;display:flex;align-items:center;gap:8px;"><i class="ri-home-heart-line" style="color:#4552CC;"></i> Editar Refugio</h3>
-      <button onclick="closeShelterModal()" style="background:rgba(69,82,204,0.06);border:1px solid rgba(69,82,204,0.12);color:#616161;font-size:1rem;cursor:pointer;padding:6px 10px;border-radius:10px;line-height:1;transition:background 0.15s;" onmouseover="this.style.background='rgba(231,76,60,0.08)';this.style.color='#E74C3C'" onmouseout="this.style.background='rgba(69,82,204,0.06)';this.style.color='#616161'"><i class="ri-close-line"></i></button>
+      <button onclick="closeShelterModal()" style="background:rgba(69,82,204,0.06);border:1px solid rgba(69,82,204,0.12);color:#616161;font-size:1rem;cursor:pointer;padding:6px 10px;border-radius:10px;line-height:1;transition:background 0.15s;" onmouseover="this.style.background='rgba(231,76,60,0.08)';this.style.color='#E74C3C'" onmouseout="this.style.background='rgba(69,82,204,0.06)';this.style.color='#616161'"><i data-lucide="x"></i></button>
     </div>
     <p style="font-size:0.82rem;color:#757575;margin:0 0 20px;font-family:'Plus Jakarta Sans',sans-serif;">Actualiza los datos del refugio y sus credenciales de acceso.</p>
     <input type="hidden" id="es-shelter-id"/>
@@ -2123,7 +2126,96 @@
       '</table>' +
       '<p class="footer">Petcingo — www.petcingo.com.bo</p>' +
       '<script>window.onload=function(){window.print();}<\/script>' +
-      '</body></html>');
+      '<script src="https://unpkg.com/lucide@latest"></script>
+<script>lucide.createIcons();</script>
+
+<!-- Verify Payment Modal -->
+<div id="verify-payment-modal" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;padding:16px;">
+  <div class="ptcg-index__modal-card" style="max-width:500px;width:100%;padding:28px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <h3 style="font-family:'Sora',sans-serif;font-size:1.2rem;font-weight:800;margin:0;display:flex;align-items:center;gap:8px;"><i data-lucide="shield-check" style="color:#4552CC;"></i> Verificar Pago</h3>
+      <button onclick="closeVerifyModal()" style="background:rgba(69,82,204,0.06);border:1px solid rgba(69,82,204,0.12);color:#616161;font-size:1rem;cursor:pointer;padding:6px 10px;border-radius:10px;line-height:1;transition:background 0.15s;" onmouseover="this.style.background='rgba(231,76,60,0.08)';this.style.color='#E74C3C'" onmouseout="this.style.background='rgba(69,82,204,0.06)';this.style.color='#616161'"><i data-lucide="x"></i></button>
+    </div>
+    <div id="verify-payment-details" style="font-size:0.9rem;color:#424242;margin-bottom:20px;line-height:1.5;"></div>
+    <div style="display:flex;gap:10px;">
+      <button class="ptcg-index__btn ptcg-index__btn--danger" style="flex:1;" onclick="rejectPayment()">Rechazar</button>
+      <button class="ptcg-index__btn ptcg-index__btn--success" style="flex:1;" onclick="approvePayment()">Aprobar y Activar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+window._currentVerifyOrderId = null;
+
+window.openVerifyModal = function(orderId) {
+  var order = _ordersCache.find(function(o) { return o.id === orderId; });
+  if (!order) return;
+  window._currentVerifyOrderId = orderId;
+  
+  var d = order.data;
+  var receiptHtml = d.receiptUrl 
+    ? '<div style="margin-top:12px;"><a href="' + d.receiptUrl + '" target="_blank"><img src="' + d.receiptUrl + '" style="max-width:100%;max-height:250px;border-radius:8px;border:1px solid #ddd;" alt="Comprobante"></a></div>'
+    : '<div style="margin-top:12px;color:#f44336;font-weight:600;">⚠️ Sin comprobante adjunto</div>';
+    
+  var detailsHtml = 
+    '<strong>Comprador:</strong> ' + (d.buyerName || '—') + '<br>' +
+    '<strong>Email:</strong> ' + (d.email || '—') + '<br>' +
+    '<strong>Monto:</strong> ' + (d.amount ? d.amount + ' Bs' : '—') + '<br>' +
+    '<strong>Mascota:</strong> ' + (d.petName || '—') + '<br>' +
+    receiptHtml;
+    
+  document.getElementById('verify-payment-details').innerHTML = detailsHtml;
+  document.getElementById('verify-payment-modal').style.display = 'flex';
+  if(typeof lucide !== 'undefined') lucide.createIcons();
+};
+
+window.closeVerifyModal = function() {
+  document.getElementById('verify-payment-modal').style.display = 'none';
+  window._currentVerifyOrderId = null;
+};
+
+window.approvePayment = function() {
+  if (!window._currentVerifyOrderId) return;
+  var orderId = window._currentVerifyOrderId;
+  var order = _ordersCache.find(function(o) { return o.id === orderId; });
+  if (!order) return;
+  var db2 = typeof db === 'function' ? db() : firebase.firestore();
+  
+  var batch = db2.batch();
+  var orderRef = db2.collection('orders').doc(orderId);
+  batch.update(orderRef, { status: 'preparando', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+  
+  if (order.data.petId) {
+    var petRef = db2.collection('pets').doc(order.data.petId);
+    batch.update(petRef, { isActive: true, status: 'active', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+  }
+  
+  batch.commit().then(function() {
+    if (typeof toast === 'function') toast('Pago aprobado y mascota activada.');
+    closeVerifyModal();
+  }).catch(function(e) {
+    if (typeof toast === 'function') toast('Error al aprobar: ' + e.message);
+  });
+};
+
+window.rejectPayment = function() {
+  if (!window._currentVerifyOrderId) return;
+  if (!confirm('¿Seguro que deseas rechazar este pago?')) return;
+  var db2 = typeof db === 'function' ? db() : firebase.firestore();
+  
+  db2.collection('orders').doc(window._currentVerifyOrderId).update({
+    status: 'rechazado',
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  }).then(function() {
+    if (typeof toast === 'function') toast('Pago rechazado.');
+    closeVerifyModal();
+  }).catch(function(e) {
+    if (typeof toast === 'function') toast('Error al rechazar: ' + e.message);
+  });
+};
+</script>
+
+</body></html>');
     win.document.close();
   };
 
@@ -3220,7 +3312,7 @@ setTimeout(function cleanRegSeller() {
   <div style="background:#fff;border-radius:24px;max-width:620px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 50px rgba(0,0,0,0.15);padding:28px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
       <h3 style="font-family:'Sora',sans-serif;font-size:1.3rem;font-weight:800;color:#212121;margin:0;display:flex;align-items:center;gap:10px;"><span id="mod-pet-status" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#BDBDBD;flex-shrink:0;animation:statusPulse 2s infinite;"></span><span id="mod-pet-name">—</span></h3>
-      <button onclick="closePetModal()" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:#757575;line-height:1;"><i class="ri-close-line"></i></button>
+      <button onclick="closePetModal()" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:#757575;line-height:1;"><i data-lucide="x"></i></button>
     </div>
     <div id="mod-pet-content"></div>
   </div>
