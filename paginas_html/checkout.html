@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Finalizar compra -- Petcingo</title>
+
+  <!--
+    Anti-Dashnex encapsulation: todo el contenido vive dentro de .ptcg-checkout
+    BEM: .ptcg-checkout__* | Liquid Glass en tarjetas principales
+    Prefijo CSS: ptcg-checkout-* | sin emojis | sin caracteres fuera de ASCII basico
+  -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+
+  <style>
+/* =====================================================================
+   REMIXICON BLINDADO -- Dashnex no puede sobrescribir
+   ===================================================================== */
+[class*="ri-"] { font-family: 'remixicon' !important; font-style: normal !important; }
+
+/* =====================================================================
+   RESET Y VARIABLES -- encapsulado en .ptcg-checkout
+   ===================================================================== */
+.ptcg-checkout,
+.ptcg-checkout * {
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+.ptcg-checkout a { text-decoration: none !important; }
+.ptcg-checkout img { display: block !important; max-width: 100% !important; }
+
+/* Variables de color (hex hardcodeado -- Dashnex puede stripear CSS vars) */
+/* purple=#4552CC cyan=#51CBF5 bg=#F8F9FB dark=#1E255E body=#333959 muted=#6C7297 */
+
+/* =====================================================================
+   LAYOUT BASE
+   ===================================================================== */
+.ptcg-checkout {
+  min-height: 100vh !important;
+  background: linear-gradient(135deg, #EEF0FA 0%, #F8F9FB 50%, #E8F7FD 100%) !important;
+  position: relative !important;
+  overflow-x: hidden !important;
+}
+
+/* Orbs decorativos */
+.ptcg-checkout__orb {
+  position: fixed !important;
+  border-radius: 50% !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.ptcg-checkout__orb--1 {
+  width: 500px !important;
+  height: 500px !important;
+  top: -160px !important;
+  right: -120px !important;
+  background: radial-gradient(circle, rgba(69,82,204,0.09) 0%, transparent 70%) !important;
+}
+.ptcg-checkout__orb--2 {
+  width: 350px !important;
+  height: 350px !important;
+  bottom: -80px !important;
+  left: -80px !important;
+  background: radial-gradient(circle, rgba(81,203,245,0.11) 0%, transparent 70%) !important;
+}
+
+/* =====================================================================
+   TOPBAR
+   ===================================================================== */
+.ptcg-checkout__topbar {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 100 !important;
+  height: 64px !important;
+  padding: 0 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background: rgba(248,249,251,0.80) !important;
+  backdrop-filter: blur(20px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.70) !important;
+  box-shadow: 0 1px 0 rgba(69,82,204,0.06) !important;
+}
+.ptcg-checkout__logo {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  text-decoration: none !important;
+}
+.ptcg-checkout__logo img {
+  height: 32px !important;
+  width: auto !important;
+}
+.ptcg-checkout__topbar-badge {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 6px 14px !important;
+  border-radius: 99px !important;
+  background: rgba(69,82,204,0.08) !important;
+  color: #4552CC !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  border: 1px solid rgba(69,82,204,0.15) !important;
+}
+.ptcg-checkout__topbar-badge i { color: #4552CC !important; font-size: 0.9rem !important; }
+
+/* =====================================================================
+   MAIN Y CONTENEDOR
+   ===================================================================== */
+.ptcg-checkout__main {
+  position: relative !important;
+  z-index: 1 !important;
+  padding: 32px 16px 80px !important;
+  display: flex !important;
+  justify-content: center !important;
+}
+.ptcg-checkout__inner {
+  width: 100% !important;
+  max-width: 520px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 20px !important;
+}
+
+/* =====================================================================
+   TITULO DE PAGINA
+   ===================================================================== */
+.ptcg-checkout__page-header {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+.ptcg-checkout__page-title {
+  font-family: 'Sora', sans-serif !important;
+  font-size: 1.80rem !important;
+  font-weight: 800 !important;
+  color: #1E255E !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.03em !important;
+}
+.ptcg-checkout__page-sub {
+  font-size: 0.88rem !important;
+  color: #6C7297 !important;
+  line-height: 1.60 !important;
+}
+
+/* =====================================================================
+   TARJETA GLASS (patron del sistema de diseno)
+   ===================================================================== */
+.ptcg-checkout__card {
+  position: relative !important;
+  overflow: hidden !important;
+  isolation: isolate !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(255,255,255,0.92) !important;
+  box-shadow: 0 8px 40px rgba(69,82,204,0.10), 0 2px 8px rgba(69,82,204,0.04), inset 0 1px 0 rgba(255,255,255,1) !important;
+  padding: 24px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+}
+.ptcg-checkout__card::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+  background: rgba(255,255,255,0.72) !important;
+  z-index: 0 !important;
+}
+.ptcg-checkout__card::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 50% !important;
+  background: linear-gradient(180deg, rgba(255,255,255,0.30) 0%, rgba(255,255,255,0) 100%) !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+  border-radius: 24px 24px 0 0 !important;
+}
+.ptcg-checkout__card > * { position: relative !important; z-index: 2 !important; }
+
+/* Titulo de seccion dentro de tarjeta */
+.ptcg-checkout__section-title {
+  font-family: 'Sora', sans-serif !important;
+  font-size: 0.92rem !important;
+  font-weight: 700 !important;
+  color: #1E255E !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  border-bottom: 1px solid rgba(69,82,204,0.08) !important;
+  padding-bottom: 12px !important;
+}
+.ptcg-checkout__section-title i { color: #4552CC !important; font-size: 1rem !important; }
+
+/* =====================================================================
+   PLAN SELECTOR
+   ===================================================================== */
+.ptcg-checkout__plans {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+.ptcg-checkout__plan {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  padding: 16px !important;
+  border-radius: 16px !important;
+  border: 2px solid rgba(69,82,204,0.12) !important;
+  background: rgba(255,255,255,0.60) !important;
+  cursor: pointer !important;
+  transition: all 0.20s ease !important;
+  position: relative !important;
+}
+.ptcg-checkout__plan:hover {
+  border-color: rgba(69,82,204,0.35) !important;
+  background: rgba(255,255,255,0.85) !important;
+  transform: translateY(-1px) !important;
+}
+.ptcg-checkout__plan.is-selected {
+  border-color: #4552CC !important;
+  background: rgba(69,82,204,0.06) !important;
+  box-shadow: 0 0 0 3px rgba(69,82,204,0.12) !important;
+}
+.ptcg-checkout__plan-radio {
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 50% !important;
+  border: 2px solid #D4D8F5 !important;
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.20s !important;
+  background: #fff !important;
+}
+.ptcg-checkout__plan.is-selected .ptcg-checkout__plan-radio {
+  border-color: #4552CC !important;
+  background: #4552CC !important;
+}
+.ptcg-checkout__plan-radio::after {
+  content: '' !important;
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  transition: background 0.20s !important;
+}
+.ptcg-checkout__plan.is-selected .ptcg-checkout__plan-radio::after {
+  background: #fff !important;
+}
+.ptcg-checkout__plan-icon {
+  font-size: 1.80rem !important;
+  line-height: 1 !important;
+  flex-shrink: 0 !important;
+}
+.ptcg-checkout__plan-info {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+.ptcg-checkout__plan-name {
+  font-family: 'Sora', sans-serif !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  color: #1E255E !important;
+}
+.ptcg-checkout__plan-desc {
+  font-size: 0.78rem !important;
+  color: #6C7297 !important;
+  line-height: 1.45 !important;
+}
+.ptcg-checkout__plan-price {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  flex-shrink: 0 !important;
+}
+.ptcg-checkout__plan-amount {
+  font-family: 'Sora', sans-serif !important;
+  font-size: 1.15rem !important;
+  font-weight: 800 !important;
+  color: #4552CC !important;
+}
+.ptcg-checkout__plan-currency {
+  font-size: 0.70rem !important;
+  color: #6C7297 !important;
+  font-weight: 500 !important;
+}
+.ptcg-checkout__plan-badge {
+  position: absolute !important;
+  top: -10px !important;
+  right: 12px !important;
+  background: linear-gradient(90deg, #4552CC, #51CBF5) !important;
+  color: #fff !important;
+  font-size: 0.60rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  padding: 3px 10px !important;
+  border-radius: 99px !important;
+}
+
+/* =====================================================================
+   FORMULARIO
+   ===================================================================== */
+.ptcg-checkout__field {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+.ptcg-checkout__field-row {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 12px !important;
+}
+.ptcg-checkout__label {
+  font-size: 0.80rem !important;
+  font-weight: 600 !important;
+  color: #333959 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+.ptcg-checkout__required { color: #F24E4E !important; font-size: 0.75rem !important; }
+.ptcg-checkout__input-wrap {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+}
+.ptcg-checkout__input-icon {
+  position: absolute !important;
+  left: 13px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  font-size: 1rem !important;
+  color: #B8C3F5 !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  transition: color 0.2s !important;
+}
+.ptcg-checkout__input-wrap:focus-within .ptcg-checkout__input-icon {
+  color: #4552CC !important;
+}
+.ptcg-checkout__input {
+  width: 100% !important;
+  padding: 11px 14px !important;
+  font-size: 0.90rem !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-weight: 400 !important;
+  color: #1E255E !important;
+  background: rgba(255,255,255,0.75) !important;
+  border: 1.5px solid rgba(69,82,204,0.15) !important;
+  border-radius: 10px !important;
+  outline: none !important;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+.ptcg-checkout__input-wrap .ptcg-checkout__input { padding-left: 42px !important; }
+.ptcg-checkout__input::placeholder { color: #B8C3F5 !important; }
+.ptcg-checkout__input:focus {
+  border-color: #4552CC !important;
+  background: rgba(255,255,255,0.96) !important;
+  box-shadow: 0 0 0 3px rgba(69,82,204,0.14) !important;
+}
+.ptcg-checkout__input.has-error { border-color: #F24E4E !important; box-shadow: 0 0 0 3px rgba(242,78,78,0.12) !important; }
+.ptcg-checkout__textarea {
+  resize: vertical !important;
+  min-height: 80px !important;
+  padding-left: 14px !important;
+}
+.ptcg-checkout__field-error {
+  font-size: 0.74rem !important;
+  color: #F24E4E !important;
+  font-weight: 600 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+.ptcg-checkout__field-error[hidden] { display: none !important; }
+
+/* =====================================================================
+   METODOS DE PAGO
+   ===================================================================== */
+.ptcg-checkout__payment-methods {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+.ptcg-checkout__payment-method {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 14px 16px !important;
+  border-radius: 14px !important;
+  border: 2px solid rgba(69,82,204,0.10) !important;
+  background: rgba(255,255,255,0.60) !important;
+  cursor: pointer !important;
+  transition: all 0.20s ease !important;
+}
+.ptcg-checkout__payment-method:hover {
+  border-color: rgba(69,82,204,0.30) !important;
+  background: rgba(255,255,255,0.85) !important;
+}
+.ptcg-checkout__payment-method.is-selected {
+  border-color: #4552CC !important;
+  background: rgba(69,82,204,0.05) !important;
+  box-shadow: 0 0 0 3px rgba(69,82,204,0.10) !important;
+}
+.ptcg-checkout__pm-radio {
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 50% !important;
+  border: 2px solid #D4D8F5 !important;
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #fff !important;
+  transition: all 0.20s !important;
+}
+.ptcg-checkout__payment-method.is-selected .ptcg-checkout__pm-radio {
+  border-color: #4552CC !important;
+  background: #4552CC !important;
+}
+.ptcg-checkout__pm-radio::after {
+  content: '' !important;
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  transition: background 0.20s !important;
+}
+.ptcg-checkout__payment-method.is-selected .ptcg-checkout__pm-radio::after {
+  background: #fff !important;
+}
+.ptcg-checkout__pm-icon {
+  font-size: 1.50rem !important;
+  line-height: 1 !important;
+  flex-shrink: 0 !important;
+  color: #4552CC !important;
+}
+.ptcg-checkout__pm-info { flex: 1 !important; }
+.ptcg-checkout__pm-name {
+  font-size: 0.88rem !important;
+  font-weight: 700 !important;
+  color: #1E255E !important;
+}
+.ptcg-checkout__pm-desc {
+  font-size: 0.75rem !important;
+  color: #6C7297 !important;
+  line-height: 1.40 !important;
+  margin-top: 1px !important;
+}
+
+/* Datos de pago (QR / banco / PayPal) */
+.ptcg-checkout__pm-detail {
+  background: rgba(69,82,204,0.05) !important;
+  border: 1px solid rgba(69,82,204,0.12) !important;
+  border-radius: 12px !important;
+  padding: 16px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+.ptcg-checkout__pm-detail[hidden] { display: none !important; }
+.ptcg-checkout__pm-detail-title {
+  font-size: 0.80rem !important;
+  font-weight: 700 !important;
+  color: #4552CC !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+.ptcg-checkout__pm-detail-row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  font-size: 0.82rem !important;
+}
+.ptcg-checkout__pm-detail-label { color: #6C7297 !important; font-weight: 500 !important; }
+.ptcg-checkout__pm-detail-value {
+  font-weight: 700 !important;
+  color: #1E255E !important;
+  font-family: 'SF Mono', ui-monospace, monospace !important;
+  font-size: 0.80rem !important;
+}
+.ptcg-checkout__pm-detail-value--copy {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  cursor: pointer !important;
+}
+.ptcg-checkout__pm-detail-value--copy i { color: #4552CC !important; font-size: 0.85rem !important; }
+
+/* =====================================================================
+   SUBIDA DE COMPROBANTE
+   ===================================================================== */
+.ptcg-checkout__upload-area {
+  border: 2px dashed rgba(69,82,204,0.25) !important;
+  border-radius: 14px !important;
+  background: rgba(238,240,250,0.50) !important;
+  padding: 28px 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+  transition: all 0.20s !important;
+  text-align: center !important;
+}
+.ptcg-checkout__upload-area:hover {
+  border-color: #4552CC !important;
+  background: rgba(69,82,204,0.06) !important;
+}
+.ptcg-checkout__upload-area.has-file {
+  border-color: #22C55E !important;
+  background: rgba(34,197,94,0.06) !important;
+}
+.ptcg-checkout__upload-icon {
+  font-size: 2.40rem !important;
+  color: #4552CC !important;
+  line-height: 1 !important;
+}
+.ptcg-checkout__upload-text {
+  font-size: 0.84rem !important;
+  color: #333959 !important;
+  font-weight: 600 !important;
+}
+.ptcg-checkout__upload-hint {
+  font-size: 0.74rem !important;
+  color: #6C7297 !important;
+}
+.ptcg-checkout__upload-filename {
+  font-size: 0.78rem !important;
+  color: #22C55E !important;
+  font-weight: 600 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+}
+.ptcg-checkout__upload-filename[hidden] { display: none !important; }
+#ptcg-receipt-input { display: none !important; }
+
+/* =====================================================================
+   RESUMEN DEL PEDIDO
+   ===================================================================== */
+.ptcg-checkout__summary-row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  font-size: 0.84rem !important;
+  padding: 6px 0 !important;
+}
+.ptcg-checkout__summary-label { color: #6C7297 !important; font-weight: 500 !important; }
+.ptcg-checkout__summary-value { color: #1E255E !important; font-weight: 600 !important; }
+.ptcg-checkout__summary-divider {
+  border: none !important;
+  border-top: 1px solid rgba(69,82,204,0.08) !important;
+  margin: 8px 0 !important;
+}
+.ptcg-checkout__summary-total .ptcg-checkout__summary-label {
+  font-family: 'Sora', sans-serif !important;
+  font-size: 0.92rem !important;
+  font-weight: 700 !important;
+  color: #1E255E !important;
+}
+.ptcg-checkout__summary-total .ptcg-checkout__summary-value {
+  font-family: 'Sora', sans-serif !important;
+  font-size: 1.30rem !important;
+  font-weight: 800 !important;
+  color: #4552CC !important;
+}
+
+/* =====================================================================
+   BOTON CONFIRMAR
+   ===================================================================== */
+.ptcg-checkout__btn-confirm {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  padding: 16px 24px !important;
+  border-radius: 16px !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 0.96rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  border: none !important;
+  background: linear-gradient(135deg, #4552CC 0%, #3A45B0 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 24px rgba(69,82,204,0.35) !important;
+  transition: all 0.20s !important;
+  line-height: 1 !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+.ptcg-checkout__btn-confirm:hover {
+  background: linear-gradient(135deg, #3A45B0 0%, #2E3A9E 100%) !important;
+  box-shadow: 0 8px 28px rgba(69,82,204,0.42) !important;
+  transform: translateY(-1px) !important;
+}
+.ptcg-checkout__btn-confirm:active { transform: scale(0.98) !important; }
+.ptcg-checkout__btn-confirm:disabled {
+  opacity: 0.55 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  pointer-events: none !important;
+}
+.ptcg-checkout__btn-confirm i { color: #fff !important; font-size: 1.1rem !important; }
+
+/* Spinner dentro del boton */
+.ptcg-checkout__btn-spinner {
+  width: 18px !important;
+  height: 18px !important;
+  border: 2px solid rgba(255,255,255,0.30) !important;
+  border-top-color: #fff !important;
+  border-radius: 50% !important;
+  animation: ptcg-co-spin 0.7s linear infinite !important;
+  flex-shrink: 0 !important;
+}
+.ptcg-checkout__btn-spinner[hidden] { display: none !important; }
+
+/* =====================================================================
+   CONFIRMACION (oculta hasta que se completa el pedido)
+   ===================================================================== */
+.ptcg-checkout__confirm-section {
+  animation: ptcg-co-fadein 0.45s ease-out both !important;
+}
+.ptcg-checkout__confirm-section[hidden] { display: none !important; }
+.ptcg-checkout__confirm-icon {
+  font-size: 4.0rem !important;
+  text-align: center !important;
+  display: block !important;
+  color: #22C55E !important;
+  animation: ptcg-co-pop 0.55s cubic-bezier(0.34,1.56,0.64,1) both !important;
+}
+.ptcg-checkout__confirm-title {
+  font-family: 'Sora', sans-serif !important;
+  font-size: 1.50rem !important;
+  font-weight: 800 !important;
+  color: #1E255E !important;
+  text-align: center !important;
+  line-height: 1.20 !important;
+  letter-spacing: -0.02em !important;
+}
+.ptcg-checkout__confirm-sub {
+  font-size: 0.86rem !important;
+  color: #6C7297 !important;
+  text-align: center !important;
+  line-height: 1.60 !important;
+}
+.ptcg-checkout__activation-box {
+  background: linear-gradient(135deg, rgba(69,82,204,0.08), rgba(81,203,245,0.08)) !important;
+  border: 2px solid rgba(69,82,204,0.20) !important;
+  border-radius: 16px !important;
+  padding: 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+.ptcg-checkout__activation-label {
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.10em !important;
+  color: #4552CC !important;
+}
+.ptcg-checkout__activation-code {
+  font-family: 'SF Mono', ui-monospace, monospace !important;
+  font-size: 2.20rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.25em !important;
+  color: #1E255E !important;
+  line-height: 1 !important;
+}
+.ptcg-checkout__activation-hint {
+  font-size: 0.76rem !important;
+  color: #6C7297 !important;
+  text-align: center !important;
+}
+.ptcg-checkout__confirm-actions {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+.ptcg-checkout__btn-activate {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+  padding: 14px 24px !important;
+  border-radius: 14px !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 0.92rem !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  background: #4552CC !important;
+  color: #fff !important;
+  border: none !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 16px rgba(69,82,204,0.30) !important;
+  transition: all 0.20s !important;
+}
+.ptcg-checkout__btn-activate:hover {
+  background: #3A45B0 !important;
+  transform: translateY(-1px) !important;
+}
+.ptcg-checkout__btn-activate i { color: #fff !important; }
+.ptcg-checkout__btn-copy {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+  padding: 12px 24px !important;
+  border-radius: 14px !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 0.88rem !important;
+  font-weight: 600 !important;
+  background: rgba(69,82,204,0.08) !important;
+  color: #4552CC !important;
+  border: 1.5px solid rgba(69,82,204,0.20) !important;
+  cursor: pointer !important;
+  transition: all 0.20s !important;
+}
+.ptcg-checkout__btn-copy:hover { background: rgba(69,82,204,0.14) !important; }
+.ptcg-checkout__btn-copy i { color: #4552CC !important; }
+
+/* =====================================================================
+   TOAST NOTIFICACION
+   ===================================================================== */
+.ptcg-checkout__toast {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  z-index: 9999 !important;
+  padding: 14px 20px !important;
+  border-radius: 14px !important;
+  background: #1E255E !important;
+  color: #fff !important;
+  font-size: 0.86rem !important;
+  font-weight: 600 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  box-shadow: 0 8px 32px rgba(30,37,94,0.25) !important;
+  animation: ptcg-co-toast-in 0.35s cubic-bezier(0.34,1.56,0.64,1) both !important;
+  max-width: 340px !important;
+}
+.ptcg-checkout__toast[hidden] { display: none !important; }
+.ptcg-checkout__toast i { font-size: 1.10rem !important; flex-shrink: 0 !important; }
+.ptcg-checkout__toast--success i { color: #22C55E !important; }
+.ptcg-checkout__toast--error i { color: #F24E4E !important; }
+.ptcg-checkout__toast--info i { color: #51CBF5 !important; }
+
+/* =====================================================================
+   ANIMACIONES
+   ===================================================================== */
+@keyframes ptcg-co-spin { to { transform: rotate(360deg); } }
+@keyframes ptcg-co-pop {
+  from { transform: scale(0.5); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+@keyframes ptcg-co-fadein {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+@keyframes ptcg-co-toast-in {
+  from { opacity: 0; transform: translateX(24px) scale(0.95); }
+  to   { opacity: 1; transform: translateX(0)    scale(1);    }
+}
+
+/* =====================================================================
+   RESPONSIVE
+   ===================================================================== */
+@media (max-width: 540px) {
+  .ptcg-checkout__topbar { padding: 0 16px !important; }
+  .ptcg-checkout__main { padding: 20px 12px 80px !important; }
+  .ptcg-checkout__card { padding: 20px 16px !important; border-radius: 20px !important; }
+  .ptcg-checkout__field-row { grid-template-columns: 1fr !important; }
+  .ptcg-checkout__page-title { font-size: 1.50rem !important; }
+  .ptcg-checkout__activation-code { font-size: 1.80rem !important; }
+}
+  </style>
+</head>
+<body>
+
+<div class="ptcg-checkout">
+
+  <!-- Orbs decorativos -->
+  <div class="ptcg-checkout__orb ptcg-checkout__orb--1"></div>
+  <div class="ptcg-checkout__orb ptcg-checkout__orb--2"></div>
+
+  <!-- Toast -->
+  <div class="ptcg-checkout__toast" id="ptcg-toast" hidden>
+    <i class="ri-information-line"></i>
+    <span id="ptcg-toast-msg">Mensaje</span>
+  </div>
+
+  <!-- TOPBAR -->
+  <header class="ptcg-checkout__topbar">
+    <a class="ptcg-checkout__logo" href="https://prueb2.dashnexpages.net/home/">
+      <img src="https://prueb2.dashnexpages.net/assets/images/logo/PETCINGO_DARK.svg" alt="Petcingo" height="32">
+    </a>
+    <div class="ptcg-checkout__topbar-badge">
+      <i class="ri-shield-check-line"></i>
+      Pago seguro
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="ptcg-checkout__main">
+    <div class="ptcg-checkout__inner">
+
+      <!-- Titulo -->
+      <div class="ptcg-checkout__page-header">
+        <h1 class="ptcg-checkout__page-title">Finalizar compra</h1>
+        <p class="ptcg-checkout__page-sub">Selecciona tu plan, completa los datos y envia tu comprobante de pago.</p>
+      </div>
+
+      <!-- ====================================================
+           1. SELECTOR DE PLAN
+           ==================================================== -->
+      <div class="ptcg-checkout__card" id="ptcg-card-plans">
+        <div class="ptcg-checkout__section-title">
+          <i class="ri-price-tag-3-line"></i>
+          Elige tu plan
+        </div>
+        <div class="ptcg-checkout__plans" id="ptcg-plans-list">
+
+          <!-- Plan Preventa -->
+          <div class="ptcg-checkout__plan" data-plan="preventa" data-plan-name="Preventa" onclick="ptcgSelectPlan(this)">
+            <div class="ptcg-checkout__plan-radio"></div>
+            <div class="ptcg-checkout__plan-icon"><i class="ri-time-line" style="color:#FFC837 !important;"></i></div>
+            <div class="ptcg-checkout__plan-info">
+              <div class="ptcg-checkout__plan-name">Preventa</div>
+              <div class="ptcg-checkout__plan-desc">1 placa Pet ID con descuento especial de lanzamiento</div>
+            </div>
+            <div class="ptcg-checkout__plan-price">
+              <span class="ptcg-checkout__plan-amount" id="ptcg-price-preventa">--</span>
+              <span class="ptcg-checkout__plan-currency">Bs.</span>
+            </div>
+          </div>
+
+          <!-- Plan Pet ID -->
+          <div class="ptcg-checkout__plan" data-plan="petid" data-plan-name="Pet ID" onclick="ptcgSelectPlan(this)">
+            <div class="ptcg-checkout__plan-badge">Popular</div>
+            <div class="ptcg-checkout__plan-radio"></div>
+            <div class="ptcg-checkout__plan-icon"><i class="ri-qr-code-line" style="color:#4552CC !important;"></i></div>
+            <div class="ptcg-checkout__plan-info">
+              <div class="ptcg-checkout__plan-name">Pet ID</div>
+              <div class="ptcg-checkout__plan-desc">1 placa inteligente con perfil digital de mascota</div>
+            </div>
+            <div class="ptcg-checkout__plan-price">
+              <span class="ptcg-checkout__plan-amount" id="ptcg-price-petid">--</span>
+              <span class="ptcg-checkout__plan-currency">Bs.</span>
+            </div>
+          </div>
+
+          <!-- Plan Pack Familia -->
+          <div class="ptcg-checkout__plan" data-plan="pack" data-plan-name="Pack Familia" onclick="ptcgSelectPlan(this)">
+            <div class="ptcg-checkout__plan-radio"></div>
+            <div class="ptcg-checkout__plan-icon"><i class="ri-group-line" style="color:#22C55E !important;"></i></div>
+            <div class="ptcg-checkout__plan-info">
+              <div class="ptcg-checkout__plan-name">Pack Familia</div>
+              <div class="ptcg-checkout__plan-desc">3 placas para todas tus mascotas, precio especial</div>
+            </div>
+            <div class="ptcg-checkout__plan-price">
+              <span class="ptcg-checkout__plan-amount" id="ptcg-price-pack">--</span>
+              <span class="ptcg-checkout__plan-currency">Bs.</span>
+            </div>
+          </div>
+
+        </div>
+        <!-- Error plan -->
+        <div class="ptcg-checkout__field-error" id="ptcg-err-plan" hidden>
+          <i class="ri-error-warning-line"></i> Selecciona un plan para continuar
+        </div>
+      </div>
+
+      <!-- ====================================================
+           2. DATOS DEL COMPRADOR
+           ==================================================== -->
+      <div class="ptcg-checkout__card">
+        <div class="ptcg-checkout__section-title">
+          <i class="ri-user-3-line"></i>
+          Datos del comprador
+        </div>
+
+        <div class="ptcg-checkout__field-row">
+          <div class="ptcg-checkout__field">
+            <label class="ptcg-checkout__label" for="ptcg-nombre">
+              Nombre completo <span class="ptcg-checkout__required">*</span>
+            </label>
+            <div class="ptcg-checkout__input-wrap">
+              <i class="ri-user-line ptcg-checkout__input-icon"></i>
+              <input class="ptcg-checkout__input" id="ptcg-nombre" type="text" placeholder="Juan Perez" autocomplete="name">
+            </div>
+            <div class="ptcg-checkout__field-error" id="ptcg-err-nombre" hidden>
+              <i class="ri-error-warning-line"></i> Campo requerido
+            </div>
+          </div>
+
+          <div class="ptcg-checkout__field">
+            <label class="ptcg-checkout__label" for="ptcg-telefono">
+              Telefono <span class="ptcg-checkout__required">*</span>
+            </label>
+            <div class="ptcg-checkout__input-wrap">
+              <i class="ri-phone-line ptcg-checkout__input-icon"></i>
+              <input class="ptcg-checkout__input" id="ptcg-telefono" type="tel" placeholder="7XXXXXXX" autocomplete="tel">
+            </div>
+            <div class="ptcg-checkout__field-error" id="ptcg-err-telefono" hidden>
+              <i class="ri-error-warning-line"></i> Campo requerido
+            </div>
+          </div>
+        </div>
+
+        <div class="ptcg-checkout__field">
+          <label class="ptcg-checkout__label" for="ptcg-email">
+            Correo electronico <span class="ptcg-checkout__required">*</span>
+          </label>
+          <div class="ptcg-checkout__input-wrap">
+            <i class="ri-mail-line ptcg-checkout__input-icon"></i>
+            <input class="ptcg-checkout__input" id="ptcg-email" type="email" placeholder="correo@ejemplo.com" autocomplete="email">
+          </div>
+          <div class="ptcg-checkout__field-error" id="ptcg-err-email" hidden>
+            <i class="ri-error-warning-line"></i> Ingresa un correo valido
+          </div>
+        </div>
+
+        <div class="ptcg-checkout__field">
+          <label class="ptcg-checkout__label" for="ptcg-direccion">
+            Ciudad / Direccion de entrega <span class="ptcg-checkout__required">*</span>
+          </label>
+          <div class="ptcg-checkout__input-wrap">
+            <i class="ri-map-pin-line ptcg-checkout__input-icon"></i>
+            <input class="ptcg-checkout__input" id="ptcg-direccion" type="text" placeholder="Ej: Santa Cruz, Av. Las Americas 123" autocomplete="street-address">
+          </div>
+          <div class="ptcg-checkout__field-error" id="ptcg-err-direccion" hidden>
+            <i class="ri-error-warning-line"></i> Campo requerido
+          </div>
+        </div>
+
+        <div class="ptcg-checkout__field">
+          <label class="ptcg-checkout__label" for="ptcg-notas">
+            Notas adicionales
+          </label>
+          <textarea class="ptcg-checkout__input ptcg-checkout__textarea" id="ptcg-notas"
+            placeholder="Ej: horario de entrega, referencia del edificio, nombre de la mascota..."></textarea>
+        </div>
+      </div>
+
+      <!-- ====================================================
+           3. METODO DE PAGO
+           ==================================================== -->
+      <div class="ptcg-checkout__card">
+        <div class="ptcg-checkout__section-title">
+          <i class="ri-bank-card-line"></i>
+          Metodo de pago
+        </div>
+
+        <div class="ptcg-checkout__payment-methods">
+
+          <!-- QR Tigo Money -->
+          <div class="ptcg-checkout__payment-method" data-method="tigo" onclick="ptcgSelectMethod(this)">
+            <div class="ptcg-checkout__pm-radio"></div>
+            <i class="ri-qr-code-line ptcg-checkout__pm-icon"></i>
+            <div class="ptcg-checkout__pm-info">
+              <div class="ptcg-checkout__pm-name">QR Tigo Money</div>
+              <div class="ptcg-checkout__pm-desc">Escanea el QR y paga desde tu app Tigo Money</div>
+            </div>
+          </div>
+
+          <!-- Deposito bancario -->
+          <div class="ptcg-checkout__payment-method" data-method="banco" onclick="ptcgSelectMethod(this)">
+            <div class="ptcg-checkout__pm-radio"></div>
+            <i class="ri-building-2-line ptcg-checkout__pm-icon"></i>
+            <div class="ptcg-checkout__pm-info">
+              <div class="ptcg-checkout__pm-name">Deposito bancario</div>
+              <div class="ptcg-checkout__pm-desc">Transfiere a nuestra cuenta BNB o Banco Union</div>
+            </div>
+          </div>
+
+          <!-- PayPal -->
+          <div class="ptcg-checkout__payment-method" data-method="paypal" onclick="ptcgSelectMethod(this)">
+            <div class="ptcg-checkout__pm-radio"></div>
+            <i class="ri-paypal-line ptcg-checkout__pm-icon"></i>
+            <div class="ptcg-checkout__pm-info">
+              <div class="ptcg-checkout__pm-name">PayPal</div>
+              <div class="ptcg-checkout__pm-desc">Pago internacional via PayPal (USD)</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Error metodo -->
+        <div class="ptcg-checkout__field-error" id="ptcg-err-method" hidden>
+          <i class="ri-error-warning-line"></i> Selecciona un metodo de pago
+        </div>
+
+        <!-- Detalle Tigo Money -->
+        <div class="ptcg-checkout__pm-detail" id="ptcg-detail-tigo" hidden>
+          <div class="ptcg-checkout__pm-detail-title">
+            <i class="ri-qr-code-line"></i> Datos de pago Tigo Money
+          </div>
+          <div class="ptcg-checkout__pm-detail-row">
+            <span class="ptcg-checkout__pm-detail-label">Numero</span>
+            <span class="ptcg-checkout__pm-detail-value ptcg-checkout__pm-detail-value--copy" onclick="ptcgCopyText('72000000')">
+              72000000 <i class="ri-file-copy-line"></i>
+            </span>
+          </div>
+          <div class="ptcg-checkout__pm-detail-row">
+            <span class="ptcg-checkout__pm-detail-label">A nombre de</span>
+            <span class="ptcg-checkout__pm-detail-value">Petcingo SRL</span>
+          </div>
+        </div>
+
+        <!-- Detalle banco -->
+        <div class="ptcg-checkout__pm-detail" id="ptcg-detail-banco" hidden>
+          <div class="ptcg-checkout__pm-detail-title">
+            <i class="ri-building-2-line"></i> Datos bancarios
+          </div>
+          <div class="ptcg-checkout__pm-detail-row">
+            <span class="ptcg-checkout__pm-detail-label">Banco</span>
+            <span class="ptcg-checkout__pm-detail-value">Banco Union</span>
+          </div>
+          <div class="ptcg-checkout__pm-detail-row">
+            <span class="ptcg-checkout__pm-detail-label">Cuenta</span>
+            <span class="ptcg-checkout__pm-detail-value ptcg-checkout__pm-detail-value--copy" onclick="ptcgCopyText('1234567890')">
+              1234567890 <i class="ri-file-copy-line"></i>
+            </span>
+          </div>
+          <div class="ptcg-checkout__pm-detail-row">
+            <span class="ptcg-checkout__pm-detail-label">Titular</span>
+            <span class="ptcg-checkout__pm-detail-value">Petcingo SRL</span>
+          </div>
+        </div>
+
+        <!-- Detalle PayPal -->
+        <div class="ptcg-checkout__pm-detail" id="ptcg-detail-paypal" hidden>
+          <div class="ptcg-checkout__pm-detail-title">
+            <i class="ri-paypal-line"></i> Datos PayPal
+          </div>
+          <div class="ptcg-checkout__pm-detail-row">
+            <span class="ptcg-checkout__pm-detail-label">Correo PayPal</span>
+            <span class="ptcg-checkout__pm-detail-value ptcg-checkout__pm-detail-value--copy" onclick="ptcgCopyText('pagos@petcingo.com')">
+              pagos@petcingo.com <i class="ri-file-copy-line"></i>
+            </span>
+          </div>
+          <div class="ptcg-checkout__pm-detail-row">
+            <span class="ptcg-checkout__pm-detail-label">Moneda</span>
+            <span class="ptcg-checkout__pm-detail-value">USD</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ====================================================
+           4. COMPROBANTE DE PAGO
+           ==================================================== -->
+      <div class="ptcg-checkout__card">
+        <div class="ptcg-checkout__section-title">
+          <i class="ri-image-line"></i>
+          Comprobante de pago
+        </div>
+        <input type="file" id="ptcg-receipt-input" accept="image/*">
+        <div class="ptcg-checkout__upload-area" id="ptcg-upload-area" onclick="document.getElementById('ptcg-receipt-input').click()">
+          <i class="ri-upload-cloud-2-line ptcg-checkout__upload-icon"></i>
+          <span class="ptcg-checkout__upload-text">Subir captura o foto del comprobante</span>
+          <span class="ptcg-checkout__upload-hint">JPG, PNG o WEBP -- max 5 MB</span>
+          <span class="ptcg-checkout__upload-filename" id="ptcg-upload-filename" hidden>
+            <i class="ri-checkbox-circle-line"></i>
+            <span id="ptcg-upload-fname-text"></span>
+          </span>
+        </div>
+        <div class="ptcg-checkout__field-error" id="ptcg-err-receipt" hidden>
+          <i class="ri-error-warning-line"></i> Adjunta el comprobante de pago
+        </div>
+      </div>
+
+      <!-- ====================================================
+           5. RESUMEN Y CONFIRMACION
+           ==================================================== -->
+      <div class="ptcg-checkout__card">
+        <div class="ptcg-checkout__section-title">
+          <i class="ri-receipt-line"></i>
+          Resumen del pedido
+        </div>
+        <div class="ptcg-checkout__summary-row">
+          <span class="ptcg-checkout__summary-label">Plan seleccionado</span>
+          <span class="ptcg-checkout__summary-value" id="ptcg-sum-plan">--</span>
+        </div>
+        <div class="ptcg-checkout__summary-row">
+          <span class="ptcg-checkout__summary-label">Metodo de pago</span>
+          <span class="ptcg-checkout__summary-value" id="ptcg-sum-method">--</span>
+        </div>
+        <hr class="ptcg-checkout__summary-divider">
+        <div class="ptcg-checkout__summary-row ptcg-checkout__summary-total">
+          <span class="ptcg-checkout__summary-label">Total</span>
+          <span class="ptcg-checkout__summary-value" id="ptcg-sum-total">-- Bs.</span>
+        </div>
+
+        <button class="ptcg-checkout__btn-confirm" id="ptcg-btn-confirm" onclick="ptcgConfirmOrder()">
+          <div class="ptcg-checkout__btn-spinner" id="ptcg-btn-spinner" hidden></div>
+          <i class="ri-checkbox-circle-line" id="ptcg-btn-icon"></i>
+          <span id="ptcg-btn-text">Confirmar pedido</span>
+        </button>
+      </div>
+
+      <!-- ====================================================
+           6. SECCION DE CONFIRMACION (oculta hasta completar)
+           ==================================================== -->
+      <div class="ptcg-checkout__card ptcg-checkout__confirm-section" id="ptcg-confirm-section" hidden>
+        <i class="ri-checkbox-circle-fill ptcg-checkout__confirm-icon"></i>
+        <h2 class="ptcg-checkout__confirm-title">Pedido recibido</h2>
+        <p class="ptcg-checkout__confirm-sub">
+          Tu pedido fue registrado correctamente.<br>
+          Usa el codigo de activacion para configurar tu placa Petcingo.
+        </p>
+
+        <div class="ptcg-checkout__activation-box">
+          <span class="ptcg-checkout__activation-label">Codigo de activacion</span>
+          <span class="ptcg-checkout__activation-code" id="ptcg-activation-code">------</span>
+          <span class="ptcg-checkout__activation-hint">Guarda este codigo -- lo necesitaras para activar tu placa</span>
+        </div>
+
+        <div class="ptcg-checkout__confirm-actions">
+          <a class="ptcg-checkout__btn-activate" id="ptcg-btn-activate" href="https://prueb2.dashnexpages.net/activacion/">
+            <i class="ri-qr-code-line"></i>
+            Ir a activar mi placa
+          </a>
+          <button class="ptcg-checkout__btn-copy" onclick="ptcgCopyCode()">
+            <i class="ri-file-copy-line"></i>
+            Copiar codigo
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- =====================================================================
+     JAVASCRIPT
+     ===================================================================== -->
+<script>
+(function () {
+  'use strict';
+
+  /* ---- Firebase config ---- */
+  const FB_CONFIG = {
+    apiKey: 'AIzaSyAEE3yLFFsJTMORNFLYZWW2_DNHwzF0hE8',
+    authDomain: 'petcingo-43096.firebaseapp.com',
+    projectId: 'petcingo-43096',
+    storageBucket: 'petcingo-43096.firebasestorage.app',
+    appId: '1:679546185536:web:ceccd210b7c73b296f7ca5'
+  };
+
+  /* ---- Estado de la pagina ---- */
+  let db, storage;
+  let selectedPlan = null;   // { key, name, price }
+  let selectedMethod = null; // { key, name }
+  let receiptFile = null;
+  let refCode = null;
+  let activationCode = null;
+
+  /* ---- URLs ---- */
+  const ACTIVATE_URL = 'https://prueb2.dashnexpages.net/activacion/';
+
+  /* ---- Precios por defecto (se sobreescriben con Firestore) ---- */
+  const DEFAULT_PRICES = { preventa: 89, petid: 120, pack: 290 };
+  let prices = { ...DEFAULT_PRICES };
+
+  /* ------------------------------------------------------------------
+     INIT
+  ------------------------------------------------------------------ */
+  document.addEventListener('DOMContentLoaded', function () {
+    initFirebase();
+    readRefParam();
+    loadPrices();
+    initUpload();
+  });
+
+  function initFirebase() {
+    if (!firebase.apps.length) {
+      firebase.initializeApp(FB_CONFIG);
+    }
+    db      = firebase.firestore();
+    storage = firebase.storage();
+  }
+
+  /* Lee ?ref= de la URL y lo persiste */
+  function readRefParam() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const r = params.get('ref');
+      if (r && r.length <= 64) {
+        refCode = r;
+        try { sessionStorage.setItem('ptcg_ref', r); } catch (_) {}
+      } else {
+        try { refCode = sessionStorage.getItem('ptcg_ref') || null; } catch (_) {}
+      }
+    } catch (_) {}
+  }
+
+  /* Carga precios desde Firestore siteConfig/main */
+  function loadPrices() {
+    db.collection('siteConfig').doc('main').get().then(function (snap) {
+      if (!snap.exists) return;
+      const d = snap.data();
+      if (d.prices) {
+        if (d.prices.preventa) prices.preventa = d.prices.preventa;
+        if (d.prices.petid)    prices.petid    = d.prices.petid;
+        if (d.prices.pack)     prices.pack     = d.prices.pack;
+      }
+      renderPrices();
+    }).catch(function () {
+      renderPrices(); // usa defaults si falla
+    });
+  }
+
+  function renderPrices() {
+    el('ptcg-price-preventa').textContent = prices.preventa;
+    el('ptcg-price-petid').textContent    = prices.petid;
+    el('ptcg-price-pack').textContent     = prices.pack;
+    updateSummary();
+  }
+
+  /* ------------------------------------------------------------------
+     SELECCION DE PLAN
+  ------------------------------------------------------------------ */
+  window.ptcgSelectPlan = function (card) {
+    document.querySelectorAll('.ptcg-checkout__plan').forEach(function (c) {
+      c.classList.remove('is-selected');
+    });
+    card.classList.add('is-selected');
+    const key  = card.dataset.plan;
+    const name = card.dataset.planName;
+    selectedPlan = { key: key, name: name, price: prices[key] };
+    hide('ptcg-err-plan');
+    updateSummary();
+  };
+
+  /* ------------------------------------------------------------------
+     SELECCION DE METODO DE PAGO
+  ------------------------------------------------------------------ */
+  const METHOD_NAMES = { tigo: 'QR Tigo Money', banco: 'Deposito bancario', paypal: 'PayPal' };
+
+  window.ptcgSelectMethod = function (card) {
+    document.querySelectorAll('.ptcg-checkout__payment-method').forEach(function (c) {
+      c.classList.remove('is-selected');
+    });
+    card.classList.add('is-selected');
+    const key = card.dataset.method;
+    selectedMethod = { key: key, name: METHOD_NAMES[key] };
+    hide('ptcg-err-method');
+
+    /* Mostrar detalle del metodo seleccionado */
+    ['tigo', 'banco', 'paypal'].forEach(function (m) {
+      var d = document.getElementById('ptcg-detail-' + m);
+      if (d) { if (m === key) { d.removeAttribute('hidden'); } else { d.setAttribute('hidden', ''); } }
+    });
+
+    updateSummary();
+  };
+
+  /* ------------------------------------------------------------------
+     SUBIDA DE COMPROBANTE
+  ------------------------------------------------------------------ */
+  function initUpload() {
+    var input = document.getElementById('ptcg-receipt-input');
+    input.addEventListener('change', function () {
+      var f = input.files[0];
+      if (!f) return;
+      if (f.size > 5 * 1024 * 1024) {
+        showToast('El archivo supera 5 MB', 'error');
+        return;
+      }
+      receiptFile = f;
+      hide('ptcg-err-receipt');
+      var area = document.getElementById('ptcg-upload-area');
+      area.classList.add('has-file');
+      var fname = document.getElementById('ptcg-upload-fname-text');
+      fname.textContent = f.name;
+      show('ptcg-upload-filename');
+    });
+  }
+
+  /* ------------------------------------------------------------------
+     RESUMEN
+  ------------------------------------------------------------------ */
+  function updateSummary() {
+    el('ptcg-sum-plan').textContent   = selectedPlan   ? selectedPlan.name   : '--';
+    el('ptcg-sum-method').textContent = selectedMethod ? selectedMethod.name : '--';
+    if (selectedPlan) {
+      el('ptcg-sum-total').textContent = selectedPlan.price + ' Bs.';
+    } else {
+      el('ptcg-sum-total').textContent = '-- Bs.';
+    }
+  }
+
+  /* ------------------------------------------------------------------
+     VALIDACION
+  ------------------------------------------------------------------ */
+  function validate() {
+    var ok = true;
+
+    if (!selectedPlan) { show('ptcg-err-plan'); ok = false; }
+
+    var nombre    = val('ptcg-nombre').trim();
+    var telefono  = val('ptcg-telefono').trim();
+    var email     = val('ptcg-email').trim();
+    var direccion = val('ptcg-direccion').trim();
+
+    if (!nombre) { show('ptcg-err-nombre'); addClass('ptcg-nombre', 'has-error'); ok = false; }
+    else { hide('ptcg-err-nombre'); removeClass('ptcg-nombre', 'has-error'); }
+
+    if (!telefono) { show('ptcg-err-telefono'); addClass('ptcg-telefono', 'has-error'); ok = false; }
+    else { hide('ptcg-err-telefono'); removeClass('ptcg-telefono', 'has-error'); }
+
+    if (!email || !email.includes('@') || !email.includes('.')) {
+      show('ptcg-err-email'); addClass('ptcg-email', 'has-error'); ok = false;
+    } else { hide('ptcg-err-email'); removeClass('ptcg-email', 'has-error'); }
+
+    if (!direccion) { show('ptcg-err-direccion'); addClass('ptcg-direccion', 'has-error'); ok = false; }
+    else { hide('ptcg-err-direccion'); removeClass('ptcg-direccion', 'has-error'); }
+
+    if (!selectedMethod) { show('ptcg-err-method'); ok = false; }
+
+    if (!receiptFile) { show('ptcg-err-receipt'); ok = false; }
+
+    return ok;
+  }
+
+  /* ------------------------------------------------------------------
+     GENERAR CODIGO DE ACTIVACION (6 chars alfanumericos, mayusculas)
+  ------------------------------------------------------------------ */
+  function genActivationCode() {
+    var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    var code = '';
+    for (var i = 0; i < 6; i++) {
+      code += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return code;
+  }
+
+  /* ------------------------------------------------------------------
+     CONFIRMAR PEDIDO
+  ------------------------------------------------------------------ */
+  window.ptcgConfirmOrder = function () {
+    if (!validate()) {
+      showToast('Completa todos los campos requeridos', 'error');
+      scrollToFirst();
+      return;
+    }
+
+    setLoading(true);
+
+    var code       = genActivationCode();
+    activationCode = code;
+
+    var nombre    = val('ptcg-nombre').trim();
+    var telefono  = val('ptcg-telefono').trim();
+    var email     = val('ptcg-email').trim();
+    var direccion = val('ptcg-direccion').trim();
+    var notas     = val('ptcg-notas').trim();
+    var now       = firebase.firestore.FieldValue.serverTimestamp();
+
+    var orderData = {
+      activationCode : code,
+      plan           : selectedPlan.key,
+      planName       : selectedPlan.name,
+      price          : selectedPlan.price,
+      paymentMethod  : selectedMethod.key,
+      paymentName    : selectedMethod.name,
+      buyer          : {
+        nombre   : nombre,
+        telefono : telefono,
+        email    : email,
+        direccion: direccion,
+        notas    : notas
+      },
+      status         : 'pending',
+      ref            : refCode || null,
+      receiptUrl     : null,
+      createdAt      : now
+    };
+
+    var petData = {
+      activationCode : code,
+      status         : 'reserved',
+      plan           : selectedPlan.key,
+      owner          : {
+        nombre   : nombre,
+        telefono : telefono,
+        email    : email
+      },
+      createdAt      : now
+    };
+
+    /* Subir comprobante y luego guardar en Firestore */
+    var receiptPath = 'receipts/' + code + '_' + Date.now();
+    var storageRef  = storage.ref(receiptPath);
+
+    storageRef.put(receiptFile).then(function () {
+      return storageRef.getDownloadURL();
+    }).then(function (url) {
+      orderData.receiptUrl = url;
+
+      var batch = db.batch();
+
+      var orderRef = db.collection('orders').doc();
+      batch.set(orderRef, orderData);
+
+      var petRef = db.collection('pets').doc(code);
+      batch.set(petRef, petData);
+
+      if (refCode) {
+        var commRef = db.collection('commissions').doc();
+        batch.set(commRef, {
+          ref            : refCode,
+          activationCode : code,
+          plan           : selectedPlan.key,
+          price          : selectedPlan.price,
+          status         : 'pending',
+          createdAt      : now
+        });
+      }
+
+      return batch.commit();
+    }).then(function () {
+      setLoading(false);
+      showConfirmation(code);
+    }).catch(function (err) {
+      console.error('Error al confirmar pedido:', err);
+      setLoading(false);
+      showToast('Ocurrio un error al enviar el pedido. Intenta de nuevo.', 'error');
+    });
+  };
+
+  /* ------------------------------------------------------------------
+     UI HELPERS
+  ------------------------------------------------------------------ */
+  function setLoading(on) {
+    var btn     = document.getElementById('ptcg-btn-confirm');
+    var spinner = document.getElementById('ptcg-btn-spinner');
+    var icon    = document.getElementById('ptcg-btn-icon');
+    var text    = document.getElementById('ptcg-btn-text');
+    if (on) {
+      btn.disabled = true;
+      spinner.removeAttribute('hidden');
+      icon.setAttribute('hidden', '');
+      text.textContent = 'Procesando...';
+    } else {
+      btn.disabled = false;
+      spinner.setAttribute('hidden', '');
+      icon.removeAttribute('hidden');
+      text.textContent = 'Confirmar pedido';
+    }
+  }
+
+  function showConfirmation(code) {
+    el('ptcg-activation-code').textContent = code;
+
+    /* Enlace de activacion con codigo pre-cargado */
+    var activateLink = ACTIVATE_URL + '?code=' + encodeURIComponent(code);
+    document.getElementById('ptcg-btn-activate').href = activateLink;
+
+    var section = document.getElementById('ptcg-confirm-section');
+    section.removeAttribute('hidden');
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    /* Ocultar formulario de confirmacion */
+    document.getElementById('ptcg-btn-confirm').setAttribute('hidden', '');
+
+    showToast('Pedido registrado correctamente', 'success');
+  }
+
+  window.ptcgCopyCode = function () {
+    if (activationCode) ptcgCopyText(activationCode);
+  };
+
+  window.ptcgCopyText = function (text) {
+    if (!text) return;
+    try {
+      navigator.clipboard.writeText(text).then(function () {
+        showToast('Copiado al portapapeles', 'success');
+      });
+    } catch (_) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity  = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Copiado al portapapeles', 'success');
+    }
+  };
+
+  /* Toast */
+  var toastTimer;
+  function showToast(msg, type) {
+    var t  = document.getElementById('ptcg-toast');
+    var tm = document.getElementById('ptcg-toast-msg');
+    var ic = t.querySelector('i');
+    t.className = 'ptcg-checkout__toast ptcg-checkout__toast--' + (type || 'info');
+    ic.className = type === 'success' ? 'ri-checkbox-circle-fill'
+                 : type === 'error'   ? 'ri-error-warning-fill'
+                 :                      'ri-information-line';
+    tm.textContent = msg;
+    t.removeAttribute('hidden');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.setAttribute('hidden', ''); }, 4000);
+  }
+
+  function scrollToFirst() {
+    var first = document.querySelector('.has-error, .ptcg-checkout__field-error:not([hidden])');
+    if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  /* Mini helpers DOM */
+  function el(id)          { return document.getElementById(id); }
+  function val(id)         { var e = document.getElementById(id); return e ? e.value : ''; }
+  function show(id)        { var e = document.getElementById(id); if (e) e.removeAttribute('hidden'); }
+  function hide(id)        { var e = document.getElementById(id); if (e) e.setAttribute('hidden', ''); }
+  function addClass(id, c) { var e = document.getElementById(id); if (e) e.classList.add(c); }
+  function removeClass(id, c) { var e = document.getElementById(id); if (e) e.classList.remove(c); }
+
+}());
+</script>
+
+</body>
+</html>
