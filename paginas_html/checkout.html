@@ -720,10 +720,17 @@
               <button type="button" onclick="ptcgUpdateQuantity(1)" style="border:none;background:none;color:#4552CC;font-size:1.2rem;cursor:pointer;"><i class="ri-add-line"></i></button>
             </div>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
-            <input type="text" class="ptcg-checkout__input" id="ptcg-promo-input" placeholder="Codigo promocional" style="flex:1;min-width:130px;padding:10px 14px;font-size:0.8rem;">
-            <button class="ptcg-checkout__btn ptcg-checkout__btn--secondary" type="button" onclick="ptcgApplyPromo()" style="flex-shrink:0;white-space:nowrap;width:auto;padding:10px 16px;font-size:0.8rem;">Aplicar</button>
-          </div>
+          <!-- Código promocional -->
+<div style="border:1px dashed rgba(69,82,204,0.25) !important;border-radius:14px !important;overflow:hidden !important;margin-top:4px;">
+  <button onclick="ptcgTogglePromo()" style="width:100% !important;padding:14px 16px !important;background:rgba(238,240,250,0.50) !important;border:none !important;text-align:left !important;color:#4552CC !important;font-weight:600 !important;font-size:0.84rem !important;cursor:pointer !important;display:flex !important;align-items:center !important;justify-content:space-between !important;">
+    <span><i class="ri-coupon-line" style="margin-right:8px;"></i>¿Tienes un código promocional?</span>
+    <i class="ri-arrow-down-s-line" id="ptcg-promo-arrow" style="transition:transform 0.2s;"></i>
+  </button>
+  <div id="ptcg-promo-area" style="display:none !important;padding:0 14px 14px;border-top:1px solid rgba(69,82,204,0.08);flex-direction:row;gap:8px;">
+    <input id="ptcg-promo-code" type="text" placeholder="Ej: PETCINGO10" style="flex:1;min-width:130px;padding:10px 14px;border:1.5px solid rgba(69,82,204,0.15);border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.88rem;color:#1E255E;outline:none;" maxlength="20" oninput="this.value=this.value.toUpperCase()">
+    <button onclick="ptcgApplyPromo()" style="padding:10px 18px;background:#4552CC;color:#fff;border:none;border-radius:10px;font-weight:700;font-size:0.84rem;cursor:pointer;flex-shrink:0;">Aplicar</button>
+  </div>
+</div>
           <div id="ptcg-promo-msg" style="font-size:0.75rem;font-weight:600;display:none;margin-top:-4px;"></div>
           <div style="border-top:1px dashed rgba(69,82,204,0.15);padding-top:12px;margin-top:4px;">
             <div style="display:flex;justify-content:space-between;font-size:0.85rem;color:#6C7297;margin-bottom:6px;">
