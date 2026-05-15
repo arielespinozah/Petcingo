@@ -155,7 +155,7 @@ function exportDatabase(collectionName) {
         arr.push(Object.assign({ _id: doc.id }, d));
       });
       downloadJson(JSON.stringify(arr, null, 2), collectionName + '_backup_' + new Date().toISOString().slice(0,10) + '.json');
-      toast('<i class="ri-check-line"></i>  ' + arr.length + ' registros exportados.');
+      toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  ' + arr.length + ' registros exportados.');
     })
     .catch(function(e) { toast('âŒ Error: ' + e.message); });
 }
@@ -369,7 +369,7 @@ function loadRecent() {
         '</tr></thead><tbody>';
       docs.forEach(function(d) {
         var bCls=d.status==='perdido'?'badge-lost':d.status==='reservada'?'badge-reserved':'badge-active';
-        var bTxt=d.status==='perdido'?'<i class="ri-alert-line"></i> Perdido':d.status==='reservada'?'â³ Reservada':'<i class="ri-check-line"></i>  Activo';
+        var bTxt=d.status==='perdido'?'<i class="ri-alert-line" style="color:#E74C3C;"></i> Perdido':d.status==='reservada'?'â³ Reservada':'<i class="ri-check-line" style="color:#2ECC71;"></i>  Activo';
         var fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'--';
         html+='<tr style="border-bottom:1px solid rgba(255,255,255,.04)">'+
           '<td style="padding:9px 8px"><span style="font-weight:600">'+esc(d.name||'--')+'</span><br><span style="color:var(--muted-dark);font-size:.75rem">'+esc(d.ownerName||'')+'</span></td>'+
@@ -520,7 +520,7 @@ function renderTable(pets) {
         btnCopyCode.innerHTML = '<i class="ri-file-copy-line"></i>';
         btnCopyCode.title = 'Copiar codigo de activacion';
         btnCopyCode.onclick = (function(pid){ return function() {
-          navigator.clipboard.writeText(pid).then(function() { toast('<i class="ri-check-line"></i> Codigo copiado: ' + pid); });
+          navigator.clipboard.writeText(pid).then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i> Codigo copiado: ' + pid); });
         }; })(id);
 
         var btnResetPass = document.createElement('button');
@@ -529,11 +529,11 @@ function renderTable(pets) {
         btnResetPass.title = 'Enviar recuperacion de contrasena';
         btnResetPass.onclick = (function(petData){ return function() {
           var email = petData.ownerEmail || petData.owner_email || petData.email;
-          if (!email) { toast('<i class="ri-alert-line"></i> No hay email registrado para este dueno.'); return; }
+          if (!email) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> No hay email registrado para este dueno.'); return; }
           if (!confirm('?Enviar enlace de restablecimiento a ' + email + '?')) return;
           firebase.auth().sendPasswordResetEmail(email)
             .then(function() { toast('<i class="ri-mail-line"></i> Correo enviado a ' + email); })
-            .catch(function(err) { toast('<i class="ri-error-warning-line"></i> Error: ' + err.message); });
+            .catch(function(err) { toast('<i class="ri-error-warning-line" style="color:#E74C3C;"></i> Error: ' + err.message); });
         }; })(d);
 
         tdAct.appendChild(btnCopyCode);
@@ -570,7 +570,7 @@ window.archivePet = function(id) {
 
 window.restorePet = function(id) {
   db().collection('pets').doc(id).update({ status:'reservada', deletedAt:null })
-    .then(function() { toast('<i class="ri-check-line"></i>  Restaurada.'); addLog('restored_pet',id,_dash.currentUser&&_dash.currentUser.name); loadPets(); })
+    .then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Restaurada.'); addLog('restored_pet',id,_dash.currentUser&&_dash.currentUser.name); loadPets(); })
     .catch(function(e) { toast('âŒ '+e.message); });
 };
 
@@ -671,7 +671,7 @@ window.loadNotifications = function() {
     var html = '';
 
     /* Lost pets */
-    html += '<div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A8B4F5;margin-bottom:10px;margin-top:4px"><i class="ri-alert-line"></i> Mascotas Perdidas (' + lostSnap.size + ')</div>';
+    html += '<div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A8B4F5;margin-bottom:10px;margin-top:4px"><i class="ri-alert-line" style="color:#E74C3C;"></i> Mascotas Perdidas (' + lostSnap.size + ')</div>';
     if (lostSnap.empty) {
       html += '<div style="font-size:.82rem;color:#8B98D8;margin-bottom:16px">Ninguna mascota perdida.</div>';
     } else {
@@ -691,7 +691,7 @@ window.loadNotifications = function() {
     }
 
     /* Recent activations */
-    html += '<div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A8B4F5;margin:16px 0 10px"><i class="ri-check-line"></i>  Activaciones Recientes (' + newActSnap.size + ')</div>';
+    html += '<div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A8B4F5;margin:16px 0 10px"><i class="ri-check-line" style="color:#2ECC71;"></i>  Activaciones Recientes (' + newActSnap.size + ')</div>';
     if (newActSnap.empty) {
       html += '<div style="font-size:.82rem;color:#8B98D8;margin-bottom:16px">Sin nuevas activaciones en 3 dias.</div>';
     } else {
@@ -824,7 +824,7 @@ window.loadStorageStats = function() {
       + '<div class="storage-cell" style="border-radius:8px;padding:8px 10px;font-size:.8rem"><span class="storage-label">Logos (vets/refugios)</span><br><strong class="storage-val">'+r2LogoCount+'</strong><br><span class="storage-label" style="font-size:.7rem">~'+(r2LogoCount*80/1024).toFixed(1)+' MB</span></div>'
       + '</div></div>',
       '<div class="storage-tip-box" style="margin-top:14px;padding:10px 12px;border-radius:8px;font-size:.78rem">'
-      + '’! <strong>R2 es muy generoso:</strong> 10 GB gratis, sin cargos por egress. Las fotos de mascotas se comprimen a JPEG â‰¤10 KB; logos a PNG â‰¤80 KB. <br><i class="ri-alert-line"></i> Elimina fotos de mascotas borradas para liberar espacio.</div>'
+      + '’! <strong>R2 es muy generoso:</strong> 10 GB gratis, sin cargos por egress. Las fotos de mascotas se comprimen a JPEG â‰¤10 KB; logos a PNG â‰¤80 KB. <br><i class="ri-alert-line" style="color:#E74C3C;"></i> Elimina fotos de mascotas borradas para liberar espacio.</div>'
     );
 
     /* Summary */
@@ -919,10 +919,10 @@ function loadRegisterSelect() {
 
 window.registerPlate = function() {
   var sel = document.getElementById('reg-seller-select');
-  if (!sel||!sel.value) { toast('<i class="ri-alert-line"></i> Selecciona un cliente primero.'); return; }
+  if (!sel||!sel.value) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Selecciona un cliente primero.'); return; }
   var sellerData;
   try { sellerData=JSON.parse(sel.value); } catch(e) { toast('Error al leer el cliente.'); return; }
-  if (!sellerData.prefix) { toast('<i class="ri-alert-line"></i> Este cliente no tiene prefijo configurado.'); return; }
+  if (!sellerData.prefix) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Este cliente no tiene prefijo configurado.'); return; }
 
   var btn = document.querySelector('#sec-register .btn-primary');
   if (btn) { btn.disabled=true; btn.innerHTML='<i class="ri-loader-4-line"></i> Reservando...'; }
@@ -949,7 +949,7 @@ window.registerPlate = function() {
   }).then(function(res) {
     _generateRegQR(res.newId, res.profileUrl, res.next, sellerData);
     addLog('reserved_plate', res.newId, _dash.currentUser&&_dash.currentUser.name);
-    toast('<i class="ri-check-line"></i>  Placa '+res.newId+' reservada para '+sellerData.name);
+    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Placa '+res.newId+' reservada para '+sellerData.name);
     loadSellersCache();
   }).catch(function(err) { toast('âŒ '+err.message); })
     .finally(function() { if(btn){ btn.disabled=false; btn.innerHTML='<i class="ri-add-circle-line"></i> Crear y Reservar Placa'; } });
@@ -976,7 +976,7 @@ function _generateRegQR(newId, profileUrl, next, sellerData) {
 
 window.registerNextFast = function() {
   var sel = document.getElementById('reg-seller-select');
-  if (!sel||!sel.value) { toast('<i class="ri-alert-line"></i> No hay cliente seleccionado.'); return; }
+  if (!sel||!sel.value) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> No hay cliente seleccionado.'); return; }
   var res = document.getElementById('reg-result');
   if (res) res.style.display='none';
   window.registerPlate();
@@ -1016,9 +1016,9 @@ window.saveVet = function() {
   var name   =document.getElementById('vet-name').value.trim();
   var contact=document.getElementById('vet-contact').value.trim();
   var prefix =document.getElementById('vet-prefix').value.trim().toUpperCase().replace(/\s/g,'');
-  if (!name)    { toast('<i class="ri-alert-line"></i> El nombre es obligatorio.'); return; }
-  if (!contact) { toast('<i class="ri-alert-line"></i> El contacto es obligatorio.'); return; }
-  if (!prefix)  { toast('<i class="ri-alert-line"></i> El Prefijo de Placa es OBLIGATORIO (ej: VET-LP).'); return; }
+  if (!name)    { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> El nombre es obligatorio.'); return; }
+  if (!contact) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> El contacto es obligatorio.'); return; }
+  if (!prefix)  { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> El Prefijo de Placa es OBLIGATORIO (ej: VET-LP).'); return; }
 
   var btn=document.getElementById('btn-save-vet');
   if(btn){btn.disabled=true;btn.textContent='Guardando...';}
@@ -1031,7 +1031,7 @@ window.saveVet = function() {
     logoUrl:(document.getElementById('vet-logo')||{value:''}).value.trim(),
     createdAt:firebase.firestore.FieldValue.serverTimestamp()
   }).then(function() {
-    toast('<i class="ri-check-line"></i>  Veterinaria registrada.');
+    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Veterinaria registrada.');
     ['vet-name','vet-contact','vet-prefix','vet-phone','vet-city','vet-email','vet-logo'].forEach(function(id){ var el=document.getElementById(id); if(el)el.value=''; });
     var cp=document.getElementById('vet-create-panel'); if(cp)cp.style.display='none';
     loadVets(); loadSellersCache(); loadRegisterSelect();
@@ -1084,7 +1084,7 @@ window.closeVetModal = function() {
 window.updateVet = function() {
   var vetId = document.getElementById('ev-vet-id').value;
   var name  = document.getElementById('ev-name').value.trim();
-  if (!name) { toast('<i class="ri-alert-line"></i> El nombre es obligatorio.'); return; }
+  if (!name) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> El nombre es obligatorio.'); return; }
   var update = {
     name:    name,
     contact: document.getElementById('ev-contact').value.trim(),
@@ -1098,7 +1098,7 @@ window.updateVet = function() {
   if (btn) { btn.disabled=true; btn.innerHTML='<i class="ri-loader-4-line"></i> Guardando...'; }
   db().collection('veterinarias').doc(vetId).update(update)
     .then(function() {
-      toast('<i class="ri-check-line"></i>  Veterinaria actualizada: '+name);
+      toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Veterinaria actualizada: '+name);
       closeVetModal();
       loadVets();
     })
@@ -1162,7 +1162,7 @@ window.generateVetQR = function() {
   var links=document.getElementById('vet-qr-links');
   if(links){var safeUrl=profileUrl.replace(/'/g,"\\'");links.innerHTML='<div class="qr-link-row"><div class="qr-link-label">Perfil Publico</div><div class="qr-link-url">'+esc(profileUrl)+'</div><button class="qr-link-copy" onclick="copyText(\''+safeUrl+'\',\'URL copiada\')"><i class="ri-file-copy-line"></i> Copiar</button></div>';}
   var res=document.getElementById('vet-qr-result');if(res)res.style.display='block';
-  toast('<i class="ri-check-line"></i>  Placa creada: '+newId);
+  toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Placa creada: '+newId);
 };
 
 window.downloadVetQR = function() {
@@ -1205,16 +1205,16 @@ window.saveShelter = function() {
   var name       =document.getElementById('sh-name').value.trim();
   var responsible=document.getElementById('sh-responsible').value.trim();
   var prefix     =document.getElementById('sh-prefix').value.trim().toUpperCase().replace(/\s/g,'');
-  if(!name)       {toast('<i class="ri-alert-line"></i> El nombre es obligatorio.');return;}
-  if(!responsible){toast('<i class="ri-alert-line"></i> El encargado es obligatorio.');return;}
-  if(!prefix)     {toast('<i class="ri-alert-line"></i> El Prefijo de Placa es OBLIGATORIO (ej: REF-LP).');return;}
+  if(!name)       {toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> El nombre es obligatorio.');return;}
+  if(!responsible){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> El encargado es obligatorio.');return;}
+  if(!prefix)     {toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> El Prefijo de Placa es OBLIGATORIO (ej: REF-LP).');return;}
 
   var username = (document.getElementById('sh-username')||{}).value||'';
   var password = (document.getElementById('sh-password')||{}).value||'';
   var limite   = parseInt((document.getElementById('sh-limite')||{}).value||'40',10)||40;
 
   username = username.trim().toLowerCase().replace(/\s/g,'');
-  if (password && password.length < 6) { toast('<i class="ri-alert-line"></i> La contrasena debe tener al menos 6 caracteres.'); return; }
+  if (password && password.length < 6) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> La contrasena debe tener al menos 6 caracteres.'); return; }
 
   var btn=document.getElementById('btn-save-shelter');
   if(btn){btn.disabled=true;btn.textContent='Guardando...';}
@@ -1232,7 +1232,7 @@ window.saveShelter = function() {
 
   db().collection('shelters').add(data)
     .then(function(){
-      toast('<i class="ri-check-line"></i>  Refugio registrado.');
+      toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Refugio registrado.');
       ['sh-name','sh-responsible','sh-prefix','sh-phone','sh-address','sh-username','sh-password','sh-logo'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
       var lim=document.getElementById('sh-limite');if(lim)lim.value='40';
       var cp=document.getElementById('shelter-create-panel'); if(cp)cp.style.display='none';
@@ -1291,8 +1291,8 @@ window.updateShelter = function() {
   var username = (document.getElementById('es-username').value||'').trim().toLowerCase().replace(/\s/g,'');
   var password = (document.getElementById('es-password').value||'').trim();
   var limite   = parseInt(document.getElementById('es-limite').value||'40',10)||40;
-  if (!name) { toast('<i class="ri-alert-line"></i> El nombre es obligatorio.'); return; }
-  if (password && password.length < 6) { toast('<i class="ri-alert-line"></i> La contrasena debe tener al menos 6 caracteres.'); return; }
+  if (!name) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> El nombre es obligatorio.'); return; }
+  if (password && password.length < 6) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> La contrasena debe tener al menos 6 caracteres.'); return; }
 
   var update = {
     name:        name,
@@ -1311,7 +1311,7 @@ window.updateShelter = function() {
 
   db().collection('shelters').doc(shId).update(update)
     .then(function() {
-      toast('<i class="ri-check-line"></i>  Refugio actualizado: '+name);
+      toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Refugio actualizado: '+name);
       closeShelterModal();
       loadShelters();
       addLog('updated_shelter', name, _dash.currentUser&&_dash.currentUser.name);
@@ -1369,7 +1369,7 @@ window.generateShelterQR = function() {
   var links=document.getElementById('sh-qr-links');
   if(links){var safeUrl=profileUrl.replace(/'/g,"\\'");links.innerHTML='<div class="qr-link-row"><div class="qr-link-label">Perfil Publico</div><div class="qr-link-url">'+esc(profileUrl)+'</div><button class="qr-link-copy" onclick="copyText(\''+safeUrl+'\',\'URL copiada\')"><i class="ri-file-copy-line"></i> Copiar</button></div>';}
   var res=document.getElementById('sh-qr-result');if(res)res.style.display='block';
-  toast('<i class="ri-check-line"></i>  Placa creada: '+newId);
+  toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Placa creada: '+newId);
 };
 
 window.downloadShelterQR = function() {
@@ -1422,11 +1422,11 @@ window.resetUserForm=resetUserForm;
 window.saveUser = function() {
   var name=document.getElementById('usr-name').value.trim();
   var pass=document.getElementById('usr-pass').value.trim();
-  if(!name){toast('<i class="ri-alert-line"></i> Nombre obligatorio.');return;}
-  if(pass.length<6){toast('<i class="ri-alert-line"></i> Contrasena minimo 6 caracteres.');return;}
-  if(pass===MASTER_PASSWORD){toast('<i class="ri-alert-line"></i> No puedes usar la contrasena maestra.');return;}
+  if(!name){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Nombre obligatorio.');return;}
+  if(pass.length<6){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Contrasena minimo 6 caracteres.');return;}
+  if(pass===MASTER_PASSWORD){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> No puedes usar la contrasena maestra.');return;}
   db().collection('users').add({ username:name, password:pass, role:'staff', permissions:readPerms(), createdAt:firebase.firestore.FieldValue.serverTimestamp() })
-    .then(function(){toast('<i class="ri-check-line"></i>  Usuario creado: '+name);resetUserForm();loadUsers();addLog('created_user',name,_dash.currentUser&&_dash.currentUser.name);})
+    .then(function(){toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Usuario creado: '+name);resetUserForm();loadUsers();addLog('created_user',name,_dash.currentUser&&_dash.currentUser.name);})
     .catch(function(e){toast('âŒ '+e.message);});
 };
 
@@ -1447,11 +1447,11 @@ window.updateUser = function() {
   if(!_dash.editingUserId){window.saveUser();return;}
   var name=document.getElementById('usr-name').value.trim();
   var pass=document.getElementById('usr-pass').value.trim();
-  if(!name){toast('<i class="ri-alert-line"></i> Nombre obligatorio.');return;}
+  if(!name){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Nombre obligatorio.');return;}
   var update={username:name,permissions:readPerms()};
-  if(pass){if(pass.length<6){toast('<i class="ri-alert-line"></i> Contrasena minimo 6 caracteres.');return;}if(pass===MASTER_PASSWORD){toast('<i class="ri-alert-line"></i> No puedes usar la contrasena maestra.');return;}update.password=pass;}
+  if(pass){if(pass.length<6){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Contrasena minimo 6 caracteres.');return;}if(pass===MASTER_PASSWORD){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> No puedes usar la contrasena maestra.');return;}update.password=pass;}
   db().collection('users').doc(_dash.editingUserId).update(update)
-    .then(function(){toast('<i class="ri-check-line"></i>  Usuario actualizado: '+name);resetUserForm();loadUsers();addLog('updated_user',name,_dash.currentUser&&_dash.currentUser.name);})
+    .then(function(){toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Usuario actualizado: '+name);resetUserForm();loadUsers();addLog('updated_user',name,_dash.currentUser&&_dash.currentUser.name);})
     .catch(function(e){toast('âŒ '+e.message);});
 };
 
@@ -1556,12 +1556,12 @@ window.toggleAllLogs=function(checked){
 };
 window.deleteSelectedLogs=function(){
   var checkboxes=document.querySelectorAll('#log-tbody .log-check:checked');
-  if(!checkboxes.length){toast('<i class="ri-alert-line"></i> Selecciona al menos un log.');return;}
+  if(!checkboxes.length){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Selecciona al menos un log.');return;}
   if(!confirm('Eliminar '+checkboxes.length+' log(s) seleccionado(s)? Esta accion no se puede deshacer.'))return;
   var b=db().batch();
   checkboxes.forEach(function(cb){b.delete(db().collection('logs').doc(cb.dataset.logId));});
   b.commit().then(function(){
-    toast('<i class="ri-check-line"></i>  '+checkboxes.length+' log(s) eliminado(s).');
+    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  '+checkboxes.length+' log(s) eliminado(s).');
     loadLogs(true);
   }).catch(function(e){toast('âŒ '+e.message);});
 };
@@ -1662,7 +1662,7 @@ window.handleLogoUpload=function(input,type){
       if(urlInput)urlInput.value=dataUrl;
       var prev=document.getElementById(prefix+'-preview');
       if(prev){prev.src=dataUrl;prev.style.display='block';}
-      if(statusEl)statusEl.innerHTML='<i class="ri-check-line"></i>  Listo -- presiona Guardar para confirmar';
+      if(statusEl)statusEl.innerHTML='<i class="ri-check-line" style="color:#2ECC71;"></i>  Listo -- presiona Guardar para confirmar';
     };
     reader.readAsDataURL(blob);
   };
@@ -1699,7 +1699,7 @@ window.handleOrgLogoUpload = function(input, urlInputId, statusId) {
       var publicUrl = 'https://pub-cb882f9b206543b28ea81fcadac0f4b2.r2.dev/' + key;
       var urlEl = document.getElementById(urlInputId);
       if (urlEl) urlEl.value = publicUrl;
-      if (statusEl) statusEl.innerHTML = '<i class="ri-check-line"></i>  Logo subido -- presiona Guardar para confirmar.';
+      if (statusEl) statusEl.innerHTML = '<i class="ri-check-line" style="color:#2ECC71;"></i>  Logo subido -- presiona Guardar para confirmar.';
     });
   }
 
@@ -1742,7 +1742,7 @@ window.saveLogo = function(type) {
   db().collection('config').doc('admin_settings').set(data,{merge:true})
     .then(function(){
       _applyLogo(url,type||'dark');
-      toast('<i class="ri-check-line"></i>  Logo guardado.');
+      toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Logo guardado.');
     }).catch(function(e){toast('âŒ '+e.message);});
 };
 
@@ -1763,7 +1763,7 @@ window.saveQrLogo = function() {
   var url = (document.getElementById('cfg-qr-logo-url')||{}).value;
   if (url !== undefined) url = url.trim(); else url = '';
   db().collection('config').doc('admin_settings').set({qrLogoUrl: url}, {merge: true})
-    .then(function() { toast('<i class="ri-check-line"></i>  Logo QR guardado.'); })
+    .then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Logo QR guardado.'); })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 
@@ -1864,16 +1864,16 @@ window.applyTheme = function(name) {
 /* -- Staff legacy ---------------------------------------- */
 window.saveStaff = function() {
   var name=document.getElementById('staff-name');var pass=document.getElementById('staff-pass');
-  if(!name||!pass||!name.value.trim()||pass.value.trim().length<6){toast('<i class="ri-alert-line"></i> Nombre y contrasena (6+ chars).');return;}
+  if(!name||!pass||!name.value.trim()||pass.value.trim().length<6){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Nombre y contrasena (6+ chars).');return;}
   db().collection('staff').add({name:name.value.trim(),password:pass.value.trim(),role:'empleado',createdAt:firebase.firestore.FieldValue.serverTimestamp()})
-    .then(function(){toast('<i class="ri-check-line"></i>  Empleado creado.');name.value='';pass.value='';})
+    .then(function(){toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Empleado creado.');name.value='';pass.value='';})
     .catch(function(e){toast('âŒ '+e.message);});
 };
 
 /* -- Global QR generator (custom ID) --------------------- */
 window.generateQR = function() {
   var inp=document.getElementById('qr-id-input');
-  if(!inp||!inp.value.trim()){toast('<i class="ri-alert-line"></i> Ingresa un ID.');return;}
+  if(!inp||!inp.value.trim()){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Ingresa un ID.');return;}
   var rawId=inp.value.trim();
   var profileUrl='https://prueb2.dashnexpages.net/activacion/?id='+encodeURIComponent(rawId);
   var display=document.getElementById('qr-display');if(!display)return;
@@ -1890,7 +1890,7 @@ window.generateQR = function() {
   var links=document.getElementById('qr-links'),res=document.getElementById('qr-result');
   if(links){var safeUrl=profileUrl.replace(/'/g,"\\'");links.innerHTML='<div class="qr-link-row"><div class="qr-link-label">Perfil Publico</div><div class="qr-link-url">'+esc(profileUrl)+'</div><button class="qr-link-copy" onclick="copyText(\''+safeUrl+'\',\'URL copiada\')"><i class="ri-file-copy-line"></i> Copiar</button></div>';}
   if(res)res.style.display='block';
-  toast('<i class="ri-check-line"></i>  QR generado: '+rawId);
+  toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  QR generado: '+rawId);
 };
 
 window.downloadQR = function() {
@@ -2020,7 +2020,7 @@ window.exportFullBackup = function() {
     a.download = 'petcingo-backup-' + new Date().toISOString().slice(0, 10) + '.json';
     document.body.appendChild(a); a.click();
     document.body.removeChild(a); URL.revokeObjectURL(url);
-    toast('<i class="ri-check-line"></i>  Backup completo descargado.');
+    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Backup completo descargado.');
     if (btn) { btn.disabled = false; btn.innerHTML = '<i class="ri-download-cloud-line"></i> Exportar Backup Completo'; }
   });
 };
@@ -2078,7 +2078,7 @@ window.importFullBackup = function() {
         });
       }, Promise.resolve())
         .then(function() {
-          toast('<i class="ri-check-line"></i>  Backup restaurado: ' + restored + ' documentos en ' + cols.length + ' colecciones' + (errors ? ' · ' + errors + ' omitidos' : '') + '.');
+          toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Backup restaurado: ' + restored + ' documentos en ' + cols.length + ' colecciones' + (errors ? ' · ' + errors + ' omitidos' : '') + '.');
         })
         .catch(function(err) { toast('âŒ Error al restaurar: ' + err.message); });
     };
@@ -2134,7 +2134,7 @@ window.importDatabase = function(collectionName) {
         return p.then(function() { return commitChunk(chunk); });
       }, Promise.resolve())
         .then(function() {
-          toast('<i class="ri-check-line"></i>  ' + count + ' registros restaurados en "' + collectionName + '"' + (errors ? ' · ' + errors + ' omitidos (sin ID)' : '') + '.');
+          toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  ' + count + ' registros restaurados en "' + collectionName + '"' + (errors ? ' · ' + errors + ' omitidos (sin ID)' : '') + '.');
         })
         .catch(function(err) { toast('âŒ Error al importar: ' + err.message); });
     };
@@ -2306,7 +2306,7 @@ function renderPetProfile(d, petId) {
         var msgIcon=msgAcc.querySelector('.pet-acc-icon');
         if(msgIcon){msgIcon.innerHTML='<i class="ri-alarm-warning-line" style="color:#f43f5e"></i>';}
         var msgLabel=msgAcc.querySelector('.pet-acc-label');
-        if(msgLabel)msgLabel.innerHTML='<i class="ri-alert-line"></i> Mensaje al rescatista';
+        if(msgLabel)msgLabel.innerHTML='<i class="ri-alert-line" style="color:#E74C3C;"></i> Mensaje al rescatista';
       }
     }
     var val=document.getElementById('pet-acc-message-val');
@@ -2472,9 +2472,9 @@ function _buildPetDataAccordion(d) {
   }
   if(d.rabiesVaccineCode)   medRows+=_petInfoRow('ri-syringe-line','Codigo vacuna rabia',d.rabiesVaccineCode);
   if(d.rabiesVaccineExpiry) medRows+=_petInfoRow('ri-calendar-check-line','Venc. vacuna rabia',d.rabiesVaccineExpiry);
-  if(d.microchipped==='yes') medRows+=_petInfoRow('ri-cpu-line','Microchip','Si <i class="ri-check-line"></i>');
+  if(d.microchipped==='yes') medRows+=_petInfoRow('ri-cpu-line','Microchip','Si <i class="ri-check-line" style="color:#2ECC71;"></i>');
   else if(d.microchipped==='no') medRows+=_petInfoRow('ri-cpu-line','Microchip','No');
-  if(d.spayNeutered==='yes') medRows+=_petInfoRow('ri-heart-line','Castrado/a','Si <i class="ri-check-line"></i>');
+  if(d.spayNeutered==='yes') medRows+=_petInfoRow('ri-heart-line','Castrado/a','Si <i class="ri-check-line" style="color:#2ECC71;"></i>');
   else if(d.spayNeutered==='no') medRows+=_petInfoRow('ri-heart-line','Castrado/a','No');
   if(medRows){medAcc.style.display='block';medContent.innerHTML=medRows;}
 
@@ -2774,7 +2774,7 @@ function initClientApp(d, petId, editToken, firestoreDb) {
   /* -- Notificaciones de Soporte -- */
   checkSupportNotifications(petId, firestoreDb);
 
-  var sTxt = { activo:'<i class="ri-check-line"></i>  Activo', perdido:'<i class="ri-alert-line"></i> Perdido', reservada:'â³ Pendiente' };
+  var sTxt = { activo:'<i class="ri-check-line" style="color:#2ECC71;"></i>  Activo', perdido:'<i class="ri-alert-line" style="color:#E74C3C;"></i> Perdido', reservada:'â³ Pendiente' };
   var sCls = { activo:'badge-active', perdido:'badge-lost', reservada:'badge-reserved' };
   var cs   = document.getElementById('card-status');
   if (cs) cs.innerHTML = '<span class="badge ' + (sCls[d.status] || 'badge-reserved') + '">' + (sTxt[d.status] || d.status || '--') + '</span>';
@@ -2794,12 +2794,12 @@ function initClientApp(d, petId, editToken, firestoreDb) {
 
     if (btn) {
       if (isLost) {
-        btn.innerHTML = '<i class="ri-check-line"></i>  Mascota Encontrada -- Desactivar alerta';
+        btn.innerHTML = '<i class="ri-check-line" style="color:#2ECC71;"></i>  Mascota Encontrada -- Desactivar alerta';
         btn.style.background = '#d1fae5';
         btn.style.color = '#065f46';
         btn.style.border = '1.5px solid #6ee7b7';
       } else {
-        btn.innerHTML = '<i class="ri-alert-line"></i> Marcar como Perdida';
+        btn.innerHTML = '<i class="ri-alert-line" style="color:#E74C3C;"></i> Marcar como Perdida';
         btn.style.background = '#fce7f3';
         btn.style.color = '#9d174d';
         btn.style.border = '1.5px solid #fbcfe8';
@@ -2808,7 +2808,7 @@ function initClientApp(d, petId, editToken, firestoreDb) {
     if (heroCard) { heroCard.classList.toggle('is-lost', isLost); }
     if (lostCard) { lostCard.classList.toggle('is-lost', isLost); }
     if (lostDesc && isLost) {
-      lostDesc.innerHTML = '<i class="ri-alert-line"></i> Modo perdido activo. El perfil de tu mascota aparece en alerta roja. Presiona el boton cuando la encuentres.';
+      lostDesc.innerHTML = '<i class="ri-alert-line" style="color:#E74C3C;"></i> Modo perdido activo. El perfil de tu mascota aparece en alerta roja. Presiona el boton cuando la encuentres.';
     } else if (lostDesc) {
       lostDesc.textContent = 'Si tu mascota se ha extraviado, activa el modo perdido. Esto cambiara su perfil a alerta roja y notificara visualmente a quien la encuentre.';
     }
@@ -2824,7 +2824,7 @@ function initClientApp(d, petId, editToken, firestoreDb) {
       .then(function() {
         d.status = newStatus;
         var isLost = newStatus === 'perdido';
-        toast(isLost ? '<i class="ri-alert-line"></i> Modo perdido activado.' : '<i class="ri-check-line"></i>  Alerta cancelada. Mascota activa.');
+        toast(isLost ? '<i class="ri-alert-line" style="color:#E74C3C;"></i> Modo perdido activado.' : '<i class="ri-check-line" style="color:#2ECC71;"></i>  Alerta cancelada. Mascota activa.');
         _updateLostUI(isLost);
       })
       .catch(function(e) { toast('âŒ Error: ' + e.message); });
@@ -3031,7 +3031,7 @@ function initClientApp(d, petId, editToken, firestoreDb) {
       return;
     }
     auth.sendPasswordResetEmail(user.email).then(function() {
-      if (msgEl) { msgEl.style.display = 'block'; msgEl.style.color = '#22C55E'; msgEl.innerHTML = '<i class="ri-check-line"></i>  Enlace enviado a ' + user.email + '. Revisa tu correo.'; }
+      if (msgEl) { msgEl.style.display = 'block'; msgEl.style.color = '#22C55E'; msgEl.innerHTML = '<i class="ri-check-line" style="color:#2ECC71;"></i>  Enlace enviado a ' + user.email + '. Revisa tu correo.'; }
     }).catch(function(err) {
       if (msgEl) { msgEl.style.display = 'block'; msgEl.style.color = '#F24E4E'; msgEl.textContent = 'Error: ' + err.message; }
     });
@@ -3107,7 +3107,7 @@ window.loadOwnerMessages = function() {
 
 window.sendOwnerMessage = function() {
   var inputEl = document.getElementById('owner-msg-input');
-  if (!inputEl || !inputEl.value.trim()) { toast('<i class="ri-alert-line"></i> Escribe un mensaje.'); return; }
+  if (!inputEl || !inputEl.value.trim()) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Escribe un mensaje.'); return; }
   var petId = (new URLSearchParams(window.location.search).get('id') || '').trim();
   if (!petId) return;
   var nameEl = document.getElementById('card-name');
@@ -3122,7 +3122,7 @@ window.sendOwnerMessage = function() {
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   }).then(function() {
     inputEl.value = '';
-    toast('<i class="ri-check-line"></i>  Mensaje enviado.');
+    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Mensaje enviado.');
     window.loadOwnerMessages();
   }).catch(function(e) { toast('âŒ '+e.message); });
 };
@@ -3185,9 +3185,9 @@ function renderClientPetGrid(d) {
     if (mm<0||(mm===0&&nw.getDate()<bbd.getDate())){yy--;mm=(mm+12)%12;}
     ageVal = yy>0 ? yy+' ano'+(yy>1?'s':'') : mm+' mes'+(mm!==1?'es':'');
   }
-  var vaccLabel = d.vaccinationStatus==='yes'?'Si <i class="ri-check-line"></i>':d.vaccinationStatus==='no'?'No':null;
-  var chipLabel = d.microchipped==='yes'?'Si <i class="ri-check-line"></i>':d.microchipped==='no'?'No':null;
-  var spayLabel = d.spayNeutered==='yes'?'Si <i class="ri-check-line"></i>':d.spayNeutered==='no'?'No':null;
+  var vaccLabel = d.vaccinationStatus==='yes'?'Si <i class="ri-check-line" style="color:#2ECC71;"></i>':d.vaccinationStatus==='no'?'No':null;
+  var chipLabel = d.microchipped==='yes'?'Si <i class="ri-check-line" style="color:#2ECC71;"></i>':d.microchipped==='no'?'No':null;
+  var spayLabel = d.spayNeutered==='yes'?'Si <i class="ri-check-line" style="color:#2ECC71;"></i>':d.spayNeutered==='no'?'No':null;
   var locLabel  = d.ownerLocation ? (d.ownerLocation.text || null) : null;
   
   var cells = [
@@ -3237,7 +3237,7 @@ window.loadScanLogs = function(petId, firestoreDb, petStatus) {
 
       var totalSize = snap.size;
       var sScans   = document.getElementById('stat-scans');    if (sScans)   sScans.textContent   = totalSize;
-      var sGeo     = document.getElementById('stat-with-geo'); if (sGeo)     sGeo.innerHTML     = withGeo > 0 ? '<i class="ri-check-line"></i>  ' + withGeo + ' con ubicacion' : 'Sin ubicacion';
+      var sGeo     = document.getElementById('stat-with-geo'); if (sGeo)     sGeo.innerHTML     = withGeo > 0 ? '<i class="ri-check-line" style="color:#2ECC71;"></i>  ' + withGeo + ' con ubicacion' : 'Sin ubicacion';
       var sLast    = document.getElementById('stat-last-scan');
 
       if (docsArray.length > 0 && docsArray[0].scannedAt && docsArray[0].scannedAt.toDate) {
@@ -3352,9 +3352,9 @@ window.copyEditUrl = function() {
 /* -- Update pet profile from client dashboard -- */
 window.updatePetData = function() {
   var clientPetId = window._clientPetId || (_dash.currentUser && _dash.currentUser.petId);
-  if (!clientPetId) { toast('<i class="ri-alert-line"></i> ID de mascota no encontrado.'); return; }
+  if (!clientPetId) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> ID de mascota no encontrado.'); return; }
   var petId = clientPetId;
-  if (!petId) { toast('<i class="ri-alert-line"></i> ID de mascota no encontrado.'); return; }
+  if (!petId) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> ID de mascota no encontrado.'); return; }
   var firestoreDb = (typeof _db !== 'undefined' && _db) ? _db : _getPcApp().firestore();
 
   var fields = [
@@ -3409,7 +3409,7 @@ window.updatePetData = function() {
     var checked = document.querySelector('input[name="'+r[0]+'"]:checked');
     if (checked) updates[r[1]] = checked.value;
   });
-  if (!Object.keys(updates).length) { toast('<i class="ri-alert-line"></i> No hay cambios para guardar.'); return; }
+  if (!Object.keys(updates).length) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> No hay cambios para guardar.'); return; }
 
   var btn = document.getElementById('btn-update-pet');
   if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line"></i> Guardando...'; }
@@ -3435,7 +3435,7 @@ window.updatePetData = function() {
     if (newPhotoUrl) updates['photoUrl'] = newPhotoUrl;
     return firestoreDb.collection('pets').doc(petId).update(updates);
   }).then(function() {
-    toast('<i class="ri-check-line"></i>  Perfil actualizado correctamente.');
+    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Perfil actualizado correctamente.');
     
     // Actualizar datos locales y re-renderizar
     if (window._currentPetData) {
@@ -3468,7 +3468,7 @@ window.sendPetReport = function() {
   var msgEl  = document.getElementById('pet-report-msg');
   var sentEl = document.getElementById('pet-report-sent');
   var btnEl  = document.getElementById('pet-report-send-btn');
-  if (!msgEl || !msgEl.value.trim()) { toast('<i class="ri-alert-line"></i> Escribe un mensaje antes de enviar.'); return; }
+  if (!msgEl || !msgEl.value.trim()) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Escribe un mensaje antes de enviar.'); return; }
   var plateId  = new URLSearchParams(window.location.search).get('id') || '';
   var nameEl   = document.getElementById('pet-name');
   var petName  = nameEl ? nameEl.textContent.trim() : '';
@@ -3485,7 +3485,7 @@ window.sendPetReport = function() {
     if (msgEl)  msgEl.style.display = 'none';
     if (btnEl)  btnEl.style.display = 'none';
     if (sentEl) sentEl.style.display = 'block';
-    toast('<i class="ri-check-line"></i>  Reporte enviado correctamente.');
+    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Reporte enviado correctamente.');
   }).catch(function(e) {
     if (btnEl) { btnEl.disabled = false; btnEl.innerHTML = '<i class="ri-send-plane-line"></i> Enviar reporte'; }
     toast('âŒ Error al enviar: ' + e.message);
@@ -3549,13 +3549,13 @@ window.loadReports = function(filterStatus) {
           + '<textarea id="reply-msg-'+r.id+'" placeholder="Escribe tu respuesta al reporte..." maxlength="500" style="width:100%;padding:10px 12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;color:#f0ecff;font-size:.85rem;font-family:\'DM Sans\',sans-serif;resize:none;height:80px;box-sizing:border-box;outline:none;line-height:1.5;"></textarea>'
           + '<div style="display:flex;gap:8px;margin-top:8px;">'
           + '<button onclick="replyToReport(\''+r.id+'\')" style="background:#4552CC;color:#fff;border:none;padding:9px 18px;border-radius:9px;font-weight:700;font-size:.82rem;cursor:pointer;flex:1;transition:background .2s;" onmouseover="this.style.background=\'#3A45B0\'" onmouseout="this.style.background=\'#4552CC\'"><i class="ri-send-plane-line"></i> Enviar respuesta</button>'
-          + '<button onclick="closeReportById(\''+r.id+'\')" style="background:rgba(108,117,125,.15);color:#a0a0b0;border:none;padding:9px 14px;border-radius:9px;font-weight:700;font-size:.82rem;cursor:pointer;transition:background .2s;" title="Cerrar reporte"><i class="ri-check-line"></i></button>'
+          + '<button onclick="closeReportById(\''+r.id+'\')" style="background:rgba(108,117,125,.15);color:#a0a0b0;border:none;padding:9px 14px;border-radius:9px;font-weight:700;font-size:.82rem;cursor:pointer;transition:background .2s;" title="Cerrar reporte"><i class="ri-check-line" style="color:#2ECC71;"></i></button>'
           + '</div></div>'
         : '';
       var actionRow = canReply
         ? '<div style="margin-top:12px;display:flex;gap:8px;">'
           + '<button onclick="toggleReplyForm(\''+r.id+'\')" style="background:rgba(69,82,204,.15);color:#A8B4F5;border:1px solid rgba(69,82,204,.3);padding:7px 14px;border-radius:9px;font-size:.8rem;font-weight:600;cursor:pointer;"><i class="ri-reply-line"></i> '+(d.adminReply?'Editar respuesta':'Responder')+'</button>'
-          + '<button onclick="closeReportById(\''+r.id+'\')" style="background:rgba(108,117,125,.12);color:#6c757d;border:1px solid rgba(108,117,125,.2);padding:7px 12px;border-radius:9px;font-size:.8rem;cursor:pointer;" title="Cerrar reporte"><i class="ri-check-line"></i> Cerrar</button>'
+          + '<button onclick="closeReportById(\''+r.id+'\')" style="background:rgba(108,117,125,.12);color:#6c757d;border:1px solid rgba(108,117,125,.2);padding:7px 12px;border-radius:9px;font-size:.8rem;cursor:pointer;" title="Cerrar reporte"><i class="ri-check-line" style="color:#2ECC71;"></i> Cerrar</button>'
           + '</div>'
         : '<div style="margin-top:12px;"><span style="font-size:.75rem;color:#6c757d;font-style:italic"><i class="ri-lock-line"></i> Reporte anonimo -- sin respuesta disponible</span></div>';
       return '<div id="report-card-'+r.id+'" class="rep-card" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px 18px;margin-bottom:12px;">'
@@ -3584,14 +3584,14 @@ window.toggleReplyForm = function(id) {
 
 window.replyToReport = function(id) {
   var msgEl = document.getElementById('reply-msg-'+id);
-  if (!msgEl || !msgEl.value.trim()) { toast('<i class="ri-alert-line"></i> Escribe una respuesta antes de enviar.'); return; }
+  if (!msgEl || !msgEl.value.trim()) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Escribe una respuesta antes de enviar.'); return; }
   var db2 = (typeof _db !== 'undefined' && _db) ? _db : _getPcApp().firestore();
   db2.collection('reports').doc(id).update({
     adminReply: msgEl.value.trim(),
     status:     'replied',
     replyAt:    firebase.firestore.FieldValue.serverTimestamp()
   }).then(function() {
-    toast('<i class="ri-check-line"></i>  Respuesta enviada.');
+    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Respuesta enviada.');
     loadReports(_rCurrentFilter || 'all');
   }).catch(function(e) { toast('âŒ Error: ' + e.message); });
 };
@@ -3599,7 +3599,7 @@ window.replyToReport = function(id) {
 window.closeReportById = function(id) {
   var db2 = (typeof _db !== 'undefined' && _db) ? _db : _getPcApp().firestore();
   db2.collection('reports').doc(id).update({ status: 'closed' }).then(function() {
-    toast('<i class="ri-check-line"></i>  Reporte cerrado.');
+    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Reporte cerrado.');
     loadReports(_rCurrentFilter || 'all');
   }).catch(function(e) { toast('âŒ Error: ' + e.message); });
 };
@@ -3655,7 +3655,7 @@ window.closeSupportPanel = function() {
 };
 window.sendOwnerMessage = function() {
   var inp = document.getElementById('owner-msg-input');
-  if (!inp || !inp.value.trim()) { toast('<i class="ri-alert-line"></i> Escribe un mensaje.'); return; }
+  if (!inp || !inp.value.trim()) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Escribe un mensaje.'); return; }
   var petId = window._clientPetId;
   var d = window._currentPetData || {};
   var db2 = window._clientFirestore || ((typeof _db !== 'undefined' && _db) ? _db : _getPcApp().firestore());
@@ -3669,7 +3669,7 @@ window.sendOwnerMessage = function() {
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   }).then(function() {
     inp.value = '';
-    toast('<i class="ri-check-line"></i>  Mensaje enviado.');
+    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Mensaje enviado.');
     loadOwnerMessages();
   }).catch(function(e) { toast('âŒ Error: ' + e.message); });
 };
@@ -3838,13 +3838,13 @@ window.saveProduct = function() {
     featured: document.getElementById('pf-featured').checked,
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
   };
-  if (!data.name) { toast('<i class="ri-alert-line"></i> El nombre es obligatorio'); return; }
+  if (!data.name) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> El nombre es obligatorio'); return; }
   var ref = window._editingProductId
     ? db().collection('products').doc(window._editingProductId)
     : db().collection('products').doc();
   if (!window._editingProductId) data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
   ref.set(data, { merge: true }).then(function() {
-    toast('<i class="ri-check-line"></i>  Producto guardado');
+    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Producto guardado');
     var overlay = document.getElementById('product-modal-overlay');
     if (overlay) overlay.remove();
     window._editingProductId = null;
@@ -3866,7 +3866,7 @@ window._fillProductForm = function(id) {
 
 window.toggleProductActive = function(id, current) {
   db().collection('products').doc(id).update({ active: !current })
-    .then(function() { toast('<i class="ri-check-line"></i>  Estado actualizado'); loadProducts(); })
+    .then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Estado actualizado'); loadProducts(); })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 
@@ -3874,7 +3874,7 @@ window.updateOrderStatus = function(id) {
   var newStatus = prompt('Nuevo estado:\npending_verification | paid | shipped | delivered');
   if (!newStatus) return;
   db().collection('orders').doc(id).update({ status: newStatus })
-    .then(function() { toast('<i class="ri-check-line"></i>  Estado de orden actualizado'); loadOrders(); })
+    .then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Estado de orden actualizado'); loadOrders(); })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 
@@ -3941,12 +3941,12 @@ window.saveDiscount = function() {
   var value = parseFloat(document.getElementById('dc-value').value) || 0;
   var maxUses = parseInt(document.getElementById('dc-max').value) || null;
   var expiry = document.getElementById('dc-expiry').value;
-  if (!value) { toast('<i class="ri-alert-line"></i> El valor es obligatorio'); return; }
+  if (!value) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> El valor es obligatorio'); return; }
   var data = { type: type, value: value, active: true, usageCount: 0,
     maxUses: maxUses, expiresAt: expiry ? new Date(expiry) : null,
     createdAt: firebase.firestore.FieldValue.serverTimestamp() };
   db().collection('discountCodes').doc(code).set(data).then(function() {
-    toast('<i class="ri-check-line"></i>  Codigo ' + code + ' creado');
+    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Codigo ' + code + ' creado');
     var o = document.getElementById('discount-modal-overlay'); if (o) o.remove();
     loadDiscounts();
   }).catch(function(e) { toast('âŒ ' + e.message); });
@@ -3954,13 +3954,13 @@ window.saveDiscount = function() {
 
 window.quickDiscount = function(code, type, value) {
   db().collection('discountCodes').doc(code).set({ type: type, value: value, active: true, usageCount: 0, maxUses: null, expiresAt: null, createdAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true })
-    .then(function() { toast('<i class="ri-check-line"></i>  Codigo ' + code + ' listo'); loadDiscounts(); })
+    .then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Codigo ' + code + ' listo'); loadDiscounts(); })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 
 window.toggleDiscount = function(id, current) {
   db().collection('discountCodes').doc(id).update({ active: !current })
-    .then(function() { toast('<i class="ri-check-line"></i>  Estado actualizado'); loadDiscounts(); });
+    .then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Estado actualizado'); loadDiscounts(); });
 };
 
 window.deleteDiscount = function(id) {
@@ -4002,7 +4002,7 @@ window.loadAffiliates = function() {
 
     /* Pending */
     if (pendWrap) {
-      if (!pending.length) { pendWrap.innerHTML = '<p style="color:#22C55E;font-size:.85rem;padding:12px"><i class="ri-check-line"></i>  Sin solicitudes pendientes.</p>'; }
+      if (!pending.length) { pendWrap.innerHTML = '<p style="color:#22C55E;font-size:.85rem;padding:12px"><i class="ri-check-line" style="color:#2ECC71;"></i>  Sin solicitudes pendientes.</p>'; }
       else {
         pendWrap.innerHTML = pending.map(function(a) {
           return '<div style="padding:14px;background:#f8f9ff;border-radius:12px;margin-bottom:10px;border:1px solid rgba(69,82,204,.1)">'
@@ -4065,7 +4065,7 @@ window.approveAffiliate = function(id) {
     status: 'approved', promoCode: code, commissionPct: comm,
     approvedAt: firebase.firestore.FieldValue.serverTimestamp()
   }).then(function() {
-    toast('<i class="ri-check-line"></i>  Afiliado aprobado -- codigo: ' + code);
+    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Afiliado aprobado -- codigo: ' + code);
     loadAffiliates();
   }).catch(function(e) { toast('âŒ ' + e.message); });
 };
@@ -4084,7 +4084,7 @@ window.markAffPaid = function(id, amount) {
     affiliateId: id, amount: amount,
     paidAt: firebase.firestore.FieldValue.serverTimestamp()
   });
-  batch.commit().then(function() { toast('<i class="ri-check-line"></i>  Pago registrado'); loadAffiliates(); })
+  batch.commit().then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Pago registrado'); loadAffiliates(); })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 
@@ -4111,7 +4111,7 @@ window.loadSecurityAlerts = function() {
     if (cntVel) cntVel.textContent = velCount;
 
     if (!wrap) return;
-    if (snap.empty) { wrap.innerHTML = '<p style="color:#22C55E;font-size:.85rem;padding:12px"><i class="ri-check-line"></i>  Sin alertas activas.</p>'; return; }
+    if (snap.empty) { wrap.innerHTML = '<p style="color:#22C55E;font-size:.85rem;padding:12px"><i class="ri-check-line" style="color:#2ECC71;"></i>  Sin alertas activas.</p>'; return; }
     var typeColors = { velocity:'#FFC837', geo_anomaly:'#f43f5e', unauthorized:'#7c3aed' };
     var typeLabels = { velocity:'Alta velocidad', geo_anomaly:'Anomalia geografica', unauthorized:'No autorizado' };
     var html = '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.82rem">'
@@ -4159,7 +4159,7 @@ window.loadSecurityAlerts = function() {
 window.blockPlate = function() {
   var input = document.getElementById('block-plate-input');
   var pid = input ? input.value.trim() : '';
-  if (!pid) { toast('<i class="ri-alert-line"></i> Ingresa un ID de placa'); return; }
+  if (!pid) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Ingresa un ID de placa'); return; }
   db().collection('config').doc('admin_settings').update({
     blockedPlates: firebase.firestore.FieldValue.arrayUnion(pid)
   }).then(function() {
@@ -4179,7 +4179,7 @@ window.blockPlateFromAlert = function(pid) {
 window.unblockPlate = function(pid) {
   db().collection('config').doc('admin_settings').update({
     blockedPlates: firebase.firestore.FieldValue.arrayRemove(pid)
-  }).then(function() { toast('<i class="ri-check-line"></i>  Placa desbloqueada'); loadSecurityAlerts(); });
+  }).then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Placa desbloqueada'); loadSecurityAlerts(); });
 };
 
 window.dismissAlert = function(docId) {
@@ -4236,7 +4236,7 @@ window.saveIndexContent = function() {
     headline: headline.trim(), subheadline: subheadline.trim(),
     bannerActive: bannerActive, bannerMessage: bannerMessage.trim(), bannerColor: bannerColor,
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-  }, { merge: true }).then(function() { toast('<i class="ri-check-line"></i>  Contenido guardado'); })
+  }, { merge: true }).then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Contenido guardado'); })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 
@@ -4244,9 +4244,9 @@ window.saveFeaturedProducts = function() {
   var boxes = document.querySelectorAll('input[name="featured-product"]:checked');
   var ids = [];
   boxes.forEach(function(b) { ids.push(b.value); });
-  if (ids.length > 4) { toast('<i class="ri-alert-line"></i> Maximo 4 productos destacados'); return; }
+  if (ids.length > 4) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Maximo 4 productos destacados'); return; }
   db().collection('config').doc('index_content').set({ featuredProducts: ids }, { merge: true })
-    .then(function() { toast('<i class="ri-check-line"></i>  Destacados guardados (' + ids.length + ')'); })
+    .then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Destacados guardados (' + ids.length + ')'); })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 

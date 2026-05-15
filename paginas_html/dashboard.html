@@ -381,7 +381,28 @@
     #dashboard-alerts .dash-alert.danger i { color: #E74C3C !important; }
     #dashboard-alerts .dash-alert.success { border-left-color: #2ECC71 !important; }
     #dashboard-alerts .dash-alert.success i { color: #2ECC71 !important; }
-  </style>
+  
+/* Iconos de tarjetas de estadisticas heredan el color */
+.stat-icon i {
+  color: inherit !important;
+  font-size: 1.8rem !important;
+}
+
+/* Colores especificos para iconos de cada tarjeta */
+.stat-card.total .stat-icon i    { color: #4552CC !important; }
+.stat-card.active .stat-icon i   { color: #2ECC71 !important; }
+.stat-card.lost .stat-icon i     { color: #E74C3C !important; }
+.stat-card.expired .stat-icon i  { color: #F39C12 !important; }
+
+/* Blindaje de iconos en modales (para que no se vean cuadrados) */
+#vet-edit-modal i[class*="ri-"],
+#shelter-edit-modal i[class*="ri-"],
+#payment-modal i[class*="ri-"],
+#pet-detail-modal i[class*="ri-"] {
+  font-family: 'remixicon' !important;
+  font-style: normal !important;
+}
+</style>
 </head>
 <body>
 
@@ -540,23 +561,23 @@
       <!-- Row 2: Red & Ventas -->
       <div class="stats-grid" style="margin-top:0">
         <div class="stat-card" style="background:rgba(99,102,241,.12);border-color:rgba(99,102,241,.25)">
-          <div class="stat-icon"><i class="ri-hospital-line"></i></div>
+          <div class="stat-icon"><i class="ri-hospital-line" style="color:#6366F1;"></i></div>
           <div class="stat-value" id="stat-vets-count">—</div>
           <div class="stat-label">Veterinarias aliadas</div>
         </div>
         <div class="stat-card" style="background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.25)">
-          <div class="stat-icon"><i class="ri-home-heart-line"></i></div>
+          <div class="stat-icon"><i class="ri-home-heart-line" style="color:#10B981;"></i></div>
           <div class="stat-value" id="stat-shelters-count">—</div>
           <div class="stat-label">Refugios aliados</div>
         </div>
         <div class="stat-card" style="background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.25)">
-          <div class="stat-icon"><i class="ri-archive-line"></i></div>
+          <div class="stat-icon"><i class="ri-archive-line" style="color:#F59E0B;"></i></div>
           <div class="stat-value" id="stat-stock">—</div>
           <div class="stat-label">Stock disponible</div>
           <div style="font-size:.68rem;color:var(--muted-dark);margin-top:3px">placas sin asignar</div>
         </div>
         <div class="stat-card" style="background:rgba(168,85,247,.08);border-color:rgba(168,85,247,.25)">
-          <div class="stat-icon"><i class="ri-money-dollar-circle-line"></i></div>
+          <div class="stat-icon"><i class="ri-money-dollar-circle-line" style="color:#A855F7;"></i></div>
           <div class="stat-value" id="stat-sold">—</div>
           <div class="stat-label">Placas vendidas</div>
           <div style="font-size:.68rem;color:var(--muted-dark);margin-top:3px">activadas + reservadas</div>
