@@ -1884,13 +1884,23 @@
 
   window.ptcgCloseModal = function () { document.getElementById('ptcg-modal').hidden = true; };
 
-  window.ptcgBuyPlan = function (planKey) {
-    // Determine path based on previous fetch result
-    var isIntl = window.ptcgIsIntl || false;
+  window.ptcgBuyPlan = async function (planKey) {
+    var isIntl = window.ptcgIsIntl;
+    if (isIntl === undefined) {
+      try {
+        var res = await fetch('https://ipapi.co/json/');
+        var data = await res.json();
+        isIntl = (data.country_code && data.country_code !== 'BO');
+        window.ptcgIsIntl = isIntl;
+      } catch(e) { 
+        console.warn('IP detect error');
+        isIntl = false; 
+      }
+    }
     var base = isIntl
       ? 'https://prueb2.dashnexpages.net/checkout-internacional/'
       : 'https://prueb2.dashnexpages.net/checkout/';
-    window.location.href = base + '?plan=' + planKey;
+    window.location.href = base + '?plan=' + planKey + (isIntl ? '&intl=1' : '');
   };
 
   window.ptcgShowView = function (view) {

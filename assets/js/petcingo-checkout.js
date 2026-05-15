@@ -389,28 +389,24 @@
   function drawQrCanvas(total) {
     var canvas = byId('ptcg-qr-canvas');
     if (!canvas) return;
-    var ctx = canvas.getContext('2d');
-    var sz  = 200;
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(0, 0, sz, sz);
-    ctx.fillStyle = '#1E255E';
-    var cell = sz / 10;
-    var pat  = [
-      [1,1,1,1,1,1,1,0,1,0],[1,0,0,0,0,0,1,0,0,1],
-      [1,0,1,1,1,0,1,0,1,1],[1,0,1,1,1,0,1,1,0,0],
-      [1,0,1,1,1,0,1,0,1,0],[1,0,0,0,0,0,1,0,0,1],
-      [1,1,1,1,1,1,1,0,1,0],[0,0,0,0,0,0,0,1,0,1],
-      [0,1,0,1,0,1,0,0,1,0],[1,0,1,0,1,0,1,1,0,1]
-    ];
-    for (var r = 0; r < 10; r++) {
-      for (var c = 0; c < 10; c++) {
-        if (pat[r][c]) ctx.fillRect(c * cell + 1, r * cell + 1, cell - 2, cell - 2);
+    // Cargar datos bancarios y generar QR real
+    db.collection('config').doc('bank_info').get().then(function(snap) {
+      var data = snap.exists ? snap.data() : {};
+      var bankName = data.bankName || 'Banco Union';
+      var account = data.accountNumber || '10000000000000';
+      var holder = data.accountHolder || 'Petcingo SRL';
+      var qrText = 'Transferencia Bancaria\nBanco: ' + bankName + '\nCuenta: ' + account + '\nTitular: ' + holder + '\nMonto: Bs ' + total;
+      canvas.innerHTML = '';
+      try {
+        new QRCode(canvas, { text: qrText, width: 200, height: 200, colorDark: '#1E255E', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+      } catch(e) {
+        // Fallback: dibujar manualmente
+        var ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, 200, 200);
+        ctx.fillStyle = '#1E255E'; ctx.font = 'bold 11px monospace';
+        ctx.fillText('PETCINGO QR', 50, 100);
       }
-    }
-    ctx.fillStyle = '#4552CC';
-    ctx.font = 'bold 10px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('PETCINGO', sz / 2, sz - 6);
+    }).catch(function(){});
   }
 
   function showBankCard() {

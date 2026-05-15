@@ -927,40 +927,33 @@
 
         <!-- Tarjeta de datos bancarios (aparece cuando es deposito bancario) -->
         <div class="ptcg-checkout__card" id="ptcg-bank-card" hidden>
-          <div style="font-family:'Sora',sans-serif;font-size:0.92rem;font-weight:700;color:#1E255E;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(69,82,204,0.08);padding-bottom:12px;">
-            <i class="ri-bank-line" style="color:#4552CC;"></i> Datos para transferencia
+          <div class="ptcg-checkout__section-title" style="font-family:'Sora',sans-serif;font-size:0.92rem;font-weight:700;color:#1E255E;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(69,82,204,0.08);padding-bottom:12px;">
+            <i class="ri-bank-line" style="color:#4552CC;"></i> Datos bancarios
           </div>
-          <div style="background:rgba(69,82,204,0.05);border-radius:12px;padding:16px;border:1px solid rgba(69,82,204,0.15);">
-            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-              <span style="font-size:0.8rem;color:#6C7297;">Banco</span>
-              <span style="font-weight:700;color:#1E255E;font-size:0.85rem;" id="ptcg-bank-name">Banco Union</span>
+          <div style="display:flex;flex-direction:column;gap:10px;background:rgba(238,240,250,0.60);border-radius:14px;padding:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:0.82rem;color:#6C7297;">Banco</span>
+              <span style="font-weight:700;color:#1E255E;font-family:monospace;" id="ptcg-bank-name">Banco Union</span>
             </div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-              <span style="font-size:0.8rem;color:#6C7297;">Tipo de cuenta</span>
-              <span style="font-weight:700;color:#1E255E;font-size:0.85rem;" id="ptcg-bank-type">Cuenta Corriente</span>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:0.82rem;color:#6C7297;">Tipo de cuenta</span>
+              <span style="font-weight:700;color:#1E255E;" id="ptcg-bank-type">Cuenta Corriente</span>
             </div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-              <span style="font-size:0.8rem;color:#6C7297;">Numero de cuenta</span>
-              <span style="font-weight:700;color:#1E255E;font-size:0.85rem;" id="ptcg-bank-account">10000000000000</span>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:0.82rem;color:#6C7297;">Numero de cuenta</span>
+              <span style="font-weight:700;color:#1E255E;font-family:monospace;cursor:pointer;" id="ptcg-bank-account" onclick="ptcgCopyText(document.getElementById('ptcg-bank-account').textContent.trim())">10000000000000</span>
             </div>
-            <div style="display:flex;justify-content:space-between;">
-              <span style="font-size:0.8rem;color:#6C7297;">Titular</span>
-              <span style="font-weight:700;color:#1E255E;font-size:0.85rem;" id="ptcg-bank-holder">Petcingo SRL</span>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:0.82rem;color:#6C7297;">Titular</span>
+              <span style="font-weight:700;color:#1E255E;" id="ptcg-bank-holder">Petcingo SRL</span>
             </div>
           </div>
           <p style="font-size:0.82rem;color:#6C7297;text-align:center;">
-            Monto a pagar: <strong style="color:#1E255E;" id="ptcg-bank-amount">-- Bs</strong>
+            Monto a depositar: <strong style="color:#1E255E;" id="ptcg-bank-amount">-- Bs</strong>
           </p>
-          <div class="ptcg-checkout__confirm-area visible">
-            <button class="ptcg-checkout__btn ptcg-checkout__btn--primary"
-                    onclick="ptcgConfirmPayment()">
-              <i class="ri-upload-cloud-2-line"></i> Ya deposite (Subir comprobante)
-            </button>
-            <a href="https://wa.me/59171040074" target="_blank"
-               style="font-size:0.80rem;color:#4552CC;font-weight:600;text-decoration:underline;">
-              Tienes dudas? Contactanos por WhatsApp
-            </a>
-          </div>
+          <button class="ptcg-checkout__btn ptcg-checkout__btn--primary" onclick="ptcgConfirmPayment()">
+            <i class="ri-checkbox-circle-line"></i> Ya deposite
+          </button>
         </div>
 
         <button class="ptcg-checkout__btn ptcg-checkout__btn--secondary"
@@ -1034,6 +1027,7 @@
   </main>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://prueb2.dashnexpages.net/assets/js/petcingo-checkout.js?v=20260515"></script>
 </body>
 </html>
