@@ -1111,33 +1111,55 @@
         <p>Administra los pedidos de placas, cambia estados y genera guías de envío</p>
       </div>
 
+      <div class="stats-grid" style="margin-bottom:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+        <div class="stat-card" style="background:rgba(255,152,0,0.08);border:1px solid rgba(255,152,0,0.2);border-radius:14px;padding:16px;text-align:center;">
+          <div class="stat-icon"><i class="ri-time-line" style="color:#F39C12;font-size:1.5rem;"></i></div>
+          <div class="stat-value" id="stat-pending" style="font-size:1.8rem;font-weight:800;color:#212121;">—</div>
+          <div class="stat-label" style="font-size:0.8rem;color:#757575;font-weight:600;text-transform:uppercase;">Pendientes</div>
+        </div>
+        <div class="stat-card" style="background:rgba(69,82,204,0.08);border:1px solid rgba(69,82,204,0.2);border-radius:14px;padding:16px;text-align:center;">
+          <div class="stat-icon"><i class="ri-box-3-line" style="color:#4552CC;font-size:1.5rem;"></i></div>
+          <div class="stat-value" id="stat-processing" style="font-size:1.8rem;font-weight:800;color:#212121;">—</div>
+          <div class="stat-label" style="font-size:0.8rem;color:#757575;font-weight:600;text-transform:uppercase;">En proceso</div>
+        </div>
+        <div class="stat-card" style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:14px;padding:16px;text-align:center;">
+          <div class="stat-icon"><i class="ri-check-line" style="color:#2ECC71;font-size:1.5rem;"></i></div>
+          <div class="stat-value" id="stat-delivered" style="font-size:1.8rem;font-weight:800;color:#212121;">—</div>
+          <div class="stat-label" style="font-size:0.8rem;color:#757575;font-weight:600;text-transform:uppercase;">Entregados</div>
+        </div>
+      </div>
+
+
       <!-- Filtros -->
       <div class="ptcg-index__card" style="margin-bottom:16px;">
-        <div class="table-toolbar" style="margin-bottom:0;">
-          <select class="ptcg-activate__select" id="order-filter-status" onchange="filterOrders()">
-            <option value="">Todos los estados</option>
-            <option value="pendiente">Pendiente</option>
-            <option value="preparando">Preparando</option>
-            <option value="enviado">Enviado</option>
-            <option value="entregado">Entregado</option>
+        <div class="table-toolbar" style="margin-bottom:0;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+          <select class="ptcg-activate__select" id="order-filter-status" onchange="filterOrders()" style="width:auto;flex:1;">
+            <option value="">Estados (Todos)</option>
+            <option value="pending">Pendientes</option>
+            <option value="confirmed">Confirmados</option>
+            <option value="processing">En Proceso</option>
+            <option value="shipped">Enviados</option>
+            <option value="delivered">Entregados</option>
+            <option value="rejected">Rechazados</option>
           </select>
-          <select class="ptcg-activate__select" id="order-filter-channel" onchange="filterOrders()">
-            <option value="">Todos los canales</option>
-            <option value="directo">Venta directa</option>
-            <option value="refugio">Refugio</option>
-            <option value="afiliado">Afiliado</option>
-            <option value="veterinaria">Veterinaria</option>
+          <select class="ptcg-activate__select" id="order-filter-channel" onchange="filterOrders()" style="width:auto;flex:1;">
+            <option value="">Canal (Todos)</option>
+            <option value="Directo">Directo</option>
+            <option value="Refugio">Refugio</option>
+            <option value="Afiliado">Afiliado</option>
+            <option value="Veterinaria">Veterinaria</option>
           </select>
-          <select class="ptcg-activate__select" id="order-filter-destino" onchange="filterOrders()">
-            <option value="">Todos los destinos</option>
+          <select class="ptcg-activate__select" id="order-filter-destino" onchange="filterOrders()" style="width:auto;flex:1;">
+            <option value="">Destino (Todos)</option>
             <option value="Santa Cruz">Santa Cruz</option>
             <option value="Nacional">Nacional</option>
             <option value="Internacional">Internacional</option>
           </select>
+          <input type="text" id="order-filter-search" placeholder="Buscar comprador o código" oninput="filterOrders()" class="ptcg-activate__input" style="width:200px;margin-bottom:0;">
           <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;font-weight:600;color:#212121;cursor:pointer;">
-            <input type="checkbox" id="order-filter-urgent" onchange="filterOrders()"> Solo urgentes
+            <input type="checkbox" id="order-filter-urgent" onchange="filterOrders()"> Urgentes
           </label>
-          <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="loadOrders()" style="margin-left:auto;"><i class="ri-refresh-line"></i> Recargar</button>
+          <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="loadOrders()" style="margin-left:auto;"><i class="ri-refresh-line"></i></button>
         </div>
       </div>
 
@@ -1281,42 +1303,6 @@
           </table>
         </div>
         <div class="table-count" id="store-count"></div>
-      </div>
-    </section>
-
-    <!-- ── PEDIDOS Y PAGOS ── -->
-    <section class="section" id="sec-orders">
-      <div class="page-header">
-        <h2><i class="ri-shopping-cart-line"></i> Pedidos y Pagos</h2>
-        <p>Gestiona los pedidos de Bolivia e Internacionales, verifica comprobantes QR y acepta pagos.</p>
-      </div>
-      <div class="ptcg-index__card" style="margin-bottom:16px;">
-        <div class="table-toolbar" style="margin-bottom:0;">
-          <select class="ptcg-activate__select" id="order-filter-status" onchange="filterOrders()">
-            <option value="pending">Pendientes de Pago</option>
-            <option value="processing">Procesando (Verificar)</option>
-            <option value="completed">Completados</option>
-            <option value="cancelled">Cancelados</option>
-            <option value="">Todos</option>
-          </select>
-          <select class="ptcg-activate__select" id="order-filter-region" onchange="filterOrders()">
-            <option value="">Todas las regiones</option>
-            <option value="bolivia">Bolivia</option>
-            <option value="international">Internacional</option>
-          </select>
-          <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="loadOrders()"><i class="ri-refresh-line"></i> Recargar</button>
-        </div>
-      </div>
-      <div class="ptcg-index__card">
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>ID Pedido</th><th>Cliente</th><th>Región</th><th>Total</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead>
-            <tbody id="orders-tbody">
-              <tr><td colspan="7"><div class="empty-state">Cargando pedidos...</div></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="table-count" id="orders-count"></div>
       </div>
     </section>
 
@@ -2067,33 +2053,9 @@
   var _ordersCache = [];
   window._ordersListenerActive = false;
 
-  window.loadOrders = function() {
-    var db2 = db(); if (!db2) return;
-    window._ordersListenerActive = true;
-    var tbody = document.getElementById('orders-tbody');
-    if (tbody) tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></td></tr>';
+  
 
-    db2.collection('orders').orderBy('createdAt', 'desc').onSnapshot(function(snap) {
-      _ordersCache = [];
-      snap.forEach(function(doc) { _ordersCache.push({ id: doc.id, data: doc.data() }); });
-      renderOrders(_ordersCache);
-      updateOrdersBadge();
-    }, function(err) {
-      console.error('Error loading orders:', err);
-      window._ordersListenerActive = false;
-      if (tbody) tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state">Error al cargar pedidos.</div></td></tr>';
-    });
-  };
-
-  function renderOrders(orders) {
-    var tbody = document.getElementById('orders-tbody');
-    if (!tbody) return;
-    if (orders.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state">No hay pedidos registrados.</div></td></tr>';
-      var cnt = document.getElementById('orders-count'); if (cnt) cnt.textContent = '';
-      return;
-    }
-    var html = '';
+      var html = '';
     orders.forEach(function(o) {
       var d = o.data;
       var status = d.status || 'pendiente';
@@ -2121,132 +2083,314 @@
     if (cnt) cnt.textContent = orders.length + ' pedido' + (orders.length !== 1 ? 's' : '');
   }
 
-  function getNextOrderStatus(current) {
-    var flow = { pendiente: 'preparando', preparando: 'enviado', enviado: 'entregado' };
-    return flow[current] || current;
-  }
+  
+  
 
-  window.changeOrderStatus = function(orderId, newStatus) {
-    var db2 = db(); if (!db2) return;
-    db2.collection('orders').doc(orderId).update({ status: newStatus, updatedAt: firebase.firestore.FieldValue.serverTimestamp() })
-      .then(function() { if (typeof toast === 'function') toast('Pedido → ' + newStatus); })
-      .catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
+  
+
+
+
+
+
+  window.openVerifyModal = function(orderId) {
+    var db2 = db();
+    db2.collection('orders').doc(orderId).get().then(function(doc) {
+      if (!doc.exists) { toast('Pedido no encontrado.'); return; }
+      var d = doc.data();
+      var modal = document.getElementById('verify-payment-modal');
+      var content = document.getElementById('verify-modal-content');
+      var actions = document.getElementById('verify-modal-actions');
+      
+      var html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Comprador</span><br><strong>' + escFn(d.buyer ? d.buyer.name : d.buyerName || '—') + '</strong></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Telefono</span><br><strong>' + escFn(d.buyer ? d.buyer.phone : d.phone || '—') + '</strong></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Email</span><br><strong>' + escFn(d.buyer ? d.buyer.email : d.email || '—') + '</strong></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Plan</span><br><strong>' + escFn(d.planName || '—') + '</strong></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Total</span><br><strong style="color:#4552CC;">' + (d.total || 0) + ' Bs</strong></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Metodo</span><br><strong>' + escFn(d.paymentMethod || '—') + '</strong></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Direccion</span><br><strong>' + escFn(d.buyer ? d.buyer.address : d.address || '—') + '</strong></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Estado</span><br><span class="status-badge ' + (d.status || 'pending') + '">' + (d.status || 'pending').toUpperCase() + '</span></div>';
+      html += '</div>';
+      
+      if (d.receiptUrl) {
+        html += '<div style="margin-bottom:16px;">';
+        html += '<span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;display:block;margin-bottom:8px;">Comprobante de pago</span>';
+        html += '<a href="' + d.receiptUrl + '" target="_blank">';
+        html += '<img src="' + d.receiptUrl + '" style="width:100%;max-height:300px;object-fit:contain;border-radius:12px;border:1px solid #E0E0E0;cursor:pointer;" alt="Comprobante" onerror="this.style.display=\'none\'">';
+        html += '</a>';
+        html += '<a href="' + d.receiptUrl + '" target="_blank" style="display:block;text-align:center;margin-top:6px;font-size:0.8rem;color:#4552CC;font-weight:600;">Ver imagen completa</a>';
+        html += '</div>';
+      }
+      
+      if (d.activationCode) {
+        html += '<div style="background:#EEF1FB;padding:10px 14px;border-radius:10px;margin-bottom:12px;text-align:center;">';
+        html += '<span style="font-size:0.7rem;color:#9E9E9E;">Codigo de activacion</span><br>';
+        html += '<strong style="font-family:monospace;font-size:1.2rem;color:#4552CC;">' + d.activationCode + '</strong>';
+        html += '</div>';
+      }
+      
+      content.innerHTML = html;
+      
+      var btnsHtml = '';
+      if (d.status === 'pending') {
+        btnsHtml += '<button class="ptcg-index__btn ptcg-index__btn--success" style="flex:1;" onclick="verifyOrderApprove(\'' + orderId + '\')"><i class="ri-check-line"></i> Aceptar pago</button>';
+        btnsHtml += '<button class="ptcg-index__btn ptcg-index__btn--danger" style="flex:1;" onclick="verifyOrderReject(\'' + orderId + '\')"><i class="ri-close-line"></i> Rechazar</button>';
+      } else if (d.status === 'confirmed') {
+        btnsHtml += '<button class="ptcg-index__btn ptcg-index__btn--primary" style="flex:1;" onclick="markAsProcessing(\'' + orderId + '\')"><i class="ri-box-3-line"></i> Marcar en preparacion</button>';
+      } else if (d.status === 'processing') {
+        btnsHtml += '<button class="ptcg-index__btn ptcg-index__btn--primary" style="flex:1;" onclick="openShippingForm(\'' + orderId + '\')"><i class="ri-truck-line"></i> Registrar envio</button>';
+      } else if (d.status === 'shipped') {
+        btnsHtml += '<button class="ptcg-index__btn ptcg-index__btn--success" style="flex:1;" onclick="markAsDelivered(\'' + orderId + '\')"><i class="ri-check-double-line"></i> Marcar entregado</button>';
+      }
+      actions.innerHTML = btnsHtml;
+      
+      modal.style.display = 'flex';
+    }).catch(function(e) { toast('Error: ' + e.message); });
   };
 
-  window.printGuide = function(orderId) {
-    var order = _ordersCache.find(function(o) { return o.id === orderId; });
-    if (!order) { if (typeof toast === 'function') toast('Pedido no encontrado.'); return; }
-    var d = order.data;
-    var win = window.open('', '_blank', 'width=800,height=600');
-    win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Guía de Envío — ' + orderId + '</title>' +
-      '<link href="https://fonts.googleapis.com/css2?family=Sora:wght@700;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">' +
-      '<style>body{margin:0;padding:20px;font-family:"Plus Jakarta Sans",sans-serif;}h2{font-family:"Sora",sans-serif;}' +
-      'table{width:100%;border-collapse:collapse;margin:16px 0;}td{border:1px solid #ddd;padding:10px;font-size:.9rem;}' +
-      '.footer{margin-top:24px;font-size:.8rem;color:#9E9E9E;text-align:center;}' +
-      '@media print{body{padding:0;}}</style></head><body>' +
-      '<h2>🐾 Petcingo — Guía de Envío</h2>' +
-      '<p style="font-size:.85rem;color:#757575">Pedido: <strong>' + orderId + '</strong> | Fecha: ' + new Date().toLocaleDateString('es-BO') + '</p>' +
-      '<table>' +
-        '<tr><td><strong>Comprador</strong></td><td>' + escFn(d.buyerName || '—') + '</td></tr>' +
-        '<tr><td><strong>Teléfono</strong></td><td>' + escFn(d.phone || '—') + '</td></tr>' +
-        '<tr><td><strong>Canal</strong></td><td>' + escFn(d.channel || '—') + '</td></tr>' +
-        '<tr><td><strong>Tipo de envío</strong></td><td>' + escFn(d.shippingType || '—') + '</td></tr>' +
-        '<tr><td><strong>Departamento</strong></td><td>' + escFn(d.department || '—') + '</td></tr>' +
-        '<tr><td><strong>Dirección</strong></td><td>' + escFn(d.address || '—') + '</td></tr>' +
-        '<tr><td><strong>Notas</strong></td><td>' + escFn(d.notes || '—') + '</td></tr>' +
-        '<tr><td><strong>Estado</strong></td><td>' + escFn(d.status || 'pendiente').toUpperCase() + '</td></tr>' +
-      '</table>' +
-      '<p class="footer">Petcingo — www.petcingo.com.bo</p>' +
-      '<script>window.onload=function(){window.print();}<\/script>' +
-      '<script src="https://unpkg.com/lucide@latest"></script>
-<script>lucide.createIcons();</script>
+  window.closeVerifyModal = function() {
+    var m = document.getElementById('verify-payment-modal');
+    if(m) m.style.display = 'none';
+  };
 
-<!-- Verify Payment Modal -->
-<div id="verify-payment-modal" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;padding:16px;">
-  <div class="ptcg-index__modal-card" style="max-width:500px;width:100%;padding:28px;">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-      <h3 style="font-family:'Sora',sans-serif;font-size:1.2rem;font-weight:800;margin:0;display:flex;align-items:center;gap:8px;"><i data-lucide="shield-check" style="color:#4552CC;"></i> Verificar Pago</h3>
-      <button onclick="closeVerifyModal()" style="background:rgba(69,82,204,0.06);border:1px solid rgba(69,82,204,0.12);color:#616161;font-size:1rem;cursor:pointer;padding:6px 10px;border-radius:10px;line-height:1;transition:background 0.15s;" onmouseover="this.style.background='rgba(231,76,60,0.08)';this.style.color='#E74C3C'" onmouseout="this.style.background='rgba(69,82,204,0.06)';this.style.color='#616161'"><i data-lucide="x"></i></button>
-    </div>
-    <div id="verify-payment-details" style="font-size:0.9rem;color:#424242;margin-bottom:20px;line-height:1.5;"></div>
-    <div style="display:flex;gap:10px;">
-      <button class="ptcg-index__btn ptcg-index__btn--danger" style="flex:1;" onclick="rejectPayment()">Rechazar</button>
-      <button class="ptcg-index__btn ptcg-index__btn--success" style="flex:1;" onclick="approvePayment()">Aprobar y Activar</button>
-    </div>
-  </div>
-</div>
-
-<script>
-window._currentVerifyOrderId = null;
-
-window.openVerifyModal = function(orderId) {
-  var order = _ordersCache.find(function(o) { return o.id === orderId; });
-  if (!order) return;
-  window._currentVerifyOrderId = orderId;
-  
-  var d = order.data;
-  var receiptHtml = d.receiptUrl 
-    ? '<div style="margin-top:12px;"><a href="' + d.receiptUrl + '" target="_blank"><img src="' + d.receiptUrl + '" style="max-width:100%;max-height:250px;border-radius:8px;border:1px solid #ddd;" alt="Comprobante"></a></div>'
-    : '<div style="margin-top:12px;color:#f44336;font-weight:600;">⚠️ Sin comprobante adjunto</div>';
+  window.verifyOrderApprove = function(orderId) {
+    if (!confirm('Confirmar pago y generar codigo de activacion?')) return;
+    var db2 = db();
+    var batch = db2.batch();
+    var activationCode = genActivationCode();
     
-  var detailsHtml = 
-    '<strong>Comprador:</strong> ' + (d.buyerName || '—') + '<br>' +
-    '<strong>Email:</strong> ' + (d.email || '—') + '<br>' +
-    '<strong>Monto:</strong> ' + (d.amount ? d.amount + ' Bs' : '—') + '<br>' +
-    '<strong>Mascota:</strong> ' + (d.petName || '—') + '<br>' +
-    receiptHtml;
+    batch.update(db2.collection('orders').doc(orderId), {
+      status: 'confirmed',
+      activationCode: activationCode,
+      verifiedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
     
-  document.getElementById('verify-payment-details').innerHTML = detailsHtml;
-  document.getElementById('verify-payment-modal').style.display = 'flex';
-  if(typeof lucide !== 'undefined') lucide.createIcons();
-};
+    batch.set(db2.collection('pets').doc(activationCode), {
+      activationCode: activationCode,
+      status: 'reserved',
+      orderId: orderId,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    
+    batch.commit().then(function() {
+      closeVerifyModal();
+      toast('Pago aceptado. Codigo: ' + activationCode);
+      loadOrders();
+    }).catch(function(e) { toast('Error: ' + e.message); });
+  };
 
-window.closeVerifyModal = function() {
-  document.getElementById('verify-payment-modal').style.display = 'none';
-  window._currentVerifyOrderId = null;
-};
+  window.verifyOrderReject = function(orderId) {
+    var reason = prompt('Motivo del rechazo (opcional):');
+    var db2 = db();
+    db2.collection('orders').doc(orderId).update({
+      status: 'rejected',
+      rejectReason: reason || '',
+      verifiedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function() {
+      closeVerifyModal();
+      toast('Pago rechazado');
+      loadOrders();
+    }).catch(function(e) { toast('Error: ' + e.message); });
+  };
 
-window.approvePayment = function() {
-  if (!window._currentVerifyOrderId) return;
-  var orderId = window._currentVerifyOrderId;
-  var order = _ordersCache.find(function(o) { return o.id === orderId; });
-  if (!order) return;
-  var db2 = typeof db === 'function' ? db() : firebase.firestore();
-  
-  var batch = db2.batch();
-  var orderRef = db2.collection('orders').doc(orderId);
-  batch.update(orderRef, { status: 'preparando', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-  
-  if (order.data.petId) {
-    var petRef = db2.collection('pets').doc(order.data.petId);
-    batch.update(petRef, { isActive: true, status: 'active', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+  function genActivationCode() {
+    var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    var code = '';
+    for (var i = 0; i < 6; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+    return code;
   }
-  
-  batch.commit().then(function() {
-    if (typeof toast === 'function') toast('Pago aprobado y mascota activada.');
-    closeVerifyModal();
-  }).catch(function(e) {
-    if (typeof toast === 'function') toast('Error al aprobar: ' + e.message);
-  });
-};
 
-window.rejectPayment = function() {
-  if (!window._currentVerifyOrderId) return;
-  if (!confirm('¿Seguro que deseas rechazar este pago?')) return;
-  var db2 = typeof db === 'function' ? db() : firebase.firestore();
-  
-  db2.collection('orders').doc(window._currentVerifyOrderId).update({
-    status: 'rechazado',
-    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-  }).then(function() {
-    if (typeof toast === 'function') toast('Pago rechazado.');
-    closeVerifyModal();
-  }).catch(function(e) {
-    if (typeof toast === 'function') toast('Error al rechazar: ' + e.message);
-  });
-};
+  window.markAsProcessing = function(orderId) {
+    var db2 = db();
+    db2.collection('orders').doc(orderId).update({
+      status: 'processing',
+      processingAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function() {
+      closeVerifyModal();
+      toast('Pedido en preparacion');
+      loadOrders();
+    });
+  };
+
+  window.openShippingForm = function(orderId) {
+    var tracking = prompt('Numero de guia / tracking:');
+    if (!tracking) return;
+    var db2 = db();
+    db2.collection('orders').doc(orderId).update({
+      status: 'shipped',
+      trackingNumber: tracking,
+      shippedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function() {
+      closeVerifyModal();
+      toast('Envio registrado: ' + tracking);
+      loadOrders();
+    });
+  };
+
+  window.markAsDelivered = function(orderId) {
+    if (!confirm('Confirmar entrega del pedido?')) return;
+    var db2 = db();
+    db2.collection('orders').doc(orderId).update({
+      status: 'delivered',
+      deliveredAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function() {
+      closeVerifyModal();
+      toast('Pedido entregado');
+      loadOrders();
+    });
+  };
+
+  window.printShippingGuide = function(orderId) {
+    var order = _ordersCache.find(function(o) { return o.id === orderId; });
+    if (!order) { toast('Pedido no encontrado.'); return; }
+    var d = order.data;
+    var buyerName = d.buyer ? d.buyer.name : d.buyerName;
+    var buyerPhone = d.buyer ? d.buyer.phone : d.phone;
+    var buyerAddress = d.buyer ? d.buyer.address : d.address;
+    var buyerNotes = d.buyer ? d.buyer.notes : d.notes;
+
+    var win = window.open('', '_blank', 'width=800,height=600');
+    win.document.write('<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Guia de Envio - ' + orderId + '</title>');
+    win.document.write('<link href="https://fonts.googleapis.com/css2?family=Sora:wght@700;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">');
+    win.document.write('<style>body{font-family:"Plus Jakarta Sans",sans-serif;padding:40px;color:#212121;}');
+    win.document.write('h1{font-family:"Sora",sans-serif;font-size:1.5rem;margin-bottom:4px;}');
+    win.document.write('.meta{color:#757575;font-size:0.85rem;margin-bottom:20px;border-bottom:2px solid #4552CC;padding-bottom:12px;}');
+    win.document.write('table{width:100%;border-collapse:collapse;margin:16px 0;}');
+    win.document.write('td,th{border:1px solid #E0E0E0;padding:10px 14px;font-size:0.88rem;text-align:left;}');
+    win.document.write('th{background:#F8F9FB;font-weight:700;width:30%;}');
+    win.document.write('.footer{margin-top:30px;text-align:center;font-size:0.75rem;color:#9E9E9E;border-top:1px solid #E0E0E0;padding-top:12px;}');
+    win.document.write('@media print{body{padding:20px;}}</style></head><body>');
+    win.document.write('<h1>Guia de Envio - Petcingo</h1>');
+    win.document.write('<div class="meta">Pedido: <strong>' + orderId + '</strong> | Fecha: ' + new Date().toLocaleDateString('es-BO', {day:'2-digit',month:'long',year:'numeric'}) + '</div>');
+    win.document.write('<table>');
+    win.document.write('<tr><th>Comprador</th><td>' + escFn(buyerName || '—') + '</td></tr>');
+    win.document.write('<tr><th>Telefono</th><td>' + escFn(buyerPhone || '—') + '</td></tr>');
+    win.document.write('<tr><th>Direccion</th><td>' + escFn(buyerAddress || '—') + '</td></tr>');
+    win.document.write('<tr><th>Plan</th><td>' + escFn(d.planName || '—') + '</td></tr>');
+    win.document.write('<tr><th>Tipo de envio</th><td>' + escFn(d.shippingType || d.deliveryType || '—') + '</td></tr>');
+    win.document.write('<tr><th>Tracking</th><td>' + escFn(d.trackingNumber || '—') + '</td></tr>');
+    win.document.write('<tr><th>Notas</th><td>' + escFn(buyerNotes || '—') + '</td></tr>');
+    win.document.write('</table>');
+    win.document.write('<div class="footer">Petcingo — Sistema de Identificacion de Mascotas | petcingo.com.bo</div>');
+    win.document.write('<script>window.onload=function(){window.print();};<\/script></body></html>');
+    win.document.close();
+  };
+
+  function updateOrderStats() {
+    var p=0, c=0, e=0, newO=0;
+    _ordersCache.forEach(function(o) {
+      if (o.data.status === 'pending') { p++; newO++; }
+      if (o.data.status === 'processing') c++;
+      if (o.data.status === 'delivered') e++;
+    });
+    var elP = document.getElementById('stat-pending');
+    var elC = document.getElementById('stat-processing');
+    var elE = document.getElementById('stat-delivered');
+    if(elP) elP.textContent = p;
+    if(elC) elC.textContent = c;
+    if(elE) elE.textContent = e;
+    
+    // Alerta de nuevos pedidos
+    if (newO > 0) {
+      if (typeof showDashAlert === 'function') {
+        showDashAlert('Tienes ' + newO + ' pedido(s) pendiente(s) de verificacion.', 'warning', 'ri-shopping-bag-line');
+      }
+    }
+  }
+
+  window.filterOrders = function() {
+    var status = document.getElementById('order-filter-status').value.toLowerCase();
+    var channel = document.getElementById('order-filter-channel').value.toLowerCase();
+    var dest = document.getElementById('order-filter-destino').value.toLowerCase();
+    var search = (document.getElementById('order-filter-search') ? document.getElementById('order-filter-search').value.toLowerCase() : '');
+    var urgent = document.getElementById('order-filter-urgent').checked;
+    
+    var filtered = _ordersCache.filter(function(o) {
+      var d = o.data;
+      var s = d.status || 'pending';
+      var c = (d.channel || '').toLowerCase();
+      var de = (d.department || d.shippingType || '').toLowerCase();
+      var bn = (d.buyerName || (d.buyer ? d.buyer.name : '') || '').toLowerCase();
+      var code = (d.activationCode || '').toLowerCase();
+      
+      if (status && s !== status) return false;
+      if (channel && c !== channel) return false;
+      if (dest && de.indexOf(dest) === -1) return false;
+      if (urgent && d.urgent !== true) return false;
+      if (search && bn.indexOf(search) === -1 && code.indexOf(search) === -1) return false;
+      
+      return true;
+    });
+    renderOrders(filtered);
+  };
+
+  window.loadOrders = function() {
+    var db2 = db(); if (!db2) return;
+    window._ordersListenerActive = true;
+    var tbody = document.getElementById('orders-tbody');
+    if (tbody) tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></td></tr>';
+
+    db2.collection('orders').orderBy('createdAt', 'desc').onSnapshot(function(snap) {
+      _ordersCache = [];
+      snap.forEach(function(doc) { _ordersCache.push({ id: doc.id, data: doc.data() }); });
+      updateOrderStats();
+      filterOrders();
+      updateOrdersBadge();
+    }, function(err) {
+      console.error('Error loading orders:', err);
+      window._ordersListenerActive = false;
+      if (tbody) tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state">Error al cargar pedidos.</div></td></tr>';
+    });
+  };
+
+  window.renderOrders = function(orders) {
+    var tbody = document.getElementById('orders-tbody');
+    if (!tbody) return;
+    if (orders.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state">No hay pedidos registrados.</div></td></tr>';
+      return;
+    }
+    var html = '';
+    orders.forEach(function(o) {
+      var d = o.data;
+      var status = d.status || 'pending';
+      var isUrgent = d.urgent === true;
+      var rowClass = isUrgent ? 'tr-urgent' : '';
+      var date = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toLocaleDateString('es-BO', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
+      
+      var buyerName = d.buyer ? d.buyer.name : d.buyerName;
+      var buyerPhone = d.buyer ? d.buyer.phone : d.phone;
+
+      var acciones = '';
+      if (status === 'pending') {
+        acciones += '<button class="ptcg-index__btn ptcg-index__btn--success btn-sm" onclick="openVerifyModal(\'' + o.id + '\')"><i class="ri-shield-check-line"></i> Verificar pago</button> ';
+      } else {
+        acciones += '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="openVerifyModal(\'' + o.id + '\')" title="Ver detalles"><i class="ri-eye-line"></i></button> ';
+      }
+      
+      if (status !== 'pending' && status !== 'rejected') {
+        acciones += '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="printShippingGuide(\'' + o.id + '\')" title="Imprimir guía"><i class="ri-printer-line"></i></button> ';
+      }
+      
+      acciones += '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="color:' + (isUrgent ? '#f44336' : '#757575') + '" onclick="toggleUrgent(\'' + o.id + '\',' + isUrgent + ')" title="' + (isUrgent ? 'Quitar urgente' : 'Marcar urgente') + '"><i class="ri-flashlight-line"></i></button>';
+
+      var trk = d.trackingNumber ? '<br><small style="color:#4552CC;">Trk: ' + escFn(d.trackingNumber) + '</small>' : '';
+      var actCode = d.activationCode ? '<br><small style="color:#2ECC71;font-family:monospace;">Cod: ' + escFn(d.activationCode) + '</small>' : '';
+
+      html += '<tr class="' + rowClass + '">' +
+        '<td><strong>' + escFn(o.id.substring(0,8)) + '...</strong>' + actCode + '</td>' +
+        '<td>' + escFn(buyerName || '—') + '<br><small style="color:#757575;">' + escFn(buyerPhone || '') + '</small></td>' +
+        '<td>' + escFn(d.channel || 'Directo') + '</td>' +
+        '<td>' + escFn(d.shippingType || d.deliveryType || '—') + '<br><small style="color:#757575;">' + escFn(d.department || '') + '</small>' + trk + '</td>' +
+        '<td><span class="status-badge ' + status + '">' + status.toUpperCase() + '</span></td>' +
+        '<td>' + date + '</td>' +
+        '<td style="white-space:nowrap;">' + acciones + '</td>' +
+      '</tr>';
+    });
+    tbody.innerHTML = html;
+  };
+
 </script>
-
 </body></html>');
     win.document.close();
   };
@@ -3209,12 +3353,7 @@ window.rejectPayment = function() {
 
 
   /* ═══════════════ PEDIDOS Y PAGOS ═══════════════ */
-  window.loadOrders = function() {
-    var tbody = document.getElementById('orders-tbody');
-    if (!tbody) return;
-    tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state">Función en construcción (Próximamente)...</div></td></tr>';
-    // Aquí irá la lógica de Firebase para cargar los pedidos
-  };
+  
 
   window.filterOrders = function() {
     // Lógica para filtrar por estado y región
