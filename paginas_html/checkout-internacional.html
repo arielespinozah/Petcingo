@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>International Checkout -- Petcingo</title>
+
+  <!--
+    Anti-Dashnex encapsulation: .ptcg-checkout
+    Checkout Internacional -- ASCII puro -- sin emojis
+    Mismo JS externo: petcingo-checkout.js (isIntl detectado por URL)
+    Fases: 1=Datos, 2=Pago, 3=Comprobante (modal), 4=Listo
+  -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+
+  <style>
+/* =====================================================================
+   REMIXICON BLINDADO
+   ===================================================================== */
+[class*="ri-"] { font-family: 'remixicon' !important; font-style: normal !important; }
+
+/* =====================================================================
+   RESET
+   ===================================================================== */
+.ptcg-checkout,
+.ptcg-checkout * {
+  margin: 0 !important; padding: 0 !important; box-sizing: border-box !important;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  -webkit-font-smoothing: antialiased !important; -moz-osx-font-smoothing: grayscale !important;
+}
+.ptcg-checkout a { text-decoration: none !important; }
+.ptcg-checkout img { display: block !important; max-width: 100% !important; }
+
+/* =====================================================================
+   LAYOUT
+   ===================================================================== */
+.ptcg-checkout {
+  min-height: 100vh !important;
+  background: linear-gradient(160deg, #EEF0FA 0%, #F8F9FB 50%, #E8F7FD 100%) !important;
+  position: relative !important; overflow-x: hidden !important; padding-bottom: 100px !important;
+}
+.ptcg-checkout__orb { position: fixed !important; border-radius: 50% !important; pointer-events: none !important; z-index: 0 !important; }
+.ptcg-checkout__orb--1 { width: 500px !important; height: 500px !important; top: -160px !important; right: -120px !important; background: radial-gradient(circle, rgba(69,82,204,0.08) 0%, transparent 70%) !important; }
+.ptcg-checkout__orb--2 { width: 350px !important; height: 350px !important; bottom: -80px !important; left: -80px !important; background: radial-gradient(circle, rgba(81,203,245,0.10) 0%, transparent 70%) !important; }
+
+/* =====================================================================
+   TOPBAR
+   ===================================================================== */
+.ptcg-checkout__topbar {
+  position: sticky !important; top: 0 !important; z-index: 100 !important; height: 60px !important;
+  padding: 0 20px !important; display: flex !important; align-items: center !important;
+  justify-content: space-between !important; background: rgba(248,249,251,0.85) !important;
+  backdrop-filter: blur(20px) saturate(200%) !important; -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.70) !important;
+  box-shadow: 0 1px 0 rgba(69,82,204,0.06) !important;
+}
+.ptcg-checkout__logo { display: flex !important; align-items: center !important; gap: 6px !important; }
+.ptcg-checkout__logo img { height: 36px !important; width: auto !important; }
+.ptcg-checkout__topbar-right { display: flex !important; align-items: center !important; gap: 10px !important; }
+.ptcg-checkout__back {
+  display: flex !important; align-items: center !important; gap: 6px !important;
+  padding: 8px 14px !important; border-radius: 12px !important;
+  background: rgba(69,82,204,0.08) !important; color: #4552CC !important;
+  font-size: 0.82rem !important; font-weight: 600 !important; cursor: pointer !important;
+  border: 1px solid rgba(69,82,204,0.15) !important; transition: all 0.2s !important;
+}
+.ptcg-checkout__back:hover { background: rgba(69,82,204,0.14) !important; }
+.ptcg-checkout__back i { color: #4552CC !important; }
+.ptcg-checkout__lang-badge {
+  font-size: 0.72rem !important; font-weight: 700 !important;
+  padding: 4px 10px !important; border-radius: 99px !important;
+  background: rgba(69,82,204,0.08) !important; color: #4552CC !important;
+  border: 1px solid rgba(69,82,204,0.15) !important;
+}
+
+/* =====================================================================
+   BANNER DE PLAN
+   ===================================================================== */
+.ptcg-checkout__plan-banner {
+  display: flex !important; align-items: center !important; gap: 10px !important;
+  padding: 12px 16px !important; border-radius: 14px !important;
+  background: rgba(34,197,94,0.08) !important; border: 1px solid rgba(34,197,94,0.22) !important;
+}
+.ptcg-checkout__plan-banner[hidden] { display: none !important; }
+.ptcg-checkout__plan-banner-info { flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 1px !important; }
+.ptcg-checkout__plan-banner-label { font-size: 0.72rem !important; color: #6C7297 !important; }
+.ptcg-checkout__plan-banner-value { font-family: 'Sora', sans-serif !important; font-size: 1.05rem !important; font-weight: 800 !important; color: #1E255E !important; }
+.ptcg-checkout__plan-banner-change { font-size: 0.75rem !important; color: #4552CC !important; font-weight: 600 !important; text-decoration: underline !important; flex-shrink: 0 !important; }
+
+/* =====================================================================
+   PROGRESO
+   ===================================================================== */
+.ptcg-checkout__progress { padding: 20px 20px 0 !important; display: flex !important; align-items: center !important; justify-content: center !important; gap: 0 !important; position: relative !important; z-index: 1 !important; }
+.ptcg-checkout__step { display: flex !important; flex-direction: column !important; align-items: center !important; gap: 6px !important; z-index: 2 !important; }
+.ptcg-checkout__step-dot { width: 34px !important; height: 34px !important; border-radius: 50% !important; background: #E0E4F5 !important; display: flex !important; align-items: center !important; justify-content: center !important; font-size: 0.85rem !important; color: #9E9E9E !important; transition: all 0.35s ease !important; border: 2px solid transparent !important; }
+.ptcg-checkout__step.active .ptcg-checkout__step-dot { background: #4552CC !important; color: #fff !important; box-shadow: 0 0 0 6px rgba(69,82,204,0.12) !important; transform: scale(1.1) !important; }
+.ptcg-checkout__step.done .ptcg-checkout__step-dot { background: #22C55E !important; color: #fff !important; border-color: #22C55E !important; }
+.ptcg-checkout__step-label { font-size: 0.60rem !important; font-weight: 600 !important; color: #9E9E9E !important; text-transform: uppercase !important; letter-spacing: 0.06em !important; white-space: nowrap !important; }
+.ptcg-checkout__step.active .ptcg-checkout__step-label { color: #4552CC !important; }
+.ptcg-checkout__step.done .ptcg-checkout__step-label  { color: #22C55E !important; }
+.ptcg-checkout__step-line { width: 48px !important; height: 2px !important; background: #E0E4F5 !important; margin: 0 4px !important; margin-bottom: 18px !important; border-radius: 2px !important; transition: background 0.35s ease !important; }
+.ptcg-checkout__step-line.done { background: #22C55E !important; }
+
+/* =====================================================================
+   CONTENEDOR
+   ===================================================================== */
+.ptcg-checkout__main { position: relative !important; z-index: 1 !important; padding: 20px 16px 60px !important; display: flex !important; justify-content: center !important; }
+.ptcg-checkout__inner { width: 100% !important; max-width: 520px !important; display: flex !important; flex-direction: column !important; gap: 16px !important; }
+
+/* =====================================================================
+   TARJETA GLASS
+   ===================================================================== */
+.ptcg-checkout__card {
+  position: relative !important; overflow: hidden !important; isolation: isolate !important;
+  border-radius: 24px !important; border: 1px solid rgba(255,255,255,0.92) !important;
+  box-shadow: 0 8px 40px rgba(69,82,204,0.10), 0 2px 8px rgba(69,82,204,0.04), inset 0 1px 0 rgba(255,255,255,1) !important;
+  padding: 24px !important; display: flex !important; flex-direction: column !important; gap: 16px !important;
+}
+.ptcg-checkout__card::before { content: '' !important; position: absolute !important; inset: 0 !important; backdrop-filter: blur(40px) saturate(180%) !important; -webkit-backdrop-filter: blur(40px) saturate(180%) !important; background: rgba(255,255,255,0.72) !important; z-index: 0 !important; }
+.ptcg-checkout__card::after { content: '' !important; position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important; height: 50% !important; background: linear-gradient(180deg, rgba(255,255,255,0.30) 0%, rgba(255,255,255,0) 100%) !important; z-index: 1 !important; pointer-events: none !important; border-radius: 24px 24px 0 0 !important; }
+.ptcg-checkout__card > * { position: relative !important; z-index: 2 !important; }
+
+/* =====================================================================
+   FASES
+   ===================================================================== */
+.ptcg-checkout__phase { display: none !important; animation: ptcg-co-fadein 0.4s ease-out both !important; }
+.ptcg-checkout__phase.active { display: flex !important; flex-direction: column !important; gap: 16px !important; }
+@keyframes ptcg-co-fadein { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+/* =====================================================================
+   FORMULARIO
+   ===================================================================== */
+.ptcg-checkout__field { display: flex !important; flex-direction: column !important; gap: 6px !important; }
+.ptcg-checkout__field-row { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 12px !important; }
+.ptcg-checkout__label { font-size: 0.80rem !important; font-weight: 600 !important; color: #333959 !important; display: flex !important; align-items: center !important; gap: 4px !important; }
+.ptcg-checkout__label-sub { font-size: 0.68rem !important; color: #9E9E9E !important; font-weight: 400 !important; }
+.ptcg-checkout__required { color: #F24E4E !important; font-size: 0.75rem !important; }
+.ptcg-checkout__input-wrap { position: relative !important; display: flex !important; align-items: center !important; }
+.ptcg-checkout__input-icon { position: absolute !important; left: 13px !important; top: 50% !important; transform: translateY(-50%) !important; font-size: 1rem !important; color: #B8C3F5 !important; pointer-events: none !important; z-index: 1 !important; }
+.ptcg-checkout__input-wrap:focus-within .ptcg-checkout__input-icon { color: #4552CC !important; }
+.ptcg-checkout__input {
+  width: 100% !important; padding: 11px 14px !important; font-size: 0.90rem !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important; font-weight: 400 !important;
+  color: #1E255E !important; background: rgba(255,255,255,0.75) !important;
+  border: 1.5px solid rgba(69,82,204,0.15) !important; border-radius: 10px !important;
+  outline: none !important; transition: border-color 0.2s, box-shadow 0.2s, background 0.2s !important;
+  -webkit-appearance: none !important; appearance: none !important;
+}
+.ptcg-checkout__input-wrap .ptcg-checkout__input { padding-left: 42px !important; }
+.ptcg-checkout__input::placeholder { color: #B8C3F5 !important; }
+.ptcg-checkout__input:focus { border-color: #4552CC !important; background: rgba(255,255,255,0.96) !important; box-shadow: 0 0 0 3px rgba(69,82,204,0.14) !important; }
+.ptcg-checkout__input.has-error { border-color: #F24E4E !important; box-shadow: 0 0 0 3px rgba(242,78,78,0.12) !important; }
+.ptcg-checkout__field-error { font-size: 0.74rem !important; color: #F24E4E !important; font-weight: 600 !important; display: flex !important; align-items: center !important; gap: 4px !important; }
+.ptcg-checkout__field-error[hidden] { display: none !important; }
+
+/* =====================================================================
+   METODOS DE PAGO
+   ===================================================================== */
+.ptcg-checkout__payment-methods { display: flex !important; flex-direction: column !important; gap: 8px !important; }
+.ptcg-checkout__payment-method {
+  display: flex !important; align-items: center !important; gap: 12px !important;
+  padding: 14px 16px !important; border-radius: 14px !important;
+  border: 2px solid rgba(69,82,204,0.10) !important;
+  background: rgba(255,255,255,0.60) !important;
+  cursor: pointer !important; transition: all 0.20s ease !important;
+}
+.ptcg-checkout__payment-method:hover { border-color: rgba(69,82,204,0.30) !important; }
+.ptcg-checkout__payment-method.is-selected { border-color: #4552CC !important; background: rgba(69,82,204,0.05) !important; box-shadow: 0 0 0 3px rgba(69,82,204,0.10) !important; }
+.ptcg-checkout__pm-radio { width: 18px !important; height: 18px !important; border-radius: 50% !important; border: 2px solid #D4D8F5 !important; flex-shrink: 0 !important; display: flex !important; align-items: center !important; justify-content: center !important; background: #fff !important; transition: all 0.20s !important; }
+.ptcg-checkout__payment-method.is-selected .ptcg-checkout__pm-radio { border-color: #4552CC !important; background: #4552CC !important; }
+.ptcg-checkout__pm-radio::after { content: '' !important; width: 7px !important; height: 7px !important; border-radius: 50% !important; background: transparent !important; }
+.ptcg-checkout__payment-method.is-selected .ptcg-checkout__pm-radio::after { background: #fff !important; }
+.ptcg-checkout__pm-icon { font-size: 1.50rem !important; line-height: 1 !important; flex-shrink: 0 !important; color: #4552CC !important; }
+.ptcg-checkout__pm-info { flex: 1 !important; }
+.ptcg-checkout__pm-name { font-size: 0.88rem !important; font-weight: 700 !important; color: #1E255E !important; }
+.ptcg-checkout__pm-desc { font-size: 0.75rem !important; color: #6C7297 !important; line-height: 1.40 !important; margin-top: 1px !important; }
+
+/* QR y timer */
+.ptcg-checkout__qr-section { display: flex !important; flex-direction: column !important; align-items: center !important; gap: 16px !important; }
+.ptcg-checkout__timer { display: inline-flex !important; align-items: center !important; gap: 8px !important; padding: 8px 20px !important; border-radius: 99px !important; background: rgba(242,78,78,0.08) !important; border: 1px solid rgba(242,78,78,0.20) !important; color: #F24E4E !important; font-size: 1.1rem !important; font-weight: 700 !important; font-family: 'SF Mono', ui-monospace, monospace !important; }
+.ptcg-checkout__timer i { color: #F24E4E !important; font-size: 1.2rem !important; }
+.ptcg-checkout__confirm-area { opacity: 0 !important; pointer-events: none !important; transition: opacity 0.5s ease !important; display: flex !important; flex-direction: column !important; align-items: center !important; gap: 12px !important; width: 100% !important; }
+.ptcg-checkout__confirm-area.visible { opacity: 1 !important; pointer-events: auto !important; }
+
+/* Tracking */
+.ptcg-checkout__tracking-steps { display: flex !important; align-items: flex-start !important; justify-content: space-between !important; position: relative !important; padding: 0 10px !important; margin-bottom: 20px !important; }
+.ptcg-checkout__tracking-line { position: absolute !important; top: 17px !important; left: 30px !important; right: 30px !important; height: 2px !important; background: #E0E4F5 !important; z-index: 0 !important; }
+.ptcg-checkout__tracking-dot { width: 36px !important; height: 36px !important; border-radius: 50% !important; background: #E0E4F5 !important; display: flex !important; align-items: center !important; justify-content: center !important; font-size: 0.80rem !important; color: #9E9E9E !important; position: relative !important; z-index: 2 !important; transition: all 0.35s ease !important; }
+.ptcg-checkout__tracking-dot.active { background: #4552CC !important; color: #fff !important; box-shadow: 0 0 0 4px rgba(69,82,204,0.15) !important; }
+.ptcg-checkout__tracking-dot.done   { background: #22C55E !important; color: #fff !important; }
+.ptcg-checkout__tracking-label { font-size: 0.62rem !important; font-weight: 600 !important; color: #9E9E9E !important; text-align: center !important; margin-top: 6px !important; white-space: nowrap !important; }
+.ptcg-checkout__tracking-dot.done   + .ptcg-checkout__tracking-label { color: #22C55E !important; }
+.ptcg-checkout__tracking-dot.active + .ptcg-checkout__tracking-label { color: #4552CC !important; }
+
+/* =====================================================================
+   BOTONES
+   ===================================================================== */
+.ptcg-checkout__btn { display: flex !important; align-items: center !important; justify-content: center !important; gap: 10px !important; width: 100% !important; padding: 16px 24px !important; border-radius: 16px !important; font-family: 'Plus Jakarta Sans', sans-serif !important; font-size: 0.96rem !important; font-weight: 700 !important; cursor: pointer !important; border: none !important; transition: all 0.20s !important; line-height: 1 !important; text-decoration: none !important; }
+.ptcg-checkout__btn--primary { background: linear-gradient(135deg, #4552CC 0%, #3A45B0 100%) !important; color: #fff !important; box-shadow: 0 6px 24px rgba(69,82,204,0.35) !important; }
+.ptcg-checkout__btn--primary:hover { background: linear-gradient(135deg, #3A45B0 0%, #2E3A9E 100%) !important; transform: translateY(-1px) !important; }
+.ptcg-checkout__btn--primary:disabled { opacity: 0.55 !important; cursor: not-allowed !important; transform: none !important; }
+.ptcg-checkout__btn--primary i { color: #fff !important; }
+.ptcg-checkout__btn--secondary { background: rgba(69,82,204,0.08) !important; color: #4552CC !important; border: 1.5px solid rgba(69,82,204,0.20) !important; }
+.ptcg-checkout__btn--secondary:hover { background: rgba(69,82,204,0.14) !important; }
+.ptcg-checkout__btn i { font-size: 1.1rem !important; }
+
+/* Spinner */
+.ptcg-checkout__spinner { width: 18px !important; height: 18px !important; border: 2px solid rgba(255,255,255,0.30) !important; border-top-color: #fff !important; border-radius: 50% !important; animation: ptcg-co-spin 0.7s linear infinite !important; flex-shrink: 0 !important; }
+.ptcg-checkout__spinner[hidden] { display: none !important; }
+@keyframes ptcg-co-spin { to { transform: rotate(360deg); } }
+
+/* Activation code */
+.ptcg-checkout__activation-box { background: linear-gradient(135deg, rgba(69,82,204,0.08), rgba(81,203,245,0.08)) !important; border: 2px solid rgba(69,82,204,0.20) !important; border-radius: 16px !important; padding: 20px !important; display: flex !important; flex-direction: column !important; align-items: center !important; gap: 8px !important; }
+.ptcg-checkout__activation-label { font-size: 0.72rem !important; font-weight: 700 !important; text-transform: uppercase !important; letter-spacing: 0.10em !important; color: #4552CC !important; }
+.ptcg-checkout__activation-code { font-family: 'SF Mono', ui-monospace, monospace !important; font-size: 2.20rem !important; font-weight: 800 !important; letter-spacing: 0.25em !important; color: #1E255E !important; line-height: 1 !important; }
+.ptcg-checkout__activation-hint { font-size: 0.76rem !important; color: #6C7297 !important; text-align: center !important; }
+
+/* Toast */
+.ptcg-checkout__toast { position: fixed !important; bottom: 24px !important; right: 24px !important; z-index: 9999 !important; padding: 14px 20px !important; border-radius: 14px !important; background: #1E255E !important; color: #fff !important; font-size: 0.86rem !important; font-weight: 600 !important; display: flex !important; align-items: center !important; gap: 10px !important; box-shadow: 0 8px 32px rgba(30,37,94,0.25) !important; animation: ptcg-co-toast-in 0.35s cubic-bezier(0.34,1.56,0.64,1) both !important; max-width: 340px !important; }
+.ptcg-checkout__toast[hidden] { display: none !important; }
+@keyframes ptcg-co-toast-in { from { opacity: 0; transform: translateX(24px) scale(0.95); } to { opacity: 1; transform: translateX(0) scale(1); } }
+
+/* Modal */
+.ptcg-checkout__overlay { position: fixed !important; inset: 0 !important; z-index: 9998 !important; background: rgba(30,37,94,0.55) !important; backdrop-filter: blur(8px) !important; -webkit-backdrop-filter: blur(8px) !important; display: flex !important; align-items: center !important; justify-content: center !important; padding: 20px !important; animation: ptcg-co-fadein 0.3s ease !important; }
+.ptcg-checkout__overlay[hidden] { display: none !important; }
+.ptcg-checkout__modal { background: #fff !important; border-radius: 24px !important; padding: 28px 24px !important; max-width: 400px !important; width: 100% !important; box-shadow: 0 24px 64px rgba(30,37,94,0.28) !important; display: flex !important; flex-direction: column !important; gap: 16px !important; animation: ptcg-co-modal-in 0.35s cubic-bezier(0.34,1.56,0.64,1) both !important; }
+@keyframes ptcg-co-modal-in { from { transform: scale(0.92) translateY(12px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+.ptcg-checkout__modal-head { display: flex !important; align-items: center !important; justify-content: space-between !important; border-bottom: 1px solid rgba(69,82,204,0.08) !important; padding-bottom: 12px !important; }
+.ptcg-checkout__modal-title { font-family: 'Sora', sans-serif !important; font-size: 1.05rem !important; font-weight: 800 !important; color: #1E255E !important; }
+.ptcg-checkout__modal-close { background: rgba(69,82,204,0.08) !important; border: none !important; border-radius: 8px !important; padding: 6px 8px !important; cursor: pointer !important; display: flex !important; align-items: center !important; }
+.ptcg-checkout__modal-close i { color: #4552CC !important; font-size: 1.1rem !important; }
+.ptcg-checkout__modal-sub { font-size: 0.82rem !important; color: #6C7297 !important; line-height: 1.55 !important; margin-top: -8px !important; }
+
+/* Upload */
+.ptcg-checkout__upload-area { border: 2px dashed rgba(69,82,204,0.25) !important; border-radius: 14px !important; background: rgba(238,240,250,0.50) !important; padding: 28px 20px !important; display: flex !important; flex-direction: column !important; align-items: center !important; gap: 8px !important; cursor: pointer !important; transition: all 0.20s !important; text-align: center !important; }
+.ptcg-checkout__upload-area:hover { border-color: #4552CC !important; background: rgba(69,82,204,0.06) !important; }
+.ptcg-checkout__upload-area.has-file { border-color: #22C55E !important; background: rgba(34,197,94,0.06) !important; }
+.ptcg-checkout__upload-icon { font-size: 2.4rem !important; color: #4552CC !important; line-height: 1 !important; }
+.ptcg-checkout__upload-text { font-size: 0.88rem !important; font-weight: 600 !important; color: #333959 !important; }
+.ptcg-checkout__upload-hint { font-size: 0.74rem !important; color: #6C7297 !important; }
+#ptcg-upload-fname { font-size: 0.80rem !important; color: #22C55E !important; font-weight: 600 !important; }
+#ptcg-upload-fname[hidden] { display: none !important; }
+#ptcg-receipt-input { display: none !important; }
+
+/* Responsive */
+@media (max-width: 540px) {
+  .ptcg-checkout__main { padding: 16px 12px 60px !important; }
+  .ptcg-checkout__card { padding: 20px 16px !important; border-radius: 20px !important; }
+  .ptcg-checkout__field-row { grid-template-columns: 1fr !important; }
+  .ptcg-checkout__activation-code { font-size: 1.80rem !important; }
+  .ptcg-checkout__progress { padding: 16px 12px 0 !important; }
+  .ptcg-checkout__step-label { font-size: 0.55rem !important; }
+  .ptcg-checkout__step-line { width: 32px !important; }
+  .ptcg-checkout__modal { padding: 24px 16px !important; }
+}
+  </style>
+</head>
+<body>
+
+<div class="ptcg-checkout">
+
+  <div class="ptcg-checkout__orb ptcg-checkout__orb--1"></div>
+  <div class="ptcg-checkout__orb ptcg-checkout__orb--2"></div>
+
+  <!-- Toast -->
+  <div class="ptcg-checkout__toast" id="ptcg-toast" hidden>
+    <i class="ri-information-line"></i>
+    <span id="ptcg-toast-msg"></span>
+  </div>
+
+  <!-- MODAL: Upload receipt / Subir comprobante -->
+  <div class="ptcg-checkout__overlay" id="ptcg-modal-receipt" hidden>
+    <div class="ptcg-checkout__modal">
+      <div class="ptcg-checkout__modal-head">
+        <span class="ptcg-checkout__modal-title">
+          Upload receipt / Subir comprobante
+        </span>
+        <button class="ptcg-checkout__modal-close" onclick="ptcgCloseModal()">
+          <i class="ri-close-line"></i>
+        </button>
+      </div>
+      <p class="ptcg-checkout__modal-sub">
+        Attach a screenshot of your payment confirmation.
+        / Adjunta la captura de tu pago para confirmar el pedido.
+      </p>
+      <input type="file" id="ptcg-receipt-input" accept="image/*">
+      <div class="ptcg-checkout__upload-area" id="ptcg-upload-area"
+           onclick="document.getElementById('ptcg-receipt-input').click()">
+        <i class="ri-upload-cloud-2-line ptcg-checkout__upload-icon"></i>
+        <span class="ptcg-checkout__upload-text">Tap to select image / Seleccionar imagen</span>
+        <span class="ptcg-checkout__upload-hint">JPG, PNG or WEBP -- max 5 MB</span>
+        <span id="ptcg-upload-fname" hidden></span>
+      </div>
+      <div class="ptcg-checkout__field-error" id="ptcg-err-receipt" hidden>
+        <i class="ri-error-warning-line"></i> Select the receipt / Selecciona el comprobante
+      </div>
+      <button class="ptcg-checkout__btn ptcg-checkout__btn--primary"
+              id="ptcg-btn-upload" onclick="ptcgUploadReceipt()">
+        <div class="ptcg-checkout__spinner" id="ptcg-upload-spinner" hidden></div>
+        <i class="ri-checkbox-circle-line" id="ptcg-upload-icon"></i>
+        <span id="ptcg-upload-text">Confirm payment / Confirmar pago</span>
+      </button>
+      <button class="ptcg-checkout__btn ptcg-checkout__btn--secondary" onclick="ptcgCloseModal()">
+        Cancel / Cancelar
+      </button>
+    </div>
+  </div>
+
+  <!-- TOPBAR -->
+  <header class="ptcg-checkout__topbar">
+    <a class="ptcg-checkout__logo" href="https://prueb2.dashnexpages.net/home/">
+      <img src="https://prueb2.dashnexpages.net/assets/images/logo/PETCINGO_DARK.svg"
+           alt="Petcingo" height="36">
+    </a>
+    <div class="ptcg-checkout__topbar-right">
+      <span class="ptcg-checkout__lang-badge">EN / ES</span>
+      <button class="ptcg-checkout__back" onclick="ptcgPrevPhase()"
+              id="ptcg-btn-back" hidden>
+        <i class="ri-arrow-left-line"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- BANNER DE PLAN -->
+  <div style="display:flex;justify-content:center;padding:12px 16px 0;position:relative;z-index:1;">
+    <div style="width:100%;max-width:520px;">
+      <div class="ptcg-checkout__plan-banner" id="ptcg-plan-banner" hidden>
+        <i class="ri-check-fill" style="color:#22C55E !important;font-size:1.2rem;flex-shrink:0;"></i>
+        <div class="ptcg-checkout__plan-banner-info">
+          <span class="ptcg-checkout__plan-banner-label">Selected plan / Plan seleccionado</span>
+          <span class="ptcg-checkout__plan-banner-value">
+            <span id="ptcg-banner-plan-name">--</span>
+            &nbsp;&middot;&nbsp;
+            <span id="ptcg-banner-plan-price">--</span>
+          </span>
+        </div>
+        <a class="ptcg-checkout__plan-banner-change"
+           href="https://prueb2.dashnexpages.net/home/#plans">Change</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESO -->
+  <div class="ptcg-checkout__progress" id="ptcg-progress">
+    <div class="ptcg-checkout__step active" data-step="1">
+      <div class="ptcg-checkout__step-dot">1</div>
+      <div class="ptcg-checkout__step-label">Info</div>
+    </div>
+    <div class="ptcg-checkout__step-line" data-line="1"></div>
+    <div class="ptcg-checkout__step" data-step="2">
+      <div class="ptcg-checkout__step-dot">2</div>
+      <div class="ptcg-checkout__step-label">Payment</div>
+    </div>
+    <div class="ptcg-checkout__step-line" data-line="2"></div>
+    <div class="ptcg-checkout__step" data-step="3">
+      <div class="ptcg-checkout__step-dot">3</div>
+      <div class="ptcg-checkout__step-label">Receipt</div>
+    </div>
+    <div class="ptcg-checkout__step-line" data-line="3"></div>
+    <div class="ptcg-checkout__step" data-step="4">
+      <div class="ptcg-checkout__step-dot">4</div>
+      <div class="ptcg-checkout__step-label">Done</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main class="ptcg-checkout__main">
+    <div class="ptcg-checkout__inner">
+
+      <!-- ============================================================
+           FASE 1: DATOS DEL COMPRADOR + DIRECCION INTERNACIONAL
+           ============================================================ -->
+      <div class="ptcg-checkout__phase active" id="ptcg-phase-1">
+
+        <div class="ptcg-checkout__card">
+          <div style="font-family:'Sora',sans-serif;font-size:0.92rem;font-weight:700;color:#1E255E;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(69,82,204,0.08);padding-bottom:12px;">
+            <i class="ri-user-3-line" style="color:#4552CC;"></i>
+            Buyer information / Datos del comprador
+          </div>
+
+          <div class="ptcg-checkout__field-row">
+            <div class="ptcg-checkout__field">
+              <label class="ptcg-checkout__label" for="ptcg-name">
+                Full name / Nombre <span class="ptcg-checkout__required">*</span>
+              </label>
+              <div class="ptcg-checkout__input-wrap">
+                <i class="ri-user-line ptcg-checkout__input-icon"></i>
+                <input class="ptcg-checkout__input" id="ptcg-name" type="text"
+                  placeholder="John Doe" autocomplete="name">
+              </div>
+              <div class="ptcg-checkout__field-error" id="ptcg-err-name" hidden>
+                <i class="ri-error-warning-line"></i> Required
+              </div>
+            </div>
+            <div class="ptcg-checkout__field">
+              <label class="ptcg-checkout__label" for="ptcg-phone">
+                Phone / Telefono <span class="ptcg-checkout__required">*</span>
+              </label>
+              <div class="ptcg-checkout__input-wrap">
+                <i class="ri-phone-line ptcg-checkout__input-icon"></i>
+                <input class="ptcg-checkout__input" id="ptcg-phone" type="tel"
+                  placeholder="+1 555 000 0000" autocomplete="tel">
+              </div>
+              <div class="ptcg-checkout__field-error" id="ptcg-err-phone" hidden>
+                <i class="ri-error-warning-line"></i> Required
+              </div>
+            </div>
+          </div>
+
+          <div class="ptcg-checkout__field">
+            <label class="ptcg-checkout__label" for="ptcg-email">
+              Email <span class="ptcg-checkout__required">*</span>
+            </label>
+            <div class="ptcg-checkout__input-wrap">
+              <i class="ri-mail-line ptcg-checkout__input-icon"></i>
+              <input class="ptcg-checkout__input" id="ptcg-email" type="email"
+                placeholder="you@example.com" autocomplete="email">
+            </div>
+            <div class="ptcg-checkout__field-error" id="ptcg-err-email" hidden>
+              <i class="ri-error-warning-line"></i> Enter a valid email
+            </div>
+          </div>
+
+          <div class="ptcg-checkout__field">
+            <label class="ptcg-checkout__label" for="ptcg-intl-country">
+              Country / Pais <span class="ptcg-checkout__required">*</span>
+            </label>
+            <div class="ptcg-checkout__input-wrap">
+              <i class="ri-global-line ptcg-checkout__input-icon"></i>
+              <input class="ptcg-checkout__input" id="ptcg-intl-country" type="text"
+                placeholder="Argentina, Chile, Peru, Mexico...">
+            </div>
+          </div>
+
+          <div class="ptcg-checkout__field">
+            <label class="ptcg-checkout__label" for="ptcg-intl-address">
+              Shipping address / Direccion de envio
+              <span class="ptcg-checkout__label-sub">(international flat rate)</span>
+            </label>
+            <textarea class="ptcg-checkout__input" id="ptcg-intl-address" rows="3"
+              placeholder="Street, city, ZIP code / Calle, ciudad, codigo postal"
+              style="resize:vertical;min-height:70px;padding-left:14px;"></textarea>
+          </div>
+
+          <div class="ptcg-checkout__field">
+            <label class="ptcg-checkout__label" for="ptcg-notes">
+              Notes / Notas (optional)
+            </label>
+            <textarea class="ptcg-checkout__input" id="ptcg-notes" rows="2"
+              placeholder="Pet name, special instructions..."
+              style="resize:vertical;min-height:56px;padding-left:14px;"></textarea>
+          </div>
+        </div>
+
+        <!-- Info de envio internacional -->
+        <div style="padding:14px 16px;background:rgba(81,203,245,0.08);border:1px solid rgba(81,203,245,0.25);border-radius:16px;font-size:0.80rem;color:#1E255E;line-height:1.6;">
+          <i class="ri-plane-line" style="color:#4552CC;margin-right:6px;"></i>
+          <strong>International shipping:</strong> We ship to Argentina, Chile, Peru, Mexico and more.
+          Contact us via WhatsApp for exact shipping costs to your country.
+          /
+          <strong>Envio internacional:</strong> Escribenos por WhatsApp para el costo exacto segun tu pais.
+        </div>
+
+        <button class="ptcg-checkout__btn ptcg-checkout__btn--primary"
+                onclick="ptcgGoPhase(2)">
+          Continue / Continuar <i class="ri-arrow-right-line"></i>
+        </button>
+
+        <p style="text-align:center;font-size:0.78rem;color:#9E9E9E;">
+          In Bolivia?
+          <a href="https://prueb2.dashnexpages.net/checkout/"
+             style="color:#4552CC;font-weight:600;">
+            Use Bolivia checkout
+          </a>
+        </p>
+      </div>
+
+      <!-- ============================================================
+           FASE 2: METODO DE PAGO (PayPal / Stripe - Proximamente)
+           ============================================================ -->
+      <div class="ptcg-checkout__phase" id="ptcg-phase-2">
+
+        <div class="ptcg-checkout__card">
+          <div style="font-family:'Sora',sans-serif;font-size:0.92rem;font-weight:700;color:#1E255E;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(69,82,204,0.08);padding-bottom:12px;">
+            <i class="ri-bank-card-line" style="color:#4552CC;"></i>
+            Payment method / Metodo de pago
+          </div>
+          <div class="ptcg-checkout__payment-methods" id="ptcg-payment-methods"></div>
+          <div class="ptcg-checkout__field-error" id="ptcg-err-method" hidden>
+            <i class="ri-error-warning-line"></i> Select a payment method
+          </div>
+
+          <!-- Aviso "proximamente" con alternativa WhatsApp -->
+          <div style="padding:14px 16px;background:rgba(255,200,55,0.10);border:1px solid rgba(255,200,55,0.30);border-radius:14px;font-size:0.80rem;color:#92400E;line-height:1.6;">
+            <i class="ri-time-line" style="color:#F59E0B;margin-right:6px;"></i>
+            <strong>Coming soon:</strong> Online payment will be available soon.
+            For now, please contact us via WhatsApp to complete your purchase.
+            / <strong>Pronto:</strong> Contactanos por WhatsApp para completar tu pedido.
+            <br>
+            <a href="https://wa.me/59171040074?text=Quiero+comprar+una+placa+Petcingo+fuera+de+Bolivia"
+               target="_blank"
+               style="display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:10px 16px;background:#25D366;color:#fff;border-radius:10px;font-weight:700;font-size:0.82rem;text-decoration:none;">
+              <i class="ri-whatsapp-line" style="color:#fff;font-size:1rem;"></i>
+              Contact us / Contactanos
+            </a>
+          </div>
+        </div>
+
+        <!-- QR card (mostrado cuando se selecciona metodo -- ambos son "soon" en intl) -->
+        <div class="ptcg-checkout__card" id="ptcg-qr-card" hidden>
+          <div class="ptcg-checkout__qr-section">
+            <div class="ptcg-checkout__timer">
+              <i class="ri-timer-line"></i>
+              <span id="ptcg-timer-text">05:00</span>
+            </div>
+            <div style="background:#fff;border-radius:16px;padding:20px;display:flex;justify-content:center;">
+              <canvas id="ptcg-qr-canvas" width="200" height="200" style="border-radius:8px;"></canvas>
+            </div>
+            <p style="font-size:0.82rem;color:#6C7297;text-align:center;">
+              Amount / Monto: <strong style="color:#1E255E;" id="ptcg-qr-amount">-- USD</strong>
+            </p>
+            <div class="ptcg-checkout__confirm-area" id="ptcg-confirm-area">
+              <p style="font-weight:700;color:#1E255E;font-size:0.90rem;text-align:center;">
+                Did you complete payment? / Ya pagaste?
+              </p>
+              <button class="ptcg-checkout__btn ptcg-checkout__btn--primary"
+                      onclick="ptcgConfirmPayment()">
+                <i class="ri-checkbox-circle-line"></i> Yes, I paid / Si, pague
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button class="ptcg-checkout__btn ptcg-checkout__btn--secondary"
+                onclick="ptcgGoPhase(1)"
+                style="padding:14px 20px;width:auto;align-self:flex-start;">
+          <i class="ri-arrow-left-line"></i> Back / Atras
+        </button>
+      </div>
+
+      <!-- ============================================================
+           FASE 4: LISTO / DONE
+           ============================================================ -->
+      <div class="ptcg-checkout__phase" id="ptcg-phase-4">
+        <div class="ptcg-checkout__card">
+          <div style="text-align:center;padding:10px 0;">
+            <i class="ri-checkbox-circle-fill"
+               style="font-size:4rem;color:#22C55E;display:block;margin-bottom:12px;"></i>
+            <h2 style="font-family:'Sora',sans-serif;font-size:1.4rem;font-weight:800;color:#1E255E;margin-bottom:4px;">
+              Order received! / Pedido recibido
+            </h2>
+            <p style="font-size:0.85rem;color:#6C7297;line-height:1.55;">
+              We received your proof of payment. We will verify it shortly
+              and activate your Petcingo tag.
+            </p>
+          </div>
+
+          <div class="ptcg-checkout__activation-box">
+            <span class="ptcg-checkout__activation-label">Activation code / Codigo de activacion</span>
+            <span class="ptcg-checkout__activation-code" id="ptcg-act-code">------</span>
+            <span class="ptcg-checkout__activation-hint">
+              Save this code -- you need it to activate your Petcingo tag
+            </span>
+          </div>
+
+          <!-- Tracking -->
+          <div class="ptcg-checkout__tracking-steps">
+            <div class="ptcg-checkout__tracking-line"></div>
+            <div style="text-align:center;position:relative;z-index:2;">
+              <div class="ptcg-checkout__tracking-dot done">
+                <i class="ri-check-line"></i>
+              </div>
+              <div class="ptcg-checkout__tracking-label">Received</div>
+            </div>
+            <div style="text-align:center;position:relative;z-index:2;">
+              <div class="ptcg-checkout__tracking-dot active">
+                <i class="ri-search-line"></i>
+              </div>
+              <div class="ptcg-checkout__tracking-label">Verifying</div>
+            </div>
+            <div style="text-align:center;position:relative;z-index:2;">
+              <div class="ptcg-checkout__tracking-dot">
+                <i class="ri-box-3-line"></i>
+              </div>
+              <div class="ptcg-checkout__tracking-label">Accepted</div>
+            </div>
+          </div>
+
+          <a class="ptcg-checkout__btn ptcg-checkout__btn--primary"
+             id="ptcg-btn-activate"
+             href="https://prueb2.dashnexpages.net/activacion/">
+            <i class="ri-qr-code-line"></i> Activate my tag / Activar mi placa
+          </a>
+          <button class="ptcg-checkout__btn ptcg-checkout__btn--secondary"
+                  onclick="ptcgCopyCode()">
+            <i class="ri-file-copy-line"></i> Copy code / Copiar codigo
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="https://prueb2.dashnexpages.net/assets/js/petcingo-checkout.js?v=20260515"></script>
+</body>
+</html>

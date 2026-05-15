@@ -924,8 +924,9 @@
             <li class="ptcg-index__plan-feat"><i class="ri-check-line"></i> Historial de escaneos</li>
             <li class="ptcg-index__plan-feat"><i class="ri-check-line"></i> Soporte por WhatsApp</li>
           </ul>
-          <a href="#" class="ptcg-index__plan-btn ptcg-index__plan-btn--secondary"
-             onclick="ptcgOpenModal('login');return false;">
+          <a href="https://prueb2.dashnexpages.net/checkout/?plan=preventa"
+             class="ptcg-index__plan-btn ptcg-index__plan-btn--secondary"
+             onclick="ptcgBuyPlan('preventa');return false;">
             <i class="ri-timer-line"></i> Precio de preventa
           </a>
         </div>
@@ -946,8 +947,9 @@
             <li class="ptcg-index__plan-feat"><i class="ri-check-line"></i> Alerta con geolocalización</li>
             <li class="ptcg-index__plan-feat"><i class="ri-check-line"></i> Historial de escaneos + mapa</li>
           </ul>
-          <a href="#" class="ptcg-index__plan-btn ptcg-index__plan-btn--primary"
-             onclick="ptcgOpenModal('login');return false;">
+          <a href="https://prueb2.dashnexpages.net/checkout/?plan=petid"
+             class="ptcg-index__plan-btn ptcg-index__plan-btn--primary"
+             onclick="ptcgBuyPlan('petid');return false;">
             <i class="ri-shield-check-line"></i> Comprar Pet ID
           </a>
         </div>
@@ -967,8 +969,9 @@
             <li class="ptcg-index__plan-feat"><i class="ri-check-line"></i> Soporte prioritario</li>
             <li class="ptcg-index__plan-feat"><i class="ri-check-line"></i> El mejor precio por placa</li>
           </ul>
-          <a href="#" class="ptcg-index__plan-btn ptcg-index__plan-btn--secondary"
-             onclick="ptcgOpenModal('login');return false;">
+          <a href="https://prueb2.dashnexpages.net/checkout/?plan=pack"
+             class="ptcg-index__plan-btn ptcg-index__plan-btn--secondary"
+             onclick="ptcgBuyPlan('pack');return false;">
             <i class="ri-team-line"></i> Pack Familia
           </a>
         </div>
@@ -1865,6 +1868,15 @@
   };
 
   window.ptcgCloseModal = function () { document.getElementById('ptcg-modal').hidden = true; };
+
+  window.ptcgBuyPlan = function (planKey) {
+    var lang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+    var isSpanish = lang.indexOf('es') === 0;
+    var base = isSpanish
+      ? 'https://prueb2.dashnexpages.net/checkout/'
+      : 'https://prueb2.dashnexpages.net/checkout-internacional/';
+    window.location.href = base + '?plan=' + planKey;
+  };
 
   window.ptcgShowView = function (view) {
     ['login','register','recovery'].forEach(function (v) {
