@@ -140,11 +140,11 @@
         if(snap.empty){alert('No hay escaneos tan antiguos.');return;}
         var batch=db2.batch();
         snap.forEach(function(doc){batch.delete(doc.ref);});
-        return batch.commit().then(function(){alert(' '+snap.size+' escaneos eliminados.');});
+        return batch.commit().then(function(){alert('a '+snap.size+' escaneos eliminados.');});
       }).catch(function(e){alert('Error: '+e.message);});
   };
 
-  /* EEEEEEEEEEEEEEE AUDITORA: clearOldLogs corregido EEEEEEEEEEEEEEE */
+  /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE AUDITORiA: clearOldLogs corregido oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
   window.clearOldLogs = function() {
     var daysInput = document.getElementById('cfg-log-days');
     var days = daysInput ? parseInt(daysInput.value, 10) : 30;
@@ -168,7 +168,7 @@
   };
 
 
-  /* EEEEEEEEEEEEEEE PEDIDOS EEEEEEEEEEEEEEE */
+  /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE PEDIDOS oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
   var _ordersCache = [];
   window._ordersListenerActive = false;
 
@@ -489,7 +489,6 @@
       .catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
   };
 
-
   function updateOrdersBadge() {
     var badge = document.getElementById('orders-nav-badge');
     if (!badge) return;
@@ -498,7 +497,7 @@
     badge.style.display = pending > 0 ? 'inline' : 'none';
   }
 
-  /* EEEEEEEEEEEEEEE COMISIONES Y PAGOS EEEEEEEEEEEEEEE */
+  /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE COMISIONES Y PAGOS oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
   var _commissionsCache = [];
   var _commissionsUnsub = null;
   var _currentPaymentId = null;
@@ -669,7 +668,7 @@
     if (modal && e.target === modal) closePaymentModal();
   });
 
-  /* EEEEEEEEEEEEEEE TIENDA EEEEEEEEEEEEEEE */
+  /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE TIENDA oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
   var _productsCache = [];
   var _productsUnsub = null;
   window._storeListenerActive = false;
@@ -843,7 +842,7 @@
     badge.style.display = lowStock > 0 ? 'inline' : 'none';
   }
 
-  /* EEEEEEEEEEEEEEE PROMOCIONES EEEEEEEEEEEEEEE */
+  /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE PROMOCIONES oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
   var _promotionsCache = [];
   var _promotionsUnsub = null;
   window._promoListenerActive = false;
@@ -1009,7 +1008,7 @@
       .catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
   };
 
-  /* EEEEEEEEEEEEEEE MASCOTAS PERDIDAS EEEEEEEEEEEEEEE */
+  /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE MASCOTAS PERDIDAS oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
   /* loadLostPets esti en petcingo.js  usa lost-pets-tbody y lost-pets-count */
 
   window.toggleFeaturedLost = function(petId, current) {
@@ -1024,7 +1023,7 @@
     });
   };
 
-  /* EEEEEEEEEEEEEEE SISTEMA DE ALERTAS EEEEEEEEEEEEEEE */
+  /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE SISTEMA DE ALERTAS oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
   window.showDashAlert = function(msg, type, icon) {
     var container = document.getElementById('alerts-container');
     if (!container) return;
@@ -1064,7 +1063,7 @@
     }, 1800);
   }
 
-  /* EEEEEEEEEEEEEEE PERSONALIZAR INDEX EEEEEEEEEEEEEEE */
+  /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE PERSONALIZAR INDEX oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
 
   window.showCTab = function(tab, btn) {
     document.querySelectorAll('.ctab-panel').forEach(function(p) { p.style.display = 'none'; });
@@ -1282,7 +1281,7 @@
     if (typeof toast === 'function') toast('Sincronizacin de adopciones en desarrollo.');
   };
 
-  /* EEEEEEEEEEEEEEE MODAL DETALLE MASCOTA EEEEEEEEEEEEEEE */
+  /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE MODAL DETALLE MASCOTA oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
 
   function infoItem(label, value) {
     return '<div><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;font-family:\'Plus Jakarta Sans\',sans-serif;">' + escFn(label) + '</span><br><span style="font-weight:600;font-size:0.9rem;">' + escFn(value || '') + '</span></div>';
@@ -1360,7 +1359,7 @@
       /* Vacunas */
       html += '<div style="padding:12px 14px;background:#F8F9FB;border-radius:12px;margin-bottom:16px;">';
       html += '<div style="font-size:0.72rem;color:#9E9E9E;text-transform:uppercase;margin-bottom:6px;font-family:\'Plus Jakarta Sans\',sans-serif;">Vacunas</div>';
-      html += '<span style="font-size:0.9rem;font-weight:600;">' + (d.vaccinationStatus === 'yes' ? ' Al da' : 'a No al da / Sin datos') + '</span>';
+      html += '<span style="font-size:0.9rem;font-weight:600;">' + (d.vaccinationStatus === 'yes' ? 'a Al da' : 'a No al da / Sin datos') + '</span>';
       if (d.vaccinationDetails) html += '<br><small style="color:#757575;">' + escFn(d.vaccinationDetails) + '</small>';
       html += '</div>';
 
@@ -1383,7 +1382,7 @@
     if (modal) modal.style.display = 'none';
   };
 
-  /* EEEEEEEEEEEEEEE SOPORTE AL CLIENTE EEEEEEEEEEEEEEE */
+  /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE SOPORTE AL CLIENTE oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
 
   window.copyRegCode = function() {
     var code = (document.getElementById('reg-result-id') || {}).textContent || '';
@@ -1422,11 +1421,10 @@
 
 
 
-  /* EEEEEEEEEEEEEEE PEDIDOS Y PAGOS EEEEEEEEEEEEEEE */
+  /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE PEDIDOS Y PAGOS oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
   
 
-
-  /* EEEEEEEEEEEEEEE PASARELAS Y ENVOS EEEEEEEEEEEEEEE */
+  /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE PASARELAS Y ENViOS oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
   window.saveShippingConfig = function() {
     if (typeof toast === 'function') toast('Configuracin de DHL guardada (Simulada).');
     // Lgica para guardar las tarifas en Firebase
@@ -1437,7 +1435,7 @@
     // Lgica para guardar credenciales API en Firebase
   };
 
-  /* EEEEEEEEEEEEEEE IMPRESION 360 EEEEEEEEEEEEEEE */
+  /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE IMPRESION 360 oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
   window.generatePrintLayout = function() {
     var container = document.getElementById('print-layout-container');
     var canvasArea = document.getElementById('print-canvas-area');
@@ -1446,7 +1444,7 @@
     canvasArea.innerHTML = '<div style="padding:40px;background:#f9f9f9;border:1px dashed #ccc;width:100%;color:#888;">Renderizando pliego segun Plan Maestro 360... (Proximamente)</div>';
   };
 
-  /* EEEEEEEEEEEEEEE QR DE PAGO EEEEEEEEEEEEEEE */
+  /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE QR DE PAGO oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
   var _qrFile = null;
 
   window.ptcgHandleQrUpload = function(file) {
@@ -1514,9 +1512,6 @@
     }, 1500);
   })();
 
-  /* EEEEEEEEEEEEEEE DATOS BANCARIOS EEEEEEEEEEEEEEE */
-
-  /* EEEEEEEEEEEEEEE MODAL MASCOTA EEEEEEEEEEEEEEE */
-
-
+  /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE DATOS BANCARIOS oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
+  /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE MODAL MASCOTA oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
 })();
