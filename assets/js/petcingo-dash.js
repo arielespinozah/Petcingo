@@ -35,15 +35,19 @@
     if (m) m.classList.toggle('open');
   };
 
-  window.doLogout = function() {
-    document.getElementById('dashboard').style.display    = 'none';
-    document.getElementById('login-screen').style.display = 'flex';
-    var inp = document.getElementById('login-pass');
-    if (inp) { inp.value = ''; inp.focus(); }
-    localStorage.removeItem('pc_auth');
-    sessionStorage.removeItem('pc_user');
-    sessionStorage.removeItem('pc_user_name');
-  };
+  /* doLogout: defer to petcingo.js which also clears _dash state.
+     This is a safe fallback only if petcingo.js hasn't loaded yet. */
+  if (typeof window.doLogout !== 'function') {
+    window.doLogout = function() {
+      document.getElementById('dashboard').style.display    = 'none';
+      document.getElementById('login-screen').style.display = 'flex';
+      var inp = document.getElementById('login-pass');
+      if (inp) { inp.value = ''; inp.focus(); }
+      localStorage.removeItem('pc_auth');
+      sessionStorage.removeItem('pc_user');
+      sessionStorage.removeItem('pc_user_name');
+    };
+  }
 
   /*  exportFullBackup inline fallback (also defined in petcingo.js)  */
   window.exportFullBackup = function() {
@@ -1464,9 +1468,10 @@
   window.ptcgSaveQr = function() {
     if (!_qrFile) { if (typeof toast === 'function') toast('Selecciona una imagen QR primero'); return; }
     var db2 = db(); if (!db2) { if (typeof toast === 'function') toast('Firebase no disponible'); return; }
-    var storage = (function() { try { return firebase.storage(); } catch(e) { return null; } })();
-    if (!storage) { if (typeof toast === 'function') toast('Firebase Storage no disponible'); return; }
-    var ref = storage.ref('config/qr-pago-' + Date.now() + '.png');
+    /* Use global storage() from petcingo.js to avoid duplicate Firebase app init */
+    var storageSvc = (typeof storage === 'function') ? storage() : (function() { try { return firebase.storage(); } catch(e) { return null; } })();
+    if (!storageSvc) { if (typeof toast === 'function') toast('Firebase Storage no disponible'); return; }
+    var ref = storageSvc.ref('config/qr-pago-' + Date.now() + '.png');
     if (typeof toast === 'function') toast('Subiendo QR...');
     ref.put(_qrFile).then(function() {
       return ref.getDownloadURL();
@@ -1512,6 +1517,31 @@
     }, 1500);
   })();
 
-  /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE DATOS BANCARIOS oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
-  /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE MODAL MASCOTA oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
+  /* ==================================================================
+     _runInitDashboard: punto de extension para petcingo.js
+     Permite que petcingo.js llame a este hook despues de enterDashboard.
+     NOTE: initDashboard() en petcingo.js ya ejecuta los modulos con
+     setTimeout(800ms). Esta funcion es un respaldo para integraciones
+     futuras o recarga de sesion sin login.
+  ================================================================== */
+  window._runInitDashboard = function(role, name) {
+    var tries = 0;
+    var poll = setInterval(function() {
+      tries++;
+      if (typeof initDashboard === 'function') {
+        clearInterval(poll);
+        /* initDashboard() ya carga los modulos nuevos internamente */
+        try { initDashboard(); } catch(e) { console.error('[petcingo-dash] initDashboard err:', e); }
+        /* Carga de respaldo con escalonado por si initDashboard no incluye el modulo */
+        setTimeout(function() { if (typeof loadOrders      === 'function' && !window._ordersListenerActive)      loadOrders();      }, 600);
+        setTimeout(function() { if (typeof loadCommissions === 'function' && !window._commissionsListenerActive) loadCommissions(); }, 700);
+        setTimeout(function() { if (typeof loadProducts    === 'function' && !window._storeListenerActive)       loadProducts();    }, 800);
+        setTimeout(function() { if (typeof loadPromotions  === 'function') loadPromotions();  }, 900);
+        setTimeout(function() { if (typeof loadSiteConfig  === 'function') loadSiteConfig();  }, 1000);
+        setTimeout(function() { if (typeof showInitialAlerts === 'function') showInitialAlerts(); }, 2200);
+      }
+      if (tries > 20) { clearInterval(poll); console.warn('[petcingo-dash] initDashboard no encontrado tras 3s'); }
+    }, 150);
+  };
+
 })();
