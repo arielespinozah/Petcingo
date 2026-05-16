@@ -1,9 +1,8 @@
 (function() {
-"use strict";
   'use strict';
 
-  /*  Restaurar sesion al recargar (F5/cierre de pestana)  */
-  /* petcingo.js se encarga de initDashboard y todos los modulos */
+  /*  Restaurar sesin al recargar (F5/cierre de pestaa)  */
+  /* petcingo.js se encarga de initDashboard y todos los mdulos */
   (function() {
     if (localStorage.getItem('pc_auth')) {
       var loginEl = document.getElementById('login-screen');
@@ -47,19 +46,47 @@
   };
 
   /*  exportFullBackup inline fallback (also defined in petcingo.js)  */
-  
+  window.exportFullBackup = function() {
+    /* Prefer the richer version from petcingo.js if loaded */
+    if (window._petcingoExportFullBackup) { window._petcingoExportFullBackup(); return; }
+    var COLS = ['pets','users','veterinarias','shelters','scan_logs','logs','staff'];
+    var backup = { version:1, exportedAt: new Date().toISOString(), data:{} };
+    var btn = document.getElementById('btn-full-backup');
+    if(btn){btn.disabled=true;btn.innerHTML='<i class="ri-loader-4-line"></i> Exportando';}
+    var db2 = db();
+    if (!db2) { alert('Error: Firebase no esti listo.'); if(btn){btn.disabled=false;btn.innerHTML='<i class="ri-download-cloud-line"></i> Exportar Backup Completo';} return; }
+    var promises = COLS.map(function(col) {
+      return db2.collection(col).get().then(function(snap){
+        backup.data[col]=[];
+        snap.forEach(function(doc){
+          var d=doc.data();
+          Object.keys(d).forEach(function(k){ if(d[k]&&typeof d[k].toDate==='function') d[k]=d[k].toDate().toISOString(); });
+          backup.data[col].push(Object.assign({_id:doc.id},d));
+        });
+      }).catch(function(){backup.data[col]=[];});
+    });
+    Promise.all(promises).then(function(){
+      var json=JSON.stringify(backup,null,2);
+      var blob=new Blob([json],{type:'application/json'});
+      var url=URL.createObjectURL(blob);
+      var a=document.createElement('a');a.href=url;
+      a.download='petcingo-backup-'+new Date().toISOString().slice(0,10)+'.json';
+      document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+      if(btn){btn.disabled=false;btn.innerHTML='<i class="ri-download-cloud-line"></i> Exportar Backup Completo';}
+    });
+  };
 
   window.importFullBackup = function(event) {
     var file = event.target.files[0];
     /* Reset input so the same file can be re-selected */
     event.target.value = '';
     if (!file) return;
-    if (!confirm('ATENCION: Esto importara todos los datos del backup a Firebase.\nRegistros existentes con el mismo ID quedaran sobreescritos.\n\nDeseas continuar?')) return;
+    if (!confirm('ATENCIN: Esto importari todos los datos del backup a Firebase.\nRegistros existentes con el mismo ID quedarin sobreescritos.\n\nDeseas continuar?')) return;
     var reader = new FileReader();
     reader.onload = function(e) {
       try {
         var backup = JSON.parse(e.target.result);
-        if (!backup || !backup.data) throw new Error('Formato de backup invalido');
+        if (!backup || !backup.data) throw new Error('Formato de backup invilido');
         var db2 = db(); if (!db2) { if (typeof toast === 'function') toast('Error: Firebase no listo.'); return; }
         var collections = Object.keys(backup.data);
         var totalDocs = 0;
@@ -86,12 +113,12 @@
             op.then(function() {
               written++;
               if (written + errors === totalDocs && typeof toast === 'function') {
-                toast('Importacion completada: ' + written + ' documentos en ' + collections.length + ' colecciones.' + (errors ? ' (' + errors + ' errores)' : ''));
+                toast('Importacin completada: ' + written + ' documentos en ' + collections.length + ' colecciones.' + (errors ? ' (' + errors + ' errores)' : ''));
               }
             }).catch(function() { errors++; });
           });
         });
-        if (totalDocs === 0 && typeof toast === 'function') toast('El backup esta vacio.');
+        if (totalDocs === 0 && typeof toast === 'function') toast('El backup esti vaco.');
       } catch(err) {
         if (typeof toast === 'function') toast('Error al leer el archivo: ' + err.message);
       }
@@ -99,13 +126,49 @@
     reader.readAsText(file);
   };
 
-  
+  window.purgeScanLogs = function() {
+    if (typeof _purgeScanLogsNative === 'function') { _purgeScanLogsNative(); return; }
+    var inp=document.getElementById('cfg-scan-days');
+    var days=inp?parseInt(inp.value,10):90;
+    if(!days||days<7)days=90;
+    if(!confirm('Eliminar escaneos con mis de '+days+' das?'))return;
+    var cutoff=new Date(Date.now()-days*24*60*60*1000);
+    var db2=(typeof db==='function')?db():null;
+    if(!db2){alert('Error: Firebase no listo.');return;}
+    db2.collection('scan_logs').where('scannedAt','<',cutoff).get()
+      .then(function(snap){
+        if(snap.empty){alert('No hay escaneos tan antiguos.');return;}
+        var batch=db2.batch();
+        snap.forEach(function(doc){batch.delete(doc.ref);});
+        return batch.commit().then(function(){alert(' '+snap.size+' escaneos eliminados.');});
+      }).catch(function(e){alert('Error: '+e.message);});
+  };
 
-  /*  AUDITORIA: clearOldLogs corregido  */
-  
+  /* EEEEEEEEEEEEEEE AUDITORA: clearOldLogs corregido EEEEEEEEEEEEEEE */
+  window.clearOldLogs = function() {
+    var daysInput = document.getElementById('cfg-log-days');
+    var days = daysInput ? parseInt(daysInput.value, 10) : 30;
+    if (!days || days < 1) days = 30;
+    if (!confirm('Eliminar logs con mis de ' + days + ' das?')) return;
+    var cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+    var db2 = db(); if (!db2) return;
+    function deleteBatch() {
+      db2.collection('logs').where('timestamp', '<', cutoff).limit(500).get()
+        .then(function(snap) {
+          if (snap.empty) { if (typeof toast === 'function') toast('Logs antiguos eliminados.'); return; }
+          var batch = db2.batch();
+          snap.forEach(function(doc) { batch.delete(doc.ref); });
+          batch.commit().then(function() {
+            if (typeof toast === 'function') toast('Eliminados ' + snap.size + ' logs, continuando');
+            deleteBatch();
+          }).catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
+        }).catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
+    }
+    deleteBatch();
+  };
 
 
-  /*  PEDIDOS  */
+  /* EEEEEEEEEEEEEEE PEDIDOS EEEEEEEEEEEEEEE */
   var _ordersCache = [];
   window._ordersListenerActive = false;
 
@@ -130,13 +193,13 @@
       var actions = document.getElementById('verify-modal-actions');
       
       var html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">';
-      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Comprador</span><br><strong>' + escFn(d.buyer ? d.buyer.name : d.buyerName || '-') + '</strong></div>';
-      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Telefono</span><br><strong>' + escFn(d.buyer ? d.buyer.phone : d.phone || '-') + '</strong></div>';
-      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Email</span><br><strong>' + escFn(d.buyer ? d.buyer.email : d.email || '-') + '</strong></div>';
-      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Plan</span><br><strong>' + escFn(d.planName || '-') + '</strong></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Comprador</span><br><strong>' + escFn(d.buyer ? d.buyer.name : d.buyerName || '') + '</strong></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Telefono</span><br><strong>' + escFn(d.buyer ? d.buyer.phone : d.phone || '') + '</strong></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Email</span><br><strong>' + escFn(d.buyer ? d.buyer.email : d.email || '') + '</strong></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Plan</span><br><strong>' + escFn(d.planName || '') + '</strong></div>';
       html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Total</span><br><strong style="color:#4552CC;">' + (d.total || 0) + ' Bs</strong></div>';
-      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Metodo</span><br><strong>' + escFn(d.paymentMethod || '-') + '</strong></div>';
-      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Direccion</span><br><strong>' + escFn(d.buyer ? d.buyer.address : d.address || '-') + '</strong></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Metodo</span><br><strong>' + escFn(d.paymentMethod || '') + '</strong></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Direccion</span><br><strong>' + escFn(d.buyer ? d.buyer.address : d.address || '') + '</strong></div>';
       html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Estado</span><br><span class="status-badge ' + (d.status || 'pending') + '">' + (d.status || 'pending').toUpperCase() + '</span></div>';
       html += '</div>';
       
@@ -291,16 +354,16 @@
     win.document.write('<h1>Guia de Envio - Petcingo</h1>');
     win.document.write('<div class="meta">Pedido: <strong>' + orderId + '</strong> | Fecha: ' + new Date().toLocaleDateString('es-BO', {day:'2-digit',month:'long',year:'numeric'}) + '</div>');
     win.document.write('<table>');
-    win.document.write('<tr><th>Comprador</th><td>' + escFn(buyerName || '-') + '</td></tr>');
-    win.document.write('<tr><th>Telefono</th><td>' + escFn(buyerPhone || '-') + '</td></tr>');
-    win.document.write('<tr><th>Direccion</th><td>' + escFn(buyerAddress || '-') + '</td></tr>');
-    win.document.write('<tr><th>Plan</th><td>' + escFn(d.planName || '-') + '</td></tr>');
-    win.document.write('<tr><th>Tipo de envio</th><td>' + escFn(d.shippingType || d.deliveryType || '-') + '</td></tr>');
-    win.document.write('<tr><th>Tracking</th><td>' + escFn(d.trackingNumber || '-') + '</td></tr>');
-    win.document.write('<tr><th>Notas</th><td>' + escFn(buyerNotes || '-') + '</td></tr>');
+    win.document.write('<tr><th>Comprador</th><td>' + escFn(buyerName || '') + '</td></tr>');
+    win.document.write('<tr><th>Telefono</th><td>' + escFn(buyerPhone || '') + '</td></tr>');
+    win.document.write('<tr><th>Direccion</th><td>' + escFn(buyerAddress || '') + '</td></tr>');
+    win.document.write('<tr><th>Plan</th><td>' + escFn(d.planName || '') + '</td></tr>');
+    win.document.write('<tr><th>Tipo de envio</th><td>' + escFn(d.shippingType || d.deliveryType || '') + '</td></tr>');
+    win.document.write('<tr><th>Tracking</th><td>' + escFn(d.trackingNumber || '') + '</td></tr>');
+    win.document.write('<tr><th>Notas</th><td>' + escFn(buyerNotes || '') + '</td></tr>');
     win.document.write('</table>');
-    win.document.write('<div class="footer">Petcingo - Sistema de Identificacion de Mascotas | petcingo.com.bo</div>');
-    win.document.write('window.onload=function(){window.print();};<\/script></body></html>');
+    win.document.write('<div class="footer">Petcingo  Sistema de Identificacion de Mascotas | petcingo.com.bo</div>');
+    win.document.write('<script>window.onload=function(){window.print();};<\/script></body></html>');
     win.document.close();
   };
 
@@ -384,7 +447,7 @@
       var status = d.status || 'pending';
       var isUrgent = d.urgent === true;
       var rowClass = isUrgent ? 'tr-urgent' : '';
-      var date = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toLocaleDateString('es-BO', { day: '2-digit', month: 'short', year: 'numeric' }) : '-';
+      var date = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toLocaleDateString('es-BO', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
       
       var buyerName = d.buyer ? d.buyer.name : d.buyerName;
       var buyerPhone = d.buyer ? d.buyer.phone : d.phone;
@@ -397,7 +460,7 @@
       }
       
       if (status !== 'pending' && status !== 'rejected') {
-        acciones += '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="printShippingGuide(\'' + o.id + '\')" title="Imprimir guia"><i class="ri-printer-line"></i></button> ';
+        acciones += '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="printShippingGuide(\'' + o.id + '\')" title="Imprimir gua"><i class="ri-printer-line"></i></button> ';
       }
       
       acciones += '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="color:' + (isUrgent ? '#f44336' : '#757575') + '" onclick="toggleUrgent(\'' + o.id + '\',' + isUrgent + ')" title="' + (isUrgent ? 'Quitar urgente' : 'Marcar urgente') + '"><i class="ri-flashlight-line"></i></button>';
@@ -407,9 +470,9 @@
 
       html += '<tr class="' + rowClass + '">' +
         '<td><strong>' + escFn(o.id.substring(0,8)) + '...</strong>' + actCode + '</td>' +
-        '<td>' + escFn(buyerName || '-') + '<br><small style="color:#757575;">' + escFn(buyerPhone || '') + '</small></td>' +
+        '<td>' + escFn(buyerName || '') + '<br><small style="color:#757575;">' + escFn(buyerPhone || '') + '</small></td>' +
         '<td>' + escFn(d.channel || 'Directo') + '</td>' +
-        '<td>' + escFn(d.shippingType || d.deliveryType || '-') + '<br><small style="color:#757575;">' + escFn(d.department || '') + '</small>' + trk + '</td>' +
+        '<td>' + escFn(d.shippingType || d.deliveryType || '') + '<br><small style="color:#757575;">' + escFn(d.department || '') + '</small>' + trk + '</td>' +
         '<td><span class="status-badge ' + status + '">' + status.toUpperCase() + '</span></td>' +
         '<td>' + date + '</td>' +
         '<td style="white-space:nowrap;">' + acciones + '</td>' +
@@ -422,27 +485,10 @@
   window.toggleUrgent = function(orderId, current) {
     var db2 = db(); if (!db2) return;
     db2.collection('orders').doc(orderId).update({ urgent: !current, updatedAt: firebase.firestore.FieldValue.serverTimestamp() })
-      .then(function() { if (typeof toast === 'function') toast(current ? 'Urgente removido' : ' Marcado como urgente'); })
+      .then(function() { if (typeof toast === 'function') toast(current ? 'Urgente removido' : 'i Marcado como urgente'); })
       .catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
   };
 
-  window.filterOrders = function() {
-    var status    = (document.getElementById('order-filter-status')  || {}).value || '';
-    var channel   = (document.getElementById('order-filter-channel') || {}).value || '';
-    var destino   = (document.getElementById('order-filter-destino') || {}).value || '';
-    var urgentEl  = document.getElementById('order-filter-urgent');
-    var urgentOnly = urgentEl ? urgentEl.checked : false;
-
-    var filtered = _ordersCache.filter(function(o) {
-      var d = o.data;
-      if (status    && d.status       !== status)   return false;
-      if (channel   && d.channel      !== channel)  return false;
-      if (destino   && d.shippingType !== destino)  return false;
-      if (urgentOnly && !d.urgent)                  return false;
-      return true;
-    });
-    renderOrders(filtered);
-  };
 
   function updateOrdersBadge() {
     var badge = document.getElementById('orders-nav-badge');
@@ -452,7 +498,7 @@
     badge.style.display = pending > 0 ? 'inline' : 'none';
   }
 
-  /*  COMISIONES Y PAGOS  */
+  /* EEEEEEEEEEEEEEE COMISIONES Y PAGOS EEEEEEEEEEEEEEE */
   var _commissionsCache = [];
   var _commissionsUnsub = null;
   var _currentPaymentId = null;
@@ -488,12 +534,12 @@
     list.forEach(function(c) {
       var d = c.data;
       var status = d.status || 'pendiente';
-      var amount = typeof d.amount === 'number' ? d.amount.toFixed(2) + ' Bs' : '-';
-      var due  = d.dueDate && d.dueDate.toDate ? d.dueDate.toDate().toLocaleDateString('es-BO', { day: '2-digit', month: 'short', year: 'numeric' }) : '-';
+      var amount = typeof d.amount === 'number' ? d.amount.toFixed(2) + ' Bs' : '';
+      var due  = d.dueDate && d.dueDate.toDate ? d.dueDate.toDate().toLocaleDateString('es-BO', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
       var paidDate = d.paidAt && d.paidAt.toDate ? d.paidAt.toDate().toLocaleDateString('es-BO', { day: '2-digit', month: 'short' }) : '';
       html += '<tr>' +
-        '<td style="font-weight:600;">' + escFn(d.entityName || '-') + (d.details ? '<br><small style="color:#757575;font-weight:400;">' + escFn(d.details) + '</small>' : '') + '</td>' +
-        '<td style="text-transform:capitalize;">' + escFn(d.channel || '-') + '</td>' +
+        '<td style="font-weight:600;">' + escFn(d.entityName || '') + (d.details ? '<br><small style="color:#757575;font-weight:400;">' + escFn(d.details) + '</small>' : '') + '</td>' +
+        '<td style="text-transform:capitalize;">' + escFn(d.channel || '') + '</td>' +
         '<td style="font-weight:700;">' + amount + '</td>' +
         '<td><span class="status-badge ' + status + '">' + status + '</span>' + (paidDate ? '<br><small style="color:#757575;font-size:.72rem;">' + paidDate + '</small>' : '') + '</td>' +
         '<td style="font-size:0.85rem;color:#757575;">' + due + '</td>' +
@@ -505,7 +551,7 @@
     });
     tbody.innerHTML = html;
     var cnt = document.getElementById('commissions-count');
-    if (cnt) cnt.textContent = list.length + ' comision' + (list.length !== 1 ? 'es' : '');
+    if (cnt) cnt.textContent = list.length + ' comisin' + (list.length !== 1 ? 'es' : '');
   }
 
   window.filterCommissions = function() {
@@ -539,7 +585,7 @@
     if (!_currentPaymentId) return;
     var comprobante = ((document.getElementById('payment-comprobante') || {}).value || '').trim();
     var btn = document.getElementById('btn-confirm-payment');
-    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line"></i> Guardando...'; }
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line"></i> Guardando'; }
     var db2 = db(); if (!db2) return;
     db2.collection('commissions').doc(_currentPaymentId).update({
       status:      'pagado',
@@ -548,7 +594,7 @@
       updatedAt:   firebase.firestore.FieldValue.serverTimestamp()
     }).then(function() {
       closePaymentModal();
-      if (typeof toast === 'function') toast('Comision marcada como pagada.');
+      if (typeof toast === 'function') toast('Comisin marcada como pagada.');
     }).catch(function(e) {
       if (typeof toast === 'function') toast('Error: ' + e.message);
     }).finally(function() {
@@ -557,15 +603,15 @@
   };
 
   window.deleteCommission = function(commId) {
-    if (!confirm('Eliminar esta comision permanentemente?')) return;
+    if (!confirm('Eliminar esta comisin permanentemente?')) return;
     var db2 = db(); if (!db2) return;
     db2.collection('commissions').doc(commId).delete()
-      .then(function() { if (typeof toast === 'function') toast('Comision eliminada.'); })
+      .then(function() { if (typeof toast === 'function') toast('Comisin eliminada.'); })
       .catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
   };
 
   window.exportCommissionsReport = function() {
-    var raw = prompt('Mes a exportar en formato MM-YYYY (ej: 05-2026). Dejar vacio = mes actual.');
+    var raw = prompt('Mes a exportar en formato MM-YYYY (ej: 05-2026). Dejar vaco = mes actual.');
     var now = new Date();
     var targetYear  = now.getFullYear();
     var targetMonth = now.getMonth() + 1;
@@ -582,7 +628,7 @@
       }
       return false;
     });
-    if (filtered.length === 0) { alert('No hay comisiones para ese periodo.'); return; }
+    if (filtered.length === 0) { alert('No hay comisiones para ese perodo.'); return; }
     var csv = 'Entidad,Canal,Monto,Estado,Vence,Pagado,Comprobante,Detalle\n';
     filtered.forEach(function(c) {
       var d = c.data;
@@ -623,7 +669,7 @@
     if (modal && e.target === modal) closePaymentModal();
   });
 
-  /*  TIENDA  */
+  /* EEEEEEEEEEEEEEE TIENDA EEEEEEEEEEEEEEE */
   var _productsCache = [];
   var _productsUnsub = null;
   window._storeListenerActive = false;
@@ -669,11 +715,11 @@
       var inactive = d.status === 'inactivo';
       var imgHtml = d.imageUrl
         ? '<img src="' + escFn(d.imageUrl) + '" class="product-thumb" alt="" onerror="this.style.display=\'none\'">'
-        : '<div class="product-thumb" style="background:#EEF1FB;display:inline-flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">[Paquete]</div>';
+        : '<div class="product-thumb" style="background:#EEF1FB;display:inline-flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;"></div>';
       html += '<tr' + (inactive ? ' style="opacity:0.5;"' : '') + '>' +
-        '<td><div class="product-name-cell">' + imgHtml + '<strong>' + escFn(d.name || '-') + '</strong></div></td>' +
-        '<td style="text-transform:capitalize;">' + escFn(d.category || '-') + '</td>' +
-        '<td style="font-weight:700;">' + (typeof d.price === 'number' ? d.price.toFixed(2) + ' Bs' : '-') + '</td>' +
+        '<td><div class="product-name-cell">' + imgHtml + '<strong>' + escFn(d.name || '') + '</strong></div></td>' +
+        '<td style="text-transform:capitalize;">' + escFn(d.category || '') + '</td>' +
+        '<td style="font-weight:700;">' + (typeof d.price === 'number' ? d.price.toFixed(2) + ' Bs' : '') + '</td>' +
         '<td><span class="stock-badge ' + sc + '">' + stock + '</span></td>' +
         '<td><span class="status-badge ' + (inactive ? 'entregado' : 'enviado') + '">' + (inactive ? 'Inactivo' : 'Activo') + '</span></td>' +
         '<td style="white-space:nowrap;">' +
@@ -746,10 +792,10 @@
     var stockRaw = document.getElementById('store-prod-stock').value;
     var price = priceRaw !== '' ? parseFloat(priceRaw) : null;
     var stock = stockRaw !== '' ? parseInt(stockRaw, 10) : 0;
-    if (price !== null && isNaN(price)) { if (typeof toast === 'function') toast('Precio invalido.'); return; }
+    if (price !== null && isNaN(price)) { if (typeof toast === 'function') toast('Precio invilido.'); return; }
 
     var btn = document.getElementById('btn-save-product');
-    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line"></i> Guardando...'; }
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line"></i> Guardando'; }
 
     var data = {
       name:        name,
@@ -797,7 +843,7 @@
     badge.style.display = lowStock > 0 ? 'inline' : 'none';
   }
 
-  /*  PROMOCIONES  */
+  /* EEEEEEEEEEEEEEE PROMOCIONES EEEEEEEEEEEEEEE */
   var _promotionsCache = [];
   var _promotionsUnsub = null;
   window._promoListenerActive = false;
@@ -831,7 +877,7 @@
     var tbody = document.getElementById('promotions-tbody');
     if (!tbody) return;
     if (list.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state">No hay codigos de descuento.</div></td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state">No hay cdigos de descuento.</div></td></tr>';
       var cnt = document.getElementById('promotions-count'); if (cnt) cnt.textContent = '';
       return;
     }
@@ -842,9 +888,9 @@
       var inactive = status !== 'activo';
       var valueStr = d.type === 'percent' ? (d.value + '%') : (d.value + ' Bs');
       var usesStr  = (d.usedCount || 0) + (d.maxUses ? ' / ' + d.maxUses : ' / ');
-      var expires  = d.expiresAt && d.expiresAt.toDate ? d.expiresAt.toDate().toLocaleDateString('es-BO', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Sin limite';
+      var expires  = d.expiresAt && d.expiresAt.toDate ? d.expiresAt.toDate().toLocaleDateString('es-BO', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Sin lmite';
       html += '<tr' + (inactive ? ' class="promo-inactive"' : '') + '>' +
-        '<td><code style="font-size:.9rem;font-weight:700;">' + escFn(d.code || '-') + '</code></td>' +
+        '<td><code style="font-size:.9rem;font-weight:700;">' + escFn(d.code || '') + '</code></td>' +
         '<td>' + (d.type === 'percent' ? 'Porcentaje' : 'Monto fijo') + '</td>' +
         '<td style="font-weight:700;">' + valueStr + '</td>' +
         '<td>' + usesStr + '</td>' +
@@ -858,7 +904,7 @@
     });
     tbody.innerHTML = html;
     var cnt = document.getElementById('promotions-count');
-    if (cnt) cnt.textContent = list.length + ' codigo' + (list.length !== 1 ? 's' : '');
+    if (cnt) cnt.textContent = list.length + ' cdigo' + (list.length !== 1 ? 's' : '');
   }
 
   window.filterPromotions = function() {
@@ -877,7 +923,7 @@
     var form = document.getElementById('promo-form');
     if (form) form.style.display = 'block';
     if (!promoId) {
-      document.getElementById('promo-form-title').textContent = 'Nuevo codigo de descuento';
+      document.getElementById('promo-form-title').textContent = 'Nuevo cdigo de descuento';
       document.getElementById('promo-id').value           = '';
       document.getElementById('promo-code').value         = '';
       document.getElementById('promo-type').value         = 'percent';
@@ -896,7 +942,7 @@
     if (!promo) return;
     var d = promo.data;
     showPromoForm(promoId);
-    document.getElementById('promo-form-title').textContent = 'Editar codigo';
+    document.getElementById('promo-form-title').textContent = 'Editar cdigo';
     document.getElementById('promo-id').value           = promoId;
     document.getElementById('promo-code').value         = d.code        || '';
     document.getElementById('promo-type').value         = d.type        || 'percent';
@@ -915,11 +961,11 @@
   window.savePromotion = function() {
     var code  = (document.getElementById('promo-code').value  || '').trim();
     var value = parseFloat(document.getElementById('promo-value').value);
-    if (!code)         { if (typeof toast === 'function') toast('El codigo es obligatorio.'); return; }
+    if (!code)         { if (typeof toast === 'function') toast('El cdigo es obligatorio.'); return; }
     if (!(value > 0))  { if (typeof toast === 'function') toast('El valor debe ser mayor a 0.'); return; }
 
     var btn = document.getElementById('btn-save-promo');
-    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line"></i> Guardando...'; }
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line"></i> Guardando'; }
 
     var maxUsesRaw   = document.getElementById('promo-max-uses').value;
     var minAmountRaw = document.getElementById('promo-min-amount').value;
@@ -947,24 +993,24 @@
 
     op.then(function() {
       hidePromoForm();
-      if (typeof toast === 'function') toast('Codigo ' + (promoId ? 'actualizado' : 'creado') + '.');
+      if (typeof toast === 'function') toast('Cdigo ' + (promoId ? 'actualizado' : 'creado') + '.');
     }).catch(function(e) {
       if (typeof toast === 'function') toast('Error: ' + e.message);
     }).finally(function() {
-      if (btn) { btn.disabled = false; btn.innerHTML = '<i class="ri-save-line"></i> Guardar codigo'; }
+      if (btn) { btn.disabled = false; btn.innerHTML = '<i class="ri-save-line"></i> Guardar cdigo'; }
     });
   };
 
   window.deletePromotion = function(promoId) {
-    if (!confirm('Eliminar este codigo permanentemente?')) return;
+    if (!confirm('Eliminar este cdigo permanentemente?')) return;
     var db2 = db(); if (!db2) return;
     db2.collection('promotions').doc(promoId).delete()
-      .then(function() { if (typeof toast === 'function') toast('Codigo eliminado.'); })
+      .then(function() { if (typeof toast === 'function') toast('Cdigo eliminado.'); })
       .catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
   };
 
-  /*  MASCOTAS PERDIDAS  */
-  /* loadLostPets esta en petcingo.js - usa lost-pets-tbody y lost-pets-count */
+  /* EEEEEEEEEEEEEEE MASCOTAS PERDIDAS EEEEEEEEEEEEEEE */
+  /* loadLostPets esti en petcingo.js  usa lost-pets-tbody y lost-pets-count */
 
   window.toggleFeaturedLost = function(petId, current) {
     db().collection('pets').doc(petId).update({
@@ -978,7 +1024,7 @@
     });
   };
 
-  /*  SISTEMA DE ALERTAS  */
+  /* EEEEEEEEEEEEEEE SISTEMA DE ALERTAS EEEEEEEEEEEEEEE */
   window.showDashAlert = function(msg, type, icon) {
     var container = document.getElementById('alerts-container');
     if (!container) return;
@@ -1001,11 +1047,11 @@
     setTimeout(function() {
       var ordersBadge = document.getElementById('orders-nav-badge');
       if (ordersBadge && ordersBadge.textContent.trim()) {
-        showDashAlert(ordersBadge.textContent.trim() + ' pedido(s) pendiente(s) de atencion.', 'warning', 'ri-shopping-bag-line');
+        showDashAlert(ordersBadge.textContent.trim() + ' pedido(s) pendiente(s) de atencin.', 'warning', 'ri-shopping-bag-line');
       }
       var commBadge = document.getElementById('commissions-nav-badge');
       if (commBadge && commBadge.textContent.trim()) {
-        showDashAlert(commBadge.textContent.trim() + ' comision(es) por pagar.', 'danger', 'ri-money-dollar-circle-line');
+        showDashAlert(commBadge.textContent.trim() + ' comisin(es) por pagar.', 'danger', 'ri-money-dollar-circle-line');
       }
       var storeBadge = document.getElementById('store-nav-badge');
       if (storeBadge && storeBadge.textContent.trim()) {
@@ -1018,7 +1064,7 @@
     }, 1800);
   }
 
-  /*  PERSONALIZAR INDEX  */
+  /* EEEEEEEEEEEEEEE PERSONALIZAR INDEX EEEEEEEEEEEEEEE */
 
   window.showCTab = function(tab, btn) {
     document.querySelectorAll('.ctab-panel').forEach(function(p) { p.style.display = 'none'; });
@@ -1068,7 +1114,7 @@
       setVal('cfg-intl-usd', d.intl_usd);
       setVal('cfg-intl-wa',  d.intl_whatsapp);
 
-      /* Avanzado - secciones */
+      /* Avanzado  secciones */
       setCb('cfg-ventajas-visible',  d.ventajas_visible);
       setVal('cfg-ventajas-title',   d.ventajas_title);
       setVal('cfg-ventajas-sub',     d.ventajas_sub);
@@ -1095,7 +1141,7 @@
       setCb('cfg-adopt-visible',     d.adopt_visible);
       setVal('cfg-adopt-title',      d.adopt_title);
 
-      /* Avanzado - global */
+      /* Avanzado  global */
       setVal('cfg-test1-name',       d.test1_name);
       setVal('cfg-test1-text',       d.test1_text);
       setVal('cfg-footer-text',      d.footer_text);
@@ -1103,10 +1149,10 @@
       setVal('cfg-accent-color',     d.accent_color || '#4552CC');
       setVal('cfg-accent-color-text', d.accent_color || '#4552CC');
 
-      /* Ultima edicion */
+      /* ltima edicin */
       var lastUpd = document.getElementById('cfg-last-updated');
       if (lastUpd && d.updatedAt && d.updatedAt.toDate) {
-        lastUpd.textContent = 'Ultima edicion: ' + d.updatedAt.toDate().toLocaleString('es-BO', {
+        lastUpd.textContent = 'ltima edicin: ' + d.updatedAt.toDate().toLocaleString('es-BO', {
           day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
         });
       }
@@ -1129,7 +1175,7 @@
     var db2 = db(); if (!db2) return;
     var btn    = document.getElementById('btn-save-bank');
     var status = document.getElementById('cfg-bank-status');
-    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line"></i> Guardando...'; }
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line"></i> Guardando'; }
     if (status) { status.style.display = 'none'; }
 
     function v(id)  { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
@@ -1160,7 +1206,7 @@
     var db2 = db(); if (!db2) return;
     var btn    = document.getElementById('btn-save-cfg');
     var status = document.getElementById('cfg-save-status');
-    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line"></i> Guardando...'; }
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line"></i> Guardando'; }
     if (status) { status.style.display = 'none'; }
 
     function v(id)  { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
@@ -1216,10 +1262,10 @@
 
     db2.collection('siteConfig').doc('main').set(data, { merge: true })
       .then(function() {
-        if (typeof toast === 'function') toast('Configuracion guardada correctamente.');
+        if (typeof toast === 'function') toast('Configuracin guardada correctamente.');
         if (status) { status.textContent = 'Guardado'; status.style.color = '#2ECC71'; status.style.display = 'inline'; setTimeout(function() { status.style.display = 'none'; }, 4000); }
         var lastUpd = document.getElementById('cfg-last-updated');
-        if (lastUpd) lastUpd.textContent = 'Ultima edicion: ahora';
+        if (lastUpd) lastUpd.textContent = 'ltima edicin: ahora';
         var iframe = document.getElementById('customize-preview');
         if (iframe) iframe.src = iframe.src;
       })
@@ -1233,13 +1279,13 @@
   };
 
   window.syncAdoptions = function() {
-    if (typeof toast === 'function') toast('Sincronizacion de adopciones en desarrollo.');
+    if (typeof toast === 'function') toast('Sincronizacin de adopciones en desarrollo.');
   };
 
-  /*  MODAL DETALLE MASCOTA  */
+  /* EEEEEEEEEEEEEEE MODAL DETALLE MASCOTA EEEEEEEEEEEEEEE */
 
   function infoItem(label, value) {
-    return '<div><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;font-family:\'Plus Jakarta Sans\',sans-serif;">' + escFn(label) + '</span><br><span style="font-weight:600;font-size:0.9rem;">' + escFn(value || '-') + '</span></div>';
+    return '<div><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;font-family:\'Plus Jakarta Sans\',sans-serif;">' + escFn(label) + '</span><br><span style="font-weight:600;font-size:0.9rem;">' + escFn(value || '') + '</span></div>';
   }
 
   window.showPetModal = function(plateId) {
@@ -1249,7 +1295,7 @@
     var nameEl  = document.getElementById('mod-pet-name');
     if (!modal || !content || !nameEl) return;
     content.innerHTML = '<div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div>';
-    nameEl.textContent = '...';
+    nameEl.textContent = '';
     modal.style.display = 'flex';
 
     db2.collection('pets').doc(plateId).get().then(function(doc) {
@@ -1265,19 +1311,19 @@
       var safe = plateId.replace(/'/g, "\\'");
       var html = '';
 
-      /* Foto + codigo */
+      /* Foto + cdigo */
       html += '<div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">';
       html += d.photoUrl
         ? '<img src="' + escFn(d.photoUrl) + '" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid #E0E0E0;flex-shrink:0;" onerror="this.style.display=\'none\'">'
-        : '<div style="width:72px;height:72px;border-radius:50%;background:#EEF1FB;display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;">[Huella]</div>';
+        : '<div style="width:72px;height:72px;border-radius:50%;background:#EEF1FB;display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;">E</div>';
       html += '<div><div style="font-family:monospace;font-size:0.9rem;font-weight:700;color:#4552CC;word-break:break-all;">' + escFn(plateId) + '</div>';
-      html += '<button onclick="copyPetCode(\'' + safe + '\')" style="margin-top:4px;padding:4px 10px;border-radius:8px;border:1px solid #E0E0E0;background:#fff;cursor:pointer;font-size:0.75rem;font-family:\'Plus Jakarta Sans\',sans-serif;display:inline-flex;align-items:center;gap:4px;"><i class="ri-file-copy-line"></i> Copiar codigo</button></div></div>';
+      html += '<button onclick="copyPetCode(\'' + safe + '\')" style="margin-top:4px;padding:4px 10px;border-radius:8px;border:1px solid #E0E0E0;background:#fff;cursor:pointer;font-size:0.75rem;font-family:\'Plus Jakarta Sans\',sans-serif;display:inline-flex;align-items:center;gap:4px;"><i class="ri-file-copy-line"></i> Copiar cdigo</button></div></div>';
 
-      /* Datos basicos */
+      /* Datos bisicos */
       html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">';
       html += infoItem('Especie',   d.species || d.petType);
       html += infoItem('Raza',      d.breed);
-      html += infoItem('Genero',    d.gender);
+      html += infoItem('Gnero',    d.gender);
       html += infoItem('Peso',      d.weight ? d.weight + ' kg' : null);
       html += infoItem('Nacimiento', d.birthdate);
       html += infoItem('Color',     d.color);
@@ -1285,10 +1331,10 @@
       html += infoItem('Estado',    d.status);
       html += '</div>';
 
-      /* Dueno */
+      /* Dueo */
       if (d.ownerName || d.ownerEmail) {
         html += '<div style="padding:12px 14px;background:#F8F9FB;border-radius:12px;margin-bottom:16px;">';
-        html += '<div style="font-size:0.72rem;color:#9E9E9E;text-transform:uppercase;margin-bottom:8px;font-family:\'Plus Jakarta Sans\',sans-serif;">Dueno</div>';
+        html += '<div style="font-size:0.72rem;color:#9E9E9E;text-transform:uppercase;margin-bottom:8px;font-family:\'Plus Jakarta Sans\',sans-serif;">Dueo</div>';
         html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">';
         html += infoItem('Nombre', d.ownerName);
         html += infoItem('Email',  d.ownerEmail || d.owner_email);
@@ -1314,16 +1360,16 @@
       /* Vacunas */
       html += '<div style="padding:12px 14px;background:#F8F9FB;border-radius:12px;margin-bottom:16px;">';
       html += '<div style="font-size:0.72rem;color:#9E9E9E;text-transform:uppercase;margin-bottom:6px;font-family:\'Plus Jakarta Sans\',sans-serif;">Vacunas</div>';
-      html += '<span style="font-size:0.9rem;font-weight:600;">' + (d.vaccinationStatus === 'yes' ? '[OK] Al dia' : '[!] No al dia / Sin datos') + '</span>';
+      html += '<span style="font-size:0.9rem;font-weight:600;">' + (d.vaccinationStatus === 'yes' ? ' Al da' : 'a No al da / Sin datos') + '</span>';
       if (d.vaccinationDetails) html += '<br><small style="color:#757575;">' + escFn(d.vaccinationDetails) + '</small>';
       html += '</div>';
 
       /* Mensaje */
       if (d.message) html += '<div style="background:#FFF9E6;border-radius:12px;padding:12px 14px;margin-bottom:16px;font-style:italic;color:#616161;font-size:0.88rem;">"' + escFn(d.message) + '"</div>';
 
-      /* Accion: recuperar clave */
+      /* Accin: recuperar clave */
       html += '<button class="ptcg-index__btn ptcg-index__btn--primary" onclick="sendPasswordReset(\'' + safe + '\')" style="width:100%;margin-top:8px;padding:12px;font-size:0.9rem;font-weight:700;">';
-      html += '<i class="ri-key-2-line"></i> Enviar recuperacion de contrasena</button>';
+      html += '<i class="ri-key-2-line"></i> Enviar recuperacin de contrasea</button>';
 
       content.innerHTML = html;
     }).catch(function(e) {
@@ -1337,20 +1383,20 @@
     if (modal) modal.style.display = 'none';
   };
 
-  /*  SOPORTE AL CLIENTE  */
+  /* EEEEEEEEEEEEEEE SOPORTE AL CLIENTE EEEEEEEEEEEEEEE */
 
   window.copyRegCode = function() {
     var code = (document.getElementById('reg-result-id') || {}).textContent || '';
-    if (!code || code === '-') return;
+    if (!code || code === '') return;
     navigator.clipboard.writeText(code)
-      .then(function() { if (typeof toast === 'function') toast('Codigo copiado: ' + code); })
-      .catch(function() { prompt('Codigo de activacion:', code); });
+      .then(function() { if (typeof toast === 'function') toast('Cdigo copiado: ' + code); })
+      .catch(function() { prompt('Cdigo de activacin:', code); });
   };
 
   window.copyPetCode = function(code) {
     navigator.clipboard.writeText(code)
-      .then(function() { if (typeof toast === 'function') toast('Codigo copiado: ' + code); })
-      .catch(function() { prompt('Codigo:', code); });
+      .then(function() { if (typeof toast === 'function') toast('Cdigo copiado: ' + code); })
+      .catch(function() { prompt('Cdigo:', code); });
   };
 
   window.sendPasswordReset = function(plateId) {
@@ -1360,7 +1406,7 @@
       var d = doc.data();
       var email = d.ownerEmail || d.owner_email || d.email;
       if (!email) { if (typeof toast === 'function') toast('No hay email registrado para esta placa.'); return; }
-      if (!confirm('Enviar enlace de recuperacion de contrasena a ' + email + '?')) return;
+      if (!confirm('Enviar enlace de recuperacin de contrasea a ' + email + '?')) return;
       if (typeof firebase === 'undefined') return;
       firebase.auth().sendPasswordResetEmail(email)
         .then(function() { if (typeof toast === 'function') toast('Correo enviado a ' + email + '.'); })
@@ -1376,26 +1422,22 @@
 
 
 
-  /*  PEDIDOS Y PAGOS  */
+  /* EEEEEEEEEEEEEEE PEDIDOS Y PAGOS EEEEEEEEEEEEEEE */
   
 
-  window.filterOrders = function() {
-    // Logica para filtrar por estado y region
-    window.loadOrders();
-  };
 
-  /*  PASARELAS Y ENVIOS  */
+  /* EEEEEEEEEEEEEEE PASARELAS Y ENVOS EEEEEEEEEEEEEEE */
   window.saveShippingConfig = function() {
-    if (typeof toast === 'function') toast('Configuracion de DHL guardada (Simulada).');
-    // Logica para guardar las tarifas en Firebase
+    if (typeof toast === 'function') toast('Configuracin de DHL guardada (Simulada).');
+    // Lgica para guardar las tarifas en Firebase
   };
 
   window.saveGatewayConfig = function() {
-    if (typeof toast === 'function') toast('Configuracion de pasarelas guardada (Simulada).');
-    // Logica para guardar credenciales API en Firebase
+    if (typeof toast === 'function') toast('Configuracin de pasarelas guardada (Simulada).');
+    // Lgica para guardar credenciales API en Firebase
   };
 
-  /*  IMPRESION 360  */
+  /* EEEEEEEEEEEEEEE IMPRESION 360 EEEEEEEEEEEEEEE */
   window.generatePrintLayout = function() {
     var container = document.getElementById('print-layout-container');
     var canvasArea = document.getElementById('print-canvas-area');
@@ -1404,7 +1446,7 @@
     canvasArea.innerHTML = '<div style="padding:40px;background:#f9f9f9;border:1px dashed #ccc;width:100%;color:#888;">Renderizando pliego segun Plan Maestro 360... (Proximamente)</div>';
   };
 
-  /*  QR DE PAGO  */
+  /* EEEEEEEEEEEEEEE QR DE PAGO EEEEEEEEEEEEEEE */
   var _qrFile = null;
 
   window.ptcgHandleQrUpload = function(file) {
@@ -1472,138 +1514,9 @@
     }, 1500);
   })();
 
-  /*  DATOS BANCARIOS  */
-  window.saveBankInfo = function() {
-    var db2 = db(); if (!db2) { if (typeof toast === 'function') toast('Firebase no disponible'); return; }
-    var fields = ['bank-name', 'bank-account', 'bank-account-name', 'bank-account-number', 'bank-currency'];
-    var data = {};
-    fields.forEach(function(id) {
-      var el = document.getElementById(id);
-      if (el) data[id.replace(/-/g, '_')] = el.value.trim();
-    });
-    /* Also capture any textarea notes */
-    var notesEl = document.getElementById('bank-notes');
-    if (notesEl) data.bank_notes = notesEl.value.trim();
-    db2.collection('config').doc('bank_info').set(data, { merge: true }).then(function() {
-      if (typeof toast === 'function') toast('Datos bancarios guardados');
-    }).catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
-  };
+  /* EEEEEEEEEEEEEEE DATOS BANCARIOS EEEEEEEEEEEEEEE */
 
-  /*  MODAL MASCOTA  */
-  window.showPetModal = function(plateId) {
-    var modal   = document.getElementById('pet-detail-modal');
-    var content = document.getElementById('mod-pet-content');
-    var nameEl  = document.getElementById('mod-pet-name');
-    if (!modal) return;
+  /* EEEEEEEEEEEEEEE MODAL MASCOTA EEEEEEEEEEEEEEE */
 
-    if (content) content.innerHTML = '<div class="empty-state" style="padding:20px"><div class="loading-dots"><span></span><span></span><span></span></div></div>';
-    if (nameEl)  nameEl.textContent = '...';
-    modal.style.display = 'flex';
-
-    var db2 = db(); if (!db2) { if (typeof toast === 'function') toast('Firebase no listo'); window.closePetModal(); return; }
-    db2.collection('pets').doc(plateId).get().then(function(doc) {
-      if (!doc.exists) {
-        if (typeof toast === 'function') toast('Placa no encontrada.');
-        window.closePetModal();
-        return;
-      }
-      var d = doc.data();
-      if (nameEl) nameEl.textContent = d.name || 'Sin nombre';
-
-      var html = '';
-      if (d.photoUrl) {
-        html += '<div style="text-align:center;margin-bottom:16px"><img src="' + escFn(d.photoUrl) + '" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid rgba(69,82,204,.2);" onerror="this.style.display=\'none\'"></div>';
-      }
-      html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:.85rem">';
-      var fields = [
-        ['Especie', d.species], ['Raza', d.breed],
-        ['Dueno', d.ownerName], ['Telefono', d.phone],
-        ['Ciudad', d.city], ['Estado', d.status],
-        ['Vendedor', d.sellerName], ['Codigo', plateId]
-      ];
-      fields.forEach(function(f) {
-        html += '<div style="background:#F8F9FB;padding:8px 10px;border-radius:8px"><span style="font-size:.68rem;color:#9E9E9E;text-transform:uppercase;display:block">' + escFn(f[0]) + '</span><strong>' + escFn(f[1] || '--') + '</strong></div>';
-      });
-      html += '</div>';
-      if (d.notes) {
-        html += '<div style="margin-top:12px;background:#F8F9FB;padding:10px;border-radius:8px;font-size:.82rem"><strong>Notas:</strong> ' + escFn(d.notes) + '</div>';
-      }
-      if (d.phone) {
-        var wpNum = (d.phone || '').replace(/\D/g, '');
-        html += '<a href="https://wa.me/' + wpNum + '" target="_blank" rel="noopener" class="ptcg-index__btn ptcg-index__btn--success btn-sm" style="width:100%;margin-top:14px;display:flex;justify-content:center"><i class="ri-whatsapp-line"></i> WhatsApp al dueno</a>';
-      }
-      if (content) content.innerHTML = html;
-    }).catch(function(e) {
-      if (typeof toast === 'function') toast('Error: ' + e.message);
-      window.closePetModal();
-    });
-  };
-
-  window.closePetModal = function() {
-    var modal = document.getElementById('pet-detail-modal');
-    if (modal) modal.style.display = 'none';
-  };
-
-
-
-document.addEventListener('click', function(e) {
-  var sec = document.getElementById('sec-pets');
-  if (!sec || !sec.classList.contains('active')) return;
-  var row = e.target.closest('#pets-tbody tr');
-  if (!row) return;
-  if (e.target.closest('button') || e.target.closest('a')) return;
-  var firstCell = row.querySelector('td.td-id');
-  var code = firstCell ? firstCell.textContent.trim() : '';
-  if (code && code !== '-' && typeof showPetModal === 'function') showPetModal(code);
-});
-
-
-  function addSupportButtons() {
-    var tbody = document.getElementById('pets-tbody');
-    if (!tbody) return;
-    tbody.querySelectorAll('tr').forEach(function(row) {
-      if (row.querySelector('.soporte-btns')) return;
-      var codeCell = row.querySelector('td.td-id');
-      if (!codeCell) return;
-      var code = codeCell.textContent.trim();
-      if (!code || code === '-') return;
-      var actionsCell = row.querySelector('td:last-child');
-      if (!actionsCell) return;
-      var span = document.createElement('span');
-      span.className = 'soporte-btns';
-      span.style.cssText = 'display:inline-flex;gap:4px;margin-left:6px;';
-      var safeCode = code.replace(/'/g, "\\'");
-      span.innerHTML =
-        '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="copyPetCode(\'' + safeCode + '\')" title="Copiar codigo"><i class="ri-file-copy-line"></i></button>' +
-        '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="sendPasswordReset(\'' + safeCode + '\')" title="Recuperar contrasena"><i class="ri-key-2-line"></i></button>';
-      actionsCell.appendChild(span);
-    });
-  }
-
-  var observer = new MutationObserver(addSupportButtons);
-  function attachObserver() {
-    var tbody = document.getElementById('pets-tbody');
-    if (tbody) { observer.observe(tbody, { childList: true, subtree: true }); return; }
-    setTimeout(attachObserver, 800);
-  }
-  attachObserver();
-
-  var _origShowSection = window.showSection;
-  if (typeof _origShowSection === 'function') {
-    window.showSection = function(name, btn) {
-      _origShowSection.call(window, name, btn);
-      if (name === 'pets') setTimeout(addSupportButtons, 400);
-    };
-  } else {
-    document.addEventListener('DOMContentLoaded', function() {
-      if (typeof window.showSection === 'function') {
-        var orig = window.showSection;
-        window.showSection = function(name, btn) {
-          orig.call(window, name, btn);
-          if (name === 'pets') setTimeout(addSupportButtons, 400);
-        };
-      }
-    });
-  }
 
 })();
