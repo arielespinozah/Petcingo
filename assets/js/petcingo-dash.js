@@ -1,15 +1,25 @@
 (function() {
   'use strict';
 
-  /*  Restaurar sesin al recargar (F5/cierre de pestaa)  */
-  /* petcingo.js se encarga de initDashboard y todos los mdulos */
+  /* Restaurar sesion al recargar (F5/cierre de pestana)
+     Si hay sesion activa: muestra el dashboard Y ejecuta initDashboard
+     para cargar todos los modulos (Pedidos, Comisiones, Tienda, etc.) */
   (function() {
-    if (localStorage.getItem('pc_auth')) {
-      var loginEl = document.getElementById('login-screen');
-      var dashEl  = document.getElementById('dashboard');
-      if (loginEl) loginEl.style.display = 'none';
-      if (dashEl)  dashEl.style.display  = 'block';
-    }
+    if (!localStorage.getItem('pc_auth')) return;
+    var loginEl = document.getElementById('login-screen');
+    var dashEl  = document.getElementById('dashboard');
+    if (loginEl) loginEl.style.display = 'none';
+    if (dashEl)  dashEl.style.display  = 'block';
+    /* Esperar a que petcingo.js haya definido initDashboard */
+    var _tries = 0;
+    var _poll = setInterval(function() {
+      _tries++;
+      if (typeof initDashboard === 'function') {
+        clearInterval(_poll);
+        try { initDashboard(); } catch(e) { console.error('[dash] initDashboard restore err:', e); }
+      }
+      if (_tries > 30) { clearInterval(_poll); console.warn('[dash] initDashboard no encontrado en restore'); }
+    }, 100);
   })();
 
   function escFn(s) {
@@ -1518,11 +1528,7 @@
   })();
 
   /* ==================================================================
-     _runInitDashboard: punto de extension para petcingo.js
-     Permite que petcingo.js llame a este hook despues de enterDashboard.
-     NOTE: initDashboard() en petcingo.js ya ejecuta los modulos con
-     setTimeout(800ms). Esta funcion es un respaldo para integraciones
-     futuras o recarga de sesion sin login.
+     _runInitDashboard: punto de extension global
   ================================================================== */
   window._runInitDashboard = function(role, name) {
     var tries = 0;
@@ -1530,9 +1536,8 @@
       tries++;
       if (typeof initDashboard === 'function') {
         clearInterval(poll);
-        /* initDashboard() ya carga los modulos nuevos internamente */
         try { initDashboard(); } catch(e) { console.error('[petcingo-dash] initDashboard err:', e); }
-        /* Carga de respaldo con escalonado por si initDashboard no incluye el modulo */
+        /* Respaldo con guards anti-duplicado */
         setTimeout(function() { if (typeof loadOrders      === 'function' && !window._ordersListenerActive)      loadOrders();      }, 600);
         setTimeout(function() { if (typeof loadCommissions === 'function' && !window._commissionsListenerActive) loadCommissions(); }, 700);
         setTimeout(function() { if (typeof loadProducts    === 'function' && !window._storeListenerActive)       loadProducts();    }, 800);
@@ -1543,5 +1548,28 @@
       if (tries > 20) { clearInterval(poll); console.warn('[petcingo-dash] initDashboard no encontrado tras 3s'); }
     }, 150);
   };
+
+  /* ==================================================================
+     Monkey-patch de initDashboard (flujo de LOGIN normal)
+     Garantiza que los modulos del dashboard se carguen incluso si el
+     setTimeout(800ms) de petcingo.js disparo antes de que este archivo
+     terminara de cargarse.
+     Guards anti-duplicado: cada modulo verifica su propio flag.
+  ================================================================== */
+  (function() {
+    var _originalInit = window.initDashboard;
+    if (typeof _originalInit !== 'function') return;
+    window.initDashboard = function() {
+      _originalInit();
+      setTimeout(function() {
+        if (typeof loadOrders      === 'function' && !window._ordersListenerActive)      loadOrders();
+        if (typeof loadCommissions === 'function' && !window._commissionsListenerActive) loadCommissions();
+        if (typeof loadProducts    === 'function' && !window._storeListenerActive)       loadProducts();
+        if (typeof loadPromotions  === 'function') loadPromotions();
+        if (typeof loadSiteConfig  === 'function') loadSiteConfig();
+        if (typeof showInitialAlerts === 'function') showInitialAlerts();
+      }, 1000);
+    };
+  })();
 
 })();
