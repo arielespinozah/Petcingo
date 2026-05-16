@@ -45,9 +45,10 @@ https://prueb2.dashnexpages.net/assets/css/sora.css
 /assets/js
 
 https://prueb2.dashnexpages.net/assets/js/app.js
-https://prueb2.dashnexpages.net/assets/js/petcingo-checkout-intl.js
 https://prueb2.dashnexpages.net/assets/js/petcingo-checkout.js
 https://prueb2.dashnexpages.net/assets/js/petcingo-core.js
+https://prueb2.dashnexpages.net/assets/js/petcingo-dash-raw.js
+https://prueb2.dashnexpages.net/assets/js/petcingo-dash.js
 https://prueb2.dashnexpages.net/assets/js/petcingo-shield.js
 https://prueb2.dashnexpages.net/assets/js/petcingo.js
 
