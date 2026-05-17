@@ -7,6 +7,24 @@ console.log('[Petcingo] app.js v20260504 loaded OK');
 =============================================================== */
 'use strict';
 
+window.toggleActionsMenu = function(btn, event) {
+  if (event) event.stopPropagation();
+  var menu = btn.nextElementSibling;
+  if (!menu) return;
+  var wasOpen = menu.style.display === 'block';
+  var allDropdowns = document.querySelectorAll('.ptcg-actions-dropdown');
+  allDropdowns.forEach(function(d) { d.style.display = 'none'; });
+  if (!wasOpen) {
+    menu.style.display = 'block';
+  }
+};
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.ptcg-actions-menu')) {
+    var allDropdowns = document.querySelectorAll('.ptcg-actions-dropdown');
+    allDropdowns.forEach(function(d) { d.style.display = 'none'; });
+  }
+});
+
 /* -- Firebase Config -------------------------------------------- */
 var FIREBASE_CONFIG = {
   apiKey:            'AIzaSyAEE3yLFFsJTMORNFLYZWW2_DNHwzF0hE8',
@@ -392,6 +410,7 @@ window.loadPets = function() {
     .then(function(snap) {
       _dash.allPets=[];
       snap.forEach(function(doc) { var d=doc.data(); d._id=doc.id; _dash.allPets.push(d); });
+      _dash.petsCurrentPage = 1;
       renderTable(_dash.allPets);
     }).catch(function(e) { tbody.innerHTML='<tr><td colspan="6"><div class="empty-state"><p>Error: '+esc(e.message)+'</p></div></td></tr>'; });
 };
@@ -415,6 +434,7 @@ window.filterTable = function() {
       (seller === '__direct__' && (!d.sellerId || d.sellerId === '' || d.sellerId === 'petcingo'));
     return matchQ && matchSt && matchSl;
   });
+  _dash.petsCurrentPage = 1;
   renderTable(filtered);
 };
 
@@ -432,14 +452,27 @@ function renderTable(pets) {
     etr.appendChild(etd);
     tbody.appendChild(etr);
     if (cnt2) cnt2.textContent = '';
+    var pagContainerExist = document.getElementById('pets-pagination');
+    if (pagContainerExist) pagContainerExist.innerHTML = '';
     return;
   }
   var ACT  = 'https://prueb2.dashnexpages.net/activacion/?id=';
   var PERF = 'https://prueb2.dashnexpages.net/perfil-mascota-petcingo/?id=';
   var CLI  = 'https://prueb2.dashnexpages.net/cliente/?id=';
   var now  = new Date();
+  
+  _dash.currentPetsList = pets;
+  if (!_dash.petsPageSize) _dash.petsPageSize = 10;
+  if (!_dash.petsCurrentPage) _dash.petsCurrentPage = 1;
+  var totalPages = Math.ceil(pets.length / _dash.petsPageSize) || 1;
+  if (_dash.petsCurrentPage > totalPages) _dash.petsCurrentPage = totalPages;
+  
+  var start = (_dash.petsCurrentPage - 1) * _dash.petsPageSize;
+  var end = start + _dash.petsPageSize;
+  var slicedPets = pets.slice(start, end);
+  
   var frag = document.createDocumentFragment();
-  pets.forEach(function(d) {
+  slicedPets.forEach(function(d) {
     var id = d._id || d.id || '';
     if (!id) return;
     var bCls = 'badge-active', bTxt = 'Activo';
@@ -469,85 +502,137 @@ function renderTable(pets) {
     tdBadge.appendChild(badge);
     tr.appendChild(tdBadge);
     tr.appendChild(td(d.createdAt && d.createdAt.toDate ? formatDate(d.createdAt.toDate()) : '', 'td-date'));
+    
     var tdAct = document.createElement('td');
     tdAct.className = 'td-actions';
+    
+    var dropdownStyle = "display:block;width:100%;text-align:left;padding:8px 14px;border:none;background:transparent;font-size:0.82rem;color:#424242;cursor:pointer;white-space:nowrap;";
+    
+    var actionMenu = document.createElement('div');
+    actionMenu.className = 'ptcg-actions-menu';
+    actionMenu.style.cssText = 'position:relative;display:inline-block;';
+    
+    var toggleBtn = document.createElement('button');
+    toggleBtn.className = 'ptcg-actions-toggle';
+    toggleBtn.style.cssText = 'background:none;border:1.5px solid #E0E0E0;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem;color:#757575;line-height:1;';
+    toggleBtn.textContent = '...';
+    toggleBtn.onclick = function(e) { window.toggleActionsMenu(toggleBtn, e); };
+    
+    var dropdownDiv = document.createElement('div');
+    dropdownDiv.className = 'ptcg-actions-dropdown';
+    dropdownDiv.style.cssText = 'display:none;position:absolute;right:0;top:100%;z-index:500;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);min-width:180px;padding:6px 0;margin-top:4px;';
+    
+    function addDropdownBtn(htmlContent, onClickFn, extraStyle) {
+      var btn = document.createElement('button');
+      btn.style.cssText = dropdownStyle + (extraStyle || '');
+      btn.innerHTML = htmlContent;
+      btn.onmouseenter = function() { btn.style.background = '#F5F5F5'; };
+      btn.onmouseleave = function() { btn.style.background = 'transparent'; };
+      btn.onclick = onClickFn;
+      dropdownDiv.appendChild(btn);
+    }
+    
+    function addDropdownLink(htmlContent, href, target, extraStyle) {
+      var a = document.createElement('a');
+      a.style.cssText = dropdownStyle + 'text-decoration:none;' + (extraStyle || '');
+      a.innerHTML = htmlContent;
+      a.href = href;
+      a.target = target;
+      a.onmouseenter = function() { a.style.background = '#F5F5F5'; };
+      a.onmouseleave = function() { a.style.background = 'transparent'; };
+      dropdownDiv.appendChild(a);
+    }
+    
     if (d.status === 'deleted') {
-      var b1 = document.createElement('button');
-      b1.className = 'btn btn-ghost btn-sm';
-      b1.innerHTML = '<i class="ri-arrow-go-back-line"></i> Restaurar';
-      b1.onclick = (function(pid){ return function(){ restorePet(pid); }; })(id);
-      var b2 = document.createElement('button');
-      b2.className = 'btn-danger-outline';
-      b2.innerHTML = '<i class="ri-delete-bin-line"></i>';
-      b2.onclick = (function(pid){ return function(){ permanentDelete(pid); }; })(id);
-      tdAct.appendChild(b1);
-      tdAct.appendChild(b2);
+      addDropdownBtn('<i class="ri-arrow-go-back-line"></i> Restaurar', (function(pid){ return function(){ restorePet(pid); }; })(id));
+      addDropdownBtn('<i class="ri-delete-bin-line"></i> Eliminar Permanente', (function(pid){ return function(){ permanentDelete(pid); }; })(id), 'color:#f43f5e;');
     } else if (d.status === 'reservada') {
-      var a1 = document.createElement('a');
-      a1.href = ACT + encodeURIComponent(id);
-      a1.target = '_blank';
-      a1.className = 'btn btn-ghost btn-sm';
-      a1.innerHTML = '<i class="ri-qr-code-line"></i> Ver placa';
-      var b3 = document.createElement('button');
-      b3.className = 'btn-danger-outline';
-      b3.innerHTML = '<i class="ri-delete-bin-line"></i>';
-      b3.onclick = (function(pid){ return function(){ archivePet(pid); }; })(id);
-      tdAct.appendChild(a1);
-      tdAct.appendChild(b3);
+      addDropdownLink('<i class="ri-qr-code-line"></i> Ver placa', ACT + encodeURIComponent(id), '_blank');
+      addDropdownBtn('<i class="ri-delete-bin-line"></i> Archivar', (function(pid){ return function(){ archivePet(pid); }; })(id), 'color:#f43f5e;');
     } else {
-      var a2 = document.createElement('a');
-      a2.href = PERF + encodeURIComponent(id);
-      a2.target = '_blank';
-      a2.className = 'btn btn-ghost btn-sm';
-      a2.innerHTML = '<i class="ri-eye-line"></i> Ver perfil';
-      tdAct.appendChild(a2);
+      addDropdownLink('<i class="ri-eye-line"></i> Ver perfil', PERF + encodeURIComponent(id), '_blank');
       if (d.editToken) {
-        var a3 = document.createElement('a');
-        a3.href = CLI + encodeURIComponent(id);
-        a3.target = '_blank';
-        a3.className = 'btn btn-ghost btn-sm';
-        a3.innerHTML = '<i class="ri-user-line"></i>';
-        tdAct.appendChild(a3);
+        addDropdownLink('<i class="ri-user-line"></i> Cliente', CLI + encodeURIComponent(id), '_blank');
       }
-      var b4 = document.createElement('button');
-      b4.className = 'btn-danger-outline';
-      b4.innerHTML = '<i class="ri-delete-bin-line"></i>';
-      b4.onclick = (function(pid){ return function(){ archivePet(pid); }; })(id);
-      tdAct.appendChild(b4);
-
+      addDropdownBtn('<i class="ri-delete-bin-line"></i> Archivar', (function(pid){ return function(){ archivePet(pid); }; })(id), 'color:#f43f5e;');
+      
       if (_dash.currentUser && _dash.currentUser.role === 'admin') {
-        var btnCopyCode = document.createElement('button');
-        btnCopyCode.className = 'btn btn-ghost btn-sm';
-        btnCopyCode.innerHTML = '<i class="ri-file-copy-line"></i>';
-        btnCopyCode.title = 'Copiar codigo de activacion';
-        btnCopyCode.onclick = (function(pid){ return function() {
+        addDropdownBtn('<i class="ri-file-copy-line"></i> Copiar codigo', (function(pid){ return function() {
           navigator.clipboard.writeText(pid).then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i> Codigo copiado: ' + pid); });
-        }; })(id);
-
-        var btnResetPass = document.createElement('button');
-        btnResetPass.className = 'btn btn-ghost btn-sm';
-        btnResetPass.innerHTML = '<i class="ri-key-2-line"></i>';
-        btnResetPass.title = 'Enviar recuperacion de contrasena';
-        btnResetPass.onclick = (function(petData){ return function() {
+        }; })(id));
+        
+        addDropdownBtn('<i class="ri-key-2-line"></i> Enviar contrasena', (function(petData){ return function() {
           var email = petData.ownerEmail || petData.owner_email || petData.email;
           if (!email) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> No hay email registrado para este dueno.'); return; }
-          if (!confirm('?Enviar enlace de restablecimiento a ' + email + '?')) return;
+          if (!confirm('Enviar enlace de restablecimiento a ' + email + '?')) return;
           firebase.auth().sendPasswordResetEmail(email)
             .then(function() { toast('<i class="ri-mail-line"></i> Correo enviado a ' + email); })
             .catch(function(err) { toast('<i class="ri-error-warning-line" style="color:#E74C3C;"></i> Error: ' + err.message); });
-        }; })(d);
-
-        tdAct.appendChild(btnCopyCode);
-        tdAct.appendChild(btnResetPass);
+        }; })(d));
       }
     }
+    
+    actionMenu.appendChild(toggleBtn);
+    actionMenu.appendChild(dropdownDiv);
+    tdAct.appendChild(actionMenu);
+    
     tr.appendChild(tdAct);
     frag.appendChild(tr);
   });
   tbody.innerHTML = '';
   tbody.appendChild(frag);
+  
   if (cnt2) cnt2.textContent = 'Mostrando ' + pets.length +
     (_dash.showingTrash ? ' en papelera' : ' de ' + _dash.allPets.length + ' mascotas');
+    
+  // Render beautiful pagination
+  var pagContainer = document.getElementById('pets-pagination');
+  if (!pagContainer) {
+    pagContainer = document.createElement('div');
+    pagContainer.id = 'pets-pagination';
+    pagContainer.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:12px;margin-top:20px;padding:10px 0;width:100%;flex-wrap:wrap;';
+    var card = document.querySelector('#sec-pets .ptcg-index__card');
+    if (card) card.appendChild(pagContainer);
+  }
+  
+  if (totalPages <= 1) {
+    pagContainer.innerHTML = '';
+  } else {
+    var pBtnStyle = 'background:#ffffff;border:1.5px solid #E0E0E0;border-radius:99px;padding:8px 18px;font-family:"Plus Jakarta Sans",sans-serif;font-size:0.85rem;font-weight:600;color:#4552CC;cursor:pointer;transition:all 0.2s ease;box-shadow:0 2px 8px rgba(0,0,0,0.05);display:inline-flex;align-items:center;gap:6px;outline:none;';
+    
+    var prevDisabled = _dash.petsCurrentPage === 1;
+    var prevBtn = document.createElement('button');
+    prevBtn.style.cssText = pBtnStyle + (prevDisabled ? 'opacity:0.5;cursor:not-allowed;' : '');
+    prevBtn.innerHTML = '<i class="ri-arrow-left-s-line"></i> Anterior';
+    if (!prevDisabled) {
+      prevBtn.onmouseenter = function() { prevBtn.style.background = '#4552CC'; prevBtn.style.color = '#ffffff'; prevBtn.style.borderColor = '#4552CC'; prevBtn.style.transform = 'translateY(-1px)'; prevBtn.style.boxShadow = '0 4px 12px rgba(69,82,204,0.2)'; };
+      prevBtn.onmouseleave = function() { prevBtn.style.background = '#ffffff'; prevBtn.style.color = '#4552CC'; prevBtn.style.borderColor = '#E0E0E0'; prevBtn.style.transform = 'none'; prevBtn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)'; };
+      prevBtn.onclick = function() { _dash.petsCurrentPage--; renderTable(_dash.currentPetsList); };
+    } else {
+      prevBtn.disabled = true;
+    }
+    
+    var pageSpan = document.createElement('span');
+    pageSpan.style.cssText = 'font-family:"Plus Jakarta Sans",sans-serif;font-size:0.88rem;color:#616161;font-weight:500;';
+    pageSpan.textContent = 'Pag. ' + _dash.petsCurrentPage + ' de ' + totalPages;
+    
+    var nextDisabled = _dash.petsCurrentPage === totalPages;
+    var nextBtn = document.createElement('button');
+    nextBtn.style.cssText = pBtnStyle + (nextDisabled ? 'opacity:0.5;cursor:not-allowed;' : '');
+    nextBtn.innerHTML = 'Siguiente <i class="ri-arrow-right-s-line"></i>';
+    if (!nextDisabled) {
+      nextBtn.onmouseenter = function() { nextBtn.style.background = '#4552CC'; nextBtn.style.color = '#ffffff'; nextBtn.style.borderColor = '#4552CC'; nextBtn.style.transform = 'translateY(-1px)'; nextBtn.style.boxShadow = '0 4px 12px rgba(69,82,204,0.2)'; };
+      nextBtn.onmouseleave = function() { nextBtn.style.background = '#ffffff'; nextBtn.style.color = '#4552CC'; nextBtn.style.borderColor = '#E0E0E0'; nextBtn.style.transform = 'none'; nextBtn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)'; };
+      nextBtn.onclick = function() { _dash.petsCurrentPage++; renderTable(_dash.currentPetsList); };
+    } else {
+      nextBtn.disabled = true;
+    }
+    
+    pagContainer.innerHTML = '';
+    pagContainer.appendChild(prevBtn);
+    pagContainer.appendChild(pageSpan);
+    pagContainer.appendChild(nextBtn);
+  }
 }
 
 window.toggleTrash = function() {
@@ -1054,12 +1139,21 @@ function loadVets() {
       snap.forEach(function(doc){
         var d=doc.data(), fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'--';
         var prefBadge=d.prefix?'<span style="background:rgba(69,82,204,.12);border:1px solid rgba(69,82,204,.25);border-radius:6px;padding:2px 8px;font-size:.75rem;color:#7C8EE8;font-family:monospace">'+esc(d.prefix)+'</span>':'--';
+        
+        var dropdownStyle = "display:block;width:100%;text-align:left;padding:8px 14px;border:none;background:transparent;font-size:0.82rem;color:#424242;cursor:pointer;white-space:nowrap;";
+        var actionDropdown = '<div class="ptcg-actions-menu" style="position:relative;display:inline-block;">' +
+          '<button class="ptcg-actions-toggle" onclick="toggleActionsMenu(this, event)" style="background:none;border:1.5px solid #E0E0E0;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem;color:#757575;line-height:1;">...</button>' +
+          '<div class="ptcg-actions-dropdown" style="display:none;position:absolute;right:0;top:100%;z-index:500;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);min-width:180px;padding:6px 0;margin-top:4px;">' +
+            '<button style="' + dropdownStyle + '" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="openVetDetail(\''+doc.id+'\')"><i class="ri-settings-3-line"></i> Placas</button>' +
+            '<button style="' + dropdownStyle + '" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="editVet(\''+doc.id+'\',\''+encodeData(d)+'\')"><i class="ri-edit-line"></i> Editar</button>' +
+            '<button style="' + dropdownStyle + 'color:#f43f5e;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="deleteRecord(\'veterinarias\',\''+doc.id+'\',\'loadVets\')"><i class="ri-delete-bin-line"></i> Eliminar</button>' +
+          '</div>' +
+        '</div>';
+
         html+='<tr><td class="td-name">'+esc(d.name||'--')+'</td><td>'+prefBadge+'</td><td>'+esc(d.contact||'--')+'</td>'+
           '<td class="td-owner">'+esc(d.city||'--')+'</td><td class="td-owner">'+esc(d.phone||'--')+'</td>'+
           '<td class="td-date">'+fecha+'</td>'+
-          '<td class="td-actions"><button class="btn btn-ghost btn-sm" onclick="openVetDetail(\''+doc.id+'\')"><i class="ri-settings-3-line"></i> Placas</button>'+
-          '<button class="btn btn-ghost btn-sm" onclick="editVet(\''+doc.id+'\',\''+encodeData(d)+'\')"><i class="ri-edit-line"></i> Editar</button>'+
-          '<button class="btn-danger-outline" onclick="deleteRecord(\'veterinarias\',\''+doc.id+'\',\'loadVets\')"><i class="ri-delete-bin-line"></i></button></td></tr>';
+          '<td class="td-actions">'+actionDropdown+'</td></tr>';
       });
       tbody.innerHTML=html;
     }).catch(function(e){tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><p>Error: '+esc(e.message)+'</p></div></td></tr>';});
@@ -1263,12 +1357,32 @@ function loadShelters() {
         var rate=d.commissionRate!=null?d.commissionRate:20;
         var rateCell='<input type="number" min="0" max="100" value="'+rate+'" id="rate-sh-'+doc.id+'" style="width:48px;padding:2px 5px;border:1px solid #E0E0E0;border-radius:6px;font-size:.78rem;text-align:center;">'+
           '<button onclick="saveShelterRate(\''+doc.id+'\')" style="padding:2px 8px;background:#4552CC;color:#fff;border:none;border-radius:6px;font-size:.70rem;cursor:pointer;margin-left:3px;">OK</button>';
-        var suspBtn=status==='active'?
-          '<button class="btn btn-ghost btn-sm" style="color:#E67E22;" onclick="setShelterStatus(\''+doc.id+'\',\''+esc(d.name||'')+'\',\'suspended\')"><i class="ri-pause-circle-line"></i></button>':
-          (status==='suspended'?'<button class="btn btn-ghost btn-sm" style="color:#2ECC71;" onclick="setShelterStatus(\''+doc.id+'\',\''+esc(d.name||'')+'\',\'active\')"><i class="ri-play-circle-line"></i></button>':'');
-        var banBtn=status!=='banned'?
-          '<button class="btn btn-ghost btn-sm" style="color:#E74C3C;" onclick="setShelterStatus(\''+doc.id+'\',\''+esc(d.name||'')+'\',\'banned\')"><i class="ri-forbid-line"></i></button>':
-          '<button class="btn btn-ghost btn-sm" style="color:#2ECC71;" onclick="setShelterStatus(\''+doc.id+'\',\''+esc(d.name||'')+'\',\'active\')"><i class="ri-checkbox-circle-line"></i></button>';
+        
+        var dropdownStyle = "display:block;width:100%;text-align:left;padding:8px 14px;border:none;background:transparent;font-size:0.82rem;color:#424242;cursor:pointer;white-space:nowrap;";
+        
+        var suspLabel=status==='active'?'<i class="ri-pause-circle-line"></i> Suspender':(status==='suspended'?'<i class="ri-play-circle-line"></i> Activar':'');
+        var suspDropdownBtn=suspLabel?'<button style="' + dropdownStyle + 'color:#E67E22;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="setShelterStatus(\''+doc.id+'\',\''+esc(d.name||'')+'\',\'suspended\')">'+suspLabel+'</button>':'';
+        if (status === 'suspended') {
+          suspDropdownBtn='<button style="' + dropdownStyle + 'color:#2ECC71;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="setShelterStatus(\''+doc.id+'\',\''+esc(d.name||'')+'\',\'active\')">'+suspLabel+'</button>';
+        }
+
+        var banLabel=status!=='banned'?'<i class="ri-forbid-line"></i> Banear':'<i class="ri-checkbox-circle-line"></i> Activar';
+        var banColor=status!=='banned'?'#E74C3C':'#2ECC71';
+        var banTargetStatus=status!=='banned'?'banned':'active';
+        var banDropdownBtn='<button style="' + dropdownStyle + 'color:'+banColor+';" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="setShelterStatus(\''+doc.id+'\',\''+esc(d.name||'')+'\',\''+banTargetStatus+'\')">'+banLabel+'</button>';
+
+        var actionDropdown = '<div class="ptcg-actions-menu" style="position:relative;display:inline-block;">' +
+          '<button class="ptcg-actions-toggle" onclick="toggleActionsMenu(this, event)" style="background:none;border:1.5px solid #E0E0E0;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem;color:#757575;line-height:1;">...</button>' +
+          '<div class="ptcg-actions-dropdown" style="display:none;position:absolute;right:0;top:100%;z-index:500;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);min-width:180px;padding:6px 0;margin-top:4px;">' +
+            '<button style="' + dropdownStyle + '" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="openShelterDetail(\''+doc.id+'\')"><i class="ri-settings-3-line"></i> Placas</button>' +
+            '<button style="' + dropdownStyle + '" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="editShelter(\''+doc.id+'\',\''+encodeData(d)+'\')"><i class="ri-edit-line"></i> Editar</button>' +
+            '<a style="' + dropdownStyle + 'text-decoration:none;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" href="https://prueb2.dashnexpages.net/refugio-panel-control/?auto='+doc.id+'" target="_blank"><i class="ri-external-link-line"></i> Ir a panel</a>' +
+            suspDropdownBtn +
+            banDropdownBtn +
+            '<button style="' + dropdownStyle + 'color:#f43f5e;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="deleteRecord(\'shelters\',\''+doc.id+'\',\'loadShelters\')"><i class="ri-delete-bin-line"></i> Eliminar</button>' +
+          '</div>' +
+        '</div>';
+
         html+='<tr>';
         html+='<td class="td-name">'+esc(d.name||'--')+'</td>';
         html+='<td>'+prefBadge+'</td>';
@@ -1278,13 +1392,7 @@ function loadShelters() {
         html+='<td class="td-owner">'+esc(d.phone||'--')+'</td>';
         html+='<td class="td-owner" style="max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+esc(d.address||'--')+'</td>';
         html+='<td class="td-date">'+fecha+'</td>';
-        html+='<td class="td-actions" style="white-space:nowrap;">';
-        html+='<button class="btn btn-ghost btn-sm" onclick="openShelterDetail(\''+doc.id+'\')"><i class="ri-settings-3-line"></i></button>';
-        html+='<button class="btn btn-ghost btn-sm" onclick="editShelter(\''+doc.id+'\',\''+encodeData(d)+'\')"><i class="ri-edit-line"></i></button>';
-        html+='<a class="btn btn-ghost btn-sm" href="https://prueb2.dashnexpages.net/refugio-panel-control/?auto='+doc.id+'" target="_blank" title="Abrir panel del refugio"><i class="ri-external-link-line"></i></a>';
-        html+=suspBtn+banBtn;
-        html+='<button class="btn-danger-outline" onclick="deleteRecord(\'shelters\',\''+doc.id+'\',\'loadShelters\')"><i class="ri-delete-bin-line"></i></button>';
-        html+='</td></tr>';
+        html+='<td class="td-actions" style="white-space:nowrap;">'+actionDropdown+'</td></tr>';
       });
       tbody.innerHTML=html;
     }).catch(function(e){tbody.innerHTML='<tr><td colspan="9"><div class="empty-state"><p>Error: '+esc(e.message)+'</p></div></td></tr>';});

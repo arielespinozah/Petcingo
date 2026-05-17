@@ -1387,6 +1387,58 @@
           <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="loadShippingRates()"><i class="ri-refresh-line"></i> Recargar</button>
         </div>
       </div>
+
+      <!-- Configuración Avanzada de Envíos -->
+      <div class="ptcg-index__card" style="margin-top:20px;">
+        <div class="ptcg-activate__title" style="margin-bottom:12px;font-size:1.1rem;display:flex;align-items:center;gap:8px;">
+          <i class="ri-settings-4-line" style="color:#4552CC;"></i> Configuración Avanzada de Envíos
+        </div>
+        <div class="ptcg-activate__subtitle" style="margin-bottom:16px;font-size:0.85rem;">Selecciona el metodo de calculo para envios nacionales e internacionales.</div>
+        
+        <div class="ptcg-activate__form-group" style="margin-bottom:16px;max-width:400px;">
+          <label class="ptcg-activate__label">Tipo de Envío</label>
+          <select id="shipping-type-select" class="ptcg-activate__select" onchange="toggleShippingTypeView()" style="width:100%;">
+            <option value="nacional">Tarifa Plana Nacional</option>
+            <option value="internacional">Tarifa por Peso/Volumen Internacional</option>
+          </select>
+        </div>
+
+        <div id="shipping-rate-settings-container">
+          <!-- Tarifa plana nacional -->
+          <div id="shipping-flat-rate-box" class="ptcg-activate__form-group" style="margin-bottom:16px;max-width:300px;">
+            <label class="ptcg-activate__label">Costo Fijo Nacional (Bs.)</label>
+            <input type="number" id="shipping-flat-rate" class="ptcg-activate__input" placeholder="25" min="0" step="0.5" style="width:100%;">
+          </div>
+
+          <!-- Rangos internacionales -->
+          <div id="shipping-ranges-box" style="display:none;margin-bottom:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+              <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.88rem;font-weight:700;color:#616161;">Rangos de Peso / Volumen</span>
+              <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="addShippingRangeRow()"><i class="ri-add-line"></i> Agregar Rango</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Minimo (kg o m³)</th>
+                    <th>Maximo (kg o m³)</th>
+                    <th>Costo (USD)</th>
+                    <th style="width:80px;text-align:center;">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="shipping-ranges-tbody">
+                  <!-- Dynamic rows go here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;align-items:center;margin-top:16px;">
+          <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="saveShippingSettings()"><i class="ri-save-line"></i> Guardar Configuración</button>
+          <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="loadShippingSettings()"><i class="ri-refresh-line"></i> Recargar</button>
+        </div>
+      </div>
     </section>
 
     <!-- ── IMPRESION 360 ── -->
@@ -1406,6 +1458,31 @@
             <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="toggleAllPrint(false)">Ninguno</button>
           </div>
         </div>
+
+        <!-- Filtros de busqueda -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;background:#F8F9FA;padding:12px;border-radius:8px;border:1px solid #E0E0E0;">
+          <div>
+            <label style="display:block;font-size:0.75rem;font-weight:700;color:#616161;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">Buscar por Codigo o Comprador</label>
+            <input type="text" id="print-filter-search" oninput="filterPrintableOrders()" placeholder="Ingresa codigo o nombre..." style="width:100%;padding:8px 12px;border:1.5px solid #E0E0E0;border-radius:6px;font-size:0.85rem;font-family:'Plus Jakarta Sans',sans-serif;outline:none;transition:border-color 0.2s ease;">
+          </div>
+          <div>
+            <label style="display:block;font-size:0.75rem;font-weight:700;color:#616161;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">Filtrar por Departamento</label>
+            <select id="print-filter-dept" onchange="filterPrintableOrders()" style="width:100%;padding:8px 12px;border:1.5px solid #E0E0E0;border-radius:6px;font-size:0.85rem;font-family:'Plus Jakarta Sans',sans-serif;outline:none;background-color:#fff;cursor:pointer;">
+              <option value="">Todos los departamentos</option>
+              <option value="santa cruz">Santa Cruz</option>
+              <option value="la paz">La Paz</option>
+              <option value="cochabamba">Cochabamba</option>
+              <option value="oruro">Oruro</option>
+              <option value="potosi">Potosi</option>
+              <option value="tarija">Tarija</option>
+              <option value="chuquisaca">Chuquisaca</option>
+              <option value="beni">Beni</option>
+              <option value="pando">Pando</option>
+              <option value="internacional">Internacional / Otros</option>
+            </select>
+          </div>
+        </div>
+
         <div class="table-wrap">
           <table>
             <thead><tr>

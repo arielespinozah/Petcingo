@@ -1635,8 +1635,117 @@
   };
 
   window.saveGatewayConfig = function() {
-    if (typeof toast === 'function') toast('Configuracin de pasarelas guardada (Simulada).');
-    // Lgica para guardar credenciales API en Firebase
+    if (typeof toast === 'function') toast('Configuracion de pasarelas guardada (Simulada).');
+    // Logica para guardar credenciales API en Firebase
+  };
+
+  /* -- Envios avanzados: nacionales e internacionales ----------------------- */
+
+  window.toggleShippingTypeView = function() {
+    var sel = document.getElementById('shipping-type-select');
+    var flatBox = document.getElementById('shipping-flat-rate-box');
+    var rangesBox = document.getElementById('shipping-ranges-box');
+    if (!sel || !flatBox || !rangesBox) return;
+    if (sel.value === 'nacional') {
+      flatBox.style.display = 'block';
+      rangesBox.style.display = 'none';
+    } else {
+      flatBox.style.display = 'none';
+      rangesBox.style.display = 'block';
+    }
+  };
+
+  window.addShippingRangeRow = function(min, max, cost) {
+    var tbody = document.getElementById('shipping-ranges-tbody');
+    if (!tbody) return;
+    
+    var minVal = (min !== undefined) ? min : 0;
+    var maxVal = (max !== undefined) ? max : 5;
+    var costVal = (cost !== undefined) ? cost : 10;
+    
+    var tr = document.createElement('tr');
+    var html = '';
+    html += '<td><input type="number" class="ptcg-activate__input range-min" value="' + minVal + '" step="0.1" style="width:100%;padding:6px 10px;"></td>';
+    html += '<td><input type="number" class="ptcg-activate__input range-max" value="' + maxVal + '" step="0.1" style="width:100%;padding:6px 10px;"></td>';
+    html += '<td><input type="number" class="ptcg-activate__input range-cost" value="' + costVal + '" step="0.1" style="width:100%;padding:6px 10px;"></td>';
+    html += '<td style="text-align:center;"><button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="this.parentNode.parentNode.remove()" style="color:#f43f5e;border-color:#FFCDD2;"><i class="ri-delete-bin-line"></i></button></td>';
+    tr.innerHTML = html;
+    tbody.appendChild(tr);
+  };
+
+  window.saveShippingSettings = function() {
+    var sel = document.getElementById('shipping-type-select');
+    if (!sel) return;
+    
+    var type = sel.value;
+    var data = {
+      type: type,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    
+    if (type === 'nacional') {
+      var flatEl = document.getElementById('shipping-flat-rate');
+      data.flatRate = flatEl ? (parseFloat(flatEl.value) || 0) : 0;
+    } else {
+      var rates = [];
+      var rows = document.querySelectorAll('#shipping-ranges-tbody tr');
+      for (var i = 0; i < rows.length; i++) {
+        var minIn = rows[i].querySelector('.range-min');
+        var maxIn = rows[i].querySelector('.range-max');
+        var costIn = rows[i].querySelector('.range-cost');
+        if (minIn && maxIn && costIn) {
+          rates.push({
+            min: parseFloat(minIn.value) || 0,
+            max: parseFloat(maxIn.value) || 0,
+            cost: parseFloat(costIn.value) || 0
+          });
+        }
+      }
+      data.rates = rates;
+    }
+    
+    var db2 = db(); if (!db2) return;
+    db2.collection('config').doc('shipping_settings').set(data, { merge: true })
+      .then(function() {
+        if (typeof toast === 'function') toast('Configuracion de envios guardada.');
+      })
+      .catch(function(e) {
+        if (typeof toast === 'function') toast('Error al guardar: ' + e.message);
+      });
+  };
+
+  window.loadShippingSettings = function() {
+    var db2 = db(); if (!db2) return;
+    db2.collection('config').doc('shipping_settings').get()
+      .then(function(doc) {
+        var sel = document.getElementById('shipping-type-select');
+        var flatEl = document.getElementById('shipping-flat-rate');
+        var tbody = document.getElementById('shipping-ranges-tbody');
+        if (!sel) return;
+        
+        if (tbody) tbody.innerHTML = '';
+        
+        if (doc.exists) {
+          var d = doc.data();
+          sel.value = d.type || 'nacional';
+          if (flatEl && d.flatRate !== undefined) {
+            flatEl.value = d.flatRate;
+          }
+          if (d.rates && d.rates.forEach && tbody) {
+            d.rates.forEach(function(r) {
+              window.addShippingRangeRow(r.min, r.max, r.cost);
+            });
+          }
+        } else {
+          sel.value = 'nacional';
+          if (flatEl) flatEl.value = '25';
+        }
+        
+        window.toggleShippingTypeView();
+      })
+      .catch(function(e) {
+        console.error('Error al cargar configuracion de envios: ', e);
+      });
   };
 
   /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE IMPRESION 360 oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
@@ -1666,18 +1775,81 @@
     if (el) el.textContent = count + ' placa(s) seleccionada(s)';
   }
 
+  var _validatedSvgUrl = '';
+  var _svgValidationError = '';
+  var _lastCheckedSvgUrl = '';
+  var _svgValidationTimeout = null;
+
   window.loadPrintableOrders = function() {
     var tbody = document.getElementById('print-orders-tbody');
     if (!tbody) return;
+    
+    if (!_ordersCache || _ordersCache.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div><p style="margin-top:10px">Cargando cola de impresion...</p></div></td></tr>';
+      var db2 = db();
+      if (!db2) return;
+      db2.collection('orders').where('status', 'in', ['confirmed', 'processing']).get()
+        .then(function(snap) {
+          _ordersCache = [];
+          snap.forEach(function(doc) {
+            _ordersCache.push({ id: doc.id, data: doc.data() });
+          });
+          window.filterPrintableOrders();
+        })
+        .catch(function(e) {
+          tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">Error al cargar pedidos: ' + escFn(e.message) + '</div></td></tr>';
+        });
+    } else {
+      window.filterPrintableOrders();
+    }
+  };
+
+  window.filterPrintableOrders = function() {
+    var tbody = document.getElementById('print-orders-tbody');
+    if (!tbody) return;
+
+    var searchVal = (document.getElementById('print-filter-search') ? document.getElementById('print-filter-search').value.toLowerCase().trim() : '');
+    var deptVal = (document.getElementById('print-filter-dept') ? document.getElementById('print-filter-dept').value.toLowerCase().trim() : '');
+
     var orders = _ordersCache.filter(function(o) {
-      var s = o.data.status;
-      return (s === 'confirmed' || s === 'processing') && o.data.activationCode;
+      var d = o.data;
+      var s = d.status;
+      var isConfirmedOrProcessing = (s === 'confirmed' || s === 'processing') && d.activationCode;
+      if (!isConfirmedOrProcessing) return false;
+
+      // Filter by search query
+      if (searchVal) {
+        var buyerName = (d.buyerName || (d.buyer ? d.buyer.name : '') || '').toLowerCase();
+        var code = (d.activationCode || '').toLowerCase();
+        var oid = (o.id || '').toLowerCase();
+        if (buyerName.indexOf(searchVal) === -1 && code.indexOf(searchVal) === -1 && oid.indexOf(searchVal) === -1) {
+          return false;
+        }
+      }
+
+      // Filter by department
+      if (deptVal) {
+        var de = (d.department || d.shippingType || '').toLowerCase();
+        if (deptVal === 'internacional') {
+          var standardDepts = ['santa cruz', 'la paz', 'cochabamba', 'oruro', 'potosi', 'tarija', 'chuquisaca', 'beni', 'pando'];
+          var isBolivian = standardDepts.some(function(dep) { return de.indexOf(dep) !== -1; });
+          if (isBolivian) return false;
+        } else {
+          if (de.indexOf(deptVal) === -1) {
+            return false;
+          }
+        }
+      }
+
+      return true;
     });
+
     if (orders.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">No hay pedidos confirmados con codigo de activacion.</div></td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">No se encontraron pedidos con los filtros actuales.</div></td></tr>';
       updatePrintCount();
       return;
     }
+
     var html = '';
     orders.forEach(function(o) {
       var d    = o.data;
@@ -1744,19 +1916,95 @@
     var scale = 4; // 1 mm = 4 px
     var W = Math.round(cfg.w * scale);
     var H = Math.round(cfg.h * scale);
-    var bgStyle = cfg.svgUrl
-      ? 'background:url(' + escFn(cfg.svgUrl) + ') no-repeat center/cover;'
-      : 'background:#fff;';
+
+    if (cfg.svgUrl) {
+      if (cfg.svgUrl !== _lastCheckedSvgUrl) {
+        _lastCheckedSvgUrl = cfg.svgUrl;
+        _svgValidationError = '';
+        
+        if (_svgValidationTimeout) clearTimeout(_svgValidationTimeout);
+        _svgValidationTimeout = setTimeout(function() {
+          var lowercaseUrl = cfg.svgUrl.toLowerCase();
+          if (!lowercaseUrl.endsWith('.svg') && lowercaseUrl.indexOf('.svg?') === -1) {
+            _svgValidationError = 'La URL debe terminar con extension .svg';
+            if (typeof toast === 'function') {
+              toast('<i class="ri-error-warning-line" style="color:#f43f5e;"></i> Error: La URL debe terminar con extension .svg');
+            }
+            window.updatePrintPreview();
+            return;
+          }
+
+          fetch(cfg.svgUrl)
+            .then(function(res) {
+              if (!res.ok) throw new Error('Error de conexion HTTP ' + res.status);
+              return res.text();
+            })
+            .then(function(text) {
+              var parser = new DOMParser();
+              var doc = parser.parseFromString(text, 'image/svg+xml');
+              var parserError = doc.getElementsByTagName('parsererror');
+              if (parserError.length > 0) {
+                throw new Error('Sintaxis SVG/XML invalida.');
+              }
+              if (doc.documentElement.nodeName.toLowerCase() !== 'svg') {
+                throw new Error('La respuesta no contiene una etiqueta <svg> raiz valida.');
+              }
+              _validatedSvgUrl = cfg.svgUrl;
+              _svgValidationError = '';
+              window.updatePrintPreview();
+            })
+            .catch(function(err) {
+              _svgValidationError = err.message;
+              if (typeof toast === 'function') {
+                toast('<i class="ri-error-warning-line" style="color:#f43f5e;"></i> Error de plantilla SVG: ' + err.message);
+              }
+              window.updatePrintPreview();
+            });
+        }, 500);
+      }
+    } else {
+      _lastCheckedSvgUrl = '';
+      _validatedSvgUrl = '';
+      _svgValidationError = '';
+    }
+
+    var bgStyle = 'background:#fff;';
+    var errorOverlay = '';
+    
+    if (cfg.svgUrl) {
+      if (_svgValidationError) {
+        bgStyle = 'background:#FFEBEE;border:2px dashed #f43f5e;';
+        errorOverlay = '<div style="position:absolute;inset:0;background:rgba(244,63,94,0.08);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;text-align:center;box-sizing:border-box;">' +
+          '<i class="ri-error-warning-fill" style="font-size:2rem;color:#f43f5e;margin-bottom:6px;"></i>' +
+          '<span style="font-family:\'Plus Jakarta Sans\',sans-serif;font-size:0.75rem;font-weight:700;color:#f43f5e;line-height:1.2;">Error SVG:</span>' +
+          '<span style="font-family:\'Plus Jakarta Sans\',sans-serif;font-size:0.70rem;color:#e11d48;margin-top:4px;word-break:break-word;line-height:1.2;">' + escFn(_svgValidationError) + '</span>' +
+        '</div>';
+      } else if (cfg.svgUrl === _validatedSvgUrl) {
+        bgStyle = 'background:url(' + escFn(cfg.svgUrl) + ') no-repeat center/cover;';
+      } else {
+        bgStyle = 'background:#F5F5F5;border:1px dashed #BDBDBD;';
+        errorOverlay = '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;text-align:center;box-sizing:border-box;">' +
+          '<div class="loading-dots"><span></span><span></span><span></span></div>' +
+          '<span style="font-family:\'Plus Jakarta Sans\',sans-serif;font-size:0.72rem;color:#757575;margin-top:6px;">Validando plantilla...</span>' +
+        '</div>';
+      }
+    }
+
     var html = '<div style="position:relative;width:' + W + 'px;height:' + H + 'px;border:1px solid #CCC;border-radius:4px;overflow:hidden;' + bgStyle + '">';
-    if (cfg.showLogo) {
-      html += '<div style="position:absolute;top:' + Math.round(2*scale) + 'px;left:' + Math.round(2*scale) + 'px;font-family:\'Sora\',sans-serif;font-size:' + Math.round(1.8*scale) + 'px;font-weight:800;color:#4552CC;letter-spacing:0.05em;">PETCINGO</div>';
+    
+    if (!_svgValidationError) {
+      if (cfg.showLogo) {
+        html += '<div style="position:absolute;top:' + Math.round(2*scale) + 'px;left:' + Math.round(2*scale) + 'px;font-family:\'Sora\',sans-serif;font-size:' + Math.round(1.8*scale) + 'px;font-weight:800;color:#4552CC;letter-spacing:0.05em;">PETCINGO</div>';
+      }
+      var qrS = Math.round(cfg.qrSize * scale);
+      html += '<div style="position:absolute;left:' + Math.round(cfg.qrX*scale) + 'px;top:' + Math.round(cfg.qrY*scale) + 'px;width:' + qrS + 'px;height:' + qrS + 'px;background:#F0F0F0;display:flex;align-items:center;justify-content:center;font-size:' + Math.round(qrS*0.55) + 'px;color:#9E9E9E;"><i class="ri-qr-code-line"></i></div>';
+      html += '<div style="position:absolute;left:' + Math.round(cfg.idX*scale) + 'px;top:' + Math.round(cfg.idY*scale) + 'px;font-family:monospace;font-size:' + Math.round(2.2*scale) + 'px;font-weight:700;color:#212121;letter-spacing:0.08em;">AB1234</div>';
+      if (cfg.showScanMe) {
+        html += '<div style="position:absolute;bottom:' + Math.round(2*scale) + 'px;left:0;right:0;text-align:center;font-size:' + Math.round(1.6*scale) + 'px;color:#757575;font-family:\'Plus Jakarta Sans\',sans-serif;">Scan Me</div>';
+      }
     }
-    var qrS = Math.round(cfg.qrSize * scale);
-    html += '<div style="position:absolute;left:' + Math.round(cfg.qrX*scale) + 'px;top:' + Math.round(cfg.qrY*scale) + 'px;width:' + qrS + 'px;height:' + qrS + 'px;background:#F0F0F0;display:flex;align-items:center;justify-content:center;font-size:' + Math.round(qrS*0.55) + 'px;color:#9E9E9E;"><i class="ri-qr-code-line"></i></div>';
-    html += '<div style="position:absolute;left:' + Math.round(cfg.idX*scale) + 'px;top:' + Math.round(cfg.idY*scale) + 'px;font-family:monospace;font-size:' + Math.round(2.2*scale) + 'px;font-weight:700;color:#212121;letter-spacing:0.08em;">AB1234</div>';
-    if (cfg.showScanMe) {
-      html += '<div style="position:absolute;bottom:' + Math.round(2*scale) + 'px;left:0;right:0;text-align:center;font-size:' + Math.round(1.6*scale) + 'px;color:#757575;font-family:\'Plus Jakarta Sans\',sans-serif;">Scan Me</div>';
-    }
+    
+    html += errorOverlay;
     html += '</div>';
     box.innerHTML = html;
   };
@@ -2033,6 +2281,8 @@
         setTimeout(function() { if (typeof loadProducts    === 'function' && !window._storeListenerActive)       loadProducts();    }, 800);
         setTimeout(function() { if (typeof loadPromotions  === 'function') loadPromotions();  }, 900);
         setTimeout(function() { if (typeof loadSiteConfig  === 'function') loadSiteConfig();  }, 1000);
+        setTimeout(function() { if (typeof loadShippingRates === 'function') loadShippingRates(); }, 1100);
+        setTimeout(function() { if (typeof loadShippingSettings === 'function') loadShippingSettings(); }, 1200);
         setTimeout(function() { if (typeof showInitialAlerts === 'function') showInitialAlerts(); }, 2200);
       }
       if (tries > 20) { clearInterval(poll); console.warn('[petcingo-dash] initDashboard no encontrado tras 3s'); }
@@ -2057,6 +2307,8 @@
         if (typeof loadProducts    === 'function' && !window._storeListenerActive)       loadProducts();
         if (typeof loadPromotions  === 'function') loadPromotions();
         if (typeof loadSiteConfig  === 'function') loadSiteConfig();
+        if (typeof loadShippingRates === 'function') loadShippingRates();
+        if (typeof loadShippingSettings === 'function') loadShippingSettings();
         if (typeof showInitialAlerts === 'function') showInitialAlerts();
       }, 1000);
     };
@@ -2176,12 +2428,26 @@
         var rateCell = '<input type="number" min="0" max="100" step="0.5" value="' + rate + '" id="rate-af-' + doc.id + '" style="width:46px;padding:2px 5px;border:1px solid #E0E0E0;border-radius:6px;font-size:.78rem;text-align:center;">' +
           '<button onclick="saveAffiliateRate(\'' + doc.id + '\')" style="padding:2px 8px;background:#4552CC;color:#fff;border:none;border-radius:6px;font-size:.70rem;cursor:pointer;margin-left:3px;">OK</button>';
 
-        var suspBtn = status === 'active' ?
-          '<button class="btn btn-ghost btn-sm" style="color:#E67E22;" title="Suspender" onclick="setAffiliateStatus(\'' + doc.id + '\',\'suspended\')"><i class="ri-pause-circle-line"></i></button>' :
-          (status === 'suspended' ? '<button class="btn btn-ghost btn-sm" style="color:#2ECC71;" title="Activar" onclick="setAffiliateStatus(\'' + doc.id + '\',\'active\')"><i class="ri-play-circle-line"></i></button>' : '');
-        var banBtn = status !== 'banned' ?
-          '<button class="btn btn-ghost btn-sm" style="color:#E74C3C;" title="Banear" onclick="setAffiliateStatus(\'' + doc.id + '\',\'banned\')"><i class="ri-forbid-line"></i></button>' :
-          '<button class="btn btn-ghost btn-sm" style="color:#2ECC71;" title="Rehabilitar" onclick="setAffiliateStatus(\'' + doc.id + '\',\'active\')"><i class="ri-checkbox-circle-line"></i></button>';
+        var dropdownStyle = "display:block;width:100%;text-align:left;padding:8px 14px;border:none;background:transparent;font-size:0.82rem;color:#424242;cursor:pointer;white-space:nowrap;";
+        
+        var suspLabel = status === 'active' ? '<i class="ri-pause-circle-line"></i> Suspender' : (status === 'suspended' ? '<i class="ri-play-circle-line"></i> Activar' : '');
+        var suspDropdownBtn = suspLabel ? '<button style="' + dropdownStyle + 'color:#E67E22;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="setAffiliateStatus(\'' + doc.id + '\',\'suspended\')">' + suspLabel + '</button>' : '';
+        if (status === 'suspended') {
+          suspDropdownBtn = '<button style="' + dropdownStyle + 'color:#2ECC71;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="setAffiliateStatus(\'' + doc.id + '\',\'active\')">' + suspLabel + '</button>';
+        }
+
+        var banLabel = status !== 'banned' ? '<i class="ri-forbid-line"></i> Banear' : '<i class="ri-checkbox-circle-line"></i> Activar';
+        var banColor = status !== 'banned' ? '#E74C3C' : '#2ECC71';
+        var banTargetStatus = status !== 'banned' ? 'banned' : 'active';
+        var banDropdownBtn = '<button style="' + dropdownStyle + 'color:' + banColor + ';" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="setAffiliateStatus(\'' + doc.id + '\',\'' + banTargetStatus + '\')">' + banLabel + '</button>';
+
+        var actionDropdown = '<div class="ptcg-actions-menu" style="position:relative;display:inline-block;">' +
+          '<button class="ptcg-actions-toggle" onclick="toggleActionsMenu(this, event)" style="background:none;border:1.5px solid #E0E0E0;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem;color:#757575;line-height:1;">...</button>' +
+          '<div class="ptcg-actions-dropdown" style="display:none;position:absolute;right:0;top:100%;z-index:500;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);min-width:180px;padding:6px 0;margin-top:4px;">' +
+            suspDropdownBtn +
+            banDropdownBtn +
+          '</div>' +
+        '</div>';
 
         html += '<tr>';
         html += '<td style="font-weight:600;">' + escFn(d.name || '--') + '</td>';
@@ -2191,7 +2457,7 @@
         html += '<td>' + lvlBadge + '</td>';
         html += '<td style="white-space:nowrap;">' + rateCell + '</td>';
         html += '<td>' + statusBadge + '</td>';
-        html += '<td style="white-space:nowrap;">' + suspBtn + banBtn + '</td>';
+        html += '<td class="td-actions" style="white-space:nowrap;">' + actionDropdown + '</td>';
         html += '</tr>';
       });
       tbody.innerHTML = html;
