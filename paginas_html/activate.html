@@ -34,11 +34,12 @@
 .ptcg-activate__loading[hidden]{display:none}
 .ptcg-activate__loading-spinner{width:48px;height:48px;border:3px solid rgba(69,82,204,0.15);border-top-color:var(--ptcg-purple);border-radius:50%;animation:ptcg-spin 0.7s linear infinite}
 .ptcg-activate__loading-text{font-size:0.9rem;color:var(--ptcg-gray-600)!important;font-weight:500;animation:ptcg-pulse 1.5s ease-in-out infinite}
-.ptcg-activate__topbar{position:sticky;top:0;z-index:100;height:var(--ptcg-topbar-h);padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(243,243,243,0.78);backdrop-filter:blur(20px) saturate(200%);-webkit-backdrop-filter:blur(20px) saturate(200%);border-bottom:1px solid rgba(255,255,255,0.70);box-shadow:0 1px 0 rgba(69,82,204,0.06)}
+.ptcg-activate__topbar{position:sticky;top:0;z-index:100;min-height:var(--ptcg-topbar-h);height:auto;padding:12px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(243,243,243,0.78);backdrop-filter:blur(20px) saturate(200%);-webkit-backdrop-filter:blur(20px) saturate(200%);border-bottom:1px solid rgba(255,255,255,0.70);box-shadow:0 1px 0 rgba(69,82,204,0.06)}
+.ptcg-activate__topbar-main{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .ptcg-activate__logo{display:flex;align-items:center;gap:8px;text-decoration:none!important;flex-shrink:0}
 .ptcg-activate__logo-icon{font-size:1.4rem;line-height:1}
 .ptcg-activate__logo-text{font-family:'Sora',sans-serif!important;font-size:1.15rem;font-weight:800;color:var(--ptcg-purple)!important;letter-spacing:-0.02em}
-.ptcg-activate__progress{flex:1;max-width:360px;display:flex;flex-direction:column;gap:6px}
+.ptcg-activate__progress{width:100%;max-width:360px;display:flex;flex-direction:column;gap:6px}
 .ptcg-activate__progress[hidden]{display:none}
 .ptcg-activate__progress-steps{display:flex;align-items:center;justify-content:center}
 .ptcg-activate__progress-step{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:52px}
@@ -212,9 +213,8 @@
 @media (max-width:767px){
   .ptcg-activate{--ptcg-glass-blur:20px}
   .ptcg-activate__orb--1,.ptcg-activate__orb--2{display:none}
-  .ptcg-activate__topbar{padding:0 16px;height:58px;--ptcg-topbar-h:58px}
+  .ptcg-activate__topbar{padding:10px 16px 8px;height:auto;min-height:54px;--ptcg-topbar-h:54px;gap:8px}
   .ptcg-activate__logo-text{font-size:1.05rem}
-  .ptcg-activate__progress{display:none}
   .ptcg-activate__main{padding:20px 12px 56px}
   .ptcg-activate__card{padding:18px;border-radius:var(--ptcg-radius)}
   .ptcg-activate__screen-title{font-size:1.40rem}
@@ -311,17 +311,25 @@ body{background:#F3F3F3!important}
 
   <!-- ── TOPBAR ── -->
   <header class="ptcg-activate__topbar" role="banner">
-    <a href="https://prueb2.dashnexpages.net/home/" class="ptcg-activate__logo" aria-label="Petcingo — Inicio">
-      <img src="https://prueb2.dashnexpages.net/assets/images/logo/PETCINGO_DARK.svg" alt="Petcingo" height="42" style="height:42px;width:auto" aria-hidden="true">
-      <span class="ptcg-activate__logo-text" style="display:none">Petcingo</span>
-    </a>
+    <div class="ptcg-activate__topbar-main">
+      <a href="https://prueb2.dashnexpages.net/home/" class="ptcg-activate__logo" aria-label="Petcingo - Inicio">
+        <img src="https://prueb2.dashnexpages.net/assets/images/logo/PETCINGO_DARK.svg" alt="Petcingo" height="42" style="height:42px;width:auto" aria-hidden="true">
+        <span class="ptcg-activate__logo-text" style="display:none">Petcingo</span>
+      </a>
+
+      <!-- Badge de placa (siempre visible cuando hay un id) -->
+      <div class="ptcg-activate__plate-badge" id="act-plate-badge" hidden aria-label="ID de placa">
+        <i class="ri-qr-code-line" aria-hidden="true"></i>
+        <span id="act-plate-id-display">—</span>
+      </div>
+    </div>
 
     <!-- Barra de progreso (se oculta en pantallas detect/error/already/success) -->
-    <div class="ptcg-activate__progress" id="act-progress" hidden aria-label="Progreso de activación">
+    <div class="ptcg-activate__progress" id="act-progress" hidden aria-label="Progreso de activacion">
       <div class="ptcg-activate__progress-steps" role="list">
         <div class="ptcg-activate__progress-step" id="act-pstep-1" role="listitem" aria-current="step">
           <div class="ptcg-activate__progress-dot" aria-hidden="true"></div>
-          <span class="ptcg-activate__progress-label">Código</span>
+          <span class="ptcg-activate__progress-label">Codigo</span>
         </div>
         <div class="ptcg-activate__progress-line" aria-hidden="true"></div>
         <div class="ptcg-activate__progress-step" id="act-pstep-2" role="listitem">
@@ -337,12 +345,6 @@ body{background:#F3F3F3!important}
       <div class="ptcg-activate__progress-track" aria-hidden="true">
         <div class="ptcg-activate__progress-fill" id="act-progress-fill"></div>
       </div>
-    </div>
-
-    <!-- Badge de placa (siempre visible cuando hay un id) -->
-    <div class="ptcg-activate__plate-badge" id="act-plate-badge" hidden aria-label="ID de placa">
-      <i class="ri-qr-code-line" aria-hidden="true"></i>
-      <span id="act-plate-id-display">—</span>
     </div>
   </header>
 
