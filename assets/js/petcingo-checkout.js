@@ -25,7 +25,7 @@
   /* ------------------------------------------------------------------ */
   /* ESTADO                                                                */
   /* ------------------------------------------------------------------ */
-  var db, storage;
+  var db;
   var isIntl       = false;
   var prices       = { preventa: 67, petid: 97, pack: 250 };
   var currentPhase = 1;
@@ -48,8 +48,7 @@
              getParam('intl') === '1';
 
     if (!firebase.apps.length) firebase.initializeApp(FB_CONFIG);
-    db      = firebase.firestore();
-    storage = firebase.storage();
+    db = firebase.firestore();
 
     readUrlParams();
     loadPrices();
@@ -429,6 +428,7 @@
 
     drawQrCanvas(finalTotal);
   }
+  window.updateTotalDisplay = updateTotalDisplay;
 
   function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
@@ -478,12 +478,38 @@
 
     activationCode = genCode();
     var now        = firebase.firestore.FieldValue.serverTimestamp();
-    var path       = 'receipts/' + activationCode + '_' + Date.now();
-    var ref        = storage.ref(path);
+    var key = 'receipts/' + activationCode + '_' + Date.now();
 
-    ref.put(receiptFile).then(function () {
-      return ref.getDownloadURL();
-    }).then(function (url) {
+    function _r2Upload(blob) {
+      return new Promise(function(resolve, reject) {
+        if (typeof AWS === 'undefined') { reject(new Error('AWS SDK no cargado')); return; }
+        AWS.config.update({
+          accessKeyId:     '6496db9c407984025f99bc0dc6a23264',
+          secretAccessKey: 'b270005e8ebf9eef779db72012a0ea6206a9f281eba9d07e0b15f78016c2d94d'
+        });
+        new AWS.S3({
+          endpoint:         'https://c11712fefc3437b619d76c69ecc14901.r2.cloudflarestorage.com',
+          signatureVersion: 'v4',
+          s3ForcePathStyle:  true
+        }).upload({
+          Bucket:      'petcingo',
+          Key:         key,
+          Body:        blob,
+          ContentType: blob.type || 'image/jpeg'
+        }, function(err) {
+          if (err) { reject(err); return; }
+          resolve('https://pub-cb882f9b206543b28ea81fcadac0f4b2.r2.dev/' + key);
+        });
+      });
+    }
+
+    var _up = typeof compressImage === 'function'
+      ? compressImage(receiptFile, 800, 0.7, 80000)
+          .then(function(b) { return _r2Upload(b); })
+          .catch(function()  { return _r2Upload(receiptFile); })
+      : _r2Upload(receiptFile);
+
+    _up.then(function (url) {
       var name  = getVal('ptcg-name').trim();
       var phone = getVal('ptcg-phone').trim();
       var email = getVal('ptcg-email').trim();

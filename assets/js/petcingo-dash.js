@@ -1645,25 +1645,68 @@
 
   window.ptcgSaveQr = function() {
     if (!_qrFile) { if (typeof toast === 'function') toast('Selecciona una imagen QR primero'); return; }
-    var db2 = db(); if (!db2) { if (typeof toast === 'function') toast('Firebase no disponible'); return; }
-    /* Use global storage() from petcingo.js to avoid duplicate Firebase app init */
-    var storageSvc = (typeof storage === 'function') ? storage() : (function() { try { return firebase.storage(); } catch(e) { return null; } })();
-    if (!storageSvc) { if (typeof toast === 'function') toast('Firebase Storage no disponible'); return; }
-    var ref = storageSvc.ref('config/qr-pago-' + Date.now() + '.png');
-    if (typeof toast === 'function') toast('Subiendo QR...');
-    ref.put(_qrFile).then(function() {
-      return ref.getDownloadURL();
-    }).then(function(url) {
-      return db2.collection('config').doc('bank_info').set({ qrImageUrl: url }, { merge: true })
-        .then(function() {
-          var img = document.getElementById('ptcg-qr-preview-img');
+
+    function _uploadToR2(file) {
+      if (typeof toast === 'function') toast('Subiendo QR...');
+
+      /* Verificar que AWS SDK este disponible */
+      if (typeof AWS === 'undefined') {
+        if (typeof toast === 'function') toast('Error: AWS SDK no cargado');
+        return;
+      }
+
+      AWS.config.update({
+        accessKeyId:     '6496db9c407984025f99bc0dc6a23264',
+        secretAccessKey: 'b270005e8ebf9eef779db72012a0ea6206a9f281eba9d07e0b15f78016c2d94d'
+      });
+
+      var s3 = new AWS.S3({
+        endpoint:         'https://c11712fefc3437b619d76c69ecc14901.r2.cloudflarestorage.com',
+        signatureVersion: 'v4',
+        s3ForcePathStyle:  true
+      });
+
+      var key = 'config/qr-pago-' + Date.now() + '.png';
+
+      s3.upload({
+        Bucket:      'petcingo',
+        Key:         key,
+        Body:        file,
+        ContentType: file.type || 'image/png'
+      }, function(err, data) {
+        if (err) {
+          if (typeof toast === 'function') toast('Error al subir QR: ' + err.message);
+          return;
+        }
+
+        var publicUrl = 'https://pub-cb882f9b206543b28ea81fcadac0f4b2.r2.dev/' + key;
+        var db2 = db();
+        if (!db2) { if (typeof toast === 'function') toast('Firebase no disponible'); return; }
+
+        db2.collection('config').doc('bank_info').set(
+          { qrImageUrl: publicUrl },
+          { merge: true }
+        ).then(function() {
+          var img  = document.getElementById('ptcg-qr-preview-img');
           var prev = document.getElementById('ptcg-qr-preview');
-          if (img) img.src = url;
+          if (img)  img.src = publicUrl;
           if (prev) prev.style.display = 'block';
           _qrFile = null;
-          if (typeof toast === 'function') toast('QR de pago guardado correctamente');
+          if (typeof toast === 'function') toast('QR guardado correctamente');
+        }).catch(function(e) {
+          if (typeof toast === 'function') toast('Error al guardar URL: ' + e.message);
         });
-    }).catch(function(e) { if (typeof toast === 'function') toast('Error al guardar QR: ' + e.message); });
+      });
+    }
+
+    /* Comprimir antes de subir si compressImage esta disponible */
+    if (typeof compressImage === 'function') {
+      compressImage(_qrFile, 400, 0.6, 80000)
+        .then(function(blob) { _uploadToR2(blob); })
+        .catch(function()    { _uploadToR2(_qrFile); });
+    } else {
+      _uploadToR2(_qrFile);
+    }
   };
 
   window.ptcgRemoveQr = function() {
@@ -1739,5 +1782,23 @@
       }, 1000);
     };
   })();
+
+  /* ── Delegado de clics: abre modal al hacer clic en fila de Mascotas ── */
+  document.addEventListener('click', function(e) {
+    var secPets = document.getElementById('sec-pets');
+    if (!secPets || !secPets.classList.contains('active')) return;
+    if (e.target.closest('button') || e.target.closest('a')) return;
+
+    var row = e.target.closest('#pets-tbody tr');
+    if (!row) return;
+
+    var codeCell = row.querySelector('td:first-child');
+    if (!codeCell) return;
+    var code = codeCell.textContent.trim();
+
+    if (code && code !== '\u2014' && code !== '...' && typeof window.showPetModal === 'function') {
+      window.showPetModal(code);
+    }
+  });
 
 })();
