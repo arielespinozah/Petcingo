@@ -2310,6 +2310,7 @@
         if (typeof loadShippingRates === 'function') loadShippingRates();
         if (typeof loadShippingSettings === 'function') loadShippingSettings();
         if (typeof showInitialAlerts === 'function') showInitialAlerts();
+        if (typeof loadArchiveToggle === 'function') loadArchiveToggle();
       }, 1000);
     };
   })();
@@ -2705,6 +2706,13 @@
       if (docBarEl) {
         var pct = Math.min((totalDocs / 10000) * 100, 100);
         docBarEl.style.width = pct + '%';
+        if (pct > 80) {
+          docBarEl.style.background = '#E74C3C';
+        } else if (pct > 50) {
+          docBarEl.style.background = '#F39C12';
+        } else {
+          docBarEl.style.background = '#4552CC';
+        }
       }
 
       var storageUsedKB = storageDocsCount * 150;
@@ -2713,12 +2721,52 @@
       if (storageBar) {
         var pctStorage = Math.min((parseFloat(storageUsedMB) / 5120) * 100, 100);
         storageBar.style.width = pctStorage + '%';
+        if (pctStorage > 80) {
+          storageBar.style.background = '#E74C3C';
+        } else if (pctStorage > 50) {
+          storageBar.style.background = '#F39C12';
+        } else {
+          storageBar.style.background = '#F39C12';
+        }
       }
 
       if (r2CountEl) r2CountEl.textContent = r2Count + ' comprobante(s)';
       if (r2BarEl) {
         var pctR2 = Math.min((r2Count / 10000) * 100, 100);
         r2BarEl.style.width = pctR2 + '%';
+        if (pctR2 > 80) {
+          r2BarEl.style.background = '#E74C3C';
+        } else if (pctR2 > 50) {
+          r2BarEl.style.background = '#F39C12';
+        } else {
+          r2BarEl.style.background = '#2ECC71';
+        }
+      }
+
+      var alertsHtml = '';
+      if (totalDocs > 8000) {
+        alertsHtml += '<div style="margin-bottom:12px;padding:12px 16px;background:#FFEBEE;border:1px solid #FFCDD2;border-radius:12px;color:#C62828;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:8px;">' +
+          '<i class="ri-error-warning-line"></i> Alerta: El uso de Firestore esta cerca del limite de 10,000 documentos (' + totalDocs + ' docs). Considere archivar logs antiguos para liberar espacio.' +
+          '</div>';
+      }
+      if (parseFloat(storageUsedMB) > 4000) {
+        alertsHtml += '<div style="margin-bottom:12px;padding:12px 16px;background:#FFEBEE;border:1px solid #FFCDD2;border-radius:12px;color:#C62828;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:8px;">' +
+          '<i class="ri-error-warning-line"></i> Alerta: El uso de Firebase Storage esta cerca del limite de 5 GB (' + storageUsedMB + ' MB). Considere optimizar las imagenes.' +
+          '</div>';
+      }
+      if (r2Count > 8000) {
+        alertsHtml += '<div style="margin-bottom:12px;padding:12px 16px;background:#FFEBEE;border:1px solid #FFCDD2;border-radius:12px;color:#C62828;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:8px;">' +
+          '<i class="ri-error-warning-line"></i> Alerta: El uso de Cloudflare R2 esta cerca de su limite sugerido (' + r2Count + ' comprobantes).' +
+          '</div>';
+      }
+      var quotaAlertsDiv = document.getElementById('quota-alerts');
+      if (quotaAlertsDiv) {
+        if (alertsHtml) {
+          quotaAlertsDiv.innerHTML = alertsHtml;
+          quotaAlertsDiv.style.display = 'block';
+        } else {
+          quotaAlertsDiv.style.display = 'none';
+        }
       }
     }).catch(function(err) {
       console.error('[loadStorageStats] error:', err);
@@ -2742,5 +2790,219 @@
     if (typeof loadStorageStats === 'function') loadStorageStats();
     if (typeof loadSiteConfig === 'function') loadSiteConfig();
   };
+
+  // --- Switch de Archivo Automatico ---
+
+  // Cargar estado del switch desde Firestore
+  window.loadArchiveToggle = function() {
+    db().collection('config').doc('storage_settings').get().then(function(doc) {
+      var enabled = doc.exists && doc.data().autoArchive === true;
+      _setArchiveToggleUI(enabled);
+      
+      // Auto-archivado automatico si esta activado y hay logs antiguos
+      if (enabled) {
+        var thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+        db().collection('logs').where('timestamp', '<', thirtyDaysAgo).limit(200).get().then(function(snap) {
+          if (snap.size > 0) {
+            console.log('[Auto-Archive] Ejecutando archivado de fondo para ' + snap.size + ' logs.');
+            _autoArchiveLogs(snap);
+          }
+        });
+      }
+    }).catch(function() {
+      _setArchiveToggleUI(false);
+    });
+  };
+
+  // Cambiar estado del switch
+  window.toggleAutoArchive = function() {
+    db().collection('config').doc('storage_settings').get().then(function(doc) {
+      var current = doc.exists && doc.data().autoArchive === true;
+      var newState = !current;
+      return db().collection('config').doc('storage_settings').set({ autoArchive: newState }, { merge: true });
+    }).then(function() {
+      return db().collection('config').doc('storage_settings').get();
+    }).then(function(doc) {
+      var enabled = doc.exists && doc.data().autoArchive === true;
+      _setArchiveToggleUI(enabled);
+      if (typeof showDashAlert === 'function') {
+        showDashAlert(enabled ? 'Archivo automatico ACTIVADO. Los logs se consolidaran mensualmente.' : 'Archivo automatico DESACTIVADO.', enabled ? 'success' : 'info');
+      } else if (typeof toast === 'function') {
+        toast(enabled ? 'Archivo automatico ACTIVADO.' : 'Archivo automatico DESACTIVADO.');
+      }
+    }).catch(function(e) {
+      if (typeof showDashAlert === 'function') {
+        showDashAlert('Error: ' + e.message, 'danger');
+      } else if (typeof toast === 'function') {
+        toast('Error: ' + e.message);
+      }
+    });
+  };
+
+  // Actualizar UI del switch
+  function _setArchiveToggleUI(enabled) {
+    var bg = document.getElementById('archive-toggle-bg');
+    var knob = document.getElementById('archive-toggle-knob');
+    var label = document.getElementById('archive-toggle-label');
+    var msgDiv = document.getElementById('archive-status-msg');
+    var msgText = document.getElementById('archive-status-text');
+
+    if (bg) bg.style.background = enabled ? '#4552CC' : '#E0E0E0';
+    if (knob) knob.style.left = enabled ? '24px' : '2px';
+    if (label) {
+      label.textContent = enabled ? 'Activado' : 'Desactivado';
+      label.style.color = enabled ? '#4552CC' : '#757575';
+    }
+
+    // Verificar si hay logs para archivar
+    if (enabled && msgDiv && msgText) {
+      var thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+      db().collection('logs').where('timestamp', '<', thirtyDaysAgo).get().then(function(snap) {
+        if (snap.size > 0) {
+          msgDiv.style.display = 'block';
+          msgDiv.style.background = '#FFF3E0';
+          msgDiv.style.color = '#E65100';
+          msgText.textContent = 'Hay ' + snap.size + ' logs antiguos listos para archivar. Usa el boton "Archivar logs" para consolidarlos.';
+        } else {
+          msgDiv.style.display = 'block';
+          msgDiv.style.background = '#E8F5E9';
+          msgDiv.style.color = '#2E7D32';
+          msgText.textContent = 'No hay logs pendientes de archivar. Todo al dia.';
+        }
+      }).catch(function() {
+        msgDiv.style.display = 'none';
+      });
+    } else if (msgDiv) {
+      msgDiv.style.display = 'none';
+    }
+  }
+
+  // Archivar logs antiguos manualmente
+  window.archiveOldLogs = function() {
+    if (!confirm('Desea archivar los logs de mas de 30 dias de antiguedad? Se consolidaran por mes y se eliminaran los registros individuales.')) return;
+
+    var thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    var db2 = db();
+    if (!db2) {
+      if (typeof toast === 'function') toast('Firebase no disponible.');
+      return;
+    }
+
+    if (typeof toast === 'function') toast('Iniciando proceso de archivo...');
+
+    db2.collection('logs').where('timestamp', '<', thirtyDaysAgo).get().then(function(snap) {
+      if (snap.empty) {
+        if (typeof toast === 'function') toast('No hay logs antiguos para archivar.');
+        return;
+      }
+
+      var logsByMonth = {};
+      snap.forEach(function(doc) {
+        var d = doc.data();
+        var date = d.timestamp ? d.timestamp.toDate() : new Date();
+        var monthKey = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0');
+        if (!logsByMonth[monthKey]) logsByMonth[monthKey] = [];
+        logsByMonth[monthKey].push({
+          id: doc.id,
+          action: d.action || '',
+          user: d.user || '',
+          details: d.details || '',
+          timestamp: date.toISOString()
+        });
+      });
+
+      var batch = db2.batch();
+      var archivePromises = Object.keys(logsByMonth).map(function(month) {
+        var archiveRef = db2.collection('archived_logs').doc(month);
+        return archiveRef.get().then(function(archiveDoc) {
+          var existingLogs = archiveDoc.exists ? (archiveDoc.data().logs || []) : [];
+          var newLogs = existingLogs.concat(logsByMonth[month]);
+          batch.set(archiveRef, {
+            month: month,
+            logs: newLogs,
+            archivedAt: firebase.firestore.FieldValue.serverTimestamp()
+          }, { merge: true });
+        });
+      });
+
+      Promise.all(archivePromises).then(function() {
+        snap.forEach(function(doc) {
+          batch.delete(doc.ref);
+        });
+        return batch.commit();
+      }).then(function() {
+        if (typeof toast === 'function') {
+          toast('Exito: ' + snap.size + ' logs consolidados en archived_logs.');
+        } else {
+          alert('Exito: ' + snap.size + ' logs consolidados en archived_logs.');
+        }
+        if (typeof loadStorageStats === 'function') loadStorageStats();
+        if (typeof loadArchiveToggle === 'function') loadArchiveToggle();
+      }).catch(function(e) {
+        console.error('[archiveOldLogs] Error:', e);
+        if (typeof toast === 'function') toast('Error al archivar: ' + e.message);
+      });
+    }).catch(function(e) {
+      console.error('[archiveOldLogs] Query Error:', e);
+      if (typeof toast === 'function') toast('Error al buscar logs: ' + e.message);
+    });
+  };
+
+  // Funcion interna para archivado automatico
+  function _autoArchiveLogs(snap) {
+    var db2 = db();
+    if (!db2) return;
+    var logsByMonth = {};
+    snap.forEach(function(doc) {
+      var d = doc.data();
+      var date = d.timestamp ? d.timestamp.toDate() : new Date();
+      var monthKey = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0');
+      if (!logsByMonth[monthKey]) logsByMonth[monthKey] = [];
+      logsByMonth[monthKey].push({
+        id: doc.id,
+        action: d.action || '',
+        user: d.user || '',
+        details: d.details || '',
+        timestamp: date.toISOString()
+      });
+    });
+
+    var batch = db2.batch();
+    var archivePromises = Object.keys(logsByMonth).map(function(month) {
+      var archiveRef = db2.collection('archived_logs').doc(month);
+      return archiveRef.get().then(function(archiveDoc) {
+        var existingLogs = archiveDoc.exists ? (archiveDoc.data().logs || []) : [];
+        var newLogs = existingLogs.concat(logsByMonth[month]);
+        batch.set(archiveRef, {
+          month: month,
+          logs: newLogs,
+          archivedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+      });
+    });
+
+    Promise.all(archivePromises).then(function() {
+      snap.forEach(function(doc) {
+        batch.delete(doc.ref);
+      });
+      return batch.commit();
+    }).then(function() {
+      console.log('[Auto-Archive] Archivado automatico finalizado con exito para ' + snap.size + ' logs.');
+      if (typeof loadStorageStats === 'function') loadStorageStats();
+      if (typeof loadArchiveToggle === 'function') loadArchiveToggle();
+    }).catch(function(e) {
+      console.error('[Auto-Archive] Error:', e);
+    });
+  }
+
+  // Agregar evento click al switch
+  document.addEventListener('DOMContentLoaded', function() {
+    var toggleBg = document.getElementById('archive-toggle-bg');
+    if (toggleBg) {
+      toggleBg.addEventListener('click', function() {
+        if (typeof toggleAutoArchive === 'function') toggleAutoArchive();
+      });
+    }
+  });
 
 })();
