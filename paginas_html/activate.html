@@ -478,6 +478,18 @@
                 inputmode="text"
               >
             </div>
+            <button type="button" id="scan-qr-btn" onclick="startQRScan()"
+              style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;
+              background:#4552CC;color:#fff;border:none;border-radius:12px;font-weight:600;
+              cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.85rem;">
+              <i class="ri-qr-scan-line"></i> Escanear QR
+            </button>
+            <div id="qr-reader" style="width:100%;max-width:400px;margin:12px auto;display:none;"></div>
+            <button id="qr-reader-close" onclick="stopQRScan()"
+              style="display:none;margin:8px auto;padding:8px 16px;background:#E74C3C;color:#fff;
+              border:none;border-radius:10px;cursor:pointer;font-weight:600;">
+              Cancelar escaneo
+            </button>
             <p class="ptcg-activate__field-hint" id="code-field-hint">
               <i class="ri-information-line" aria-hidden="true"></i>
               El código tiene el formato XXX-XXX (6 letras y números, con guion).
@@ -2160,5 +2172,56 @@
 
 <script src="https://unpkg.com/lucide@latest"></script>
 <script>lucide.createIcons();</script>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script>
+var html5QrCode = null;
+
+function startQRScan() {
+  var readerEl = document.getElementById('qr-reader');
+  var closeBtn = document.getElementById('qr-reader-close');
+  var scanBtn  = document.getElementById('scan-qr-btn');
+
+  if (!html5QrCode) {
+    html5QrCode = new Html5Qrcode("qr-reader");
+  }
+
+  readerEl.style.display = 'block';
+  closeBtn.style.display  = 'block';
+  scanBtn.style.display   = 'none';
+
+  html5QrCode.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: { width: 250, height: 250 } },
+    function(decodedText) {
+      var codeInput = document.getElementById('act-code-input') ||
+                      document.getElementById('codigo') ||
+                      document.querySelector('input[id*="codigo"]') ||
+                      document.querySelector('input[id*="code"]') ||
+                      document.querySelector('input[type="text"]');
+      if (codeInput) {
+        codeInput.value = decodedText;
+        codeInput.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+      stopQRScan();
+    },
+    function(errorMessage) { /* ignorar errores de scan */ }
+  ).catch(function(err) {
+    stopQRScan();
+  });
+}
+
+function stopQRScan() {
+  if (html5QrCode) {
+    html5QrCode.stop().catch(function() {});
+  }
+  var readerEl = document.getElementById('qr-reader');
+  var closeBtn = document.getElementById('qr-reader-close');
+  var scanBtn  = document.getElementById('scan-qr-btn');
+  if (readerEl) readerEl.style.display = 'none';
+  if (closeBtn) closeBtn.style.display = 'none';
+  if (scanBtn)  scanBtn.style.display  = 'inline-flex';
+}
+</script>
 </body>
 </html>

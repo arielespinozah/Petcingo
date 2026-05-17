@@ -1673,7 +1673,31 @@
     tbody.innerHTML = html;
     updatePrintCount();
     updatePrintPreview();
+    loadPrintConfig();
   };
+
+  function loadPrintConfig() {
+    var db2 = db(); if (!db2) return;
+    db2.collection('config').doc('print_settings').get().then(function(doc) {
+      if (!doc.exists) return;
+      var d = doc.data();
+      if (d.type) {
+        var sel = document.getElementById('print-plate-type');
+        if (sel) sel.value = d.type;
+      }
+      var setV = function(id, val) { var el = document.getElementById(id); if (el && val != null) el.value = String(val); };
+      var setCbk = function(id, val) { var el = document.getElementById(id); if (el) el.checked = val !== false; };
+      setV('print-svg-url',   d.svgUrl);
+      setV('print-qr-x',     d.qrX    != null ? d.qrX    : 4);
+      setV('print-qr-y',     d.qrY    != null ? d.qrY    : 14);
+      setV('print-qr-size',  d.qrSize != null ? d.qrSize : 20);
+      setV('print-id-x',     d.idX    != null ? d.idX    : 4);
+      setV('print-id-y',     d.idY    != null ? d.idY    : 37);
+      setCbk('print-show-logo',    d.showLogo    !== false);
+      setCbk('print-show-scanme',  d.showScanMe  !== false);
+      updatePrintPreview();
+    });
+  }
 
   window.togglePrintSelection = function(orderId, checked) {
     _printSelection[orderId] = checked;
