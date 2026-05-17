@@ -229,7 +229,7 @@
         html += '<div style="margin-bottom:16px;">';
         html += '<span style="' + LBL + 'display:block;margin-bottom:8px;">Comprobante de pago</span>';
         html += '<a href="' + d.receiptUrl + '" target="_blank">';
-        html += '<img src="' + d.receiptUrl + '" style="width:100%;max-height:300px;object-fit:contain;border-radius:12px;border:1px solid #E0E0E0;cursor:pointer;" alt="Comprobante" onerror="this.style.display=\'none\'">';
+        html += '<img id="verify-proof-img" src="' + d.receiptUrl + '" style="width:100%;max-height:300px;object-fit:contain;border-radius:12px;border:1px solid #E0E0E0;cursor:pointer;" alt="Comprobante" onerror="this.style.display=\'none\'">';
         html += '</a>';
         html += '<a href="' + d.receiptUrl + '" target="_blank" style="' + VAL + 'display:block;text-align:center;margin-top:6px;font-size:0.8rem;color:#4552CC;font-weight:600;">Ver imagen completa</a>';
         html += '</div>';
@@ -248,6 +248,26 @@
       }
       
       content.innerHTML = html;
+
+      var proofImg = document.getElementById('verify-proof-img');
+      if (proofImg) {
+        proofImg.style.cursor = 'zoom-in';
+        proofImg.onclick = function(e) {
+          if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+          var overlay = document.createElement('div');
+          overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;cursor:zoom-out;';
+          overlay.onclick = function() { overlay.remove(); };
+          var img = document.createElement('img');
+          img.src = proofImg.src;
+          img.style.cssText = 'max-width:95vw;max-height:95vh;object-fit:contain;border-radius:8px;';
+          overlay.appendChild(img);
+          document.body.appendChild(overlay);
+          return false;
+        };
+      }
       
       var btnsHtml = '';
       if (d.status === 'pending') {
@@ -1399,10 +1419,10 @@
 
     db2.collection('siteConfig').doc('main').set(data, { merge: true })
       .then(function() {
-        if (typeof toast === 'function') toast('Configuracin guardada correctamente.');
+        if (typeof toast === 'function') toast('Configuracion guardada correctamente.');
         if (status) { status.textContent = 'Guardado'; status.style.color = '#2ECC71'; status.style.display = 'inline'; setTimeout(function() { status.style.display = 'none'; }, 4000); }
         var lastUpd = document.getElementById('cfg-last-updated');
-        if (lastUpd) lastUpd.textContent = 'ltima edicin: ahora';
+        if (lastUpd) lastUpd.textContent = 'Ultima edicion: ahora';
         var iframe = document.getElementById('customize-preview');
         if (iframe) iframe.src = iframe.src;
       })
@@ -1416,7 +1436,7 @@
   };
 
   window.syncAdoptions = function() {
-    if (typeof toast === 'function') toast('Sincronizacin de adopciones en desarrollo.');
+    if (typeof toast === 'function') toast('Sincronizacion de adopciones en desarrollo.');
   };
 
   /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE MODAL DETALLE MASCOTA oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
@@ -1448,7 +1468,7 @@
       var safe = plateId.replace(/'/g, "\\'");
       var html = '';
 
-      /* Foto + cdigo */
+      /* Foto + codigo */
       html += '<div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">';
       html += d.photoUrl
         ? '<img src="' + escFn(d.photoUrl) + '" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid #E0E0E0;flex-shrink:0;" onerror="this.style.display=\'none\'">'
@@ -1456,7 +1476,7 @@
       html += '<div><div style="font-family:monospace;font-size:0.9rem;font-weight:700;color:#4552CC;word-break:break-all;">' + escFn(plateId) + '</div>';
       html += '<button onclick="copyPetCode(\'' + safe + '\')" style="margin-top:4px;padding:4px 10px;border-radius:8px;border:1px solid #E0E0E0;background:#fff;cursor:pointer;font-size:0.75rem;font-family:\'Plus Jakarta Sans\',sans-serif;display:inline-flex;align-items:center;gap:4px;"><i class="ri-file-copy-line"></i> Copiar codigo</button></div></div>';
 
-      /* Datos bisicos */
+      /* Datos basicos */
       html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">';
       html += infoItem('Especie',   d.species || d.petType);
       html += infoItem('Raza',      d.breed);
@@ -1468,7 +1488,7 @@
       html += infoItem('Estado',    d.status);
       html += '</div>';
 
-      /* Dueo */
+      /* Dueno */
       if (d.ownerName || d.ownerEmail) {
         html += '<div style="padding:12px 14px;background:#F8F9FB;border-radius:12px;margin-bottom:16px;">';
         html += '<div style="font-size:0.72rem;color:#9E9E9E;text-transform:uppercase;margin-bottom:8px;font-family:\'Plus Jakarta Sans\',sans-serif;">Dueno</div>';
@@ -1504,7 +1524,7 @@
       /* Mensaje */
       if (d.message) html += '<div style="background:#FFF9E6;border-radius:12px;padding:12px 14px;margin-bottom:16px;font-style:italic;color:#616161;font-size:0.88rem;">"' + escFn(d.message) + '"</div>';
 
-      /* Accin: recuperar clave */
+      /* Accion: recuperar clave */
       html += '<button class="ptcg-index__btn ptcg-index__btn--primary" onclick="sendPasswordReset(\'' + safe + '\')" style="width:100%;margin-top:8px;padding:12px;font-size:0.9rem;font-weight:700;">';
       html += '<i class="ri-key-2-line"></i> Enviar recuperacion de contrasena</button>';
 
@@ -1526,14 +1546,14 @@
     var code = (document.getElementById('reg-result-id') || {}).textContent || '';
     if (!code || code === '') return;
     navigator.clipboard.writeText(code)
-      .then(function() { if (typeof toast === 'function') toast('Cdigo copiado: ' + code); })
-      .catch(function() { prompt('Cdigo de activacin:', code); });
+      .then(function() { if (typeof toast === 'function') toast('Codigo copiado: ' + code); })
+      .catch(function() { prompt('Codigo de activacion:', code); });
   };
 
   window.copyPetCode = function(code) {
     navigator.clipboard.writeText(code)
-      .then(function() { if (typeof toast === 'function') toast('Cdigo copiado: ' + code); })
-      .catch(function() { prompt('Cdigo:', code); });
+      .then(function() { if (typeof toast === 'function') toast('Codigo copiado: ' + code); })
+      .catch(function() { prompt('Codigo:', code); });
   };
 
   window.sendPasswordReset = function(plateId) {
@@ -1543,7 +1563,7 @@
       var d = doc.data();
       var email = d.ownerEmail || d.owner_email || d.email;
       if (!email) { if (typeof toast === 'function') toast('No hay email registrado para esta placa.'); return; }
-      if (!confirm('Enviar enlace de recuperacin de contrasea a ' + email + '?')) return;
+      if (!confirm('Enviar enlace de recuperacion de contrasena a ' + email + '?')) return;
       if (typeof firebase === 'undefined') return;
       firebase.auth().sendPasswordResetEmail(email)
         .then(function() { if (typeof toast === 'function') toast('Correo enviado a ' + email + '.'); })
