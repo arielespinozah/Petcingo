@@ -2491,4 +2491,256 @@
       }).catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
   };
 
+  /* ==================================================================
+     API HEALTH MONITORING & STORAGE STATS
+     ================================================================== */
+  function _updateHealthLed(ledId, statusId, state) {
+    var led = document.getElementById(ledId);
+    var statusEl = document.getElementById(statusId);
+    if (!led || !statusEl) return;
+
+    if (state === 'loading') {
+      led.style.background = '#E0E0E0';
+      led.style.boxShadow = '0 0 8px #E0E0E0';
+      statusEl.textContent = 'Conectando...';
+      statusEl.style.color = '#9E9E9E';
+    } else if (state === 'online') {
+      led.style.background = '#2ECC71';
+      led.style.boxShadow = '0 0 8px #2ECC71';
+      statusEl.textContent = 'En linea';
+      statusEl.style.color = '#2ECC71';
+    } else if (state === 'error') {
+      led.style.background = '#E74C3C';
+      led.style.boxShadow = '0 0 8px #E74C3C';
+      statusEl.textContent = 'Error';
+      statusEl.style.color = '#E74C3C';
+    }
+  }
+
+  window.runAllHealthChecks = function() {
+    if (typeof checkAuthHealth === 'function') checkAuthHealth();
+    if (typeof checkFirestoreHealth === 'function') checkFirestoreHealth();
+    if (typeof checkStorageHealth === 'function') checkStorageHealth();
+    if (typeof checkR2Health === 'function') checkR2Health();
+    if (typeof checkWhatsAppHealth === 'function') checkWhatsAppHealth();
+  };
+
+  window.checkAuthHealth = function() {
+    _updateHealthLed('led-auth', 'status-auth', 'loading');
+    try {
+      var auth = _getPcApp().auth();
+      if (auth.currentUser) {
+        _updateHealthLed('led-auth', 'status-auth', 'online');
+      } else {
+        _updateHealthLed('led-auth', 'status-auth', 'online');
+      }
+    } catch (e) {
+      _updateHealthLed('led-auth', 'status-auth', 'error');
+    }
+  };
+
+  window.checkFirestoreHealth = function() {
+    _updateHealthLed('led-firestore', 'status-firestore', 'loading');
+    var db2 = db();
+    if (!db2) {
+      _updateHealthLed('led-firestore', 'status-firestore', 'error');
+      return;
+    }
+    db2.collection('siteConfig').doc('main').get().then(function() {
+      _updateHealthLed('led-firestore', 'status-firestore', 'online');
+    }).catch(function(e) {
+      console.error('[Firestore Health] error:', e);
+      _updateHealthLed('led-firestore', 'status-firestore', 'error');
+    });
+  };
+
+  window.checkStorageHealth = function() {
+    _updateHealthLed('led-storage', 'status-storage', 'loading');
+    var st = storage();
+    if (!st) {
+      _updateHealthLed('led-storage', 'status-storage', 'error');
+      return;
+    }
+    st.ref().child('ping_health').getMetadata().then(function() {
+      _updateHealthLed('led-storage', 'status-storage', 'online');
+    }).catch(function(err) {
+      if (err && (err.code === 'storage/object-not-found' || err.code === 'storage/unauthorized')) {
+        _updateHealthLed('led-storage', 'status-storage', 'online');
+      } else {
+        _updateHealthLed('led-storage', 'status-storage', 'error');
+      }
+    });
+  };
+
+  window.checkR2Health = function() {
+    _updateHealthLed('led-r2', 'status-r2', 'loading');
+    if (typeof AWS === 'undefined') {
+      var s = document.createElement('script');
+      s.src = 'https://sdk.amazonaws.com/js/aws-sdk-2.809.0.min.js';
+      s.onload = function() { _runR2Ping(); };
+      s.onerror = function() {
+        fetch('https://pub-cb882f9b206543b28ea81fcadac0f4b2.r2.dev/', { method: 'HEAD' })
+          .then(function() { _updateHealthLed('led-r2', 'status-r2', 'online'); })
+          .catch(function() { _updateHealthLed('led-r2', 'status-r2', 'error'); });
+      };
+      document.head.appendChild(s);
+    } else {
+      _runR2Ping();
+    }
+
+    function _runR2Ping() {
+      try {
+        AWS.config.update({
+          accessKeyId:     '6496db9c407984025f99bc0dc6a23264',
+          secretAccessKey: 'b270005e8ebf9eef779db72012a0ea6206a9f281eba9d07e0b15f78016c2d94d'
+        });
+        var s3 = new AWS.S3({
+          endpoint:         'https://c11712fefc3437b619d76c69ecc14901.r2.cloudflarestorage.com',
+          signatureVersion: 'v4',
+          s3ForcePathStyle:  true
+        });
+        s3.listObjects({ Bucket: 'petcingo', MaxKeys: 1 }, function(err) {
+          if (err) {
+            console.error('[R2 Health] error:', err);
+            _updateHealthLed('led-r2', 'status-r2', 'error');
+          } else {
+            _updateHealthLed('led-r2', 'status-r2', 'online');
+          }
+        });
+      } catch(e) {
+        console.error('[R2 Health] exception:', e);
+        _updateHealthLed('led-r2', 'status-r2', 'error');
+      }
+    }
+  };
+
+  window.checkWhatsAppHealth = function() {
+    _updateHealthLed('led-whatsapp', 'status-whatsapp', 'loading');
+    if (typeof AbortController === 'undefined') {
+      _updateHealthLed('led-whatsapp', 'status-whatsapp', 'online');
+      return;
+    }
+    var controller = new AbortController();
+    var timeout = setTimeout(function() { controller.abort(); }, 3000);
+    fetch('https://prueb2.dashnexpages.net/', { mode: 'no-cors', signal: controller.signal })
+      .then(function() {
+        clearTimeout(timeout);
+        _updateHealthLed('led-whatsapp', 'status-whatsapp', 'online');
+      })
+      .catch(function(err) {
+        clearTimeout(timeout);
+        console.error('[WhatsApp Health] error:', err);
+        _updateHealthLed('led-whatsapp', 'status-whatsapp', 'error');
+      });
+  };
+
+  window.loadStorageStats = function() {
+    var db2 = db();
+    if (!db2) return;
+
+    var docCountEl = document.getElementById('firestore-doc-count');
+    var docBarEl   = document.getElementById('firestore-doc-bar');
+    var storageEl  = document.getElementById('storage-used');
+    var storageBar = document.getElementById('storage-bar');
+    var r2CountEl  = document.getElementById('r2-count');
+    var r2BarEl    = document.getElementById('r2-bar');
+
+    if (docCountEl) docCountEl.textContent = 'Calculando...';
+    if (storageEl)  storageEl.textContent  = 'Calculando...';
+    if (r2CountEl)  r2CountEl.textContent  = 'Calculando...';
+
+    var collections = ['pets', 'users', 'veterinarias', 'shelters', 'logs', 'orders'];
+    var promises = collections.map(function(col) {
+      return db2.collection(col).get().then(function(snap) {
+        return { collection: col, size: snap.size, docs: snap.docs };
+      }).catch(function() {
+        return { collection: col, size: 0, docs: [] };
+      });
+    });
+
+    Promise.all(promises).then(function(results) {
+      var totalDocs = 0;
+      var storageDocsCount = 0;
+      var r2Count = 0;
+
+      results.forEach(function(res) {
+        totalDocs += res.size;
+
+        if (res.collection === 'pets') {
+          res.docs.forEach(function(d) {
+            var data = d.data();
+            if (data.photoUrl && data.photoUrl.indexOf('firebasestorage') !== -1) {
+              storageDocsCount++;
+            }
+          });
+        }
+        if (res.collection === 'shelters') {
+          res.docs.forEach(function(d) {
+            var data = d.data();
+            if (data.logoUrl && data.logoUrl.indexOf('firebasestorage') !== -1) {
+              storageDocsCount++;
+            }
+          });
+        }
+        if (res.collection === 'veterinarias') {
+          res.docs.forEach(function(d) {
+            var data = d.data();
+            if (data.logoUrl && data.logoUrl.indexOf('firebasestorage') !== -1) {
+              storageDocsCount++;
+            }
+          });
+        }
+
+        if (res.collection === 'orders') {
+          res.docs.forEach(function(d) {
+            var data = d.data();
+            if (data.receiptUrl && data.receiptUrl.indexOf('r2.dev') !== -1) {
+              r2Count++;
+            }
+          });
+        }
+      });
+
+      if (docCountEl) docCountEl.textContent = totalDocs + ' docs';
+      if (docBarEl) {
+        var pct = Math.min((totalDocs / 10000) * 100, 100);
+        docBarEl.style.width = pct + '%';
+      }
+
+      var storageUsedKB = storageDocsCount * 150;
+      var storageUsedMB = (storageUsedKB / 1024).toFixed(2);
+      if (storageEl) storageEl.textContent = storageUsedMB + ' MB / 5,120 MB';
+      if (storageBar) {
+        var pctStorage = Math.min((parseFloat(storageUsedMB) / 5120) * 100, 100);
+        storageBar.style.width = pctStorage + '%';
+      }
+
+      if (r2CountEl) r2CountEl.textContent = r2Count + ' comprobante(s)';
+      if (r2BarEl) {
+        var pctR2 = Math.min((r2Count / 10000) * 100, 100);
+        r2BarEl.style.width = pctR2 + '%';
+      }
+    }).catch(function(err) {
+      console.error('[loadStorageStats] error:', err);
+    });
+  };
+
+  window.optimizeLocalCache = function() {
+    var keys = Object.keys(localStorage);
+    var clearedCount = 0;
+    keys.forEach(function(key) {
+      if (key.indexOf('geo_logged_') === 0 || key.indexOf('ptcg_') === 0 || key.indexOf('cache_') === 0) {
+        localStorage.removeItem(key);
+        clearedCount++;
+      }
+    });
+    if (typeof toast === 'function') {
+      toast('Cache local optimizada. Se eliminaron ' + clearedCount + ' claves.');
+    } else {
+      alert('Cache local optimizada. Se eliminaron ' + clearedCount + ' claves.');
+    }
+    if (typeof loadStorageStats === 'function') loadStorageStats();
+    if (typeof loadSiteConfig === 'function') loadSiteConfig();
+  };
+
 })();

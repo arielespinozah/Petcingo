@@ -294,6 +294,7 @@ function initDashboard() {
     if (typeof loadSiteConfig  === 'function') loadSiteConfig();
     if (typeof loadBankInfo    === 'function') loadBankInfo();
     if (typeof showInitialAlerts === 'function') showInitialAlerts();
+    if (typeof loadStorageStats === 'function') loadStorageStats();
   }, 800);
 }
 
@@ -310,7 +311,8 @@ window.showSection = function(name, btn) {
   if (name === 'users')      loadUsers();
   if (name === 'pets')       { loadPets(); loadSellersCache(); }
   if (name === 'lost')       loadLostPets();
-  if (name === 'storage')    loadStorageStats();
+  if (name === 'storage')    { if (typeof loadStorageStats === 'function') loadStorageStats(); }
+  if (name === 'monitoring') { if (typeof runAllHealthChecks === 'function') runAllHealthChecks(); }
   if (name === 'tienda')     { loadProducts(); loadOrders(); }
   if (name === 'discounts')  loadDiscounts();
   if (name === 'affiliates') loadAffiliates();

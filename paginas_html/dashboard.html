@@ -522,13 +522,19 @@
         <span class="nav-icon"><i class="ri-team-line"></i></span> Usuarios
       </button>
       <button class="nav-item" data-section="logs" data-perm="settings" onclick="showSection('logs',this)">
-        <span class="nav-icon"><i class="ri-file-list-3-line"></i></span> Auditoría
+        <span class="nav-icon"><i class="ri-file-list-3-line"></i></span> Auditoria
+      </button>
+      <button class="nav-item" data-section="monitoring" data-perm="settings" onclick="showSection('monitoring',this)">
+        <span class="nav-icon"><i class="ri-pulse-line"></i></span> Monitoreo
+      </button>
+      <button class="nav-item" data-section="storage" data-perm="settings" onclick="showSection('storage',this)">
+        <span class="nav-icon"><i class="ri-database-2-line"></i></span> Almacenamiento
       </button>
       <button class="nav-item" data-section="backup" data-perm="settings" onclick="showSection('backup',this)">
         <span class="nav-icon"><i class="ri-database-2-line"></i></span> Base de Datos
       </button>
       <button class="nav-item" data-section="settings" data-perm="settings" onclick="showSection('settings',this)">
-        <span class="nav-icon"><i class="ri-settings-3-line"></i></span> Configuración
+        <span class="nav-icon"><i class="ri-settings-3-line"></i></span> Configuracion
       </button>
     </nav>
 
@@ -993,6 +999,191 @@
         </div>
         <div style="margin-top:18px;padding:14px 16px;background:rgba(255,176,32,.06);border:1px solid rgba(255,176,32,.2);border-radius:12px;font-size:.8rem;color:#b8860b;line-height:1.6">
           <strong>ℹ️ Importación:</strong> Carga un JSON exportado desde esta sección. IDs existentes son sobreescritos (merge). Fechas ISO se convierten automáticamente a Timestamp de Firestore.
+        </div>
+      </div>
+    </section>
+
+    <!-- ── MONITOREO DE APIS ── -->
+    <section class="section" id="sec-monitoring">
+      <div class="page-header">
+        <h2><i class="ri-pulse-line"></i> Monitoreo de APIs</h2>
+        <p>Estado en tiempo real de las dependencias y servicios del ecosistema</p>
+      </div>
+      
+      <div class="ptcg-dashboard__grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-bottom:30px;">
+        <!-- Tarjeta Firebase Auth -->
+        <div class="ptcg-index__card" style="display:flex;flex-direction:column;justify-content:space-between;padding:24px;border:1px solid rgba(0,0,0,0.05);background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.02)">
+          <div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+              <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:1.05rem;color:#212121">Firebase Auth</span>
+              <span id="led-auth" class="ptcg-health-led" style="width:12px;height:12px;border-radius:50%;background:#E0E0E0;box-shadow:0 0 8px #E0E0E0"></span>
+            </div>
+            <p style="font-size:0.85rem;color:#757575;line-height:1.5;margin-bottom:16px">Verifica el inicio de sesion y la autenticacion de usuarios administradores y clientes.</p>
+          </div>
+          <div id="status-auth" style="font-size:0.8rem;font-weight:600;color:#9E9E9E">Desconectado</div>
+        </div>
+
+        <!-- Tarjeta Cloud Firestore -->
+        <div class="ptcg-index__card" style="display:flex;flex-direction:column;justify-content:space-between;padding:24px;border:1px solid rgba(0,0,0,0.05);background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.02)">
+          <div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+              <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:1.05rem;color:#212121">Cloud Firestore</span>
+              <span id="led-firestore" class="ptcg-health-led" style="width:12px;height:12px;border-radius:50%;background:#E0E0E0;box-shadow:0 0 8px #E0E0E0"></span>
+            </div>
+            <p style="font-size:0.85rem;color:#757575;line-height:1.5;margin-bottom:16px">Monitorea la base de datos NoSQL principal del ecosistema (lectura y escritura).</p>
+          </div>
+          <div id="status-firestore" style="font-size:0.8rem;font-weight:600;color:#9E9E9E">Desconectado</div>
+        </div>
+
+        <!-- Tarjeta Firebase Storage -->
+        <div class="ptcg-index__card" style="display:flex;flex-direction:column;justify-content:space-between;padding:24px;border:1px solid rgba(0,0,0,0.05);background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.02)">
+          <div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+              <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:1.05rem;color:#212121">Firebase Storage</span>
+              <span id="led-storage" class="ptcg-health-led" style="width:12px;height:12px;border-radius:50%;background:#E0E0E0;box-shadow:0 0 8px #E0E0E0"></span>
+            </div>
+            <p style="font-size:0.85rem;color:#757575;line-height:1.5;margin-bottom:16px">Verifica el estado del almacenamiento nativo para fotos de perfil y archivos adjuntos.</p>
+          </div>
+          <div id="status-storage" style="font-size:0.8rem;font-weight:600;color:#9E9E9E">Desconectado</div>
+        </div>
+
+        <!-- Tarjeta Cloudflare R2 -->
+        <div class="ptcg-index__card" style="display:flex;flex-direction:column;justify-content:space-between;padding:24px;border:1px solid rgba(0,0,0,0.05);background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.02)">
+          <div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+              <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:1.05rem;color:#212121">Cloudflare R2</span>
+              <span id="led-r2" class="ptcg-health-led" style="width:12px;height:12px;border-radius:50%;background:#E0E0E0;box-shadow:0 0 8px #E0E0E0"></span>
+            </div>
+            <p style="font-size:0.85rem;color:#757575;line-height:1.5;margin-bottom:16px">Comprueba la disponibilidad del bucket S3-compatible para comprobantes de pago.</p>
+          </div>
+          <div id="status-r2" style="font-size:0.8rem;font-weight:600;color:#9E9E9E">Desconectado</div>
+        </div>
+
+        <!-- Tarjeta WhatsApp API -->
+        <div class="ptcg-index__card" style="display:flex;flex-direction:column;justify-content:space-between;padding:24px;border:1px solid rgba(0,0,0,0.05);background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.02)">
+          <div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+              <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:1.05rem;color:#212121">WhatsApp API</span>
+              <span id="led-whatsapp" class="ptcg-health-led" style="width:12px;height:12px;border-radius:50%;background:#E0E0E0;box-shadow:0 0 8px #E0E0E0"></span>
+            </div>
+            <p style="font-size:0.85rem;color:#757575;line-height:1.5;margin-bottom:16px">Verifica la pasarela de envio de notificaciones automaticas para placas escaneadas.</p>
+          </div>
+          <div id="status-whatsapp" style="font-size:0.8rem;font-weight:600;color:#9E9E9E">Desconectado</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;">
+        <button class="ptcg-index__btn ptcg-index__btn--primary" onclick="runAllHealthChecks()" style="padding:12px 28px">
+          <i class="ri-refresh-line"></i> Ejecutar Diagnostico
+        </button>
+      </div>
+    </section>
+
+    <!-- ── GESTIÓN DE ALMACENAMIENTO ── -->
+    <section class="section" id="sec-storage">
+      <div class="page-header">
+        <h2><i class="ri-database-2-line"></i> Gestion de Almacenamiento</h2>
+        <p>Estadisticas de uso y herramientas de optimizacion para planes gratuitos</p>
+      </div>
+
+      <div class="ptcg-dashboard__grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-bottom:30px;">
+        <!-- Tarjeta Firestore (Plan Gratuito) -->
+        <div class="ptcg-index__card" style="padding:24px;border:1px solid rgba(0,0,0,0.05);background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.02)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+            <div style="font-size:24px">🔥</div>
+            <div>
+              <h3 style="font-family:'Sora',sans-serif;font-weight:700;font-size:1.05rem;color:#212121;margin:0">Firestore (Plan Spark)</h3>
+              <span style="font-size:0.75rem;color:#F39C12;font-weight:600">Limite: 50,000 lecturas/dia</span>
+            </div>
+          </div>
+          
+          <!-- Barras de Progreso -->
+          <div style="margin-bottom:14px">
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:4px">
+              <span style="color:#757575">Documentos Registrados</span>
+              <span id="firestore-doc-count" style="font-weight:700;color:#212121">Cargando...</span>
+            </div>
+            <div style="width:100%;height:6px;background:#F0F0F0;border-radius:3px;overflow:hidden">
+              <div id="firestore-doc-bar" style="width:0%;height:100%;background:#4552CC;transition:width 0.5s ease"></div>
+            </div>
+          </div>
+
+          <div style="font-size:0.78rem;color:#9E9E9E;line-height:1.4">
+            Firestore no proporciona una API cliente para consultar lecturas consumidas hoy. El indicador de documentos totales te ayuda a estimar el tamano de tu base de datos.
+          </div>
+        </div>
+
+        <!-- Tarjeta Firebase Storage (Plan Spark) -->
+        <div class="ptcg-index__card" style="padding:24px;border:1px solid rgba(0,0,0,0.05);background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.02)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+            <div style="font-size:24px">📦</div>
+            <div>
+              <h3 style="font-family:'Sora',sans-serif;font-weight:700;font-size:1.05rem;color:#212121;margin:0">Firebase Storage</h3>
+              <span style="font-size:0.75rem;color:#F39C12;font-weight:600">Limite: 5 GB Almacenamiento</span>
+            </div>
+          </div>
+
+          <div style="margin-bottom:14px">
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:4px">
+              <span style="color:#757575">Almacenamiento Usado</span>
+              <span id="storage-used" style="font-weight:700;color:#212121">Cargando...</span>
+            </div>
+            <div style="width:100%;height:6px;background:#F0F0F0;border-radius:3px;overflow:hidden">
+              <div id="storage-bar" style="width:0%;height:100%;background:#F39C12;transition:width 0.5s ease"></div>
+            </div>
+          </div>
+
+          <div style="font-size:0.78rem;color:#9E9E9E;line-height:1.4">
+            Muestra el tamano acumulado estimado en Firebase Storage para avatares y archivos subidos.
+          </div>
+        </div>
+
+        <!-- Tarjeta Cloudflare R2 -->
+        <div class="ptcg-index__card" style="padding:24px;border:1px solid rgba(0,0,0,0.05);background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.02)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+            <div style="font-size:24px">☁️</div>
+            <div>
+              <h3 style="font-family:'Sora',sans-serif;font-weight:700;font-size:1.05rem;color:#212121;margin:0">Cloudflare R2</h3>
+              <span style="font-size:0.75rem;color:#2ECC71;font-weight:600">Limite: 10 GB (Plan Gratuito)</span>
+            </div>
+          </div>
+
+          <div style="margin-bottom:14px">
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:4px">
+              <span style="color:#757575">Comprobantes Almacenados</span>
+              <span id="r2-count" style="font-weight:700;color:#212121">Cargando...</span>
+            </div>
+            <div style="width:100%;height:6px;background:#F0F0F0;border-radius:3px;overflow:hidden">
+              <div id="r2-bar" style="width:0%;height:100%;background:#2ECC71;transition:width 0.5s ease"></div>
+            </div>
+          </div>
+
+          <div style="font-size:0.78rem;color:#9E9E9E;line-height:1.4">
+            Contador aproximado de imagenes de comprobantes de transferencia almacenados de forma segura en R2.
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenedor de Optimización -->
+      <div class="ptcg-index__card" style="padding:24px;border:1px solid rgba(255,176,32,.2);background:rgba(255,176,32,.03);border-radius:16px;margin-bottom:20px;">
+        <h3 style="font-family:'Sora',sans-serif;font-weight:700;font-size:1.1rem;color:#D35400;margin:0 0 8px 0;display:flex;align-items:center;gap:8px">
+          <i class="ri-alert-line"></i> Optimizacion para el Plan Spark (Gratuito)
+        </h3>
+        <p style="font-size:0.85rem;color:#757575;line-height:1.6;margin-bottom:16px">
+          Para evitar exceder el limite gratuito de Firebase y mantener el sistema a coste cero, implementamos las siguientes estrategias:
+        </p>
+        <ul style="font-size:0.85rem;color:#424242;margin:0 0 16px 20px;padding:0;line-height:1.8">
+          <li><strong>Cache Local de Datos:</strong> Almacena colecciones de configuracion estatica en `localStorage` reduciendo lecturas innecesarias en cada recarga de pagina.</li>
+          <li><strong>Compresion Inteligente de Imagenes:</strong> Redimensiona y comprime los comprobantes de pago a menos de 100 KB antes de subirlos a Cloudflare R2.</li>
+          <li><strong>Retencion Selectiva de Auditoria:</strong> El modulo de "Base de Datos" te permite purgar logs antiguos para liberar almacenamiento e indices.</li>
+        </ul>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="ptcg-index__btn ptcg-index__btn--primary" onclick="loadStorageStats()" style="padding:12px 28px">
+            <i class="ri-refresh-line"></i> Recargar Estadisticas
+          </button>
+          <button class="ptcg-index__btn ptcg-index__btn--secondary" onclick="optimizeLocalCache()" style="padding:12px 28px">
+            <i class="ri-flashlight-line"></i> Forzar Optimizacion Cache
+          </button>
         </div>
       </div>
     </section>
