@@ -345,6 +345,64 @@
     });
   };
 
+  /* -- changeOrderStatus: wrapper generico --------------------------------- */
+  window.changeOrderStatus = function(orderId, newStatus) {
+    if (!orderId || !newStatus) return;
+    var updates = { status: newStatus, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+    var tsMap = { processing:'processingAt', shipped:'shippedAt', delivered:'deliveredAt', cancelled:'cancelledAt', confirmed:'verifiedAt' };
+    if (tsMap[newStatus]) updates[tsMap[newStatus]] = firebase.firestore.FieldValue.serverTimestamp();
+    db().collection('orders').doc(orderId).update(updates)
+      .then(function() {
+        closeVerifyModal();
+        if (typeof toast === 'function') toast('Estado actualizado: ' + newStatus);
+        loadOrders();
+      })
+      .catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
+  };
+
+  /* -- cancelOrder: cancelacion con motivo y flag de reembolso ------------- */
+  window.cancelOrder = function(orderId, isPaid, reason) {
+    var db2 = db();
+    var updates = {
+      status: 'cancelled',
+      cancelledAt: firebase.firestore.FieldValue.serverTimestamp(),
+      cancelReason: reason || ''
+    };
+    if (isPaid) updates.refunded = true;
+    db2.collection('orders').doc(orderId).update(updates)
+      .then(function() {
+        /* Cerrar modal de cancelacion si esta abierto */
+        var m = document.getElementById('cancel-order-modal');
+        if (m) m.style.display = 'none';
+        closeVerifyModal();
+        if (typeof toast === 'function') toast((isPaid ? 'Pedido cancelado — pendiente de reembolso.' : 'Pedido cancelado.'));
+        if (typeof showDashAlert === 'function' && isPaid) showDashAlert('Pedido ' + orderId.substring(0,8) + '... cancelado. Reembolso pendiente.', 'warning', 'ri-refund-2-line');
+        loadOrders();
+      })
+      .catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
+  };
+
+  /* -- openCancelModal: abre modal de cancelacion -------------------------- */
+  window.openCancelModal = function(orderId, isPaid) {
+    var m = document.getElementById('cancel-order-modal');
+    if (!m) return;
+    document.getElementById('cancel-order-id').value   = orderId;
+    document.getElementById('cancel-order-paid').value = isPaid ? '1' : '0';
+    document.getElementById('cancel-order-reason').value = '';
+    m.style.display = 'flex';
+  };
+  window.closeCancelModal = function() {
+    var m = document.getElementById('cancel-order-modal');
+    if (m) m.style.display = 'none';
+  };
+  window.submitCancelOrder = function() {
+    var orderId = document.getElementById('cancel-order-id').value;
+    var isPaid  = document.getElementById('cancel-order-paid').value === '1';
+    var reason  = document.getElementById('cancel-order-reason').value.trim();
+    if (!orderId) return;
+    cancelOrder(orderId, isPaid, reason);
+  };
+
   window.printShippingGuide = function(orderId) {
     var order = _ordersCache.find(function(o) { return o.id === orderId; });
     if (!order) { toast('Pedido no encontrado.'); return; }
@@ -1438,10 +1496,56 @@
   /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE PEDIDOS Y PAGOS oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
   
 
-  /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE PASARELAS Y ENViOS oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
   window.saveShippingConfig = function() {
-    if (typeof toast === 'function') toast('Configuracin de DHL guardada (Simulada).');
-    // Lgica para guardar las tarifas en Firebase
+    var dhlBase = parseFloat(document.getElementById('cfg-dhl-base') ? document.getElementById('cfg-dhl-base').value : 0) || 0;
+    var dhlKg   = parseFloat(document.getElementById('cfg-dhl-kg')   ? document.getElementById('cfg-dhl-kg').value   : 0) || 0;
+    var db2 = db(); if (!db2) return;
+    db2.collection('config').doc('shipping_rates').set({
+      dhl_base: dhlBase,
+      dhl_per_kg: dhlKg,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true }).then(function() {
+      if (typeof toast === 'function') toast('Tarifas DHL guardadas.');
+    }).catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
+  };
+
+  /* -- loadShippingRates: tarifas de envio por ciudad boliviana ------------ */
+  window.loadShippingRates = function() {
+    var db2 = db(); if (!db2) return;
+    db2.collection('config').doc('shipping_rates').get().then(function(doc) {
+      if (!doc.exists) return;
+      var d = doc.data();
+      function setVal(id, val) { var el = document.getElementById(id); if (el && val != null) el.value = String(val); }
+      setVal('cfg-ship-scz',       d.santa_cruz);
+      setVal('cfg-ship-lpb',       d.la_paz);
+      setVal('cfg-ship-cbba',      d.cochabamba);
+      setVal('cfg-ship-resto',     d.resto);
+      setVal('cfg-ship-pickup',    d.pickup);
+      setVal('cfg-ship-intl-usd',  d.internacional_usd);
+      setVal('cfg-dhl-base',       d.dhl_base);
+      setVal('cfg-dhl-kg',         d.dhl_per_kg);
+    }).catch(function() {});
+  };
+
+  /* -- saveShippingRates: guarda tarifas por ciudad ----------------------- */
+  window.saveShippingRates = function() {
+    function numVal(id) { var el = document.getElementById(id); return el ? (parseFloat(el.value) || 0) : 0; }
+    var db2 = db(); if (!db2) return;
+    var rates = {
+      santa_cruz:       numVal('cfg-ship-scz'),
+      la_paz:           numVal('cfg-ship-lpb'),
+      cochabamba:       numVal('cfg-ship-cbba'),
+      resto:            numVal('cfg-ship-resto'),
+      pickup:           numVal('cfg-ship-pickup'),
+      internacional_usd: numVal('cfg-ship-intl-usd'),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    db2.collection('config').doc('shipping_rates').set(rates, { merge: true })
+      .then(function() {
+        if (typeof toast === 'function') toast('Tarifas de envio guardadas.');
+        if (typeof showDashAlert === 'function') showDashAlert('Tarifas de envio actualizadas correctamente.', 'success', 'ri-truck-line');
+      })
+      .catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
   };
 
   window.saveGatewayConfig = function() {
@@ -1451,11 +1555,75 @@
 
   /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE IMPRESION 360 oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
   window.generatePrintLayout = function() {
-    var container = document.getElementById('print-layout-container');
-    var canvasArea = document.getElementById('print-canvas-area');
-    if (!container || !canvasArea) return;
-    container.style.display = 'block';
-    canvasArea.innerHTML = '<div style="padding:40px;background:#f9f9f9;border:1px dashed #ccc;width:100%;color:#888;">Renderizando pliego segun Plan Maestro 360... (Proximamente)</div>';
+    var filterSel = document.getElementById('print-filter-batch');
+    var showAll   = filterSel && filterSel.value === 'all';
+    var orders    = _ordersCache.filter(function(o) {
+      var d = o.data;
+      var eligible = d.status === 'confirmed' || d.status === 'processing' || d.status === 'shipped';
+      if (!eligible) return false;
+      if (!showAll && d.printed === true) return false;
+      return !!d.activationCode;
+    });
+
+    if (orders.length === 0) {
+      if (typeof toast === 'function') toast('No hay pedidos listos para imprimir.');
+      return;
+    }
+
+    /* Construye ventana de impresion A4 */
+    var win = window.open('', '_blank', 'width=900,height=700');
+    var css = [
+      'body{font-family:"Plus Jakarta Sans",sans-serif;background:#fff;margin:0;padding:0;}',
+      '.page{width:210mm;min-height:297mm;margin:0 auto;padding:10mm;box-sizing:border-box;}',
+      '.grid{display:flex;flex-wrap:wrap;gap:6mm;justify-content:flex-start;}',
+      '.plate{width:54mm;height:86mm;border:1px solid #CCC;border-radius:4mm;padding:4mm;',
+      '  display:flex;flex-direction:column;align-items:center;justify-content:space-between;',
+      '  page-break-inside:avoid;background:#fff;box-sizing:border-box;}',
+      '.plate-logo{font-family:"Sora",sans-serif;font-size:7pt;font-weight:800;color:#4552CC;letter-spacing:0.05em;text-transform:uppercase;}',
+      '.plate-id{font-family:monospace;font-size:9pt;font-weight:700;color:#212121;letter-spacing:0.08em;word-break:break-all;text-align:center;}',
+      '.plate-qr{width:40mm;height:40mm;object-fit:contain;}',
+      '.plate-footer{font-size:5.5pt;color:#757575;text-align:center;line-height:1.4;}',
+      'h2{font-family:"Sora",sans-serif;font-size:12pt;color:#212121;margin:0 0 6mm;border-bottom:2px solid #4552CC;padding-bottom:3mm;}',
+      '@media print{body{margin:0;}.no-print{display:none!important;} .page{margin:0;padding:6mm;}}'
+    ].join('\n');
+
+    win.document.write('<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">');
+    win.document.write('<title>Pliego de Impresion Petcingo</title>');
+    win.document.write('<link href="https://fonts.googleapis.com/css2?family=Sora:wght@800&family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet">');
+    win.document.write('<style>' + css + '</style></head><body>');
+    win.document.write('<div class="page">');
+    win.document.write('<h2>Petcingo — Pliego de impresion (' + orders.length + ' placas) — ' + new Date().toLocaleDateString('es-BO') + '</h2>');
+    win.document.write('<div class="no-print" style="margin-bottom:6mm;display:flex;gap:8px;">');
+    win.document.write('<button onclick="window.print()" style="background:#4552CC;color:#fff;border:none;padding:8px 20px;border-radius:8px;font-weight:700;cursor:pointer;font-size:11pt;">Imprimir pliego</button>');
+    win.document.write('<button onclick="window.close()" style="background:#F5F5F5;border:1px solid #DDD;padding:8px 16px;border-radius:8px;cursor:pointer;">Cerrar</button>');
+    win.document.write('</div><div class="grid">');
+
+    orders.forEach(function(o) {
+      var d = o.data;
+      var code = d.activationCode || o.id.substring(0, 8).toUpperCase();
+      var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent('https://prueb2.dashnexpages.net/activacion/?id=' + code);
+      var buyer = d.buyer ? d.buyer.name : (d.buyerName || '');
+      win.document.write('<div class="plate">');
+      win.document.write('<div class="plate-logo">PETCINGO</div>');
+      win.document.write('<img class="plate-qr" src="' + qrUrl + '" alt="QR '+ code +'">');
+      win.document.write('<div class="plate-id">' + code + '</div>');
+      win.document.write('<div class="plate-footer">Escanea para ver perfil<br>' + escFn(buyer).substring(0, 20) + '</div>');
+      win.document.write('</div>');
+    });
+
+    win.document.write('</div></div>');
+    win.document.write('<script>window.onload=function(){setTimeout(function(){/* auto-print opcional */},800);};<\/script>');
+    win.document.write('</body></html>');
+    win.document.close();
+
+    /* Marcar como impresos en Firestore */
+    var db2 = db();
+    if (!db2) return;
+    orders.forEach(function(o) {
+      db2.collection('orders').doc(o.id).update({ printed: true })
+        .catch(function() {});
+    });
+    if (typeof toast === 'function') toast('Pliego generado: ' + orders.length + ' placa(s).');
   };
 
   /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE QR DE PAGO oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
