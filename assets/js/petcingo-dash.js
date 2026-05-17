@@ -2056,4 +2056,149 @@
     }
   });
 
+  /* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+     AFILIADOS \u2014 tabla + niveles + status
+     \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
+
+  var _affiliateLevels = [
+    { level: 1, name: 'Bronce',   minSales: 0,   maxSales: 25,     rate: 8  },
+    { level: 2, name: 'Plata',    minSales: 26,  maxSales: 100,    rate: 12 },
+    { level: 3, name: 'Oro',      minSales: 101, maxSales: 250,    rate: 16 },
+    { level: 4, name: 'Diamante', minSales: 251, maxSales: 999999, rate: 20 }
+  ];
+
+  function getLevelForSales(sales, levels) {
+    if (!levels || !levels.length) return null;
+    for (var i = levels.length - 1; i >= 0; i--) {
+      if (sales >= levels[i].minSales) return levels[i];
+    }
+    return levels[0];
+  }
+
+  window.loadAffiliateLevels = function() {
+    var db2 = db(); if (!db2) return;
+    db2.collection('config').doc('affiliate_levels').get().then(function(doc) {
+      if (doc.exists && doc.data().levels) _affiliateLevels = doc.data().levels;
+      renderAffiliateLevelsUI();
+    }).catch(function() { renderAffiliateLevelsUI(); });
+  };
+
+  function renderAffiliateLevelsUI() {
+    var container = document.getElementById('affiliate-levels-container');
+    if (!container) return;
+    var levelColors = ['#CD7F32', '#9E9E9E', '#D4AF37', '#51CBF5'];
+    var h = '<div style="display:grid;gap:10px;">';
+    _affiliateLevels.forEach(function(lv, i) {
+      var color = levelColors[i] || '#4552CC';
+      h += '<div style="display:flex;gap:12px;align-items:center;background:#F8F9FB;border-radius:12px;padding:12px 14px;flex-wrap:wrap;">';
+      h += '<span style="font-family:\'Sora\',sans-serif;font-weight:800;min-width:72px;color:' + color + ';">' + escFn(lv.name || 'Nivel ' + lv.level) + '</span>';
+      h += '<label style="display:flex;align-items:center;gap:5px;font-size:.82rem;">Desde <input type="number" id="lv-min-' + i + '" value="' + lv.minSales + '" min="0" style="width:64px;padding:4px 8px;border:1.5px solid #E0E0E0;border-radius:8px;font-family:\'Plus Jakarta Sans\',sans-serif;"></label>';
+      h += '<label style="display:flex;align-items:center;gap:5px;font-size:.82rem;">Hasta <input type="number" id="lv-max-' + i + '" value="' + lv.maxSales + '" min="0" style="width:72px;padding:4px 8px;border:1.5px solid #E0E0E0;border-radius:8px;font-family:\'Plus Jakarta Sans\',sans-serif;"></label>';
+      h += '<label style="display:flex;align-items:center;gap:5px;font-size:.82rem;">Comision % <input type="number" id="lv-rate-' + i + '" value="' + lv.rate + '" min="0" max="100" step="0.5" style="width:64px;padding:4px 8px;border:1.5px solid #E0E0E0;border-radius:8px;font-family:\'Plus Jakarta Sans\',sans-serif;"></label>';
+      h += '</div>';
+    });
+    h += '</div>';
+    container.innerHTML = h;
+  }
+
+  window.saveAffiliateLevels = function() {
+    var db2 = db(); if (!db2) return;
+    var levels = [];
+    _affiliateLevels.forEach(function(lv, i) {
+      var minEl  = document.getElementById('lv-min-'  + i);
+      var maxEl  = document.getElementById('lv-max-'  + i);
+      var rateEl = document.getElementById('lv-rate-' + i);
+      levels.push({
+        level:    lv.level,
+        name:     lv.name,
+        minSales: minEl  ? (parseInt(minEl.value,10)    || 0)      : lv.minSales,
+        maxSales: maxEl  ? (parseInt(maxEl.value,10)    || 999999) : lv.maxSales,
+        rate:     rateEl ? (parseFloat(rateEl.value) || 0)         : lv.rate
+      });
+    });
+    _affiliateLevels = levels;
+    db2.collection('config').doc('affiliate_levels').set({ levels: levels })
+      .then(function() { if (typeof toast === 'function') toast('Niveles guardados.'); })
+      .catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
+  };
+
+  window.loadAffiliates = function() {
+    var db2 = db(); if (!db2) return;
+    var tbody = document.getElementById('affiliates-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></td></tr>';
+
+    db2.collection('affiliates').get().then(function(snap) {
+      var cEl = document.getElementById('affiliates-count');
+      if (cEl) cEl.textContent = snap.size + ' afiliado(s)';
+      if (snap.empty) { tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state">No hay afiliados aun.</div></td></tr>'; return; }
+
+      var html = '';
+      snap.forEach(function(doc) {
+        var d = doc.data();
+        var status = d.status || 'active';
+        var statusColor = status === 'active' ? '#2ECC71' : status === 'suspended' ? '#E67E22' : '#E74C3C';
+        var statusBg    = status === 'active' ? 'rgba(46,204,113,.12)' : status === 'suspended' ? 'rgba(230,126,34,.12)' : 'rgba(231,76,60,.12)';
+        var statusLabel = status === 'active' ? 'Activo' : status === 'suspended' ? 'Suspendido' : 'Baneado';
+        var statusBadge = '<span style="padding:3px 9px;border-radius:99px;font-size:.70rem;font-weight:700;background:' + statusBg + ';color:' + statusColor + ';">' + statusLabel + '</span>';
+
+        var totalSales = d.totalSales || 0;
+        var lvl = getLevelForSales(totalSales, _affiliateLevels);
+        var levelColors = ['#CD7F32', '#9E9E9E', '#D4AF37', '#51CBF5'];
+        var lvlColor = lvl ? (levelColors[(lvl.level - 1)] || '#4552CC') : '#9E9E9E';
+        var lvlBadge = lvl ? '<span style="font-weight:700;color:' + lvlColor + ';">' + escFn(lvl.name) + '</span>' : '-';
+
+        var rate = d.commissionRate != null ? d.commissionRate : (lvl ? lvl.rate : 10);
+        var rateCell = '<input type="number" min="0" max="100" step="0.5" value="' + rate + '" id="rate-af-' + doc.id + '" style="width:46px;padding:2px 5px;border:1px solid #E0E0E0;border-radius:6px;font-size:.78rem;text-align:center;">' +
+          '<button onclick="saveAffiliateRate(\'' + doc.id + '\')" style="padding:2px 8px;background:#4552CC;color:#fff;border:none;border-radius:6px;font-size:.70rem;cursor:pointer;margin-left:3px;">OK</button>';
+
+        var suspBtn = status === 'active' ?
+          '<button class="btn btn-ghost btn-sm" style="color:#E67E22;" title="Suspender" onclick="setAffiliateStatus(\'' + doc.id + '\',\'suspended\')"><i class="ri-pause-circle-line"></i></button>' :
+          (status === 'suspended' ? '<button class="btn btn-ghost btn-sm" style="color:#2ECC71;" title="Activar" onclick="setAffiliateStatus(\'' + doc.id + '\',\'active\')"><i class="ri-play-circle-line"></i></button>' : '');
+        var banBtn = status !== 'banned' ?
+          '<button class="btn btn-ghost btn-sm" style="color:#E74C3C;" title="Banear" onclick="setAffiliateStatus(\'' + doc.id + '\',\'banned\')"><i class="ri-forbid-line"></i></button>' :
+          '<button class="btn btn-ghost btn-sm" style="color:#2ECC71;" title="Rehabilitar" onclick="setAffiliateStatus(\'' + doc.id + '\',\'active\')"><i class="ri-checkbox-circle-line"></i></button>';
+
+        html += '<tr>';
+        html += '<td style="font-weight:600;">' + escFn(d.name || '--') + '</td>';
+        html += '<td>' + escFn(d.email || '--') + '</td>';
+        html += '<td>' + escFn(d.phone || '--') + '</td>';
+        html += '<td style="font-weight:700;">' + totalSales + '</td>';
+        html += '<td>' + lvlBadge + '</td>';
+        html += '<td style="white-space:nowrap;">' + rateCell + '</td>';
+        html += '<td>' + statusBadge + '</td>';
+        html += '<td style="white-space:nowrap;">' + suspBtn + banBtn + '</td>';
+        html += '</tr>';
+      });
+      tbody.innerHTML = html;
+    }).catch(function(e) { tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state">Error: ' + escFn(e.message) + '</div></td></tr>'; });
+  };
+
+  window.saveAffiliateRate = function(id) {
+    var inp = document.getElementById('rate-af-' + id);
+    if (!inp) return;
+    var rate = parseFloat(inp.value);
+    if (isNaN(rate) || rate < 0 || rate > 100) { if (typeof toast === 'function') toast('Porcentaje invalido (0-100)'); return; }
+    db().collection('affiliates').doc(id).update({ commissionRate: rate })
+      .then(function() { if (typeof toast === 'function') toast('Comision actualizada: ' + rate + '%'); })
+      .catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
+  };
+
+  window.setAffiliateStatus = function(id, newStatus) {
+    var reason = '';
+    if (newStatus !== 'active') {
+      reason = window.prompt('Motivo (opcional):') || '';
+    }
+    var update = { status: newStatus };
+    if (newStatus === 'suspended') { update.suspendedAt = firebase.firestore.FieldValue.serverTimestamp(); update.suspendedReason = reason; }
+    if (newStatus === 'banned')    { update.bannedAt    = firebase.firestore.FieldValue.serverTimestamp(); update.bannedReason    = reason; }
+    if (newStatus === 'active')    { update.reactivatedAt = firebase.firestore.FieldValue.serverTimestamp(); }
+    db().collection('affiliates').doc(id).update(update)
+      .then(function() {
+        var lbl = { active: 'Reactivado', suspended: 'Suspendido', banned: 'Baneado' };
+        if (typeof toast === 'function') toast((lbl[newStatus] || newStatus) + ' correctamente.');
+        window.loadAffiliates();
+      }).catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
+  };
+
 })();

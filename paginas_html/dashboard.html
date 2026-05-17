@@ -499,6 +499,9 @@
       <button class="nav-item" data-section="shelters" data-perm="shelters" onclick="showSection('shelters',this)">
         <span class="nav-icon"><i class="ri-home-heart-line"></i></span> Refugios
       </button>
+      <button class="nav-item" data-section="affiliates" onclick="showSection('affiliates',this);if(typeof loadAffiliates==='function')loadAffiliates();">
+        <span class="nav-icon"><i class="ri-user-star-line"></i></span> Afiliados
+      </button>
       <button class="nav-item" data-section="customize" onclick="showSection('customize',this)">
         <span class="nav-icon"><i class="ri-layout-masonry-line"></i></span> Personalizar Index
       </button>
@@ -813,8 +816,8 @@
         <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px" style="margin-bottom:16px"><i class="ri-list-check-2"></i> Refugios Registrados<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="margin-left:auto" onclick="loadShelters()"><i class="ri-refresh-line"></i></button></div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Nombre</th><th>Prefijo</th><th>Encargado</th><th>Teléfono</th><th>Dirección</th><th>Registrado</th><th>Acciones</th></tr></thead>
-            <tbody id="shelters-tbody"><tr><td colspan="7"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></td></tr></tbody>
+            <thead><tr><th>Nombre</th><th>Prefijo</th><th>Encargado</th><th>Estado</th><th>Comision %</th><th>Telefono</th><th>Direccion</th><th>Registrado</th><th>Acciones</th></tr></thead>
+            <tbody id="shelters-tbody"><tr><td colspan="9"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></td></tr></tbody>
           </table>
         </div>
         <div class="table-count" id="shelters-count"></div>
@@ -2036,6 +2039,36 @@
     </div>
   </div>
 </div>
+
+<!-- ── AFILIADOS ── -->
+<section class="section" id="sec-affiliates">
+  <div class="page-header">
+    <h2><i class="ri-user-star-line"></i> Afiliados</h2>
+    <p>Gestiona los afiliados, sus comisiones y niveles.</p>
+  </div>
+  <div class="ptcg-index__card" style="margin-bottom:16px;">
+    <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:1rem;margin-bottom:16px;display:flex;align-items:center;gap:10px;">
+      <i class="ri-settings-3-line" style="color:#4552CC;"></i> Niveles de Comision
+    </div>
+    <p style="font-size:0.85rem;color:#757575;margin-bottom:14px;">Configura los rangos de ventas y porcentajes por nivel. Se guardan en config/affiliate_levels.</p>
+    <div id="affiliate-levels-container" style="margin-bottom:14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.875rem;"></div>
+    <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="saveAffiliateLevels()"><i class="ri-save-line"></i> Guardar niveles</button>
+    <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="loadAffiliateLevels()" style="margin-left:8px;"><i class="ri-refresh-line"></i> Recargar</button>
+  </div>
+  <div class="ptcg-index__card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:1rem;display:flex;align-items:center;gap:8px;"><i class="ri-list-check-2"></i> Afiliados Registrados</div>
+      <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="loadAffiliates()"><i class="ri-refresh-line"></i></button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Nombre</th><th>Email</th><th>Telefono</th><th>Ventas</th><th>Nivel</th><th>Comision %</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody id="affiliates-tbody"><tr><td colspan="8"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></td></tr></tbody>
+      </table>
+    </div>
+    <div class="table-count" id="affiliates-count"></div>
+  </div>
+</section>
 
 <div id="toast"></div>
 

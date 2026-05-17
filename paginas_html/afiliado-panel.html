@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Afiliado - Petcingo</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://prueb2.dashnexpages.net/assets/fonts/remixicon/remixicon.css" rel="stylesheet">
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #F8F9FB !important;
+    min-height: 100vh;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    color: #212121 !important;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- Buttons ---- */
+  .af-btn {
+    display: inline-flex !important; align-items: center !important; justify-content: center !important;
+    gap: 7px; padding: 11px 18px; border-radius: 12px;
+    font-family: 'Plus Jakarta Sans', sans-serif !important; font-size: 0.875rem; font-weight: 600;
+    cursor: pointer; text-decoration: none !important; transition: all 0.18s;
+    white-space: nowrap; line-height: 1; border: none;
+  }
+  .af-btn--primary   { background: #4552CC !important; color: #fff !important; }
+  .af-btn--primary:hover { background: #2E3A9E !important; }
+  .af-btn--secondary { background: rgba(69,82,204,0.08) !important; color: #4552CC !important; border: 1.5px solid rgba(69,82,204,0.2) !important; }
+  .af-btn--danger    { background: rgba(231,76,60,0.10) !important; color: #E74C3C !important; border: 1.5px solid rgba(231,76,60,0.3) !important; }
+  .af-btn--success   { background: rgba(46,204,113,0.10) !important; color: #2ECC71 !important; border: 1.5px solid rgba(46,204,113,0.3) !important; }
+  .af-btn--sm { padding: 7px 13px !important; font-size: 0.78rem !important; }
+  .af-btn:disabled { opacity: 0.5; cursor: not-allowed !important; }
+
+  /* ---- Card (Liquid Glass) ---- */
+  .af-card {
+    position: relative; overflow: hidden; isolation: isolate;
+    border-radius: 20px; border: 1px solid rgba(255,255,255,.95);
+    box-shadow: 0 8px 40px rgba(69,82,204,.09), 0 2px 8px rgba(69,82,204,.04), inset 0 1px 0 rgba(255,255,255,1);
+    padding: 22px; background: #fff; margin-bottom: 16px;
+  }
+  .af-card::before {
+    content: ''; position: absolute; inset: 0;
+    backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%);
+    background: rgba(255,255,255,.72); z-index: 0;
+  }
+  .af-card > * { position: relative; z-index: 2; }
+
+  /* ---- Stats ---- */
+  .af-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 13px; margin-bottom: 18px; }
+  .af-stat { border-radius: 18px; padding: 18px; background: #fff; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 3px 16px rgba(0,0,0,0.02); display: flex; flex-direction: column; }
+  .af-stat__icon { font-size: 1.6rem; margin-bottom: 10px; color: #4552CC; }
+  .af-stat__value { font-family: 'Sora', sans-serif !important; font-size: 1.7rem; font-weight: 800; color: #212121; line-height: 1; margin-bottom: 4px; }
+  .af-stat__label { font-size: 0.80rem; color: #757575; font-weight: 600; }
+
+  /* ---- Tables ---- */
+  .af-table-wrap { width: 100%; overflow-x: auto; background: #fff; border-radius: 14px; border: 1px solid rgba(0,0,0,0.05); }
+  .af-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; font-family: 'Plus Jakarta Sans', sans-serif; }
+  .af-table th { padding: 11px 13px; border-bottom: 1px solid rgba(0,0,0,0.05); color: #757575; font-weight: 600; white-space: nowrap; }
+  .af-table td { padding: 11px 13px; border-bottom: 1px solid rgba(0,0,0,0.04); color: #212121; vertical-align: middle; }
+  .af-table tr:last-child td { border-bottom: none; }
+  .af-empty { text-align: center; padding: 28px; color: #9E9E9E; font-size: 0.85rem; }
+
+  /* ---- Status badges ---- */
+  .af-badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 99px; font-size: 0.70rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+  .af-badge--pendiente { background: #FFF3E0; color: #E65100; border: 1px solid rgba(255,152,0,0.3); }
+  .af-badge--pagado    { background: #E8F5E9; color: #1B5E20; border: 1px solid rgba(76,175,80,0.3); }
+  .af-badge--confirmed { background: #E8F5E9; color: #1B5E20; border: 1px solid rgba(76,175,80,0.3); }
+  .af-badge--pending   { background: #FFF3E0; color: #E65100; border: 1px solid rgba(255,152,0,0.3); }
+  .af-badge--processing{ background: #E3F2FD; color: #0D47A1; border: 1px solid rgba(33,150,243,0.3); }
+
+  /* ---- Forms ---- */
+  .af-field { display: flex; flex-direction: column; gap: 5px; }
+  .af-label { font-size: 0.79rem; font-weight: 600; color: #424242 !important; }
+  .af-input {
+    width: 100%; padding: 10px 13px; font-size: 0.875rem;
+    font-family: 'Plus Jakarta Sans', sans-serif !important; font-weight: 400;
+    color: #212121 !important; background: rgba(255,255,255,0.72) !important;
+    border: 1.5px solid #E0E0E0 !important; border-radius: 10px; outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    -webkit-appearance: none; appearance: none;
+  }
+  .af-input:focus { border-color: #4552CC !important; box-shadow: 0 0 0 3px rgba(69,82,204,0.14) !important; }
+  .af-input[readonly] { background: #F5F5F5 !important; cursor: default; }
+  .af-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+  @media (max-width: 580px) { .af-grid-2 { grid-template-columns: 1fr; } }
+
+  /* ---- Section header ---- */
+  .af-sec-title {
+    font-family: 'Sora', sans-serif !important; font-size: 0.88rem; font-weight: 700; color: #212121;
+    display: flex; align-items: center; gap: 7px;
+    border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom: 10px; margin-bottom: 15px;
+  }
+  .af-sec-title i { color: #4552CC !important; }
+
+  /* ---- Page header ---- */
+  .af-page-header { margin-bottom: 18px; }
+  .af-page-header h2 {
+    font-family: 'Sora', sans-serif !important; font-size: 1.5rem; font-weight: 800;
+    color: #212121; display: flex; align-items: center; gap: 9px;
+  }
+  .af-page-header h2 i { color: #4552CC !important; }
+  .af-page-header p { font-size: 0.85rem; color: #757575; margin-top: 4px; }
+
+  /* ---- Referral box ---- */
+  .af-ref-box { display: flex; gap: 8px; align-items: center; }
+  .af-ref-input {
+    flex: 1; padding: 9px 13px; border: 1.5px solid #E0E0E0; border-radius: 10px;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.82rem;
+    background: #F5F5F5; color: #424242; outline: none; cursor: text;
+  }
+
+  /* ---- Toast ---- */
+  #af-toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+    padding: 13px 18px; border-radius: 13px;
+    font-family: 'Plus Jakarta Sans', sans-serif !important; font-size: 0.855rem; font-weight: 600;
+    color: #fff !important; max-width: 320px; display: flex; align-items: center; gap: 9px;
+    backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.2);
+    transform: translateY(80px); opacity: 0;
+    transition: transform 0.32s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s ease;
+    pointer-events: none;
+  }
+  #af-toast.af-show { transform: translateY(0); opacity: 1; }
+  #af-toast.af-success { background: rgba(39,174,96,0.94); }
+  #af-toast.af-error   { background: rgba(231,76,60,0.94); }
+  #af-toast.af-info    { background: rgba(69,82,204,0.94); }
+  #af-toast.af-warning { background: rgba(230,126,34,0.94); }
+
+  /* ---- Login ---- */
+  #af-login {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #EEF1FB 0%, #EEF5FF 50%, #E8F7FD 100%); padding: 20px;
+  }
+  .af-login-card {
+    width: 100%; max-width: 400px; position: relative; overflow: hidden; isolation: isolate;
+    border-radius: 26px; border: 1px solid rgba(255,255,255,.95);
+    box-shadow: 0 16px 64px rgba(69,82,204,.14), inset 0 1px 0 rgba(255,255,255,1);
+    padding: 38px 30px; background: #fff;
+  }
+  .af-login-card::before {
+    content: ''; position: absolute; inset: 0;
+    backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%);
+    background: rgba(255,255,255,.80); z-index: 0;
+  }
+  .af-login-card > * { position: relative; z-index: 2; }
+  .af-login-logo { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 24px; }
+  .af-login-logo-text { font-family: 'Sora', sans-serif !important; font-size: 1.45rem; font-weight: 800; color: #4552CC !important; letter-spacing: -0.02em; }
+  .af-login-title { font-family: 'Sora', sans-serif !important; font-size: 1.35rem; font-weight: 800; color: #212121; text-align: center; margin-bottom: 5px; }
+  .af-login-sub { font-size: 0.85rem; color: #757575; text-align: center; margin-bottom: 26px; line-height: 1.55; }
+  #af-login-err { font-size: 0.80rem; color: #E74C3C; text-align: center; margin-top: 10px; display: none; font-weight: 600; padding: 8px 12px; background: rgba(231,76,60,0.06); border-radius: 8px; }
+
+  /* ---- Topbar ---- */
+  #af-topbar {
+    position: sticky; top: 0; z-index: 100; height: 58px;
+    display: flex; align-items: center; justify-content: space-between; padding: 0 22px; gap: 14px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(20px) saturate(200%); -webkit-backdrop-filter: blur(20px) saturate(200%);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 1px 0 rgba(69,82,204,0.05);
+  }
+  .af-tb-logo { font-family: 'Sora', sans-serif !important; font-size: 1.05rem; font-weight: 800; color: #4552CC !important; flex-shrink: 0; }
+  .af-tb-center { display: flex; align-items: center; gap: 9px; flex: 1; justify-content: center; overflow: hidden; }
+  .af-tb-name { font-family: 'Plus Jakarta Sans', sans-serif !important; font-weight: 700; font-size: 0.92rem; color: #212121; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
+  .af-tb-badge { padding: 3px 9px; border-radius: 99px; background: rgba(69,82,204,0.10); color: #4552CC !important; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+
+  /* ---- Tabs ---- */
+  #af-tabs { background: #fff; border-bottom: 1px solid rgba(0,0,0,0.06); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  #af-tabs::-webkit-scrollbar { display: none; }
+  .af-tabs-inner { display: flex; min-width: max-content; padding: 0 14px; }
+  .af-tab {
+    display: flex; align-items: center; gap: 6px; padding: 13px 18px;
+    font-family: 'Plus Jakarta Sans', sans-serif !important; font-size: 0.845rem; font-weight: 600;
+    color: #757575 !important; background: transparent; border: none;
+    border-bottom: 2.5px solid transparent; cursor: pointer;
+    white-space: nowrap; transition: all 0.18s; text-decoration: none !important;
+  }
+  .af-tab:hover { color: #4552CC !important; background: rgba(69,82,204,0.04); }
+  .af-tab.active { color: #4552CC !important; border-bottom-color: #4552CC; }
+
+  /* ---- Sections ---- */
+  #af-main { padding: 24px 22px; max-width: 1160px; margin: 0 auto; }
+  .af-sec { display: none; animation: af-fade 0.22s ease-out; }
+  .af-sec.active { display: block; }
+  @keyframes af-fade { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ---- Level progress bar ---- */
+  .af-level-card {
+    background: linear-gradient(135deg, #4552CC 0%, #51CBF5 100%);
+    border-radius: 20px; padding: 22px; margin-bottom: 18px; color: #fff; position: relative; overflow: hidden;
+  }
+  .af-level-card::after {
+    content: ''; position: absolute; right: -30px; top: -30px;
+    width: 160px; height: 160px; background: rgba(255,255,255,0.07); border-radius: 50%;
+  }
+  .af-level-name { font-family: 'Sora', sans-serif; font-size: 1.1rem; font-weight: 800; margin-bottom: 2px; }
+  .af-level-sales { font-size: 0.82rem; opacity: 0.85; margin-bottom: 14px; }
+  .af-progress-bar-bg { background: rgba(255,255,255,0.25); border-radius: 99px; height: 10px; margin-bottom: 8px; overflow: hidden; }
+  .af-progress-bar-fill { height: 100%; background: #fff; border-radius: 99px; transition: width 0.7s ease; }
+  .af-progress-label { font-size: 0.76rem; opacity: 0.82; display: flex; justify-content: space-between; }
+  .af-level-rate { position: absolute; top: 22px; right: 22px; font-family: 'Sora', sans-serif; font-size: 1.55rem; font-weight: 800; z-index: 2; }
+  .af-level-rate span { font-size: 0.78rem; font-weight: 600; opacity: 0.85; display: block; text-align: right; margin-top: 1px; }
+
+  /* ---- Achievements ---- */
+  .af-achievements { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 11px; margin-bottom: 18px; }
+  .af-achiev { border-radius: 14px; padding: 14px; background: #fff; border: 1.5px solid rgba(0,0,0,0.06); text-align: center; transition: border-color 0.18s; }
+  .af-achiev.unlocked { border-color: rgba(69,82,204,0.25); background: rgba(69,82,204,0.04); }
+  .af-achiev__icon { font-size: 1.8rem; margin-bottom: 7px; }
+  .af-achiev__name { font-size: 0.76rem; font-weight: 700; color: #424242; margin-bottom: 3px; }
+  .af-achiev__desc { font-size: 0.70rem; color: #9E9E9E; }
+  .af-achiev.unlocked .af-achiev__name { color: #4552CC; }
+
+  /* ---- Utilities ---- */
+  .af-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .af-muted { font-size: 0.82rem; color: #757575; }
+  .af-green { color: #27AE60; font-weight: 700; }
+
+  @media (max-width: 460px) {
+    #af-topbar { padding: 0 12px; }
+    #af-main { padding: 14px 12px; }
+    .af-page-header h2 { font-size: 1.25rem; }
+  }
+  </style>
+</head>
+<body>
+
+<!-- ==================== LOGIN ==================== -->
+<div id="af-login">
+  <div class="af-login-card">
+    <div class="af-login-logo">
+      <i class="ri-user-star-fill" style="font-size:1.5rem;color:#4552CC;"></i>
+      <span class="af-login-logo-text">PETCINGO</span>
+    </div>
+    <div class="af-login-title">Panel Afiliado</div>
+    <div class="af-login-sub">Ingresa con las credenciales asignadas por el administrador.</div>
+
+    <div class="af-field" style="margin-bottom:13px;">
+      <label class="af-label" for="af-lu">Usuario</label>
+      <input class="af-input" type="text" id="af-lu" placeholder="usuario.afiliado" autocomplete="username" autocapitalize="none" spellcheck="false">
+    </div>
+    <div class="af-field" style="margin-bottom:6px;">
+      <label class="af-label" for="af-lp">Contrasena</label>
+      <input class="af-input" type="password" id="af-lp" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" autocomplete="current-password" onkeydown="if(event.key==='Enter')afLogin()">
+    </div>
+    <div id="af-login-err"></div>
+    <button class="af-btn af-btn--primary" style="width:100%;margin-top:14px;" id="af-login-btn" onclick="afLogin()">
+      <i class="ri-login-box-line"></i> Ingresar
+    </button>
+  </div>
+</div>
+
+<!-- ==================== PANEL ==================== -->
+<div id="af-panel" style="display:none;">
+
+  <!-- TOPBAR -->
+  <div id="af-topbar">
+    <span class="af-tb-logo">PETCINGO</span>
+    <div class="af-tb-center">
+      <span class="af-tb-name" id="af-affiliate-name">Afiliado</span>
+      <span class="af-tb-badge">Afiliado</span>
+    </div>
+    <button class="af-btn af-btn--danger af-btn--sm" onclick="afLogout()">
+      <i class="ri-logout-box-line"></i> Cerrar sesion
+    </button>
+  </div>
+
+  <!-- TABS -->
+  <div id="af-tabs">
+    <div class="af-tabs-inner">
+      <button class="af-tab active" data-tab="resumen"  onclick="afTab('resumen')"><i class="ri-dashboard-line"></i> Resumen</button>
+      <button class="af-tab"        data-tab="ventas"   onclick="afTab('ventas')"><i class="ri-shopping-bag-line"></i> Ventas</button>
+      <button class="af-tab"        data-tab="finanzas" onclick="afTab('finanzas')"><i class="ri-money-dollar-circle-line"></i> Finanzas</button>
+      <button class="af-tab"        data-tab="perfil"   onclick="afTab('perfil')"><i class="ri-settings-3-line"></i> Perfil</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="af-main">
+
+    <!-- -- RESUMEN -- -->
+    <section class="af-sec active" id="sec-af-resumen">
+      <div class="af-page-header">
+        <h2><i class="ri-dashboard-line"></i> Resumen</h2>
+        <p>Tu actividad y progreso como afiliado Petcingo.</p>
+      </div>
+
+      <!-- Level progress card -->
+      <div class="af-level-card" id="af-level-card">
+        <div class="af-level-rate" id="af-level-rate">-%<span>comision</span></div>
+        <div class="af-level-name" id="af-level-name">Cargando...</div>
+        <div class="af-level-sales" id="af-level-sales"></div>
+        <div class="af-progress-bar-bg">
+          <div class="af-progress-bar-fill" id="af-progress-fill" style="width:0%;"></div>
+        </div>
+        <div class="af-progress-label">
+          <span id="af-progress-cur">0</span>
+          <span id="af-progress-next"></span>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="af-stats">
+        <div class="af-stat">
+          <div class="af-stat__icon"><i class="ri-shopping-bag-line"></i></div>
+          <div class="af-stat__value" id="af-s-ventas-mes">-</div>
+          <div class="af-stat__label">Ventas este mes</div>
+        </div>
+        <div class="af-stat">
+          <div class="af-stat__icon"><i class="ri-bar-chart-2-line"></i></div>
+          <div class="af-stat__value" id="af-s-ventas-total">-</div>
+          <div class="af-stat__label">Ventas totales</div>
+        </div>
+        <div class="af-stat">
+          <div class="af-stat__icon"><i class="ri-money-dollar-circle-line"></i></div>
+          <div class="af-stat__value" id="af-s-monto-mes">-</div>
+          <div class="af-stat__label">Monto generado (Bs)</div>
+        </div>
+        <div class="af-stat">
+          <div class="af-stat__icon"><i class="ri-coin-line"></i></div>
+          <div class="af-stat__value" id="af-s-comisiones">-</div>
+          <div class="af-stat__label">Comisiones pendientes (Bs)</div>
+        </div>
+      </div>
+
+      <!-- Achievements -->
+      <div class="af-card">
+        <div class="af-sec-title"><i class="ri-trophy-line"></i> Logros</div>
+        <div class="af-achievements" id="af-achievements">
+          <div class="af-achiev" id="ach-primera">
+            <div class="af-achiev__icon">&#127942;</div>
+            <div class="af-achiev__name">Primera venta</div>
+            <div class="af-achiev__desc">Completa tu primera venta</div>
+          </div>
+          <div class="af-achiev" id="ach-plata">
+            <div class="af-achiev__icon">&#129352;</div>
+            <div class="af-achiev__name">Nivel Plata</div>
+            <div class="af-achiev__desc">Alcanza 26 ventas</div>
+          </div>
+          <div class="af-achiev" id="ach-oro">
+            <div class="af-achiev__icon">&#129351;</div>
+            <div class="af-achiev__name">Nivel Oro</div>
+            <div class="af-achiev__desc">Alcanza 101 ventas</div>
+          </div>
+          <div class="af-achiev" id="ach-diamante">
+            <div class="af-achiev__icon">&#128142;</div>
+            <div class="af-achiev__name">Nivel Diamante</div>
+            <div class="af-achiev__desc">Alcanza 251 ventas</div>
+          </div>
+          <div class="af-achiev" id="ach-cien">
+            <div class="af-achiev__icon">&#127881;</div>
+            <div class="af-achiev__name">100 ventas</div>
+            <div class="af-achiev__desc">Supera las 100 ventas</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Referral link -->
+      <div class="af-card">
+        <div class="af-sec-title"><i class="ri-link"></i> Enlace de referido</div>
+        <p class="af-muted" style="margin-bottom:11px;">Comparte este enlace y gana comision por cada venta.</p>
+        <div class="af-ref-box">
+          <input class="af-ref-input" type="text" id="af-ref-resumen" readonly>
+          <button class="af-btn af-btn--secondary af-btn--sm" onclick="afCopyRef()"><i class="ri-file-copy-line"></i> Copiar</button>
+        </div>
+      </div>
+
+      <!-- Recent sales -->
+      <div class="af-card">
+        <div class="af-sec-title"><i class="ri-history-line"></i> Ultimas ventas</div>
+        <div class="af-table-wrap">
+          <table class="af-table">
+            <thead><tr><th>Fecha</th><th>Codigo</th><th>Plan</th><th>Monto</th><th>Comision</th></tr></thead>
+            <tbody id="af-tb-recent"><tr><td colspan="5"><div class="af-empty">Cargando...</div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- -- VENTAS -- -->
+    <section class="af-sec" id="sec-af-ventas">
+      <div class="af-page-header">
+        <h2><i class="ri-shopping-bag-line"></i> Ventas</h2>
+        <p>Historial de placas vendidas a traves de tu enlace.</p>
+      </div>
+
+      <div class="af-card">
+        <div class="af-sec-title"><i class="ri-link"></i> Tu enlace de referido</div>
+        <p class="af-muted" style="margin-bottom:11px;">Por cada venta generada ganas comision segun tu nivel.</p>
+        <div class="af-ref-box">
+          <input class="af-ref-input" type="text" id="af-ref-ventas" readonly>
+          <button class="af-btn af-btn--secondary af-btn--sm" onclick="afCopyRef()"><i class="ri-file-copy-line"></i> Copiar</button>
+        </div>
+      </div>
+
+      <div class="af-row" style="margin-bottom:13px;">
+        <select class="af-input" id="af-filter-month" style="max-width:170px;" onchange="afLoadVentas()">
+          <option value="">Todos los meses</option>
+        </select>
+        <select class="af-input" id="af-filter-status" style="max-width:170px;" onchange="afLoadVentas()">
+          <option value="">Todos los estados</option>
+          <option value="confirmed">Confirmado</option>
+          <option value="pending">Pendiente</option>
+          <option value="processing">Procesando</option>
+        </select>
+      </div>
+
+      <div class="af-card">
+        <div class="af-table-wrap">
+          <table class="af-table">
+            <thead><tr><th>Fecha</th><th>Codigo</th><th>Plan</th><th>Total</th><th>Comision</th><th>Estado</th></tr></thead>
+            <tbody id="af-tb-ventas"><tr><td colspan="6"><div class="af-empty">Cargando...</div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- -- FINANZAS -- -->
+    <section class="af-sec" id="sec-af-finanzas">
+      <div class="af-page-header">
+        <h2><i class="ri-money-dollar-circle-line"></i> Finanzas</h2>
+        <p>Comisiones y configuracion de pago.</p>
+      </div>
+
+      <div class="af-stats" style="grid-template-columns:repeat(auto-fit,minmax(195px,1fr));">
+        <div class="af-stat">
+          <div class="af-stat__icon"><i class="ri-time-line"></i></div>
+          <div class="af-stat__value" id="af-fin-pendiente">-</div>
+          <div class="af-stat__label">Comisiones pendientes (Bs)</div>
+        </div>
+        <div class="af-stat">
+          <div class="af-stat__icon"><i class="ri-checkbox-circle-line"></i></div>
+          <div class="af-stat__value" id="af-fin-pagado">-</div>
+          <div class="af-stat__label">Total pagado (Bs)</div>
+        </div>
+        <div class="af-stat">
+          <div class="af-stat__icon"><i class="ri-calendar-check-line"></i></div>
+          <div class="af-stat__value" id="af-fin-ultimo">-</div>
+          <div class="af-stat__label">Ultimo pago recibido</div>
+        </div>
+      </div>
+
+      <div class="af-card">
+        <div class="af-sec-title"><i class="ri-history-line"></i> Historial de comisiones</div>
+        <div class="af-table-wrap">
+          <table class="af-table">
+            <thead><tr><th>Fecha</th><th>Descripcion</th><th>Monto (Bs)</th><th>Tasa</th><th>Estado</th></tr></thead>
+            <tbody id="af-tb-comisiones"><tr><td colspan="5"><div class="af-empty">Cargando...</div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="af-card">
+        <div class="af-sec-title"><i class="ri-bank-line"></i> Cuenta bancaria</div>
+        <p class="af-muted" style="margin-bottom:15px;">Ingresa tus datos para recibir pagos de comisiones.</p>
+        <div class="af-grid-2" style="margin-bottom:12px;">
+          <div class="af-field">
+            <label class="af-label">Banco</label>
+            <input class="af-input" type="text" id="af-bank-name" placeholder="Ej: Banco Mercantil Santa Cruz">
+          </div>
+          <div class="af-field">
+            <label class="af-label">Tipo de cuenta</label>
+            <select class="af-input" id="af-bank-type">
+              <option value="">-- Seleccionar --</option>
+              <option value="ahorro">Caja de ahorro</option>
+              <option value="corriente">Cuenta corriente</option>
+            </select>
+          </div>
+          <div class="af-field">
+            <label class="af-label">Numero de cuenta</label>
+            <input class="af-input" type="text" id="af-bank-number" placeholder="Ej: 1234567890">
+          </div>
+          <div class="af-field">
+            <label class="af-label">Titular</label>
+            <input class="af-input" type="text" id="af-bank-owner" placeholder="Nombre del titular">
+          </div>
+        </div>
+        <button class="af-btn af-btn--primary" onclick="afSaveBankAccount()">
+          <i class="ri-save-line"></i> Guardar datos bancarios
+        </button>
+      </div>
+    </section>
+
+    <!-- -- PERFIL -- -->
+    <section class="af-sec" id="sec-af-perfil">
+      <div class="af-page-header">
+        <h2><i class="ri-settings-3-line"></i> Mi Perfil</h2>
+        <p>Actualiza tu informacion de afiliado.</p>
+      </div>
+
+      <div class="af-card">
+        <div class="af-sec-title"><i class="ri-user-line"></i> Informacion personal</div>
+        <div class="af-grid-2" style="margin-bottom:12px;">
+          <div class="af-field">
+            <label class="af-label">Nombre completo</label>
+            <input class="af-input" type="text" id="af-prof-name" placeholder="Tu nombre completo">
+          </div>
+          <div class="af-field">
+            <label class="af-label">Telefono</label>
+            <input class="af-input" type="text" id="af-prof-phone" placeholder="Ej: 71234567">
+          </div>
+          <div class="af-field">
+            <label class="af-label">Email</label>
+            <input class="af-input" type="email" id="af-prof-email" placeholder="email@ejemplo.com">
+          </div>
+          <div class="af-field">
+            <label class="af-label">Ciudad</label>
+            <input class="af-input" type="text" id="af-prof-city" placeholder="Ej: Santa Cruz">
+          </div>
+        </div>
+        <div class="af-field" style="margin-bottom:16px;">
+          <label class="af-label">Enlace de referido</label>
+          <div class="af-ref-box">
+            <input class="af-ref-input" type="text" id="af-ref-perfil" readonly>
+            <button class="af-btn af-btn--secondary af-btn--sm" onclick="afCopyRef()"><i class="ri-file-copy-line"></i> Copiar</button>
+          </div>
+        </div>
+        <button class="af-btn af-btn--primary" onclick="afSaveProfile()">
+          <i class="ri-save-line"></i> Guardar cambios
+        </button>
+      </div>
+    </section>
+
+  </div><!-- #af-main -->
+</div><!-- #af-panel -->
+
+<!-- Toast -->
+<div id="af-toast"></div>
+
+<!-- ==================== SCRIPTS ==================== -->
+<script>
+(function () {
+  'use strict';
+
+  /* -- Firebase init -- */
+  var _fbApp = null;
+  var _db    = null;
+  function getApp() {
+    if (_fbApp) return _fbApp;
+    var cfg = {
+      apiKey:            'AIzaSyAEE3yLFFsJTMORNFLYZWW2_DNHwzF0hE8',
+      authDomain:        'petcingo-43096.firebaseapp.com',
+      projectId:         'petcingo-43096',
+      storageBucket:     'petcingo-43096.firebasestorage.app',
+      messagingSenderId: '679546185536',
+      appId:             '1:679546185536:web:ceccd210b7c73b296f7ca5'
+    };
+    try { _fbApp = firebase.app('petcingo-af'); }
+    catch(e) { _fbApp = firebase.initializeApp(cfg, 'petcingo-af'); }
+    return _fbApp;
+  }
+  function db() {
+    if (!_db) _db = getApp().firestore();
+    return _db;
+  }
+
+  /* -- State -- */
+  var _aid  = null; /* affiliate id */
+  var _adat = null; /* affiliate data object */
+  var _ventasAll   = [];
+  var _toastTimer  = null;
+  var _levels      = [
+    { name: 'Bronce',   minSales: 0,   rate: 8  },
+    { name: 'Plata',    minSales: 26,  rate: 12 },
+    { name: 'Oro',      minSales: 101, rate: 16 },
+    { name: 'Diamante', minSales: 251, rate: 20 }
+  ];
+
+  /* -- XSS escape -- */
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  /* -- Toast -- */
+  function toast(msg, type) {
+    var el = document.getElementById('af-toast');
+    if (!el) return;
+    el.textContent = msg;
+    el.className = 'af-show af-' + (type || 'info');
+    clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(function () { el.className = ''; }, 3200);
+  }
+
+  /* -- Helpers -- */
+  function $txt(id, val) { var el = document.getElementById(id); if (el) el.textContent = String(val); }
+  function $val(id, val) { var el = document.getElementById(id); if (el) el.value = String(val == null ? '' : val); }
+  function $gval(id)     { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
+  function refUrl()      { return 'https://prueb2.dashnexpages.net/checkout/?ref=' + (_aid || ''); }
+
+  function setRefLinks() {
+    var url = refUrl();
+    ['af-ref-resumen','af-ref-ventas','af-ref-perfil'].forEach(function (id) { $val(id, url); });
+  }
+
+  function tsDate(ts) {
+    if (!ts) return '-';
+    var d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleDateString('es-BO');
+  }
+
+  /* -- Level helpers -- */
+  function getLevelForSales(sales) {
+    var level = _levels[0];
+    for (var i = 0; i < _levels.length; i++) {
+      if (sales >= _levels[i].minSales) level = _levels[i];
+    }
+    return level;
+  }
+
+  function getNextLevel(sales) {
+    for (var i = 0; i < _levels.length; i++) {
+      if (_levels[i].minSales > sales) return _levels[i];
+    }
+    return null;
+  }
+
+  /* ====================================
+     LOGIN / LOGOUT
+     ==================================== */
+  window.afLogin = function () {
+    var username = $gval('af-lu').toLowerCase();
+    var password = $gval('af-lp');
+    var errEl    = document.getElementById('af-login-err');
+    var btn      = document.getElementById('af-login-btn');
+    errEl.style.display = 'none';
+    if (!username || !password) { showErr('Completa todos los campos.'); return; }
+    btn.disabled = true;
+    btn.innerHTML = '<i class="ri-loader-4-line"></i> Verificando...';
+
+    db().collection('affiliates').where('username', '==', username).limit(5).get()
+      .then(function (snap) {
+        var found = null;
+        snap.forEach(function (doc) {
+          var d = doc.data();
+          if (String(d.password) === String(password)) found = { id: doc.id, data: d };
+        });
+        if (!found) { showErr('Credenciales incorrectas.'); resetBtn(); return; }
+        if (found.data.status === 'banned' || found.data.status === 'suspended') {
+          var reason = found.data.status === 'banned' ? (found.data.bannedReason || '') : (found.data.suspendedReason || '');
+          var statusMsg = found.data.status === 'banned' ? 'Tu cuenta ha sido baneada permanentemente' : 'Tu cuenta ha sido suspendida temporalmente';
+          showErr(statusMsg + (reason ? '. Motivo: ' + reason : '') + '. Contacta al administrador.');
+          resetBtn(); return;
+        }
+        _aid  = found.id;
+        _adat = found.data;
+        sessionStorage.setItem('af_sid',  _aid);
+        sessionStorage.setItem('af_sdat', JSON.stringify(_adat));
+        afLoadLevels(function () { showPanel(); });
+      })
+      .catch(function (e) { showErr('Error de conexion: ' + e.message); resetBtn(); });
+
+    function showErr(msg) {
+      errEl.style.display = 'block';
+      errEl.textContent   = msg;
+    }
+    function resetBtn() {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="ri-login-box-line"></i> Ingresar';
+    }
+  };
+
+  window.afLogout = function () {
+    sessionStorage.removeItem('af_sid');
+    sessionStorage.removeItem('af_sdat');
+    _aid = null; _adat = null;
+    document.getElementById('af-panel').style.display = 'none';
+    document.getElementById('af-login').style.display = 'flex';
+    $val('af-lu', ''); $val('af-lp', '');
+  };
+
+  function showPanel() {
+    document.getElementById('af-login').style.display = 'none';
+    document.getElementById('af-panel').style.display = 'block';
+    $txt('af-affiliate-name', _adat.name || 'Afiliado');
+    setRefLinks();
+    afLoadResumen();
+    afPopulateMonths();
+  }
+
+  /* -- Load levels from Firestore (optional override) -- */
+  function afLoadLevels(cb) {
+    db().collection('config').doc('affiliate_levels').get()
+      .then(function (doc) {
+        if (doc.exists && Array.isArray(doc.data().levels) && doc.data().levels.length) {
+          _levels = doc.data().levels;
+        }
+      })
+      .catch(function () {})
+      .then(function () { if (cb) cb(); });
+  }
+
+  /* ====================================
+     TAB SWITCHING
+     ==================================== */
+  window.afTab = function (tab) {
+    document.querySelectorAll('.af-tab').forEach(function (b) {
+      b.classList.toggle('active', b.getAttribute('data-tab') === tab);
+    });
+    document.querySelectorAll('.af-sec').forEach(function (s) {
+      s.classList.toggle('active', s.id === 'sec-af-' + tab);
+    });
+    if (tab === 'ventas')   afLoadVentas();
+    if (tab === 'finanzas') afLoadFinanzas();
+    if (tab === 'perfil')   afFillProfile();
+  };
+
+  /* ====================================
+     RESUMEN
+     ==================================== */
+  function afLoadResumen() {
+    var now        = new Date();
+    var monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    var monthEnd   = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+
+    db().collection('orders').where('ref', '==', _aid).get()
+      .then(function (snap) {
+        var countM = 0, montoM = 0, total = 0, rows = [];
+        snap.forEach(function (doc) {
+          var d = doc.data();
+          var ts = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : null;
+          total++;
+          if (ts && ts >= monthStart && ts < monthEnd) { countM++; montoM += parseFloat(d.total || 0); }
+          rows.push({ id: doc.id, data: d });
+        });
+        _ventasAll = rows;
+        $txt('af-s-ventas-mes',   countM);
+        $txt('af-s-ventas-total', total);
+        $txt('af-s-monto-mes',    'Bs ' + montoM.toFixed(0));
+        rows.sort(function (a, b) {
+          var ta = a.data.createdAt && a.data.createdAt.toDate ? a.data.createdAt.toDate() : 0;
+          var tb = b.data.createdAt && b.data.createdAt.toDate ? b.data.createdAt.toDate() : 0;
+          return tb - ta;
+        });
+        renderRecentSales(rows.slice(0, 5));
+        renderLevelProgress(total);
+        renderAchievements(total);
+      }).catch(function (e) { toast('Error ventas: ' + e.message, 'error'); });
+
+    db().collection('commissions').where('entityId', '==', _aid).where('status', '==', 'pendiente').get()
+      .then(function (snap) {
+        var total = 0;
+        snap.forEach(function (d) { total += parseFloat(d.data().amount || 0); });
+        $txt('af-s-comisiones', 'Bs ' + total.toFixed(0));
+      }).catch(function () {});
+  }
+
+  function renderLevelProgress(totalSales) {
+    var level = getLevelForSales(totalSales);
+    var next  = getNextLevel(totalSales);
+
+    $txt('af-level-name',  level.name);
+    $txt('af-level-rate',  level.rate + '%');
+    document.getElementById('af-level-rate').innerHTML = level.rate + '%<span>comision</span>';
+
+    if (next) {
+      var from    = level.minSales;
+      var to      = next.minSales;
+      var pct     = Math.min(100, Math.round(((totalSales - from) / (to - from)) * 100));
+      document.getElementById('af-progress-fill').style.width = pct + '%';
+      $txt('af-level-sales',    totalSales + ' ventas totales');
+      $txt('af-progress-cur',   totalSales + ' ventas');
+      $txt('af-progress-next',  'Siguiente: ' + next.name + ' (' + next.minSales + ')');
+    } else {
+      document.getElementById('af-progress-fill').style.width = '100%';
+      $txt('af-level-sales',    totalSales + ' ventas totales - Nivel maximo alcanzado!');
+      $txt('af-progress-cur',   totalSales + ' ventas');
+      $txt('af-progress-next',  'Nivel maximo');
+    }
+  }
+
+  function renderAchievements(totalSales) {
+    function unlock(id) {
+      var el = document.getElementById(id);
+      if (el) el.classList.add('unlocked');
+    }
+    if (totalSales >= 1)   unlock('ach-primera');
+    if (totalSales >= 26)  unlock('ach-plata');
+    if (totalSales >= 101) unlock('ach-oro');
+    if (totalSales >= 251) unlock('ach-diamante');
+    if (totalSales >= 100) unlock('ach-cien');
+  }
+
+  function renderRecentSales(rows) {
+    var tbody = document.getElementById('af-tb-recent');
+    if (!tbody) return;
+    if (!rows.length) { tbody.innerHTML = '<tr><td colspan="5"><div class="af-empty">Sin ventas registradas.</div></td></tr>'; return; }
+    var level = getLevelForSales(_ventasAll.length);
+    var rate  = (_adat && _adat.commissionRate != null) ? parseFloat(_adat.commissionRate) : level.rate;
+    var h = '';
+    rows.forEach(function (r) {
+      var d = r.data, total = parseFloat(d.total || 0), com = (total * rate / 100).toFixed(0);
+      h += '<tr><td>' + esc(tsDate(d.createdAt)) + '</td>';
+      h += '<td><code style="font-size:0.78rem;color:#4552CC;">' + esc(d.activationCode || '-') + '</code></td>';
+      h += '<td>' + esc(d.planName || '-') + '</td>';
+      h += '<td>Bs ' + total.toFixed(0) + '</td>';
+      h += '<td class="af-green">Bs ' + com + '</td></tr>';
+    });
+    tbody.innerHTML = h;
+  }
+
+  /* ====================================
+     COPY REF LINK
+     ==================================== */
+  window.afCopyRef = function () {
+    var url = refUrl();
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(function () { toast('Enlace copiado.', 'success'); });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = url; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+      toast('Enlace copiado.', 'success');
+    }
+  };
+
+  /* ====================================
+     VENTAS
+     ==================================== */
+  function afPopulateMonths() {
+    var sel = document.getElementById('af-filter-month');
+    if (!sel) return;
+    var now = new Date();
+    for (var i = 0; i < 12; i++) {
+      var d   = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      var lbl = d.toLocaleDateString('es-BO', { month: 'long', year: 'numeric' });
+      var val = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+      var opt = document.createElement('option');
+      opt.value = val; opt.textContent = lbl;
+      sel.appendChild(opt);
+    }
+  }
+
+  window.afLoadVentas = function () {
+    var tbody = document.getElementById('af-tb-ventas');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="6"><div class="af-empty">Cargando...</div></td></tr>';
+
+    db().collection('orders').where('ref', '==', _aid).get()
+      .then(function (snap) {
+        var rows = [];
+        snap.forEach(function (doc) { rows.push({ id: doc.id, data: doc.data() }); });
+        _ventasAll = rows;
+        renderVentas(rows);
+      }).catch(function (e) { tbody.innerHTML = '<tr><td colspan="6"><div class="af-empty">Error: ' + esc(e.message) + '</div></td></tr>'; });
+  };
+
+  function renderVentas(allRows) {
+    var tbody   = document.getElementById('af-tb-ventas');
+    var fMonth  = $gval('af-filter-month');
+    var fStatus = $gval('af-filter-status');
+    var level   = getLevelForSales(_ventasAll.length);
+    var rate    = (_adat && _adat.commissionRate != null) ? parseFloat(_adat.commissionRate) : level.rate;
+
+    var rows = allRows.filter(function (r) {
+      var d = r.data;
+      if (fStatus && d.status !== fStatus) return false;
+      if (fMonth) {
+        var ts = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : null;
+        if (!ts) return false;
+        var key = ts.getFullYear() + '-' + String(ts.getMonth() + 1).padStart(2, '0');
+        if (key !== fMonth) return false;
+      }
+      return true;
+    });
+
+    rows.sort(function (a, b) {
+      var ta = a.data.createdAt && a.data.createdAt.toDate ? a.data.createdAt.toDate() : 0;
+      var tb = b.data.createdAt && b.data.createdAt.toDate ? b.data.createdAt.toDate() : 0;
+      return tb - ta;
+    });
+
+    if (!rows.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="af-empty">Sin ventas para el filtro seleccionado.</div></td></tr>'; return; }
+    var h = '';
+    rows.forEach(function (r) {
+      var d = r.data, total = parseFloat(d.total || 0), com = (total * rate / 100).toFixed(0);
+      h += '<tr>';
+      h += '<td>' + esc(tsDate(d.createdAt)) + '</td>';
+      h += '<td><code style="font-size:0.78rem;color:#4552CC;">' + esc(d.activationCode || '-') + '</code></td>';
+      h += '<td>' + esc(d.planName || '-') + '</td>';
+      h += '<td>Bs ' + total.toFixed(0) + '</td>';
+      h += '<td class="af-green">Bs ' + com + '</td>';
+      h += '<td><span class="af-badge af-badge--' + esc(d.status || 'pending') + '">' + esc(d.status || '-') + '</span></td>';
+      h += '</tr>';
+    });
+    tbody.innerHTML = h;
+  }
+
+  /* ====================================
+     FINANZAS
+     ==================================== */
+  function afLoadFinanzas() {
+    var tbody = document.getElementById('af-tb-comisiones');
+    if (tbody) tbody.innerHTML = '<tr><td colspan="5"><div class="af-empty">Cargando...</div></td></tr>';
+
+    db().collection('commissions').where('entityId', '==', _aid).get()
+      .then(function (snap) {
+        var pending = 0, paid = 0, lastPaidDate = null, rows = [];
+        snap.forEach(function (doc) {
+          var d = doc.data();
+          rows.push({ id: doc.id, data: d });
+          var amt = parseFloat(d.amount || 0);
+          if (d.status === 'pendiente') {
+            pending += amt;
+          } else if (d.status === 'pagado') {
+            paid += amt;
+            var pa = d.paidAt && d.paidAt.toDate ? d.paidAt.toDate() : null;
+            if (pa && (!lastPaidDate || pa > lastPaidDate)) lastPaidDate = pa;
+          }
+        });
+        $txt('af-fin-pendiente', 'Bs ' + pending.toFixed(0));
+        $txt('af-fin-pagado',    'Bs ' + paid.toFixed(0));
+        $txt('af-fin-ultimo',    lastPaidDate ? lastPaidDate.toLocaleDateString('es-BO') : '-');
+
+        rows.sort(function (a, b) {
+          var ta = a.data.createdAt && a.data.createdAt.toDate ? a.data.createdAt.toDate() : 0;
+          var tb = b.data.createdAt && b.data.createdAt.toDate ? b.data.createdAt.toDate() : 0;
+          return tb - ta;
+        });
+        renderComisiones(rows);
+      }).catch(function (e) { toast('Error al cargar finanzas: ' + e.message, 'error'); });
+
+    if (_adat && _adat.bankAccount) {
+      var b = _adat.bankAccount;
+      $val('af-bank-name',   b.bankName   || '');
+      $val('af-bank-type',   b.bankType   || '');
+      $val('af-bank-number', b.bankNumber || '');
+      $val('af-bank-owner',  b.bankOwner  || '');
+    }
+  }
+
+  function renderComisiones(rows) {
+    var tbody = document.getElementById('af-tb-comisiones');
+    if (!tbody) return;
+    if (!rows.length) { tbody.innerHTML = '<tr><td colspan="5"><div class="af-empty">Sin comisiones registradas.</div></td></tr>'; return; }
+    var h = '';
+    rows.forEach(function (r) {
+      var d = r.data;
+      h += '<tr>';
+      h += '<td>' + esc(tsDate(d.createdAt)) + '</td>';
+      h += '<td>' + esc(d.channel || d.description || 'Venta referida') + '</td>';
+      h += '<td style="font-weight:700;">Bs ' + parseFloat(d.amount || 0).toFixed(0) + '</td>';
+      h += '<td>' + (d.rate != null ? d.rate + '%' : '-') + '</td>';
+      h += '<td><span class="af-badge af-badge--' + esc(d.status || 'pendiente') + '">' + esc(d.status || 'pendiente') + '</span></td>';
+      h += '</tr>';
+    });
+    tbody.innerHTML = h;
+  }
+
+  window.afSaveBankAccount = function () {
+    var bankData = {
+      bankName:   $gval('af-bank-name'),
+      bankType:   $gval('af-bank-type'),
+      bankNumber: $gval('af-bank-number'),
+      bankOwner:  $gval('af-bank-owner')
+    };
+    if (!bankData.bankName || !bankData.bankNumber) { toast('Completa banco y numero de cuenta.', 'error'); return; }
+    db().collection('affiliates').doc(_aid).update({ bankAccount: bankData })
+      .then(function () {
+        _adat.bankAccount = bankData;
+        sessionStorage.setItem('af_sdat', JSON.stringify(_adat));
+        toast('Datos bancarios guardados.', 'success');
+      }).catch(function (e) { toast('Error: ' + e.message, 'error'); });
+  };
+
+  /* ====================================
+     PERFIL
+     ==================================== */
+  function afFillProfile() {
+    if (!_adat) return;
+    $val('af-prof-name',  _adat.name  || '');
+    $val('af-prof-phone', _adat.phone || '');
+    $val('af-prof-email', _adat.email || '');
+    $val('af-prof-city',  _adat.city  || '');
+  }
+
+  window.afSaveProfile = function () {
+    var updates = {
+      name:  $gval('af-prof-name'),
+      phone: $gval('af-prof-phone'),
+      email: $gval('af-prof-email'),
+      city:  $gval('af-prof-city')
+    };
+    if (!updates.name) { toast('El nombre es obligatorio.', 'error'); return; }
+    db().collection('affiliates').doc(_aid).update(updates)
+      .then(function () {
+        var keys = Object.keys(updates);
+        for (var i = 0; i < keys.length; i++) { _adat[keys[i]] = updates[keys[i]]; }
+        sessionStorage.setItem('af_sdat', JSON.stringify(_adat));
+        $txt('af-affiliate-name', _adat.name || 'Afiliado');
+        toast('Perfil actualizado.', 'success');
+      }).catch(function (e) { toast('Error: ' + e.message, 'error'); });
+  };
+
+  /* ====================================
+     SESSION RESTORE
+     ==================================== */
+  (function () {
+    var savedId   = sessionStorage.getItem('af_sid');
+    var savedData = sessionStorage.getItem('af_sdat');
+    if (!savedId || !savedData) return;
+    try {
+      _aid  = savedId;
+      _adat = JSON.parse(savedData);
+      if (_adat.status === 'banned' || _adat.status === 'suspended') {
+        sessionStorage.removeItem('af_sid');
+        sessionStorage.removeItem('af_sdat');
+        return;
+      }
+      afLoadLevels(function () { showPanel(); });
+    } catch (e) {
+      sessionStorage.removeItem('af_sid');
+      sessionStorage.removeItem('af_sdat');
+    }
+  }());
+
+}());
+</script>
+</body>
+</html>

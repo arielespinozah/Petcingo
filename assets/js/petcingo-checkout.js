@@ -569,24 +569,58 @@
         });
       }
 
-      if (refCode) {
-        batch.set(db.collection('commissions').doc(), {
-          ref:            refCode,
-          activationCode: activationCode,
-          plan:           selectedPlan.key,
-          price:          selectedPlan.price,
-          status:         'pending',
-          createdAt:      now
-        });
-      }
-
       if (appliedPromo) {
         batch.update(db.collection('promotions').doc(appliedPromo.id), {
           usedCount: firebase.firestore.FieldValue.increment(1)
         });
       }
 
-      return batch.commit();
+      /* Commission written after ref entity lookup (dynamic rate + ban check) */
+      function commitWithCommission(entity) {
+        if (entity && entity.rate != null) {
+          var commAmount = parseFloat((finalTotal * entity.rate / 100).toFixed(2));
+          batch.set(db.collection('commissions').doc(), {
+            entityId:       refCode,
+            entityName:     entity.name || refCode,
+            channel:        entity.type || 'referido',
+            ref:            refCode,
+            activationCode: activationCode,
+            plan:           selectedPlan.key,
+            price:          selectedPlan.price,
+            amount:         commAmount,
+            rate:           entity.rate,
+            status:         'pendiente',
+            dueDate:        now,
+            createdAt:      now
+          });
+        }
+        return batch.commit();
+      }
+
+      if (!refCode) return batch.commit();
+
+      /* Lookup shelter first, then affiliates; skip if banned */
+      return db.collection('shelters').doc(refCode).get().then(function(sdoc) {
+        if (sdoc.exists) {
+          var sd = sdoc.data();
+          if (sd.status === 'banned') return batch.commit();
+          return commitWithCommission({
+            rate: sd.commissionRate != null ? sd.commissionRate : 20,
+            name: sd.name || refCode,
+            type: 'refugio'
+          });
+        }
+        return db.collection('affiliates').doc(refCode).get().then(function(adoc) {
+          if (!adoc.exists) return batch.commit();
+          var ad = adoc.data();
+          if (ad.status === 'banned') return batch.commit();
+          return commitWithCommission({
+            rate: ad.commissionRate != null ? ad.commissionRate : 10,
+            name: ad.name || refCode,
+            type: 'afiliado'
+          });
+        });
+      }).catch(function() { return batch.commit(); });
     }).then(function () {
       setUploadLoading(false);
       if (qrTimer) clearInterval(qrTimer);

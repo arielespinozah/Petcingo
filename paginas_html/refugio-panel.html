@@ -271,8 +271,9 @@
       <button class="rp-tab active" data-tab="resumen"    onclick="rpTab('resumen')"><i class="ri-dashboard-line"></i> Resumen</button>
       <button class="rp-tab"        data-tab="adopciones" onclick="rpTab('adopciones')"><i class="ri-heart-line"></i> Adopciones</button>
       <button class="rp-tab"        data-tab="ventas"     onclick="rpTab('ventas')"><i class="ri-shopping-bag-line"></i> Ventas</button>
-      <button class="rp-tab"        data-tab="finanzas"   onclick="rpTab('finanzas')"><i class="ri-money-dollar-circle-line"></i> Finanzas</button>
-      <button class="rp-tab"        data-tab="perfil"     onclick="rpTab('perfil')"><i class="ri-settings-3-line"></i> Perfil</button>
+      <button class="rp-tab"        data-tab="finanzas"     onclick="rpTab('finanzas')"><i class="ri-money-dollar-circle-line"></i> Finanzas</button>
+      <button class="rp-tab"        data-tab="solicitudes" onclick="rpTab('solicitudes')"><i class="ri-file-list-line"></i> Solicitudes</button>
+      <button class="rp-tab"        data-tab="perfil"      onclick="rpTab('perfil')"><i class="ri-settings-3-line"></i> Perfil</button>
     </div>
   </div>
 
@@ -563,8 +564,60 @@
       </div>
     </section>
 
+    <!-- -- SOLICITUDES -- -->
+    <section class="rp-sec" id="sec-solicitudes">
+      <div class="rp-page-header">
+        <h2><i class="ri-file-list-line"></i> Solicitudes de Adopcion</h2>
+        <p>Revisa y gestiona las solicitudes recibidas para tus animales.</p>
+      </div>
+
+      <div class="rp-row" style="margin-bottom:13px;">
+        <select class="rp-input" id="sol-filter-status" style="max-width:180px;" onchange="rpLoadSolicitudes()">
+          <option value="">Todos los estados</option>
+          <option value="pendiente">Pendiente</option>
+          <option value="aprobada">Aprobada</option>
+          <option value="rechazada">Rechazada</option>
+        </select>
+        <button class="rp-btn rp-btn--secondary rp-btn--sm" onclick="rpLoadSolicitudes()">
+          <i class="ri-refresh-line"></i> Actualizar
+        </button>
+      </div>
+
+      <div class="rp-card">
+        <div class="rp-table-wrap">
+          <table class="rp-table">
+            <thead>
+              <tr>
+                <th>Animal</th>
+                <th>Solicitante</th>
+                <th>Contacto</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tb-solicitudes">
+              <tr><td colspan="6"><div class="rp-empty">Cargando...</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
   </div><!-- #rp-main -->
 </div><!-- #rp-panel -->
+
+<!-- Modal: Detalle solicitud -->
+<div id="sol-modal" style="display:none;position:fixed;inset:0;z-index:9990;background:rgba(0,0,0,0.45);align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#fff;border-radius:22px;max-width:560px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.22);position:relative;">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 22px 14px;border-bottom:1px solid rgba(0,0,0,0.06);">
+      <span style="font-family:'Sora',sans-serif;font-size:1rem;font-weight:800;color:#212121;">Detalle de Solicitud</span>
+      <button onclick="rpCloseSolModal()" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:#757575;line-height:1;"><i class="ri-close-line"></i></button>
+    </div>
+    <div id="sol-modal-body" style="padding:20px 22px;"></div>
+    <div id="sol-modal-actions" style="padding:0 22px 20px;display:flex;gap:10px;flex-wrap:wrap;"></div>
+  </div>
+</div>
 
 <!-- Toast -->
 <div id="rp-toast"></div>
@@ -688,6 +741,12 @@
           if (String(d.password) === String(password)) found = { id: doc.id, data: d };
         });
         if (!found) { showErr('Credenciales incorrectas.'); resetBtn(); return; }
+        if (found.data.status === 'banned' || found.data.status === 'suspended') {
+          var reason = found.data.status === 'banned' ? (found.data.bannedReason || '') : (found.data.suspendedReason || '');
+          var statusMsg = found.data.status === 'banned' ? 'Tu cuenta ha sido baneada permanentemente' : 'Tu cuenta ha sido suspendida temporalmente';
+          showErr(statusMsg + (reason ? '. Motivo: ' + reason : '') + '. Contacta al administrador.');
+          resetBtn(); return;
+        }
         _sid  = found.id;
         _sdat = found.data;
         sessionStorage.setItem('rp_sid',  _sid);
@@ -734,10 +793,11 @@
     document.querySelectorAll('.rp-sec').forEach(function (s) {
       s.classList.toggle('active', s.id === 'sec-' + tab);
     });
-    if (tab === 'adopciones') rpLoadPets();
-    if (tab === 'ventas')     rpLoadVentas();
-    if (tab === 'finanzas')   rpLoadFinanzas();
-    if (tab === 'perfil')     rpFillProfile();
+    if (tab === 'adopciones')  rpLoadPets();
+    if (tab === 'ventas')      rpLoadVentas();
+    if (tab === 'finanzas')    rpLoadFinanzas();
+    if (tab === 'solicitudes') rpLoadSolicitudes();
+    if (tab === 'perfil')      rpFillProfile();
   };
 
   /* ====================================
@@ -1176,6 +1236,136 @@
   };
 
   /* ====================================
+     SOLICITUDES
+     ==================================== */
+  var _solCache = [];
+
+  function solStatusBadge(s) {
+    var map = { pendiente: 'pendiente', aprobada: 'pagado', rechazada: 'danger' };
+    var cls = map[s] || 'pendiente';
+    if (s === 'rechazada') return '<span style="display:inline-flex;align-items:center;padding:3px 9px;border-radius:99px;font-size:0.70rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;background:#FFEBEE;color:#C62828;border:1px solid rgba(198,40,40,0.3);">' + esc(s) + '</span>';
+    return '<span class="rp-badge rp-badge--' + cls + '">' + esc(s) + '</span>';
+  }
+
+  window.rpLoadSolicitudes = function () {
+    var tbody = document.getElementById('tb-solicitudes');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="6"><div class="rp-empty">Cargando...</div></td></tr>';
+    var filterStatus = document.getElementById('sol-filter-status') ? document.getElementById('sol-filter-status').value : '';
+
+    db().collection('adoption_requests').where('shelterId', '==', _sid).get()
+      .then(function (snap) {
+        _solCache = [];
+        snap.forEach(function (doc) { _solCache.push({ id: doc.id, data: doc.data() }); });
+        _solCache.sort(function (a, b) {
+          var ta = a.data.createdAt && a.data.createdAt.toDate ? a.data.createdAt.toDate() : 0;
+          var tb = b.data.createdAt && b.data.createdAt.toDate ? b.data.createdAt.toDate() : 0;
+          return tb - ta;
+        });
+        var rows = filterStatus ? _solCache.filter(function (r) { return r.data.status === filterStatus; }) : _solCache;
+        if (!rows.length) {
+          tbody.innerHTML = '<tr><td colspan="6"><div class="rp-empty">No hay solicitudes.</div></td></tr>';
+          return;
+        }
+        var h = '';
+        rows.forEach(function (r) {
+          var d = r.data;
+          var actions = '';
+          actions += '<button class="rp-btn rp-btn--secondary rp-btn--sm" style="margin:2px;" onclick="rpViewSolicitud(\'' + esc(r.id) + '\')"><i class="ri-eye-line"></i> Ver</button>';
+          if (d.status === 'pendiente') {
+            actions += '<button class="rp-btn rp-btn--success rp-btn--sm" style="margin:2px;" onclick="rpApproveSolicitud(\'' + esc(r.id) + '\')"><i class="ri-check-line"></i> Aprobar</button>';
+            actions += '<button class="rp-btn rp-btn--danger rp-btn--sm" style="margin:2px;" onclick="rpRejectSolicitud(\'' + esc(r.id) + '\')"><i class="ri-close-line"></i> Rechazar</button>';
+          }
+          h += '<tr>';
+          h += '<td style="font-weight:600;">' + esc(d.petName || '-') + (d.petSpecies ? ' <span style="font-size:0.76rem;color:#9E9E9E;">(' + esc(d.petSpecies) + ')</span>' : '') + '</td>';
+          h += '<td>' + esc(d.applicantName || '-') + '</td>';
+          h += '<td style="font-size:0.80rem;">' + esc(d.applicantPhone || d.applicantEmail || '-') + '</td>';
+          h += '<td>' + esc(tsDate(d.createdAt)) + '</td>';
+          h += '<td>' + solStatusBadge(d.status || 'pendiente') + '</td>';
+          h += '<td style="white-space:nowrap;">' + actions + '</td>';
+          h += '</tr>';
+        });
+        tbody.innerHTML = h;
+      }).catch(function (e) {
+        tbody.innerHTML = '<tr><td colspan="6"><div class="rp-empty">Error: ' + esc(e.message) + '</div></td></tr>';
+      });
+  };
+
+  window.rpViewSolicitud = function (reqId) {
+    var entry = null;
+    for (var i = 0; i < _solCache.length; i++) { if (_solCache[i].id === reqId) { entry = _solCache[i]; break; } }
+    if (!entry) return;
+    var d = entry.data;
+
+    var bodyHtml = '';
+    function row(label, value) { return '<div style="display:flex;gap:8px;margin-bottom:9px;"><span style="font-size:0.79rem;font-weight:600;color:#757575;min-width:140px;flex-shrink:0;">' + label + '</span><span style="font-size:0.85rem;color:#212121;">' + esc(String(value == null ? '-' : value)) + '</span></div>'; }
+
+    bodyHtml += '<div style="font-size:0.80rem;font-weight:700;color:#4552CC;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em;">Animal</div>';
+    bodyHtml += row('Nombre', d.petName);
+    bodyHtml += row('Especie', d.petSpecies);
+    bodyHtml += '<div style="font-size:0.80rem;font-weight:700;color:#4552CC;margin:14px 0 12px;text-transform:uppercase;letter-spacing:0.05em;">Solicitante</div>';
+    bodyHtml += row('Nombre', d.applicantName);
+    bodyHtml += row('Email', d.applicantEmail);
+    bodyHtml += row('Telefono', d.applicantPhone);
+    bodyHtml += row('Direccion', d.applicantAddress);
+    bodyHtml += '<div style="font-size:0.80rem;font-weight:700;color:#4552CC;margin:14px 0 12px;text-transform:uppercase;letter-spacing:0.05em;">Cuestionario</div>';
+    bodyHtml += row('Tipo de vivienda', d.homeType);
+    bodyHtml += row('Tiene otras mascotas', d.hasOtherPets ? 'Si' : 'No');
+    bodyHtml += row('Experiencia previa', d.experience);
+    if (d.reason) { bodyHtml += '<div style="margin-bottom:9px;"><span style="font-size:0.79rem;font-weight:600;color:#757575;display:block;margin-bottom:4px;">Motivo de adopcion</span><div style="font-size:0.85rem;color:#212121;background:#F8F9FB;border-radius:8px;padding:9px 11px;">' + esc(d.reason) + '</div></div>'; }
+    bodyHtml += row('Estado', d.status || 'pendiente');
+    if (d.rejectionReason) { bodyHtml += row('Motivo rechazo', d.rejectionReason); }
+    bodyHtml += row('Fecha solicitud', tsDate(d.createdAt));
+
+    document.getElementById('sol-modal-body').innerHTML = bodyHtml;
+
+    var actionsHtml = '';
+    if (d.status === 'pendiente') {
+      actionsHtml += '<button class="rp-btn rp-btn--success" onclick="rpApproveSolicitud(\'' + esc(reqId) + '\');rpCloseSolModal();"><i class="ri-check-line"></i> Aprobar</button>';
+      actionsHtml += '<button class="rp-btn rp-btn--danger" onclick="rpRejectSolicitud(\'' + esc(reqId) + '\');rpCloseSolModal();"><i class="ri-close-line"></i> Rechazar</button>';
+    }
+    actionsHtml += '<button class="rp-btn rp-btn--secondary" onclick="rpCloseSolModal()">Cerrar</button>';
+    document.getElementById('sol-modal-actions').innerHTML = actionsHtml;
+
+    var modal = document.getElementById('sol-modal');
+    modal.style.display = 'flex';
+  };
+
+  window.rpCloseSolModal = function () {
+    var modal = document.getElementById('sol-modal');
+    if (modal) modal.style.display = 'none';
+  };
+
+  window.rpApproveSolicitud = function (reqId) {
+    if (!confirm('Aprobar esta solicitud de adopcion?')) return;
+    db().collection('adoption_requests').doc(reqId).update({
+      status: 'aprobada',
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function () {
+      toast('Solicitud aprobada.', 'success');
+      rpLoadSolicitudes();
+      var entry = null;
+      for (var i = 0; i < _solCache.length; i++) { if (_solCache[i].id === reqId) { entry = _solCache[i]; break; } }
+      if (entry && entry.data.petId) {
+        db().collection('pets').doc(entry.data.petId).update({ status: 'adoptado', featuredOnIndex: false }).catch(function () {});
+      }
+    }).catch(function (e) { toast('Error: ' + e.message, 'error'); });
+  };
+
+  window.rpRejectSolicitud = function (reqId) {
+    var reason = window.prompt('Motivo del rechazo (opcional):');
+    if (reason === null) return;
+    var updates = {
+      status: 'rechazada',
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    if (reason.trim()) updates.rejectionReason = reason.trim();
+    db().collection('adoption_requests').doc(reqId).update(updates)
+      .then(function () { toast('Solicitud rechazada.', 'warning'); rpLoadSolicitudes(); })
+      .catch(function (e) { toast('Error: ' + e.message, 'error'); });
+  };
+
+  /* ====================================
      SESSION RESTORE
      ==================================== */
   (function () {
@@ -1185,6 +1375,11 @@
     try {
       _sid  = savedId;
       _sdat = JSON.parse(savedData);
+      if (_sdat.status === 'banned' || _sdat.status === 'suspended') {
+        sessionStorage.removeItem('rp_sid');
+        sessionStorage.removeItem('rp_sdat');
+        return;
+      }
       showPanel();
     } catch (e) {
       sessionStorage.removeItem('rp_sid');

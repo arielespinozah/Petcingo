@@ -1246,27 +1246,77 @@ window.saveShelter = function() {
 function loadShelters() {
   var tbody=document.getElementById('shelters-tbody');
   if(!tbody)return;
-  tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></td></tr>';
+  tbody.innerHTML='<tr><td colspan="9"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></td></tr>';
   db().collection('shelters').orderBy('createdAt','desc').get()
     .then(function(snap){
       var cEl=document.getElementById('shelters-count');if(cEl)cEl.textContent=snap.size+' refugio(s)';
-      if(snap.empty){tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><p>No hay refugios aun.</p></div></td></tr>';return;}
+      if(snap.empty){tbody.innerHTML='<tr><td colspan="9"><div class="empty-state"><p>No hay refugios aun.</p></div></td></tr>';return;}
       var html='';
       snap.forEach(function(doc){
         var d=doc.data(),fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'--';
         var prefBadge=d.prefix?'<span style="background:rgba(0,225,243,.10);border:1px solid rgba(0,225,243,.25);border-radius:6px;padding:2px 8px;font-size:.75rem;color:var(--accent);font-family:monospace">'+esc(d.prefix)+'</span>':'--';
-        html+='<tr><td class="td-name">'+esc(d.name||'--')+'</td><td>'+prefBadge+'</td><td>'+esc(d.responsible||'--')+'</td>'+
-          '<td class="td-owner">'+esc(d.phone||'--')+'</td><td class="td-owner" style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(d.address||'--')+'</td>'+
-          '<td class="td-date">'+fecha+'</td>'+
-          '<td class="td-actions"><button class="btn btn-ghost btn-sm" onclick="openShelterDetail(\''+doc.id+'\')"><i class="ri-settings-3-line"></i> Placas</button>'+
-          '<button class="btn btn-ghost btn-sm" onclick="editShelter(\''+doc.id+'\',\''+encodeData(d)+'\')"><i class="ri-edit-line"></i> Editar</button>'+
-          '<a class="btn btn-ghost btn-sm" href="https://prueb2.dashnexpages.net/refugio-panel-control/?auto='+doc.id+'" target="_blank" title="Panel del refugio"><i class="ri-external-link-line"></i> Panel</a>'+
-          '<button class="btn-danger-outline" onclick="deleteRecord(\'shelters\',\''+doc.id+'\',\'loadShelters\')"><i class="ri-delete-bin-line"></i></button></td></tr>';
+        var status=d.status||'active';
+        var statusColor=status==='active'?'#2ECC71':status==='suspended'?'#E67E22':'#E74C3C';
+        var statusBg=status==='active'?'rgba(46,204,113,.12)':status==='suspended'?'rgba(230,126,34,.12)':'rgba(231,76,60,.12)';
+        var statusLabel=status==='active'?'Activo':status==='suspended'?'Suspendido':'Baneado';
+        var statusBadge='<span style="padding:3px 9px;border-radius:99px;font-size:.70rem;font-weight:700;background:'+statusBg+';color:'+statusColor+';">'+statusLabel+'</span>';
+        var rate=d.commissionRate!=null?d.commissionRate:20;
+        var rateCell='<input type="number" min="0" max="100" value="'+rate+'" id="rate-sh-'+doc.id+'" style="width:48px;padding:2px 5px;border:1px solid #E0E0E0;border-radius:6px;font-size:.78rem;text-align:center;">'+
+          '<button onclick="saveShelterRate(\''+doc.id+'\')" style="padding:2px 8px;background:#4552CC;color:#fff;border:none;border-radius:6px;font-size:.70rem;cursor:pointer;margin-left:3px;">OK</button>';
+        var suspBtn=status==='active'?
+          '<button class="btn btn-ghost btn-sm" style="color:#E67E22;" onclick="setShelterStatus(\''+doc.id+'\',\''+esc(d.name||'')+'\',\'suspended\')"><i class="ri-pause-circle-line"></i></button>':
+          (status==='suspended'?'<button class="btn btn-ghost btn-sm" style="color:#2ECC71;" onclick="setShelterStatus(\''+doc.id+'\',\''+esc(d.name||'')+'\',\'active\')"><i class="ri-play-circle-line"></i></button>':'');
+        var banBtn=status!=='banned'?
+          '<button class="btn btn-ghost btn-sm" style="color:#E74C3C;" onclick="setShelterStatus(\''+doc.id+'\',\''+esc(d.name||'')+'\',\'banned\')"><i class="ri-forbid-line"></i></button>':
+          '<button class="btn btn-ghost btn-sm" style="color:#2ECC71;" onclick="setShelterStatus(\''+doc.id+'\',\''+esc(d.name||'')+'\',\'active\')"><i class="ri-checkbox-circle-line"></i></button>';
+        html+='<tr>';
+        html+='<td class="td-name">'+esc(d.name||'--')+'</td>';
+        html+='<td>'+prefBadge+'</td>';
+        html+='<td>'+esc(d.responsible||'--')+'</td>';
+        html+='<td>'+statusBadge+'</td>';
+        html+='<td style="white-space:nowrap;">'+rateCell+'</td>';
+        html+='<td class="td-owner">'+esc(d.phone||'--')+'</td>';
+        html+='<td class="td-owner" style="max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+esc(d.address||'--')+'</td>';
+        html+='<td class="td-date">'+fecha+'</td>';
+        html+='<td class="td-actions" style="white-space:nowrap;">';
+        html+='<button class="btn btn-ghost btn-sm" onclick="openShelterDetail(\''+doc.id+'\')"><i class="ri-settings-3-line"></i></button>';
+        html+='<button class="btn btn-ghost btn-sm" onclick="editShelter(\''+doc.id+'\',\''+encodeData(d)+'\')"><i class="ri-edit-line"></i></button>';
+        html+='<a class="btn btn-ghost btn-sm" href="../paginas_html/refugio-panel.html" target="_blank"><i class="ri-external-link-line"></i></a>';
+        html+=suspBtn+banBtn;
+        html+='<button class="btn-danger-outline" onclick="deleteRecord(\'shelters\',\''+doc.id+'\',\'loadShelters\')"><i class="ri-delete-bin-line"></i></button>';
+        html+='</td></tr>';
       });
       tbody.innerHTML=html;
-    }).catch(function(e){tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><p>Error: '+esc(e.message)+'</p></div></td></tr>';});
+    }).catch(function(e){tbody.innerHTML='<tr><td colspan="9"><div class="empty-state"><p>Error: '+esc(e.message)+'</p></div></td></tr>';});
 }
 window.loadShelters=loadShelters;
+
+window.saveShelterRate=function(id){
+  var inp=document.getElementById('rate-sh-'+id);
+  if(!inp)return;
+  var rate=parseFloat(inp.value);
+  if(isNaN(rate)||rate<0||rate>100){toast('Porcentaje invalido (0-100)');return;}
+  db().collection('shelters').doc(id).update({commissionRate:rate})
+    .then(function(){toast('<i class="ri-check-line" style="color:#2ECC71;"></i> Comision actualizada: '+rate+'%');})
+    .catch(function(e){toast('Error: '+e.message);});
+};
+
+window.setShelterStatus=function(id,name,newStatus){
+  var reason='';
+  if(newStatus!=='active'){
+    reason=window.prompt('Motivo para '+(newStatus==='banned'?'banear':'suspender')+' a '+name+' (opcional):')||'';
+  }
+  var update={status:newStatus};
+  if(newStatus==='suspended'){update.suspendedAt=firebase.firestore.FieldValue.serverTimestamp();update.suspendedReason=reason;}
+  if(newStatus==='banned'){update.bannedAt=firebase.firestore.FieldValue.serverTimestamp();update.bannedReason=reason;}
+  if(newStatus==='active'){update.reactivatedAt=firebase.firestore.FieldValue.serverTimestamp();}
+  db().collection('shelters').doc(id).update(update)
+    .then(function(){
+      var lbl={active:'Reactivado',suspended:'Suspendido',banned:'Baneado'};
+      toast('<i class="ri-check-line" style="color:#2ECC71;"></i> '+(lbl[newStatus]||newStatus)+': '+name);
+      loadShelters();
+    }).catch(function(e){toast('Error: '+e.message);});
+};
 
 /* -- Edit Shelter Modal -- */
 window.editShelter = function(shId, dataJson) {
