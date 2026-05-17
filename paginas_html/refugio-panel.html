@@ -316,7 +316,7 @@
 
       <div class="rp-card">
         <div class="rp-sec-title"><i class="ri-link"></i> Enlace de referido</div>
-        <p class="rp-muted" style="margin-bottom:11px;">Comparte este enlace. Por cada venta generada ganas el 20% de comision.</p>
+        <p class="rp-muted" style="margin-bottom:11px;">Comparte este enlace. Tus clientes veran todos los planes y al comprar, recibiras tu comision automaticamente.</p>
         <div class="rp-ref-box">
           <input class="rp-ref-input" type="text" id="ref-resumen" readonly>
           <button class="rp-btn rp-btn--secondary rp-btn--sm" onclick="rpCopyRef()"><i class="ri-file-copy-line"></i> Copiar</button>
@@ -393,6 +393,10 @@
         <div class="rp-field" style="margin-bottom:10px;">
           <label class="rp-label">Descripcion / personalidad</label>
           <textarea class="rp-input" id="pet-desc" rows="3" placeholder="Cuentanos sobre el animal..."></textarea>
+        </div>
+        <div class="rp-field" style="margin-bottom:10px;">
+          <label class="rp-label">Historia / Como fue encontrado</label>
+          <textarea class="rp-input" id="pet-story" rows="2" placeholder="Ej: Fue encontrado en la calle, rescatado de..."></textarea>
         </div>
         <div class="rp-field" style="margin-bottom:14px;">
           <label class="rp-label">Estado de salud</label>
@@ -551,6 +555,10 @@
           <label class="rp-label">Direccion</label>
           <input class="rp-input" type="text" id="prof-address" placeholder="Ej: Av. Irala 456">
         </div>
+        <div class="rp-field" style="margin-bottom:13px;">
+          <label class="rp-label">Link de Google Maps (ubicacion del refugio)</label>
+          <input class="rp-input" type="url" id="prof-gps" placeholder="https://maps.google.com/?q=...">
+        </div>
         <div class="rp-field" style="margin-bottom:16px;">
           <label class="rp-label">Enlace de referido</label>
           <div class="rp-ref-box">
@@ -676,7 +684,7 @@
   function $txt(id, val) { var el = document.getElementById(id); if (el) el.textContent = String(val); }
   function $val(id, val) { var el = document.getElementById(id); if (el) el.value = String(val == null ? '' : val); }
   function $gval(id)     { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
-  function refUrl()      { return 'https://prueb2.dashnexpages.net/checkout/?ref=' + (_sid || ''); }
+  function refUrl()      { return 'https://prueb2.dashnexpages.net/producto/?ref=' + (_sid || ''); }
 
   function setRefLinks() {
     var url = refUrl();
@@ -891,7 +899,7 @@
     var open = f.style.display !== 'none';
     f.style.display = open ? 'none' : 'block';
     if (!open) {
-      ['pet-name','pet-breed','pet-age','pet-desc','pet-health'].forEach(function (id) { $val(id, ''); });
+      ['pet-name','pet-breed','pet-age','pet-desc','pet-story','pet-health'].forEach(function (id) { $val(id, ''); });
       $val('pet-species', ''); $val('pet-gender', '');
       var fi = document.getElementById('pet-photo-file'); if (fi) fi.value = '';
       var prev = document.getElementById('pet-photo-prev'); if (prev) { prev.src = ''; prev.style.display = 'none'; }
@@ -925,6 +933,7 @@
       age:             $gval('pet-age'),
       gender:          $gval('pet-gender'),
       desc:            $gval('pet-desc'),
+      story:           $gval('pet-story'),
       health:          $gval('pet-health'),
       sellerId:        _sid,
       sellerName:      _sdat.name || '',
@@ -1214,15 +1223,18 @@
     $val('prof-phone',   _sdat.phone   || '');
     $val('prof-city',    _sdat.city    || '');
     $val('prof-address', _sdat.address || '');
+    $val('prof-gps',     _sdat.gpsLink || '');
     $val('prof-limit',   _sdat.limite_mascotas != null ? _sdat.limite_mascotas : '-');
   }
 
   window.rpSaveProfile = function () {
+    var gps = $gval('prof-gps');
     var updates = {
       name:    $gval('prof-name'),
       phone:   $gval('prof-phone'),
       city:    $gval('prof-city'),
-      address: $gval('prof-address')
+      address: $gval('prof-address'),
+      gpsLink: gps
     };
     if (!updates.name) { toast('El nombre es obligatorio.', 'error'); return; }
     db().collection('shelters').doc(_sid).update(updates)
@@ -1324,6 +1336,7 @@
       actionsHtml += '<button class="rp-btn rp-btn--success" onclick="rpApproveSolicitud(\'' + esc(reqId) + '\');rpCloseSolModal();"><i class="ri-check-line"></i> Aprobar</button>';
       actionsHtml += '<button class="rp-btn rp-btn--danger" onclick="rpRejectSolicitud(\'' + esc(reqId) + '\');rpCloseSolModal();"><i class="ri-close-line"></i> Rechazar</button>';
     }
+    actionsHtml += '<button class="rp-btn rp-btn--secondary" onclick="window.print()"><i class="ri-printer-line"></i> Descargar PDF</button>';
     actionsHtml += '<button class="rp-btn rp-btn--secondary" onclick="rpCloseSolModal()">Cerrar</button>';
     document.getElementById('sol-modal-actions').innerHTML = actionsHtml;
 

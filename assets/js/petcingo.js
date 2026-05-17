@@ -1281,7 +1281,7 @@ function loadShelters() {
         html+='<td class="td-actions" style="white-space:nowrap;">';
         html+='<button class="btn btn-ghost btn-sm" onclick="openShelterDetail(\''+doc.id+'\')"><i class="ri-settings-3-line"></i></button>';
         html+='<button class="btn btn-ghost btn-sm" onclick="editShelter(\''+doc.id+'\',\''+encodeData(d)+'\')"><i class="ri-edit-line"></i></button>';
-        html+='<a class="btn btn-ghost btn-sm" href="../paginas_html/refugio-panel.html" target="_blank"><i class="ri-external-link-line"></i></a>';
+        html+='<a class="btn btn-ghost btn-sm" href="https://prueb2.dashnexpages.net/refugio-panel-control/?auto='+doc.id+'" target="_blank" title="Abrir panel del refugio"><i class="ri-external-link-line"></i></a>';
         html+=suspBtn+banBtn;
         html+='<button class="btn-danger-outline" onclick="deleteRecord(\'shelters\',\''+doc.id+'\',\'loadShelters\')"><i class="ri-delete-bin-line"></i></button>';
         html+='</td></tr>';

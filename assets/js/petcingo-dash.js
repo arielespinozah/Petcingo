@@ -208,6 +208,11 @@
       
       var LBL = 'font-family:\'Plus Jakarta Sans\',sans-serif;font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;';
       var VAL = 'font-family:\'Plus Jakarta Sans\',sans-serif;';
+      var dateLabel = '-';
+      if (d.createdAt) {
+        var tsD = d.createdAt.toDate ? d.createdAt.toDate() : new Date(d.createdAt);
+        dateLabel = tsD.toLocaleString('es-BO', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      }
       var html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">';
       html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="' + LBL + '">Comprador</span><br><strong style="' + VAL + '">' + escFn(d.buyer ? d.buyer.name  : d.buyerName || '') + '</strong></div>';
       html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="' + LBL + '">Telefono</span><br><strong style="'  + VAL + '">' + escFn(d.buyer ? d.buyer.phone : d.phone    || '') + '</strong></div>';
@@ -216,7 +221,8 @@
       html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="' + LBL + '">Total</span><br><strong style="'     + VAL + 'color:#4552CC;">' + (d.total || 0) + ' Bs</strong></div>';
       html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="' + LBL + '">Metodo</span><br><strong style="'    + VAL + '">' + escFn(d.paymentMethod || '') + '</strong></div>';
       html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="' + LBL + '">Direccion</span><br><strong style="' + VAL + '">' + escFn(d.buyer ? d.buyer.address : d.address || '') + '</strong></div>';
-      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="' + LBL + '">Estado</span><br><span class="status-badge ' + (d.status || 'pending') + '">' + (d.status || 'pending').toUpperCase() + '</span></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="' + LBL + '">Estado</span><br><span class="status-badge ' + (d.status || 'pending') + '" style="' + VAL + '">' + (d.status || 'pending').toUpperCase() + '</span></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;grid-column:span 2;"><span style="' + LBL + '">Fecha del pedido</span><br><strong style="' + VAL + '">' + dateLabel + '</strong></div>';
       html += '</div>';
 
       if (d.receiptUrl) {
@@ -421,8 +427,8 @@
     var buyerAddress = escFn(d.buyer ? d.buyer.address : d.address   || '');
     var buyerNotes   = escFn(d.buyer ? d.buyer.notes   : d.notes     || '');
     var dateStr      = new Date().toLocaleDateString('es-BO', { day: '2-digit', month: 'long', year: 'numeric' });
-    var qrTarget     = d.activationCode
-      ? 'https://prueb2.dashnexpages.net/activacion/?id=' + encodeURIComponent(d.activationCode)
+    var qrTarget     = d.trackingNumber
+      ? 'https://www.boliviapost.bo/?tracking=' + encodeURIComponent(d.trackingNumber)
       : 'https://petcingo.com.bo';
 
     var css = [
@@ -459,9 +465,7 @@
       + '<tr><th>Tracking</th><td>'     + escFn(d.trackingNumber || '---')                  + '</td></tr>'
       + '<tr><th>Notas</th><td>'        + buyerNotes   + '</td></tr>'
       + '</table>'
-      + (d.activationCode
-        ? '<div class="code-box"><div class="code-lbl">Codigo de activacion</div><div class="code-val">' + escFn(d.activationCode) + '</div></div>'
-        : '');
+      + '';
 
     var win = window.open('', '_blank', 'width=820,height=700');
     win.document.write('<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">'

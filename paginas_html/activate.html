@@ -245,6 +245,10 @@
 .ptcg-activate__input,.ptcg-activate__select{border:1.5px solid #E0E0E0!important;outline:none!important;box-shadow:none!important}
 .ptcg-activate__input:focus,.ptcg-activate__select:focus{border-color:#4552CC!important;outline:none!important;box-shadow:0 0 0 3px rgba(69,82,204,0.15)!important}
 .ptcg-activate__card{border:1px solid rgba(255,255,255,0.65)!important;border-top:1px solid rgba(255,255,255,0.65)!important;border-radius:24px!important}
+body{background:#F3F3F3!important}
+.ptcg-activate__step-header{align-items:center!important;text-align:center!important}
+.ptcg-activate__step-icon{text-align:center!important;display:block!important}
+@media print{#rp-topbar,#rp-tabs,.rp-btn,#af-topbar,#af-tabs,.af-btn{display:none!important}body{background:#fff!important}}
   </style>
 
   <!-- Firebase SDKs -->
@@ -308,7 +312,7 @@
   <!-- ── TOPBAR ── -->
   <header class="ptcg-activate__topbar" role="banner">
     <a href="https://prueb2.dashnexpages.net/home/" class="ptcg-activate__logo" aria-label="Petcingo — Inicio">
-      <img src="https://prueb2.dashnexpages.net/assets/images/logo/PETCINGO_DARK.svg" alt="Petcingo" height="28" style="height:28px;width:auto" aria-hidden="true">
+      <img src="https://prueb2.dashnexpages.net/assets/images/logo/PETCINGO_DARK.svg" alt="Petcingo" height="42" style="height:42px;width:auto" aria-hidden="true">
       <span class="ptcg-activate__logo-text" style="display:none">Petcingo</span>
     </a>
 
@@ -470,7 +474,7 @@
                 type="text"
                 class="ptcg-activate__input ptcg-activate__input--code"
                 id="act-code-input"
-                placeholder="Ej: AF3-KX9"
+                placeholder="ABC-123"
                 maxlength="8"
                 autocomplete="off"
                 autocapitalize="characters"
@@ -478,11 +482,12 @@
                 inputmode="text"
               >
             </div>
+            <p style="font-size:0.74rem;color:#9E9E9E;margin-top:2px;">Ejemplo: ABC-123</p>
             <button type="button" id="scan-qr-btn" onclick="startQRScan()"
-              style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;
-              background:#4552CC;color:#fff;border:none;border-radius:12px;font-weight:600;
-              cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.85rem;">
-              <i class="ri-qr-scan-line"></i> Escanear QR
+              style="display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;
+              background:#4552CC;color:#fff !important;border:none;border-radius:12px;font-weight:600;
+              cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.85rem;margin:6px auto 0;width:100%;max-width:220px;">
+              <i class="ri-qr-scan-line" style="color:#fff !important;"></i> Escanear QR
             </button>
             <div id="qr-reader" style="width:100%;max-width:400px;margin:12px auto;display:none;"></div>
             <button id="qr-reader-close" onclick="stopQRScan()"

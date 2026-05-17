@@ -366,7 +366,7 @@
       <!-- Referral link -->
       <div class="af-card">
         <div class="af-sec-title"><i class="ri-link"></i> Enlace de referido</div>
-        <p class="af-muted" style="margin-bottom:11px;">Comparte este enlace y gana comision por cada venta.</p>
+        <p class="af-muted" style="margin-bottom:11px;">Comparte este enlace. Tus clientes veran todos los planes y al comprar, recibiras tu comision automaticamente.</p>
         <div class="af-ref-box">
           <input class="af-ref-input" type="text" id="af-ref-resumen" readonly>
           <button class="af-btn af-btn--secondary af-btn--sm" onclick="afCopyRef()"><i class="ri-file-copy-line"></i> Copiar</button>
@@ -394,7 +394,7 @@
 
       <div class="af-card">
         <div class="af-sec-title"><i class="ri-link"></i> Tu enlace de referido</div>
-        <p class="af-muted" style="margin-bottom:11px;">Por cada venta generada ganas comision segun tu nivel.</p>
+        <p class="af-muted" style="margin-bottom:11px;">Tus clientes veran todos los planes y al comprar, recibiras tu comision segun tu nivel actual.</p>
         <div class="af-ref-box">
           <input class="af-ref-input" type="text" id="af-ref-ventas" readonly>
           <button class="af-btn af-btn--secondary af-btn--sm" onclick="afCopyRef()"><i class="ri-file-copy-line"></i> Copiar</button>
@@ -594,7 +594,7 @@
   function $txt(id, val) { var el = document.getElementById(id); if (el) el.textContent = String(val); }
   function $val(id, val) { var el = document.getElementById(id); if (el) el.value = String(val == null ? '' : val); }
   function $gval(id)     { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
-  function refUrl()      { return 'https://prueb2.dashnexpages.net/checkout/?ref=' + (_aid || ''); }
+  function refUrl()      { return 'https://prueb2.dashnexpages.net/producto/?ref=' + (_aid || ''); }
 
   function setRefLinks() {
     var url = refUrl();
