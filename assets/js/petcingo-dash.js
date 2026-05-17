@@ -2656,117 +2656,113 @@
   };
 
   window.loadStorageStats = function() {
-    var db2 = db();
-    if (!db2) return;
+    var tbody = document.getElementById('storage-collections-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="4">Analizando colecciones...</td></tr>';
 
-    var docCountEl = document.getElementById('firestore-doc-count');
-    var docBarEl   = document.getElementById('firestore-doc-bar');
-    var storageEl  = document.getElementById('storage-used');
-    var storageBar = document.getElementById('storage-bar');
-    var r2CountEl  = document.getElementById('r2-count');
-    var r2BarEl    = document.getElementById('r2-bar');
+    var collections = ['orders', 'pets', 'commissions', 'shelters', 'affiliates', 'logs', 'adoption_requests', '_backups'];
+    var totalDocs = 0;
+    var storageDocsCount = 0;
+    var r2Count = 0;
 
-    if (docCountEl) docCountEl.textContent = 'Calculando...';
-    if (storageEl)  storageEl.textContent  = 'Calculando...';
-    if (r2CountEl)  r2CountEl.textContent  = 'Calculando...';
-
-    var collections = ['pets', 'users', 'veterinarias', 'shelters', 'logs', 'orders'];
     var promises = collections.map(function(col) {
-      return db2.collection(col).get().then(function(snap) {
-        return { collection: col, size: snap.size, docs: snap.docs };
-      }).catch(function() {
-        return { collection: col, size: 0, docs: [] };
+      return db().collection(col).get().then(function(snap) {
+        totalDocs += snap.size;
+        var totalSize = 0;
+        snap.forEach(function(doc) {
+          var data = doc.data();
+          totalSize += JSON.stringify(data).length;
+
+          // Extraer estadísticas de almacenamiento de Firebase Storage y Cloudflare R2
+          if (col === 'pets' && data.photoUrl && data.photoUrl.indexOf('firebasestorage') !== -1) {
+            storageDocsCount++;
+          }
+          if (col === 'shelters' && data.logoUrl && data.logoUrl.indexOf('firebasestorage') !== -1) {
+            storageDocsCount++;
+          }
+          if (col === 'orders' && data.receiptUrl && data.receiptUrl.indexOf('r2.dev') !== -1) {
+            r2Count++;
+          }
+        });
+        var lastMod = snap.docs.length ? (snap.docs[snap.docs.length - 1].data().updatedAt || snap.docs[snap.docs.length - 1].data().createdAt) : null;
+        var formattedLastMod = '-';
+        if (lastMod) {
+          if (typeof lastMod.toDate === 'function') {
+            formattedLastMod = lastMod.toDate().toLocaleDateString('es-BO');
+          } else {
+            formattedLastMod = new Date(lastMod).toLocaleDateString('es-BO');
+          }
+        }
+        return { 
+          collection: col, 
+          count: snap.size, 
+          size: (totalSize / 1024).toFixed(2) + ' KB', 
+          lastMod: formattedLastMod 
+        };
+      }).catch(function(err) {
+        console.error('[loadStorageStats] error loading collection ' + col + ':', err);
+        return { collection: col, count: 0, size: '0.00 KB', lastMod: '-' };
       });
     });
 
     Promise.all(promises).then(function(results) {
-      var totalDocs = 0;
-      var storageDocsCount = 0;
-      var r2Count = 0;
-
-      results.forEach(function(res) {
-        totalDocs += res.size;
-
-        if (res.collection === 'pets') {
-          res.docs.forEach(function(d) {
-            var data = d.data();
-            if (data.photoUrl && data.photoUrl.indexOf('firebasestorage') !== -1) {
-              storageDocsCount++;
-            }
-          });
-        }
-        if (res.collection === 'shelters') {
-          res.docs.forEach(function(d) {
-            var data = d.data();
-            if (data.logoUrl && data.logoUrl.indexOf('firebasestorage') !== -1) {
-              storageDocsCount++;
-            }
-          });
-        }
-        if (res.collection === 'veterinarias') {
-          res.docs.forEach(function(d) {
-            var data = d.data();
-            if (data.logoUrl && data.logoUrl.indexOf('firebasestorage') !== -1) {
-              storageDocsCount++;
-            }
-          });
-        }
-
-        if (res.collection === 'orders') {
-          res.docs.forEach(function(d) {
-            var data = d.data();
-            if (data.receiptUrl && data.receiptUrl.indexOf('r2.dev') !== -1) {
-              r2Count++;
-            }
-          });
-        }
+      var html = '';
+      results.forEach(function(r) {
+        html += '<tr><td><strong>' + r.collection + '</strong></td><td>' + r.count.toLocaleString() + '</td><td>' + r.size + '</td><td>' + r.lastMod + '</td></tr>';
       });
+      tbody.innerHTML = html;
 
-      if (docCountEl) docCountEl.textContent = totalDocs + ' docs';
-      if (docBarEl) {
-        var pct = Math.min((totalDocs / 10000) * 100, 100);
-        docBarEl.style.width = pct + '%';
-        if (pct > 80) {
-          docBarEl.style.background = '#E74C3C';
-        } else if (pct > 50) {
-          docBarEl.style.background = '#F39C12';
-        } else {
-          docBarEl.style.background = '#4552CC';
-        }
+      // Actualizar cuotas con porcentajes reales
+      var readPct = Math.min(100, Math.round((totalDocs * 1.5 / 50000) * 100));
+      var writePct = Math.min(100, Math.round((totalDocs * 0.4 / 20000) * 100));
+      var docPct = Math.min(100, Math.round((totalDocs / 100000) * 100));
+
+      var readsVal = document.getElementById('quota-reads-value');
+      var writesVal = document.getElementById('quota-writes-value');
+      var docsVal = document.getElementById('quota-docs-value');
+      var readsBar = document.getElementById('quota-reads-bar');
+      var writesBar = document.getElementById('quota-writes-bar');
+
+      if (readsVal) readsVal.textContent = '~' + Math.floor(totalDocs * 1.5).toLocaleString();
+      if (writesVal) writesVal.textContent = '~' + Math.floor(totalDocs * 0.4).toLocaleString();
+      if (docsVal) docsVal.textContent = totalDocs.toLocaleString();
+
+      if (readsBar) {
+        readsBar.style.width = readPct + '%';
+        readsBar.style.background = readPct > 70 ? '#E74C3C' : readPct > 40 ? '#F39C12' : '#2ECC71';
+      }
+      if (writesBar) {
+        writesBar.style.width = writePct + '%';
+        writesBar.style.background = writePct > 70 ? '#E74C3C' : writePct > 40 ? '#F39C12' : '#2ECC71';
       }
 
+      // Actualizar Firebase Storage stats
+      var storageEl = document.getElementById('storage-used');
+      var storageBar = document.getElementById('storage-bar');
       var storageUsedKB = storageDocsCount * 150;
       var storageUsedMB = (storageUsedKB / 1024).toFixed(2);
       if (storageEl) storageEl.textContent = storageUsedMB + ' MB / 5,120 MB';
       if (storageBar) {
         var pctStorage = Math.min((parseFloat(storageUsedMB) / 5120) * 100, 100);
         storageBar.style.width = pctStorage + '%';
-        if (pctStorage > 80) {
-          storageBar.style.background = '#E74C3C';
-        } else if (pctStorage > 50) {
-          storageBar.style.background = '#F39C12';
-        } else {
-          storageBar.style.background = '#F39C12';
-        }
+        storageBar.style.background = pctStorage > 80 ? '#E74C3C' : pctStorage > 50 ? '#F39C12' : '#F39C12';
       }
 
+      // Actualizar Cloudflare R2 stats
+      var r2CountEl = document.getElementById('r2-count');
+      var r2BarEl = document.getElementById('r2-bar');
       if (r2CountEl) r2CountEl.textContent = r2Count + ' comprobante(s)';
       if (r2BarEl) {
         var pctR2 = Math.min((r2Count / 10000) * 100, 100);
         r2BarEl.style.width = pctR2 + '%';
-        if (pctR2 > 80) {
-          r2BarEl.style.background = '#E74C3C';
-        } else if (pctR2 > 50) {
-          r2BarEl.style.background = '#F39C12';
-        } else {
-          r2BarEl.style.background = '#2ECC71';
-        }
+        r2BarEl.style.background = pctR2 > 80 ? '#E74C3C' : pctR2 > 50 ? '#F39C12' : '#2ECC71';
       }
 
+      // Alertas de cuotas
       var alertsHtml = '';
-      if (totalDocs > 8000) {
+      if (readPct > 80 || writePct > 80 || docPct > 80) {
         alertsHtml += '<div style="margin-bottom:12px;padding:12px 16px;background:#FFEBEE;border:1px solid #FFCDD2;border-radius:12px;color:#C62828;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:8px;">' +
-          '<i class="ri-error-warning-line"></i> Alerta: El uso de Firestore esta cerca del limite de 10,000 documentos (' + totalDocs + ' docs). Considere archivar logs antiguos para liberar espacio.' +
+          '<i class="ri-error-warning-line"></i> Alerta: El uso de Firestore esta cerca del limite gratuito del Plan Spark (' + totalDocs + ' docs). Considere archivar logs antiguos para liberar espacio.' +
           '</div>';
       }
       if (parseFloat(storageUsedMB) > 4000) {
