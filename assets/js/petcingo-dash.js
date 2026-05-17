@@ -158,27 +158,47 @@
       }).catch(function(e){alert('Error: '+e.message);});
   };
 
-  /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE AUDITORiA: clearOldLogs corregido oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
-  window.clearOldLogs = function() {
-    var daysInput = document.getElementById('cfg-log-days');
-    var days = daysInput ? parseInt(daysInput.value, 10) : 30;
-    if (!days || days < 1) days = 30;
-    if (!confirm('Eliminar logs con mis de ' + days + ' das?')) return;
-    var cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
-    var db2 = db(); if (!db2) return;
-    function deleteBatch() {
-      db2.collection('logs').where('timestamp', '<', cutoff).limit(500).get()
-        .then(function(snap) {
-          if (snap.empty) { if (typeof toast === 'function') toast('Logs antiguos eliminados.'); return; }
-          var batch = db2.batch();
+  /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE AUDITORiA: archiveLogsToBucket oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
+  // Archivar logs antiguos (consolidar por mes en un solo documento)
+  window.archiveLogsToBucket = function() {
+    var thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    var archiveMonth = thirtyDaysAgo.getFullYear() + '-' + String(thirtyDaysAgo.getMonth() + 1).padStart(2, '0');
+
+    if (!confirm('Esto consolidara los logs de mas de 30 dias en un documento de archivo (' + archiveMonth + '). Los logs del mes actual se conservan intactos. ¿Continuar?')) return;
+
+    db().collection('logs').where('timestamp', '<', thirtyDaysAgo).get()
+      .then(function(snap) {
+        if (snap.empty) {
+          if (typeof showDashAlert === 'function') showDashAlert('No hay logs antiguos para archivar.', 'info');
+          else if (typeof toast === 'function') toast('No hay logs antiguos para archivar.');
+          return;
+        }
+        var logsArray = [];
+        snap.forEach(function(doc) {
+          logsArray.push(doc.data());
+        });
+
+        // Guardar en un solo documento de archivo
+        return db().collection('logs_archive').doc(archiveMonth).set({
+          logs: logsArray,
+          count: logsArray.length,
+          archivedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(function() {
+          // Eliminar los documentos originales
+          var batch = db().batch();
           snap.forEach(function(doc) { batch.delete(doc.ref); });
-          batch.commit().then(function() {
-            if (typeof toast === 'function') toast('Eliminados ' + snap.size + ' logs, continuando');
-            deleteBatch();
-          }).catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
-        }).catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
-    }
-    deleteBatch();
+          return batch.commit();
+        });
+      })
+      .then(function() {
+        if (typeof showDashAlert === 'function') showDashAlert('Logs archivados correctamente en logs_archive/' + archiveMonth + '.', 'success');
+        else if (typeof toast === 'function') toast('Logs archivados correctamente.');
+        if (typeof loadStorageStats === 'function') loadStorageStats();
+      })
+      .catch(function(e) {
+        if (typeof showDashAlert === 'function') showDashAlert('Error al archivar: ' + e.message, 'danger');
+        else if (typeof toast === 'function') toast('Error al archivar: ' + e.message);
+      });
   };
 
 

@@ -908,7 +908,7 @@
           <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
             <input type="number" id="cfg-log-days" value="30" min="1" max="365" style="width:64px;padding:5px 8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:var(--text-dark);font-size:.82rem;text-align:center"/>
             <span style="font-size:.75rem;color:var(--muted-dark)">días</span>
-            <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="color:var(--error)" onclick="clearOldLogs()"><i class="ri-delete-bin-line"></i> Limpiar logs</button>
+            <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="color:#4552CC" onclick="archiveLogsToBucket()" id="btn-archive-logs"><i class="ri-archive-line"></i> Archivar logs (&gt;30 dias)</button>
           </div>
         </div>
         <div id="logs-list"><div class="empty-state" style="padding:24px"><div class="loading-dots"><span></span><span></span><span></span></div></div></div>
