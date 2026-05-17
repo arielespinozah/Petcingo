@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Refugio - Petcingo</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://prueb2.dashnexpages.net/assets/fonts/remixicon/remixicon.css" rel="stylesheet">
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1472.0.min.js"></script>
+
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #F8F9FB !important;
+    min-height: 100vh;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    color: #212121 !important;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- Buttons ---- */
+  .rp-btn {
+    display: inline-flex !important; align-items: center !important; justify-content: center !important;
+    gap: 7px; padding: 11px 18px; border-radius: 12px;
+    font-family: 'Plus Jakarta Sans', sans-serif !important; font-size: 0.875rem; font-weight: 600;
+    cursor: pointer; text-decoration: none !important; transition: all 0.18s;
+    white-space: nowrap; line-height: 1; border: none;
+  }
+  .rp-btn--primary   { background: #4552CC !important; color: #fff !important; }
+  .rp-btn--primary:hover { background: #2E3A9E !important; }
+  .rp-btn--secondary { background: rgba(69,82,204,0.08) !important; color: #4552CC !important; border: 1.5px solid rgba(69,82,204,0.2) !important; }
+  .rp-btn--danger    { background: rgba(231,76,60,0.10) !important; color: #E74C3C !important; border: 1.5px solid rgba(231,76,60,0.3) !important; }
+  .rp-btn--success   { background: rgba(46,204,113,0.10) !important; color: #2ECC71 !important; border: 1.5px solid rgba(46,204,113,0.3) !important; }
+  .rp-btn--warning   { background: rgba(243,156,18,0.10) !important; color: #E67E22 !important; border: 1.5px solid rgba(243,156,18,0.3) !important; }
+  .rp-btn--sm { padding: 7px 13px !important; font-size: 0.78rem !important; }
+  .rp-btn:disabled { opacity: 0.5; cursor: not-allowed !important; }
+
+  /* ---- Card (Liquid Glass) ---- */
+  .rp-card {
+    position: relative; overflow: hidden; isolation: isolate;
+    border-radius: 20px; border: 1px solid rgba(255,255,255,.95);
+    box-shadow: 0 8px 40px rgba(69,82,204,.09), 0 2px 8px rgba(69,82,204,.04), inset 0 1px 0 rgba(255,255,255,1);
+    padding: 22px; background: #fff; margin-bottom: 16px;
+  }
+  .rp-card::before {
+    content: ''; position: absolute; inset: 0;
+    backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%);
+    background: rgba(255,255,255,.72); z-index: 0;
+  }
+  .rp-card > * { position: relative; z-index: 2; }
+
+  /* ---- Stats ---- */
+  .rp-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 13px; margin-bottom: 18px; }
+  .rp-stat { border-radius: 18px; padding: 18px; background: #fff; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 3px 16px rgba(0,0,0,0.02); display: flex; flex-direction: column; }
+  .rp-stat__icon { font-size: 1.6rem; margin-bottom: 10px; color: #4552CC; }
+  .rp-stat__value { font-family: 'Sora', sans-serif !important; font-size: 1.7rem; font-weight: 800; color: #212121; line-height: 1; margin-bottom: 4px; }
+  .rp-stat__label { font-size: 0.80rem; color: #757575; font-weight: 600; }
+
+  /* ---- Tables ---- */
+  .rp-table-wrap { width: 100%; overflow-x: auto; background: #fff; border-radius: 14px; border: 1px solid rgba(0,0,0,0.05); }
+  .rp-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; font-family: 'Plus Jakarta Sans', sans-serif; }
+  .rp-table th { padding: 11px 13px; border-bottom: 1px solid rgba(0,0,0,0.05); color: #757575; font-weight: 600; white-space: nowrap; }
+  .rp-table td { padding: 11px 13px; border-bottom: 1px solid rgba(0,0,0,0.04); color: #212121; vertical-align: middle; }
+  .rp-table tr:last-child td { border-bottom: none; }
+  .rp-empty { text-align: center; padding: 28px; color: #9E9E9E; font-size: 0.85rem; }
+
+  /* ---- Status badges ---- */
+  .rp-badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 99px; font-size: 0.70rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+  .rp-badge--pendiente { background: #FFF3E0; color: #E65100; border: 1px solid rgba(255,152,0,0.3); }
+  .rp-badge--pagado    { background: #E8F5E9; color: #1B5E20; border: 1px solid rgba(76,175,80,0.3); }
+  .rp-badge--activo    { background: #E3F2FD; color: #0D47A1; border: 1px solid rgba(33,150,243,0.3); }
+  .rp-badge--adoptado  { background: #E8F5E9; color: #1B5E20; border: 1px solid rgba(76,175,80,0.3); }
+  .rp-badge--confirmed { background: #E8F5E9; color: #1B5E20; border: 1px solid rgba(76,175,80,0.3); }
+  .rp-badge--pending   { background: #FFF3E0; color: #E65100; border: 1px solid rgba(255,152,0,0.3); }
+  .rp-badge--processing{ background: #E3F2FD; color: #0D47A1; border: 1px solid rgba(33,150,243,0.3); }
+
+  /* ---- Forms ---- */
+  .rp-field { display: flex; flex-direction: column; gap: 5px; }
+  .rp-label { font-size: 0.79rem; font-weight: 600; color: #424242 !important; }
+  .rp-input {
+    width: 100%; padding: 10px 13px; font-size: 0.875rem;
+    font-family: 'Plus Jakarta Sans', sans-serif !important; font-weight: 400;
+    color: #212121 !important; background: rgba(255,255,255,0.72) !important;
+    border: 1.5px solid #E0E0E0 !important; border-radius: 10px; outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    -webkit-appearance: none; appearance: none;
+  }
+  .rp-input:focus { border-color: #4552CC !important; box-shadow: 0 0 0 3px rgba(69,82,204,0.14) !important; }
+  .rp-input[readonly] { background: #F5F5F5 !important; cursor: default; }
+  textarea.rp-input { resize: vertical; min-height: 72px; }
+  select.rp-input {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239E9E9E'%3E%3Cpath d='M12 15l-6-6h12z'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 11px center !important;
+    background-size: 15px !important;
+    padding-right: 34px !important;
+  }
+  .rp-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+  .rp-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 13px; }
+  @media (max-width: 580px) { .rp-grid-2, .rp-grid-3 { grid-template-columns: 1fr; } }
+
+  /* ---- Section header ---- */
+  .rp-sec-title {
+    font-family: 'Sora', sans-serif !important; font-size: 0.88rem; font-weight: 700; color: #212121;
+    display: flex; align-items: center; gap: 7px;
+    border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom: 10px; margin-bottom: 15px;
+  }
+  .rp-sec-title i { color: #4552CC !important; }
+
+  /* ---- Page header ---- */
+  .rp-page-header { margin-bottom: 18px; }
+  .rp-page-header h2 {
+    font-family: 'Sora', sans-serif !important; font-size: 1.5rem; font-weight: 800;
+    color: #212121; display: flex; align-items: center; gap: 9px;
+  }
+  .rp-page-header h2 i { color: #4552CC !important; }
+  .rp-page-header p { font-size: 0.85rem; color: #757575; margin-top: 4px; }
+
+  /* ---- Referral box ---- */
+  .rp-ref-box { display: flex; gap: 8px; align-items: center; }
+  .rp-ref-input {
+    flex: 1; padding: 9px 13px; border: 1.5px solid #E0E0E0; border-radius: 10px;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.82rem;
+    background: #F5F5F5; color: #424242; outline: none; cursor: text;
+  }
+
+  /* ---- Photo preview ---- */
+  .rp-photo-thumb { width: 48px; height: 48px; object-fit: cover; border-radius: 8px; border: 1.5px solid #E0E0E0; display: none; }
+
+  /* ---- Toast ---- */
+  #rp-toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+    padding: 13px 18px; border-radius: 13px;
+    font-family: 'Plus Jakarta Sans', sans-serif !important; font-size: 0.855rem; font-weight: 600;
+    color: #fff !important; max-width: 320px; display: flex; align-items: center; gap: 9px;
+    backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.2);
+    transform: translateY(80px); opacity: 0;
+    transition: transform 0.32s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s ease;
+    pointer-events: none;
+  }
+  #rp-toast.rp-show { transform: translateY(0); opacity: 1; }
+  #rp-toast.rp-success { background: rgba(39,174,96,0.94); }
+  #rp-toast.rp-error   { background: rgba(231,76,60,0.94); }
+  #rp-toast.rp-info    { background: rgba(69,82,204,0.94); }
+  #rp-toast.rp-warning { background: rgba(230,126,34,0.94); }
+
+  /* ---- Login ---- */
+  #rp-login {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #EEF1FB 0%, #EEF5FF 50%, #E8F7FD 100%); padding: 20px;
+  }
+  .rp-login-card {
+    width: 100%; max-width: 400px; position: relative; overflow: hidden; isolation: isolate;
+    border-radius: 26px; border: 1px solid rgba(255,255,255,.95);
+    box-shadow: 0 16px 64px rgba(69,82,204,.14), inset 0 1px 0 rgba(255,255,255,1);
+    padding: 38px 30px; background: #fff;
+  }
+  .rp-login-card::before {
+    content: ''; position: absolute; inset: 0;
+    backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%);
+    background: rgba(255,255,255,.80); z-index: 0;
+  }
+  .rp-login-card > * { position: relative; z-index: 2; }
+  .rp-login-logo { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 24px; }
+  .rp-login-logo-text { font-family: 'Sora', sans-serif !important; font-size: 1.45rem; font-weight: 800; color: #4552CC !important; letter-spacing: -0.02em; }
+  .rp-login-title { font-family: 'Sora', sans-serif !important; font-size: 1.35rem; font-weight: 800; color: #212121; text-align: center; margin-bottom: 5px; }
+  .rp-login-sub { font-size: 0.85rem; color: #757575; text-align: center; margin-bottom: 26px; line-height: 1.55; }
+  #rp-login-err { font-size: 0.80rem; color: #E74C3C; text-align: center; margin-top: 10px; display: none; font-weight: 600; padding: 8px 12px; background: rgba(231,76,60,0.06); border-radius: 8px; }
+
+  /* ---- Topbar ---- */
+  #rp-topbar {
+    position: sticky; top: 0; z-index: 100; height: 58px;
+    display: flex; align-items: center; justify-content: space-between; padding: 0 22px; gap: 14px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(20px) saturate(200%); -webkit-backdrop-filter: blur(20px) saturate(200%);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 1px 0 rgba(69,82,204,0.05);
+  }
+  .rp-tb-logo { font-family: 'Sora', sans-serif !important; font-size: 1.05rem; font-weight: 800; color: #4552CC !important; flex-shrink: 0; }
+  .rp-tb-center { display: flex; align-items: center; gap: 9px; flex: 1; justify-content: center; overflow: hidden; }
+  .rp-tb-name { font-family: 'Plus Jakarta Sans', sans-serif !important; font-weight: 700; font-size: 0.92rem; color: #212121; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
+  .rp-tb-badge { padding: 3px 9px; border-radius: 99px; background: rgba(69,82,204,0.10); color: #4552CC !important; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+
+  /* ---- Tabs ---- */
+  #rp-tabs { background: #fff; border-bottom: 1px solid rgba(0,0,0,0.06); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  #rp-tabs::-webkit-scrollbar { display: none; }
+  .rp-tabs-inner { display: flex; min-width: max-content; padding: 0 14px; }
+  .rp-tab {
+    display: flex; align-items: center; gap: 6px; padding: 13px 18px;
+    font-family: 'Plus Jakarta Sans', sans-serif !important; font-size: 0.845rem; font-weight: 600;
+    color: #757575 !important; background: transparent; border: none;
+    border-bottom: 2.5px solid transparent; cursor: pointer;
+    white-space: nowrap; transition: all 0.18s; text-decoration: none !important;
+  }
+  .rp-tab:hover { color: #4552CC !important; background: rgba(69,82,204,0.04); }
+  .rp-tab.active { color: #4552CC !important; border-bottom-color: #4552CC; }
+
+  /* ---- Sections ---- */
+  #rp-main { padding: 24px 22px; max-width: 1160px; margin: 0 auto; }
+  .rp-sec { display: none; animation: rp-fade 0.22s ease-out; }
+  .rp-sec.active { display: block; }
+  @keyframes rp-fade { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ---- Utilities ---- */
+  .rp-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .rp-muted { font-size: 0.82rem; color: #757575; }
+  .rp-green { color: #27AE60; font-weight: 700; }
+
+  @media (max-width: 460px) {
+    #rp-topbar { padding: 0 12px; }
+    #rp-main { padding: 14px 12px; }
+    .rp-page-header h2 { font-size: 1.25rem; }
+  }
+  </style>
+</head>
+<body>
+
+<!-- ==================== LOGIN ==================== -->
+<div id="rp-login">
+  <div class="rp-login-card">
+    <div class="rp-login-logo">
+      <i class="ri-paw-fill" style="font-size:1.5rem;color:#4552CC;"></i>
+      <span class="rp-login-logo-text">PETCINGO</span>
+    </div>
+    <div class="rp-login-title">Panel Refugio Aliado</div>
+    <div class="rp-login-sub">Ingresa con las credenciales asignadas por el administrador.</div>
+
+    <div class="rp-field" style="margin-bottom:13px;">
+      <label class="rp-label" for="rp-lu">Usuario</label>
+      <input class="rp-input" type="text" id="rp-lu" placeholder="usuario.refugio" autocomplete="username" autocapitalize="none" spellcheck="false">
+    </div>
+    <div class="rp-field" style="margin-bottom:6px;">
+      <label class="rp-label" for="rp-lp">Contrasena</label>
+      <input class="rp-input" type="password" id="rp-lp" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" autocomplete="current-password" onkeydown="if(event.key==='Enter')rpLogin()">
+    </div>
+    <div id="rp-login-err"></div>
+    <button class="rp-btn rp-btn--primary" style="width:100%;margin-top:14px;" id="rp-login-btn" onclick="rpLogin()">
+      <i class="ri-login-box-line"></i> Ingresar
+    </button>
+  </div>
+</div>
+
+<!-- ==================== PANEL ==================== -->
+<div id="rp-panel" style="display:none;">
+
+  <!-- TOPBAR -->
+  <div id="rp-topbar">
+    <span class="rp-tb-logo">PETCINGO</span>
+    <div class="rp-tb-center">
+      <span class="rp-tb-name" id="rp-shelter-name">Refugio</span>
+      <span class="rp-tb-badge">Refugio Aliado</span>
+    </div>
+    <button class="rp-btn rp-btn--danger rp-btn--sm" onclick="rpLogout()">
+      <i class="ri-logout-box-line"></i> Cerrar sesion
+    </button>
+  </div>
+
+  <!-- TABS -->
+  <div id="rp-tabs">
+    <div class="rp-tabs-inner">
+      <button class="rp-tab active" data-tab="resumen"    onclick="rpTab('resumen')"><i class="ri-dashboard-line"></i> Resumen</button>
+      <button class="rp-tab"        data-tab="adopciones" onclick="rpTab('adopciones')"><i class="ri-heart-line"></i> Adopciones</button>
+      <button class="rp-tab"        data-tab="ventas"     onclick="rpTab('ventas')"><i class="ri-shopping-bag-line"></i> Ventas</button>
+      <button class="rp-tab"        data-tab="finanzas"   onclick="rpTab('finanzas')"><i class="ri-money-dollar-circle-line"></i> Finanzas</button>
+      <button class="rp-tab"        data-tab="perfil"     onclick="rpTab('perfil')"><i class="ri-settings-3-line"></i> Perfil</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="rp-main">
+
+    <!-- -- RESUMEN -- -->
+    <section class="rp-sec active" id="sec-resumen">
+      <div class="rp-page-header">
+        <h2><i class="ri-dashboard-line"></i> Resumen</h2>
+        <p>Vista general de tu actividad en Petcingo.</p>
+      </div>
+      <div class="rp-stats">
+        <div class="rp-stat">
+          <div class="rp-stat__icon"><i class="ri-shopping-bag-line"></i></div>
+          <div class="rp-stat__value" id="s-ventas-mes">-</div>
+          <div class="rp-stat__label">Ventas este mes</div>
+        </div>
+        <div class="rp-stat">
+          <div class="rp-stat__icon"><i class="ri-money-dollar-circle-line"></i></div>
+          <div class="rp-stat__value" id="s-monto-mes">-</div>
+          <div class="rp-stat__label">Monto generado (Bs)</div>
+        </div>
+        <div class="rp-stat">
+          <div class="rp-stat__icon"><i class="ri-coin-line"></i></div>
+          <div class="rp-stat__value" id="s-comisiones">-</div>
+          <div class="rp-stat__label">Comisiones pendientes (Bs)</div>
+        </div>
+        <div class="rp-stat">
+          <div class="rp-stat__icon"><i class="ri-heart-line"></i></div>
+          <div class="rp-stat__value" id="s-pets-activos">-</div>
+          <div class="rp-stat__label">Animales en adopcion</div>
+        </div>
+        <div class="rp-stat">
+          <div class="rp-stat__icon"><i class="ri-home-heart-line"></i></div>
+          <div class="rp-stat__value" id="s-pets-adoptados">-</div>
+          <div class="rp-stat__label">Adoptados totales</div>
+        </div>
+      </div>
+
+      <div class="rp-card">
+        <div class="rp-sec-title"><i class="ri-link"></i> Enlace de referido</div>
+        <p class="rp-muted" style="margin-bottom:11px;">Comparte este enlace. Por cada venta generada ganas el 20% de comision.</p>
+        <div class="rp-ref-box">
+          <input class="rp-ref-input" type="text" id="ref-resumen" readonly>
+          <button class="rp-btn rp-btn--secondary rp-btn--sm" onclick="rpCopyRef()"><i class="ri-file-copy-line"></i> Copiar</button>
+        </div>
+      </div>
+
+      <div class="rp-card">
+        <div class="rp-sec-title"><i class="ri-history-line"></i> Ultimas ventas</div>
+        <div class="rp-table-wrap">
+          <table class="rp-table">
+            <thead><tr><th>Fecha</th><th>Codigo</th><th>Plan</th><th>Monto</th><th>Comision</th></tr></thead>
+            <tbody id="tb-recent"><tr><td colspan="5"><div class="rp-empty">Cargando...</div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- -- ADOPCIONES -- -->
+    <section class="rp-sec" id="sec-adopciones">
+      <div class="rp-page-header">
+        <h2><i class="ri-heart-line"></i> Adopciones</h2>
+        <p>Gestiona los animales que publicas en adopcion.</p>
+      </div>
+
+      <div class="rp-row" style="margin-bottom:14px;">
+        <span class="rp-muted" id="pets-limit-info"></span>
+        <button class="rp-btn rp-btn--primary" id="btn-add-pet" onclick="rpToggleAddPet()">
+          <i class="ri-add-line"></i> Agregar animal
+        </button>
+      </div>
+
+      <!-- Formulario nuevo animal -->
+      <div class="rp-card" id="add-pet-form" style="display:none;">
+        <div class="rp-sec-title"><i class="ri-add-circle-line"></i> Nuevo animal en adopcion</div>
+        <div class="rp-grid-2" style="margin-bottom:11px;">
+          <div class="rp-field">
+            <label class="rp-label">Nombre <span style="color:#E74C3C;">*</span></label>
+            <input class="rp-input" type="text" id="pet-name" placeholder="Ej: Luna">
+          </div>
+          <div class="rp-field">
+            <label class="rp-label">Especie <span style="color:#E74C3C;">*</span></label>
+            <select class="rp-input" id="pet-species">
+              <option value="">-- Seleccionar --</option>
+              <option value="perro">Perro</option>
+              <option value="gato">Gato</option>
+              <option value="ave">Ave</option>
+              <option value="conejo">Conejo</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
+          <div class="rp-field">
+            <label class="rp-label">Raza</label>
+            <input class="rp-input" type="text" id="pet-breed" placeholder="Ej: Mestizo">
+          </div>
+          <div class="rp-field">
+            <label class="rp-label">Edad aproximada</label>
+            <input class="rp-input" type="text" id="pet-age" placeholder="Ej: 2 anos">
+          </div>
+          <div class="rp-field">
+            <label class="rp-label">Genero</label>
+            <select class="rp-input" id="pet-gender">
+              <option value="">-- Seleccionar --</option>
+              <option value="macho">Macho</option>
+              <option value="hembra">Hembra</option>
+            </select>
+          </div>
+          <div class="rp-field">
+            <label class="rp-label">Foto</label>
+            <input type="file" id="pet-photo-file" accept="image/*" onchange="rpPetPhotoPreview(this)">
+            <img id="pet-photo-prev" class="rp-photo-thumb" alt="preview" style="margin-top:5px;">
+            <span id="pet-photo-status" class="rp-muted" style="margin-top:3px;display:block;"></span>
+          </div>
+        </div>
+        <div class="rp-field" style="margin-bottom:10px;">
+          <label class="rp-label">Descripcion / personalidad</label>
+          <textarea class="rp-input" id="pet-desc" rows="3" placeholder="Cuentanos sobre el animal..."></textarea>
+        </div>
+        <div class="rp-field" style="margin-bottom:14px;">
+          <label class="rp-label">Estado de salud</label>
+          <input class="rp-input" type="text" id="pet-health" placeholder="Ej: Vacunado, esterilizado">
+        </div>
+        <div class="rp-row">
+          <button class="rp-btn rp-btn--primary" onclick="rpSavePet()"><i class="ri-save-line"></i> Guardar y publicar</button>
+          <button class="rp-btn rp-btn--secondary" onclick="rpToggleAddPet()">Cancelar</button>
+        </div>
+      </div>
+
+      <!-- Lista animales -->
+      <div class="rp-card">
+        <div class="rp-sec-title"><i class="ri-list-check"></i> Mis animales</div>
+        <div class="rp-table-wrap">
+          <table class="rp-table">
+            <thead><tr><th>Foto</th><th>Nombre</th><th>Especie</th><th>Estado</th><th>Publicado</th><th>Acciones</th></tr></thead>
+            <tbody id="tb-pets"><tr><td colspan="6"><div class="rp-empty">Cargando...</div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- -- VENTAS -- -->
+    <section class="rp-sec" id="sec-ventas">
+      <div class="rp-page-header">
+        <h2><i class="ri-shopping-bag-line"></i> Ventas</h2>
+        <p>Historial de placas vendidas a traves de tu enlace.</p>
+      </div>
+
+      <div class="rp-card">
+        <div class="rp-sec-title"><i class="ri-link"></i> Tu enlace de referido</div>
+        <p class="rp-muted" style="margin-bottom:11px;">Por cada venta generada ganas el 20% de comision.</p>
+        <div class="rp-ref-box">
+          <input class="rp-ref-input" type="text" id="ref-ventas" readonly>
+          <button class="rp-btn rp-btn--secondary rp-btn--sm" onclick="rpCopyRef()"><i class="ri-file-copy-line"></i> Copiar</button>
+        </div>
+      </div>
+
+      <div class="rp-row" style="margin-bottom:13px;">
+        <select class="rp-input" id="filter-month" style="max-width:170px;" onchange="rpLoadVentas()">
+          <option value="">Todos los meses</option>
+        </select>
+        <select class="rp-input" id="filter-status" style="max-width:170px;" onchange="rpLoadVentas()">
+          <option value="">Todos los estados</option>
+          <option value="confirmed">Confirmado</option>
+          <option value="pending">Pendiente</option>
+          <option value="processing">Procesando</option>
+        </select>
+      </div>
+
+      <div class="rp-card">
+        <div class="rp-table-wrap">
+          <table class="rp-table">
+            <thead><tr><th>Fecha</th><th>Codigo</th><th>Plan</th><th>Total</th><th>Comision</th><th>Estado</th></tr></thead>
+            <tbody id="tb-ventas"><tr><td colspan="6"><div class="rp-empty">Cargando...</div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- -- FINANZAS -- -->
+    <section class="rp-sec" id="sec-finanzas">
+      <div class="rp-page-header">
+        <h2><i class="ri-money-dollar-circle-line"></i> Finanzas</h2>
+        <p>Comisiones y configuracion de pago.</p>
+      </div>
+
+      <div class="rp-stats" style="grid-template-columns:repeat(auto-fit,minmax(195px,1fr));">
+        <div class="rp-stat">
+          <div class="rp-stat__icon"><i class="ri-time-line"></i></div>
+          <div class="rp-stat__value" id="fin-pendiente">-</div>
+          <div class="rp-stat__label">Comisiones pendientes (Bs)</div>
+        </div>
+        <div class="rp-stat">
+          <div class="rp-stat__icon"><i class="ri-checkbox-circle-line"></i></div>
+          <div class="rp-stat__value" id="fin-pagado">-</div>
+          <div class="rp-stat__label">Total pagado (Bs)</div>
+        </div>
+        <div class="rp-stat">
+          <div class="rp-stat__icon"><i class="ri-calendar-check-line"></i></div>
+          <div class="rp-stat__value" id="fin-ultimo">-</div>
+          <div class="rp-stat__label">Ultimo pago recibido</div>
+        </div>
+      </div>
+
+      <div class="rp-card">
+        <div class="rp-sec-title"><i class="ri-history-line"></i> Historial de comisiones</div>
+        <div class="rp-table-wrap">
+          <table class="rp-table">
+            <thead><tr><th>Fecha</th><th>Descripcion</th><th>Monto (Bs)</th><th>Estado</th></tr></thead>
+            <tbody id="tb-comisiones"><tr><td colspan="4"><div class="rp-empty">Cargando...</div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="rp-card">
+        <div class="rp-sec-title"><i class="ri-bank-line"></i> Cuenta bancaria</div>
+        <p class="rp-muted" style="margin-bottom:15px;">Ingresa tus datos para recibir pagos de comisiones.</p>
+        <div class="rp-grid-2" style="margin-bottom:12px;">
+          <div class="rp-field">
+            <label class="rp-label">Banco</label>
+            <input class="rp-input" type="text" id="bank-name" placeholder="Ej: Banco Mercantil Santa Cruz">
+          </div>
+          <div class="rp-field">
+            <label class="rp-label">Tipo de cuenta</label>
+            <select class="rp-input" id="bank-type">
+              <option value="">-- Seleccionar --</option>
+              <option value="ahorro">Caja de ahorro</option>
+              <option value="corriente">Cuenta corriente</option>
+            </select>
+          </div>
+          <div class="rp-field">
+            <label class="rp-label">Numero de cuenta</label>
+            <input class="rp-input" type="text" id="bank-number" placeholder="Ej: 1234567890">
+          </div>
+          <div class="rp-field">
+            <label class="rp-label">Titular</label>
+            <input class="rp-input" type="text" id="bank-owner" placeholder="Nombre del titular">
+          </div>
+        </div>
+        <button class="rp-btn rp-btn--primary" onclick="rpSaveBankAccount()">
+          <i class="ri-save-line"></i> Guardar datos bancarios
+        </button>
+      </div>
+    </section>
+
+    <!-- -- PERFIL -- -->
+    <section class="rp-sec" id="sec-perfil">
+      <div class="rp-page-header">
+        <h2><i class="ri-settings-3-line"></i> Perfil del refugio</h2>
+        <p>Actualiza los datos de tu refugio.</p>
+      </div>
+
+      <div class="rp-card">
+        <div class="rp-sec-title"><i class="ri-building-4-line"></i> Informacion del refugio</div>
+        <div class="rp-grid-2" style="margin-bottom:12px;">
+          <div class="rp-field">
+            <label class="rp-label">Nombre del refugio</label>
+            <input class="rp-input" type="text" id="prof-name" placeholder="Nombre oficial">
+          </div>
+          <div class="rp-field">
+            <label class="rp-label">Telefono</label>
+            <input class="rp-input" type="text" id="prof-phone" placeholder="Ej: 71234567">
+          </div>
+          <div class="rp-field">
+            <label class="rp-label">Ciudad</label>
+            <input class="rp-input" type="text" id="prof-city" placeholder="Ej: Santa Cruz">
+          </div>
+          <div class="rp-field">
+            <label class="rp-label">Limite de mascotas (asignado por admin)</label>
+            <input class="rp-input" type="text" id="prof-limit" readonly>
+          </div>
+        </div>
+        <div class="rp-field" style="margin-bottom:13px;">
+          <label class="rp-label">Direccion</label>
+          <input class="rp-input" type="text" id="prof-address" placeholder="Ej: Av. Irala 456">
+        </div>
+        <div class="rp-field" style="margin-bottom:16px;">
+          <label class="rp-label">Enlace de referido</label>
+          <div class="rp-ref-box">
+            <input class="rp-ref-input" type="text" id="ref-perfil" readonly>
+            <button class="rp-btn rp-btn--secondary rp-btn--sm" onclick="rpCopyRef()"><i class="ri-file-copy-line"></i> Copiar</button>
+          </div>
+        </div>
+        <button class="rp-btn rp-btn--primary" onclick="rpSaveProfile()">
+          <i class="ri-save-line"></i> Guardar cambios
+        </button>
+      </div>
+    </section>
+
+  </div><!-- #rp-main -->
+</div><!-- #rp-panel -->
+
+<!-- Toast -->
+<div id="rp-toast"></div>
+
+<!-- ==================== SCRIPTS ==================== -->
+<script>
+(function () {
+  'use strict';
+
+  /* -- Firebase init -- */
+  var _fbApp = null;
+  var _db    = null;
+  function getApp() {
+    if (_fbApp) return _fbApp;
+    var cfg = {
+      apiKey:            'AIzaSyAEE3yLFFsJTMORNFLYZWW2_DNHwzF0hE8',
+      authDomain:        'petcingo-43096.firebaseapp.com',
+      projectId:         'petcingo-43096',
+      storageBucket:     'petcingo-43096.firebasestorage.app',
+      messagingSenderId: '679546185536',
+      appId:             '1:679546185536:web:ceccd210b7c73b296f7ca5'
+    };
+    try { _fbApp = firebase.app('petcingo-rp'); }
+    catch(e) { _fbApp = firebase.initializeApp(cfg, 'petcingo-rp'); }
+    return _fbApp;
+  }
+  function db() {
+    if (!_db) _db = getApp().firestore();
+    return _db;
+  }
+
+  /* -- State -- */
+  var _sid  = null; /* shelter id */
+  var _sdat = null; /* shelter data object */
+  var _petsCache  = [];
+  var _ventasAll  = [];
+  var _toastTimer = null;
+
+  /* -- XSS escape -- */
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  /* -- Toast -- */
+  function toast(msg, type) {
+    var el = document.getElementById('rp-toast');
+    if (!el) return;
+    el.textContent = msg;
+    el.className = 'rp-show rp-' + (type || 'info');
+    clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(function () { el.className = ''; }, 3200);
+  }
+
+  /* -- Helpers -- */
+  function $txt(id, val) { var el = document.getElementById(id); if (el) el.textContent = String(val); }
+  function $val(id, val) { var el = document.getElementById(id); if (el) el.value = String(val == null ? '' : val); }
+  function $gval(id)     { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
+  function refUrl()      { return 'https://prueb2.dashnexpages.net/checkout/?ref=' + (_sid || ''); }
+
+  function setRefLinks() {
+    var url = refUrl();
+    ['ref-resumen','ref-ventas','ref-perfil'].forEach(function (id) { $val(id, url); });
+  }
+
+  function tsDate(ts) {
+    if (!ts) return '-';
+    var d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleDateString('es-BO');
+  }
+
+  /* -- Compress image -- */
+  function compressImage(file, maxW, startQ, targetBytes) {
+    maxW        = maxW        || 600;
+    startQ      = startQ      || 0.78;
+    targetBytes = targetBytes || 100000;
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onerror = function () { reject(new Error('No se pudo leer el archivo.')); };
+      reader.onload  = function (e) {
+        var img = new Image();
+        img.onerror = function () { reject(new Error('Imagen invalida.')); };
+        img.onload  = function () {
+          var canvas = document.createElement('canvas');
+          var w = img.naturalWidth, h = img.naturalHeight;
+          if (w > maxW) { h = Math.round(h * (maxW / w)); w = maxW; }
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          (function loop(q) {
+            canvas.toBlob(function (blob) {
+              if (!blob) { reject(new Error('Error al comprimir.')); return; }
+              if (blob.size > targetBytes && q > 0.28) loop(+(q - 0.08).toFixed(2));
+              else resolve(blob);
+            }, 'image/jpeg', q);
+          }(startQ));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  /* ====================================
+     LOGIN / LOGOUT
+     ==================================== */
+  window.rpLogin = function () {
+    var username = $gval('rp-lu').toLowerCase();
+    var password = $gval('rp-lp');
+    var errEl    = document.getElementById('rp-login-err');
+    var btn      = document.getElementById('rp-login-btn');
+    errEl.style.display = 'none';
+    if (!username || !password) { showErr('Completa todos los campos.'); return; }
+    btn.disabled = true;
+    btn.innerHTML = '<i class="ri-loader-4-line"></i> Verificando...';
+
+    db().collection('shelters').where('username', '==', username).limit(5).get()
+      .then(function (snap) {
+        var found = null;
+        snap.forEach(function (doc) {
+          var d = doc.data();
+          if (String(d.password) === String(password)) found = { id: doc.id, data: d };
+        });
+        if (!found) { showErr('Credenciales incorrectas.'); resetBtn(); return; }
+        _sid  = found.id;
+        _sdat = found.data;
+        sessionStorage.setItem('rp_sid',  _sid);
+        sessionStorage.setItem('rp_sdat', JSON.stringify(_sdat));
+        showPanel();
+      })
+      .catch(function (e) { showErr('Error de conexion: ' + e.message); resetBtn(); });
+
+    function showErr(msg) {
+      errEl.style.display = 'block';
+      errEl.textContent   = msg;
+    }
+    function resetBtn() {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="ri-login-box-line"></i> Ingresar';
+    }
+  };
+
+  window.rpLogout = function () {
+    sessionStorage.removeItem('rp_sid');
+    sessionStorage.removeItem('rp_sdat');
+    _sid = null; _sdat = null;
+    document.getElementById('rp-panel').style.display = 'none';
+    document.getElementById('rp-login').style.display = 'flex';
+    $val('rp-lu', ''); $val('rp-lp', '');
+  };
+
+  function showPanel() {
+    document.getElementById('rp-login').style.display = 'none';
+    document.getElementById('rp-panel').style.display = 'block';
+    $txt('rp-shelter-name', _sdat.name || 'Refugio');
+    setRefLinks();
+    rpLoadResumen();
+    rpPopulateMonths();
+  }
+
+  /* ====================================
+     TAB SWITCHING
+     ==================================== */
+  window.rpTab = function (tab) {
+    document.querySelectorAll('.rp-tab').forEach(function (b) {
+      b.classList.toggle('active', b.getAttribute('data-tab') === tab);
+    });
+    document.querySelectorAll('.rp-sec').forEach(function (s) {
+      s.classList.toggle('active', s.id === 'sec-' + tab);
+    });
+    if (tab === 'adopciones') rpLoadPets();
+    if (tab === 'ventas')     rpLoadVentas();
+    if (tab === 'finanzas')   rpLoadFinanzas();
+    if (tab === 'perfil')     rpFillProfile();
+  };
+
+  /* ====================================
+     RESUMEN
+     ==================================== */
+  function rpLoadResumen() {
+    var now        = new Date();
+    var monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    var monthEnd   = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+
+    /* Ventas */
+    db().collection('orders').where('ref', '==', _sid).get()
+      .then(function (snap) {
+        var countM = 0, montoM = 0, rows = [];
+        snap.forEach(function (doc) {
+          var d = doc.data();
+          var ts = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : null;
+          if (ts && ts >= monthStart && ts < monthEnd) { countM++; montoM += parseFloat(d.total || 0); }
+          rows.push({ id: doc.id, data: d });
+        });
+        _ventasAll = rows;
+        $txt('s-ventas-mes', countM);
+        $txt('s-monto-mes',  'Bs ' + montoM.toFixed(0));
+        rows.sort(function (a, b) {
+          var ta = a.data.createdAt && a.data.createdAt.toDate ? a.data.createdAt.toDate() : 0;
+          var tb = b.data.createdAt && b.data.createdAt.toDate ? b.data.createdAt.toDate() : 0;
+          return tb - ta;
+        });
+        renderRecentSales(rows.slice(0, 5));
+      }).catch(function (e) { toast('Error ventas: ' + e.message, 'error'); });
+
+    /* Comisiones pendientes */
+    db().collection('commissions').where('entityId', '==', _sid).where('status', '==', 'pendiente').get()
+      .then(function (snap) {
+        var total = 0;
+        snap.forEach(function (d) { total += parseFloat(d.data().amount || 0); });
+        $txt('s-comisiones', 'Bs ' + total.toFixed(0));
+      }).catch(function () {});
+
+    /* Mascotas */
+    db().collection('pets').where('sellerId', '==', _sid).get()
+      .then(function (snap) {
+        var act = 0, ado = 0;
+        snap.forEach(function (doc) {
+          var s = doc.data().status;
+          if (s === 'activo') act++;
+          else if (s === 'adoptado') ado++;
+        });
+        $txt('s-pets-activos',   act);
+        $txt('s-pets-adoptados', ado);
+      }).catch(function () {});
+  }
+
+  function renderRecentSales(rows) {
+    var tbody = document.getElementById('tb-recent');
+    if (!tbody) return;
+    if (!rows.length) { tbody.innerHTML = '<tr><td colspan="5"><div class="rp-empty">Sin ventas registradas.</div></td></tr>'; return; }
+    var h = '';
+    rows.forEach(function (r) {
+      var d = r.data, total = parseFloat(d.total || 0), com = (total * 0.2).toFixed(0);
+      h += '<tr><td>' + esc(tsDate(d.createdAt)) + '</td>';
+      h += '<td><code style="font-size:0.78rem;color:#4552CC;">' + esc(d.activationCode || '-') + '</code></td>';
+      h += '<td>' + esc(d.planName || '-') + '</td>';
+      h += '<td>Bs ' + total.toFixed(0) + '</td>';
+      h += '<td class="rp-green">Bs ' + com + '</td></tr>';
+    });
+    tbody.innerHTML = h;
+  }
+
+  /* ====================================
+     COPY REF LINK
+     ==================================== */
+  window.rpCopyRef = function () {
+    var url = refUrl();
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(function () { toast('Enlace copiado.', 'success'); });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = url; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+      toast('Enlace copiado.', 'success');
+    }
+  };
+
+  /* ====================================
+     ADOPCIONES
+     ==================================== */
+  window.rpToggleAddPet = function () {
+    var f = document.getElementById('add-pet-form');
+    if (!f) return;
+    var open = f.style.display !== 'none';
+    f.style.display = open ? 'none' : 'block';
+    if (!open) {
+      ['pet-name','pet-breed','pet-age','pet-desc','pet-health'].forEach(function (id) { $val(id, ''); });
+      $val('pet-species', ''); $val('pet-gender', '');
+      var fi = document.getElementById('pet-photo-file'); if (fi) fi.value = '';
+      var prev = document.getElementById('pet-photo-prev'); if (prev) { prev.src = ''; prev.style.display = 'none'; }
+      $txt('pet-photo-status', '');
+    }
+  };
+
+  window.rpPetPhotoPreview = function (input) {
+    var file = input.files && input.files[0];
+    var prev = document.getElementById('pet-photo-prev');
+    if (!file || !prev) return;
+    var reader = new FileReader();
+    reader.onload = function (e) { prev.src = e.target.result; prev.style.display = 'block'; };
+    reader.readAsDataURL(file);
+  };
+
+  window.rpSavePet = function () {
+    var name    = $gval('pet-name');
+    var species = $gval('pet-species');
+    if (!name)    { toast('El nombre es obligatorio.', 'error'); return; }
+    if (!species) { toast('Selecciona la especie.', 'error'); return; }
+
+    var active = _petsCache.filter(function (p) { return p.data.status === 'activo'; }).length;
+    var limit  = parseInt(_sdat.limite_mascotas || 10);
+    if (active >= limit) { toast('Limite de ' + limit + ' animales alcanzado.', 'warning'); return; }
+
+    var petData = {
+      name:            name,
+      species:         species,
+      breed:           $gval('pet-breed'),
+      age:             $gval('pet-age'),
+      gender:          $gval('pet-gender'),
+      desc:            $gval('pet-desc'),
+      health:          $gval('pet-health'),
+      sellerId:        _sid,
+      sellerName:      _sdat.name || '',
+      status:          'activo',
+      tipo:            'adopcion',
+      featuredOnIndex: false,
+      photoUrl:        '',
+      createdAt:       firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    var file = document.getElementById('pet-photo-file').files[0];
+    if (file) {
+      rpUploadPetPhoto(file, function (url) { petData.photoUrl = url; rpWritePet(petData); });
+    } else {
+      rpWritePet(petData);
+    }
+  };
+
+  function rpWritePet(petData) {
+    db().collection('pets').add(petData)
+      .then(function () { toast('Animal guardado correctamente.', 'success'); rpToggleAddPet(); rpLoadPets(); })
+      .catch(function (e) { toast('Error al guardar: ' + e.message, 'error'); });
+  }
+
+  function rpUploadPetPhoto(file, cb) {
+    var statusEl = document.getElementById('pet-photo-status');
+    function upd(msg) { if (statusEl) statusEl.textContent = msg; }
+    upd('Comprimiendo imagen...');
+    compressImage(file, 600, 0.78, 100000).then(function (blob) {
+      upd('Subiendo foto...');
+      if (typeof AWS === 'undefined') { upd('AWS SDK no disponible.'); cb(''); return; }
+      AWS.config.update({
+        accessKeyId:     '6496db9c407984025f99bc0dc6a23264',
+        secretAccessKey: 'b270005e8ebf9eef779db72012a0ea6206a9f281eba9d07e0b15f78016c2d94d'
+      });
+      var s3  = new AWS.S3({ endpoint: 'https://c11712fefc3437b619d76c69ecc14901.r2.cloudflarestorage.com', signatureVersion: 'v4', s3ForcePathStyle: true });
+      var key = 'pets/' + _sid + '-' + Date.now() + '.jpg';
+      s3.upload({ Bucket: 'petcingo', Key: key, Body: blob, ContentType: 'image/jpeg' }, function (err) {
+        if (err) { upd('Error: ' + err.message); cb(''); return; }
+        upd('Foto subida.');
+        cb('https://pub-cb882f9b206543b28ea81fcadac0f4b2.r2.dev/' + key);
+      });
+    }).catch(function (e) { upd('Error: ' + e.message); cb(''); });
+  }
+
+  function rpLoadPets() {
+    var tbody = document.getElementById('tb-pets');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="6"><div class="rp-empty">Cargando...</div></td></tr>';
+    db().collection('pets').where('sellerId', '==', _sid).get()
+      .then(function (snap) {
+        _petsCache = [];
+        snap.forEach(function (doc) { _petsCache.push({ id: doc.id, data: doc.data() }); });
+        _petsCache.sort(function (a, b) {
+          var ta = a.data.createdAt && a.data.createdAt.toDate ? a.data.createdAt.toDate() : 0;
+          var tb = b.data.createdAt && b.data.createdAt.toDate ? b.data.createdAt.toDate() : 0;
+          return tb - ta;
+        });
+        renderPets();
+        updatePetsLimitInfo();
+      }).catch(function (e) { tbody.innerHTML = '<tr><td colspan="6"><div class="rp-empty">Error: ' + esc(e.message) + '</div></td></tr>'; });
+  }
+
+  function renderPets() {
+    var tbody = document.getElementById('tb-pets');
+    if (!tbody) return;
+    if (!_petsCache.length) {
+      tbody.innerHTML = '<tr><td colspan="6"><div class="rp-empty">No hay animales registrados.</div></td></tr>';
+      return;
+    }
+    var h = '';
+    _petsCache.forEach(function (p) {
+      var d = p.data;
+      var thumb = d.photoUrl
+        ? '<img src="' + esc(d.photoUrl) + '" style="width:44px;height:44px;object-fit:cover;border-radius:8px;border:1.5px solid #E0E0E0;">'
+        : '<div style="width:44px;height:44px;background:#EEF1FB;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#9E9E9E;"><i class="ri-image-line"></i></div>';
+      var badge    = '<span class="rp-badge rp-badge--' + esc(d.status || 'activo') + '">' + esc(d.status || 'activo') + '</span>';
+      var featured = d.featuredOnIndex
+        ? '<span style="color:#4552CC;font-size:0.78rem;font-weight:700;"><i class="ri-star-fill"></i> Publicado</span>'
+        : '<span style="color:#9E9E9E;font-size:0.78rem;">No publicado</span>';
+
+      var acts = '';
+      if (d.status !== 'adoptado') {
+        acts += '<button class="rp-btn rp-btn--' + (d.featuredOnIndex ? 'warning' : 'secondary') + ' rp-btn--sm" style="margin:2px;" onclick="rpToggleFeatured(\'' + esc(p.id) + '\',' + (d.featuredOnIndex ? 'false' : 'true') + ')">' + (d.featuredOnIndex ? 'Quitar del index' : 'Publicar') + '</button>';
+        acts += '<button class="rp-btn rp-btn--success rp-btn--sm" style="margin:2px;" onclick="rpMarkAdopted(\'' + esc(p.id) + '\')"><i class="ri-heart-fill"></i> Adoptado</button>';
+      }
+      if (!d.featuredOnIndex && d.status !== 'adoptado') {
+        acts += '<button class="rp-btn rp-btn--danger rp-btn--sm" style="margin:2px;" onclick="rpDeletePet(\'' + esc(p.id) + '\')"><i class="ri-delete-bin-line"></i></button>';
+      }
+
+      h += '<tr>';
+      h += '<td>' + thumb + '</td>';
+      h += '<td style="font-weight:600;">' + esc(d.name || '-') + '</td>';
+      h += '<td>' + esc(d.species || '-') + '</td>';
+      h += '<td>' + badge + '</td>';
+      h += '<td>' + featured + '</td>';
+      h += '<td style="white-space:nowrap;">' + acts + '</td>';
+      h += '</tr>';
+    });
+    tbody.innerHTML = h;
+  }
+
+  function updatePetsLimitInfo() {
+    var el    = document.getElementById('pets-limit-info');
+    var btn   = document.getElementById('btn-add-pet');
+    if (!el) return;
+    var active = _petsCache.filter(function (p) { return p.data.status === 'activo'; }).length;
+    var limit  = parseInt(_sdat.limite_mascotas || 10);
+    el.textContent = active + ' / ' + limit + ' animales activos';
+    if (btn) btn.disabled = active >= limit;
+  }
+
+  window.rpToggleFeatured = function (petId, state) {
+    var val = (state === true || state === 'true');
+    db().collection('pets').doc(petId).update({ featuredOnIndex: val })
+      .then(function () { toast(val ? 'Publicado en el index.' : 'Quitado del index.', 'success'); rpLoadPets(); })
+      .catch(function (e) { toast('Error: ' + e.message, 'error'); });
+  };
+
+  window.rpMarkAdopted = function (petId) {
+    if (!confirm('Marcar este animal como adoptado?')) return;
+    db().collection('pets').doc(petId).update({ status: 'adoptado', featuredOnIndex: false })
+      .then(function () { toast('Marcado como adoptado.', 'success'); rpLoadPets(); })
+      .catch(function (e) { toast('Error: ' + e.message, 'error'); });
+  };
+
+  window.rpDeletePet = function (petId) {
+    if (!confirm('Eliminar este animal? Esta accion no se puede deshacer.')) return;
+    db().collection('pets').doc(petId).delete()
+      .then(function () { toast('Eliminado.', 'success'); rpLoadPets(); })
+      .catch(function (e) { toast('Error: ' + e.message, 'error'); });
+  };
+
+  /* ====================================
+     VENTAS
+     ==================================== */
+  function rpPopulateMonths() {
+    var sel = document.getElementById('filter-month');
+    if (!sel) return;
+    var now = new Date();
+    for (var i = 0; i < 12; i++) {
+      var d   = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      var lbl = d.toLocaleDateString('es-BO', { month: 'long', year: 'numeric' });
+      var val = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+      var opt = document.createElement('option');
+      opt.value = val; opt.textContent = lbl;
+      sel.appendChild(opt);
+    }
+  }
+
+  window.rpLoadVentas = function () {
+    var tbody = document.getElementById('tb-ventas');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="6"><div class="rp-empty">Cargando...</div></td></tr>';
+
+    db().collection('orders').where('ref', '==', _sid).get()
+      .then(function (snap) {
+        var rows = [];
+        snap.forEach(function (doc) { rows.push({ id: doc.id, data: doc.data() }); });
+        _ventasAll = rows;
+        renderVentas(rows);
+      }).catch(function (e) { tbody.innerHTML = '<tr><td colspan="6"><div class="rp-empty">Error: ' + esc(e.message) + '</div></td></tr>'; });
+  };
+
+  function renderVentas(allRows) {
+    var tbody    = document.getElementById('tb-ventas');
+    var fMonth   = $gval('filter-month');
+    var fStatus  = $gval('filter-status');
+
+    var rows = allRows.filter(function (r) {
+      var d = r.data;
+      if (fStatus && d.status !== fStatus) return false;
+      if (fMonth) {
+        var ts = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : null;
+        if (!ts) return false;
+        var key = ts.getFullYear() + '-' + String(ts.getMonth() + 1).padStart(2, '0');
+        if (key !== fMonth) return false;
+      }
+      return true;
+    });
+
+    rows.sort(function (a, b) {
+      var ta = a.data.createdAt && a.data.createdAt.toDate ? a.data.createdAt.toDate() : 0;
+      var tb = b.data.createdAt && b.data.createdAt.toDate ? b.data.createdAt.toDate() : 0;
+      return tb - ta;
+    });
+
+    if (!rows.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="rp-empty">Sin ventas para el filtro seleccionado.</div></td></tr>'; return; }
+    var h = '';
+    rows.forEach(function (r) {
+      var d = r.data, total = parseFloat(d.total || 0), com = (total * 0.2).toFixed(0);
+      h += '<tr>';
+      h += '<td>' + esc(tsDate(d.createdAt)) + '</td>';
+      h += '<td><code style="font-size:0.78rem;color:#4552CC;">' + esc(d.activationCode || '-') + '</code></td>';
+      h += '<td>' + esc(d.planName || '-') + '</td>';
+      h += '<td>Bs ' + total.toFixed(0) + '</td>';
+      h += '<td class="rp-green">Bs ' + com + '</td>';
+      h += '<td><span class="rp-badge rp-badge--' + esc(d.status || 'pending') + '">' + esc(d.status || '-') + '</span></td>';
+      h += '</tr>';
+    });
+    tbody.innerHTML = h;
+  }
+
+  /* ====================================
+     FINANZAS
+     ==================================== */
+  function rpLoadFinanzas() {
+    var tbody = document.getElementById('tb-comisiones');
+    if (tbody) tbody.innerHTML = '<tr><td colspan="4"><div class="rp-empty">Cargando...</div></td></tr>';
+
+    db().collection('commissions').where('entityId', '==', _sid).get()
+      .then(function (snap) {
+        var pending = 0, paid = 0, lastPaidDate = null, rows = [];
+        snap.forEach(function (doc) {
+          var d = doc.data();
+          rows.push({ id: doc.id, data: d });
+          var amt = parseFloat(d.amount || 0);
+          if (d.status === 'pendiente') {
+            pending += amt;
+          } else if (d.status === 'pagado') {
+            paid += amt;
+            var pa = d.paidAt && d.paidAt.toDate ? d.paidAt.toDate() : null;
+            if (pa && (!lastPaidDate || pa > lastPaidDate)) lastPaidDate = pa;
+          }
+        });
+        $txt('fin-pendiente', 'Bs ' + pending.toFixed(0));
+        $txt('fin-pagado',    'Bs ' + paid.toFixed(0));
+        $txt('fin-ultimo',    lastPaidDate ? lastPaidDate.toLocaleDateString('es-BO') : '-');
+
+        rows.sort(function (a, b) {
+          var ta = a.data.createdAt && a.data.createdAt.toDate ? a.data.createdAt.toDate() : 0;
+          var tb = b.data.createdAt && b.data.createdAt.toDate ? b.data.createdAt.toDate() : 0;
+          return tb - ta;
+        });
+        renderComisiones(rows);
+      }).catch(function (e) { toast('Error al cargar finanzas: ' + e.message, 'error'); });
+
+    /* Prefill bank data */
+    if (_sdat && _sdat.bankAccount) {
+      var b = _sdat.bankAccount;
+      $val('bank-name',   b.bankName   || '');
+      $val('bank-type',   b.bankType   || '');
+      $val('bank-number', b.bankNumber || '');
+      $val('bank-owner',  b.bankOwner  || '');
+    }
+  }
+
+  function renderComisiones(rows) {
+    var tbody = document.getElementById('tb-comisiones');
+    if (!tbody) return;
+    if (!rows.length) { tbody.innerHTML = '<tr><td colspan="4"><div class="rp-empty">Sin comisiones registradas.</div></td></tr>'; return; }
+    var h = '';
+    rows.forEach(function (r) {
+      var d = r.data;
+      h += '<tr>';
+      h += '<td>' + esc(tsDate(d.createdAt)) + '</td>';
+      h += '<td>' + esc(d.channel || d.description || 'Venta referida') + '</td>';
+      h += '<td style="font-weight:700;">Bs ' + parseFloat(d.amount || 0).toFixed(0) + '</td>';
+      h += '<td><span class="rp-badge rp-badge--' + esc(d.status || 'pendiente') + '">' + esc(d.status || 'pendiente') + '</span></td>';
+      h += '</tr>';
+    });
+    tbody.innerHTML = h;
+  }
+
+  window.rpSaveBankAccount = function () {
+    var bankData = {
+      bankName:   $gval('bank-name'),
+      bankType:   $gval('bank-type'),
+      bankNumber: $gval('bank-number'),
+      bankOwner:  $gval('bank-owner')
+    };
+    if (!bankData.bankName || !bankData.bankNumber) { toast('Completa banco y numero de cuenta.', 'error'); return; }
+    db().collection('shelters').doc(_sid).update({ bankAccount: bankData })
+      .then(function () {
+        _sdat.bankAccount = bankData;
+        sessionStorage.setItem('rp_sdat', JSON.stringify(_sdat));
+        toast('Datos bancarios guardados.', 'success');
+      }).catch(function (e) { toast('Error: ' + e.message, 'error'); });
+  };
+
+  /* ====================================
+     PERFIL
+     ==================================== */
+  function rpFillProfile() {
+    if (!_sdat) return;
+    $val('prof-name',    _sdat.name    || '');
+    $val('prof-phone',   _sdat.phone   || '');
+    $val('prof-city',    _sdat.city    || '');
+    $val('prof-address', _sdat.address || '');
+    $val('prof-limit',   _sdat.limite_mascotas != null ? _sdat.limite_mascotas : '-');
+  }
+
+  window.rpSaveProfile = function () {
+    var updates = {
+      name:    $gval('prof-name'),
+      phone:   $gval('prof-phone'),
+      city:    $gval('prof-city'),
+      address: $gval('prof-address')
+    };
+    if (!updates.name) { toast('El nombre es obligatorio.', 'error'); return; }
+    db().collection('shelters').doc(_sid).update(updates)
+      .then(function () {
+        var keys = Object.keys(updates);
+        for (var i = 0; i < keys.length; i++) { _sdat[keys[i]] = updates[keys[i]]; }
+        sessionStorage.setItem('rp_sdat', JSON.stringify(_sdat));
+        $txt('rp-shelter-name', _sdat.name || 'Refugio');
+        toast('Perfil actualizado.', 'success');
+      }).catch(function (e) { toast('Error: ' + e.message, 'error'); });
+  };
+
+  /* ====================================
+     SESSION RESTORE
+     ==================================== */
+  (function () {
+    var savedId   = sessionStorage.getItem('rp_sid');
+    var savedData = sessionStorage.getItem('rp_sdat');
+    if (!savedId || !savedData) return;
+    try {
+      _sid  = savedId;
+      _sdat = JSON.parse(savedData);
+      showPanel();
+    } catch (e) {
+      sessionStorage.removeItem('rp_sid');
+      sessionStorage.removeItem('rp_sdat');
+    }
+  }());
+
+}());
+</script>
+</body>
+</html>
