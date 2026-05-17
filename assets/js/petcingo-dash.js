@@ -206,24 +206,31 @@
       var content = document.getElementById('verify-modal-content');
       var actions = document.getElementById('verify-modal-actions');
       
+      var LBL = 'font-family:\'Plus Jakarta Sans\',sans-serif;font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;';
+      var VAL = 'font-family:\'Plus Jakarta Sans\',sans-serif;';
       var html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">';
-      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Comprador</span><br><strong>' + escFn(d.buyer ? d.buyer.name : d.buyerName || '') + '</strong></div>';
-      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Telefono</span><br><strong>' + escFn(d.buyer ? d.buyer.phone : d.phone || '') + '</strong></div>';
-      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Email</span><br><strong>' + escFn(d.buyer ? d.buyer.email : d.email || '') + '</strong></div>';
-      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Plan</span><br><strong>' + escFn(d.planName || '') + '</strong></div>';
-      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Total</span><br><strong style="color:#4552CC;">' + (d.total || 0) + ' Bs</strong></div>';
-      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Metodo</span><br><strong>' + escFn(d.paymentMethod || '') + '</strong></div>';
-      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Direccion</span><br><strong>' + escFn(d.buyer ? d.buyer.address : d.address || '') + '</strong></div>';
-      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;">Estado</span><br><span class="status-badge ' + (d.status || 'pending') + '">' + (d.status || 'pending').toUpperCase() + '</span></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="' + LBL + '">Comprador</span><br><strong style="' + VAL + '">' + escFn(d.buyer ? d.buyer.name  : d.buyerName || '') + '</strong></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="' + LBL + '">Telefono</span><br><strong style="'  + VAL + '">' + escFn(d.buyer ? d.buyer.phone : d.phone    || '') + '</strong></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="' + LBL + '">Email</span><br><strong style="'     + VAL + '">' + escFn(d.buyer ? d.buyer.email : d.email    || '') + '</strong></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="' + LBL + '">Plan</span><br><strong style="'      + VAL + '">' + escFn(d.planName || '') + '</strong></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="' + LBL + '">Total</span><br><strong style="'     + VAL + 'color:#4552CC;">' + (d.total || 0) + ' Bs</strong></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="' + LBL + '">Metodo</span><br><strong style="'    + VAL + '">' + escFn(d.paymentMethod || '') + '</strong></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="' + LBL + '">Direccion</span><br><strong style="' + VAL + '">' + escFn(d.buyer ? d.buyer.address : d.address || '') + '</strong></div>';
+      html += '<div style="background:#F8F9FB;padding:10px 12px;border-radius:8px;"><span style="' + LBL + '">Estado</span><br><span class="status-badge ' + (d.status || 'pending') + '">' + (d.status || 'pending').toUpperCase() + '</span></div>';
       html += '</div>';
-      
+
       if (d.receiptUrl) {
         html += '<div style="margin-bottom:16px;">';
-        html += '<span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;display:block;margin-bottom:8px;">Comprobante de pago</span>';
+        html += '<span style="' + LBL + 'display:block;margin-bottom:8px;">Comprobante de pago</span>';
         html += '<a href="' + d.receiptUrl + '" target="_blank">';
         html += '<img src="' + d.receiptUrl + '" style="width:100%;max-height:300px;object-fit:contain;border-radius:12px;border:1px solid #E0E0E0;cursor:pointer;" alt="Comprobante" onerror="this.style.display=\'none\'">';
         html += '</a>';
-        html += '<a href="' + d.receiptUrl + '" target="_blank" style="display:block;text-align:center;margin-top:6px;font-size:0.8rem;color:#4552CC;font-weight:600;">Ver imagen completa</a>';
+        html += '<a href="' + d.receiptUrl + '" target="_blank" style="' + VAL + 'display:block;text-align:center;margin-top:6px;font-size:0.8rem;color:#4552CC;font-weight:600;">Ver imagen completa</a>';
+        html += '</div>';
+      } else {
+        html += '<div style="margin-bottom:16px;padding:12px 16px;background:#FAFAFA;border-radius:10px;border:1px solid #E0E0E0;">';
+        html += '<span style="' + LBL + 'display:block;margin-bottom:6px;">Comprobante de pago</span>';
+        html += '<em style="' + VAL + 'color:#BDBDBD;font-size:0.88rem;">Sin comprobante</em>';
         html += '</div>';
       }
       
@@ -375,7 +382,7 @@
         var m = document.getElementById('cancel-order-modal');
         if (m) m.style.display = 'none';
         closeVerifyModal();
-        if (typeof toast === 'function') toast((isPaid ? 'Pedido cancelado — pendiente de reembolso.' : 'Pedido cancelado.'));
+        if (typeof toast === 'function') toast((isPaid ? 'Pedido cancelado -- pendiente de reembolso.' : 'Pedido cancelado.'));
         if (typeof showDashAlert === 'function' && isPaid) showDashAlert('Pedido ' + orderId.substring(0,8) + '... cancelado. Reembolso pendiente.', 'warning', 'ri-refund-2-line');
         loadOrders();
       })
@@ -406,36 +413,80 @@
   window.printShippingGuide = function(orderId) {
     var order = _ordersCache.find(function(o) { return o.id === orderId; });
     if (!order) { toast('Pedido no encontrado.'); return; }
-    var d = order.data;
-    var buyerName = d.buyer ? d.buyer.name : d.buyerName;
-    var buyerPhone = d.buyer ? d.buyer.phone : d.phone;
-    var buyerAddress = d.buyer ? d.buyer.address : d.address;
-    var buyerNotes = d.buyer ? d.buyer.notes : d.notes;
+    var d            = order.data;
+    var buyerName    = escFn(d.buyer ? d.buyer.name    : d.buyerName || '');
+    var buyerPhone   = escFn(d.buyer ? d.buyer.phone   : d.phone     || '');
+    var buyerEmail   = escFn(d.buyer ? d.buyer.email   : d.email     || '');
+    var buyerCity    = escFn(d.buyer ? d.buyer.city    : d.city      || '');
+    var buyerAddress = escFn(d.buyer ? d.buyer.address : d.address   || '');
+    var buyerNotes   = escFn(d.buyer ? d.buyer.notes   : d.notes     || '');
+    var dateStr      = new Date().toLocaleDateString('es-BO', { day: '2-digit', month: 'long', year: 'numeric' });
+    var qrTarget     = d.activationCode
+      ? 'https://prueb2.dashnexpages.net/activacion/?id=' + encodeURIComponent(d.activationCode)
+      : 'https://petcingo.com.bo';
 
-    var win = window.open('', '_blank', 'width=800,height=600');
-    win.document.write('<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Guia de Envio - ' + orderId + '</title>');
-    win.document.write('<link href="https://fonts.googleapis.com/css2?family=Sora:wght@700;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">');
-    win.document.write('<style>body{font-family:"Plus Jakarta Sans",sans-serif;padding:40px;color:#212121;}');
-    win.document.write('h1{font-family:"Sora",sans-serif;font-size:1.5rem;margin-bottom:4px;}');
-    win.document.write('.meta{color:#757575;font-size:0.85rem;margin-bottom:20px;border-bottom:2px solid #4552CC;padding-bottom:12px;}');
-    win.document.write('table{width:100%;border-collapse:collapse;margin:16px 0;}');
-    win.document.write('td,th{border:1px solid #E0E0E0;padding:10px 14px;font-size:0.88rem;text-align:left;}');
-    win.document.write('th{background:#F8F9FB;font-weight:700;width:30%;}');
-    win.document.write('.footer{margin-top:30px;text-align:center;font-size:0.75rem;color:#9E9E9E;border-top:1px solid #E0E0E0;padding-top:12px;}');
-    win.document.write('@media print{body{padding:20px;}}</style></head><body>');
-    win.document.write('<h1>Guia de Envio - Petcingo</h1>');
-    win.document.write('<div class="meta">Pedido: <strong>' + orderId + '</strong> | Fecha: ' + new Date().toLocaleDateString('es-BO', {day:'2-digit',month:'long',year:'numeric'}) + '</div>');
-    win.document.write('<table>');
-    win.document.write('<tr><th>Comprador</th><td>' + escFn(buyerName || '') + '</td></tr>');
-    win.document.write('<tr><th>Telefono</th><td>' + escFn(buyerPhone || '') + '</td></tr>');
-    win.document.write('<tr><th>Direccion</th><td>' + escFn(buyerAddress || '') + '</td></tr>');
-    win.document.write('<tr><th>Plan</th><td>' + escFn(d.planName || '') + '</td></tr>');
-    win.document.write('<tr><th>Tipo de envio</th><td>' + escFn(d.shippingType || d.deliveryType || '') + '</td></tr>');
-    win.document.write('<tr><th>Tracking</th><td>' + escFn(d.trackingNumber || '') + '</td></tr>');
-    win.document.write('<tr><th>Notas</th><td>' + escFn(buyerNotes || '') + '</td></tr>');
-    win.document.write('</table>');
-    win.document.write('<div class="footer">Petcingo  Sistema de Identificacion de Mascotas | petcingo.com.bo</div>');
-    win.document.write('<script>window.onload=function(){window.print();};<\/script></body></html>');
+    var css = [
+      '*{box-sizing:border-box;margin:0;padding:0;}',
+      'body{font-family:"Plus Jakarta Sans",sans-serif;background:#fff;color:#212121;padding:32px 40px;}',
+      '.hdr{display:flex;align-items:center;justify-content:space-between;padding-bottom:16px;border-bottom:3px solid #4552CC;margin-bottom:24px;}',
+      '.hdr-title{font-family:"Sora",sans-serif;font-size:1.6rem;font-weight:800;color:#4552CC;letter-spacing:0.01em;}',
+      '.hdr-meta{font-size:0.8rem;color:#9E9E9E;margin-top:4px;}',
+      '.hdr-logo{height:36px;}',
+      '.body-grid{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:start;}',
+      'table{width:100%;border-collapse:collapse;font-size:0.88rem;}',
+      'tr:nth-child(even) th,tr:nth-child(even) td{background:#F8F9FF;}',
+      'tr:nth-child(odd)  th,tr:nth-child(odd)  td{background:#fff;}',
+      'th{padding:10px 14px;font-weight:700;color:#4552CC;width:32%;border:1px solid #E0E8F0;text-align:left;}',
+      'td{padding:10px 14px;border:1px solid #E0E8F0;}',
+      '.code-box{background:#EEF1FB;border:1.5px solid #4552CC;border-radius:10px;padding:12px 18px;text-align:center;margin-top:16px;}',
+      '.code-lbl{font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}',
+      '.code-val{font-family:monospace;font-size:1.4rem;font-weight:800;color:#4552CC;letter-spacing:0.12em;}',
+      '.qr-box{text-align:center;padding:14px;border:1px solid #E0E8F0;border-radius:12px;min-width:148px;}',
+      '.qr-lbl{font-size:0.7rem;color:#757575;margin-top:8px;}',
+      '.btn-print{display:block;margin:24px auto 0;background:#4552CC;color:#fff;border:none;padding:12px 32px;border-radius:10px;font-family:"Plus Jakarta Sans",sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;}',
+      '.footer{margin-top:24px;padding-top:12px;border-top:1px solid #E0E0E0;text-align:center;font-size:0.72rem;color:#BDBDBD;}',
+      '@media print{.btn-print{display:none!important;}body{padding:16px 20px;}}'
+    ].join('\n');
+
+    var rows = '<table>'
+      + '<tr><th>Comprador</th><td>'    + buyerName    + '</td></tr>'
+      + '<tr><th>Telefono</th><td>'     + buyerPhone   + '</td></tr>'
+      + '<tr><th>Email</th><td>'        + buyerEmail   + '</td></tr>'
+      + '<tr><th>Ciudad</th><td>'       + buyerCity    + '</td></tr>'
+      + '<tr><th>Direccion</th><td>'    + buyerAddress + '</td></tr>'
+      + '<tr><th>Plan</th><td>'         + escFn(d.planName || '')                           + '</td></tr>'
+      + '<tr><th>Tipo de envio</th><td>'+ escFn(d.shippingType || d.deliveryType || '')     + '</td></tr>'
+      + '<tr><th>Tracking</th><td>'     + escFn(d.trackingNumber || '---')                  + '</td></tr>'
+      + '<tr><th>Notas</th><td>'        + buyerNotes   + '</td></tr>'
+      + '</table>'
+      + (d.activationCode
+        ? '<div class="code-box"><div class="code-lbl">Codigo de activacion</div><div class="code-val">' + escFn(d.activationCode) + '</div></div>'
+        : '');
+
+    var win = window.open('', '_blank', 'width=820,height=700');
+    win.document.write('<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">'
+      + '<title>Guia de Envio Petcingo</title>'
+      + '<link href="https://fonts.googleapis.com/css2?family=Sora:wght@700;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">'
+      + '<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>'
+      + '<style>' + css + '</style></head><body>'
+      + '<div class="hdr">'
+      + '<div><div class="hdr-title">GUIA DE ENVIO</div>'
+      + '<div class="hdr-meta">Pedido: <strong>' + escFn(orderId) + '</strong> &nbsp;|&nbsp; ' + dateStr + '</div></div>'
+      + '<img class="hdr-logo" src="https://prueb2.dashnexpages.net/assets/images/logo/PETCINGO_DARK.svg" alt="Petcingo" onerror="this.style.display=\'none\'">'
+      + '</div>'
+      + '<div class="body-grid">'
+      + '<div>' + rows + '</div>'
+      + '<div class="qr-box"><div id="qr-wrap"></div><div class="qr-lbl">Escanea para activar</div></div>'
+      + '</div>'
+      + '<button class="btn-print" onclick="window.print()">Imprimir guia</button>'
+      + '<div class="footer">Petcingo &mdash; Sistema de Identificacion de Mascotas | petcingo.com.bo</div>'
+      + '<script>window.addEventListener("load",function(){'
+      + 'var el=document.getElementById("qr-wrap");'
+      + 'if(el&&typeof QRCode!=="undefined"){'
+      + 'new QRCode(el,{text:"' + qrTarget + '",width:120,height:120,colorDark:"#4552CC",colorLight:"#ffffff"});'
+      + '}'
+      + '});<\/script>'
+      + '</body></html>');
     win.document.close();
   };
 
@@ -1592,7 +1643,7 @@
     win.document.write('<link href="https://fonts.googleapis.com/css2?family=Sora:wght@800&family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet">');
     win.document.write('<style>' + css + '</style></head><body>');
     win.document.write('<div class="page">');
-    win.document.write('<h2>Petcingo — Pliego de impresion (' + orders.length + ' placas) — ' + new Date().toLocaleDateString('es-BO') + '</h2>');
+    win.document.write('<h2>Petcingo -- Pliego de impresion (' + orders.length + ' placas) -- ' + new Date().toLocaleDateString('es-BO') + '</h2>');
     win.document.write('<div class="no-print" style="margin-bottom:6mm;display:flex;gap:8px;">');
     win.document.write('<button onclick="window.print()" style="background:#4552CC;color:#fff;border:none;padding:8px 20px;border-radius:8px;font-weight:700;cursor:pointer;font-size:11pt;">Imprimir pliego</button>');
     win.document.write('<button onclick="window.close()" style="background:#F5F5F5;border:1px solid #DDD;padding:8px 16px;border-radius:8px;cursor:pointer;">Cerrar</button>');
@@ -1783,7 +1834,7 @@
     };
   })();
 
-  /* ── Delegado de clics: abre modal al hacer clic en fila de Mascotas ── */
+  /* -- Delegado de clics: abre modal al hacer clic en fila de Mascotas -- */
   document.addEventListener('click', function(e) {
     var secPets = document.getElementById('sec-pets');
     if (!secPets || !secPets.classList.contains('active')) return;

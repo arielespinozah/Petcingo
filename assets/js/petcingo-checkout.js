@@ -262,7 +262,7 @@
         // Mostrar imagen real en lugar del canvas
         qrCanvas.parentElement.innerHTML = '<img src="' + qrImage + '" style="max-width:200px;border-radius:12px;" alt="QR de pago">';
       } else if (qrCanvas) {
-        // Fallback: generar QR dinámico
+        // Fallback: generar QR dinamico
         drawQrCanvas();
       }
       
@@ -712,7 +712,7 @@ window.ptcgUpdateDelivery = function() {
   var zoneMsg = document.getElementById('ptcg-zone-msg');
 
   if (SCZ_CITIES.indexOf(city) !== -1) {
-    // ── SANTA CRUZ ──
+    // -- SANTA CRUZ --
     if (pickupBtn) pickupBtn.style.opacity = '1';
     if (pickupBtn) pickupBtn.style.pointerEvents = 'auto';
     if (deliveryBtn) deliveryBtn.style.opacity = '1';
@@ -727,13 +727,13 @@ window.ptcgUpdateDelivery = function() {
     if (shipInfo) shipInfo.style.display = 'none';
 
     if (deliveryType === 'pickup') {
-      showDeliveryInfo('Recoges tu placa en nuestra tienda (Santa Cruz). Te notificaremos cuando esté lista.');
+      showDeliveryInfo('Recoges tu placa en nuestra tienda (Santa Cruz). Te notificaremos cuando este lista.');
     } else {
-      showDeliveryInfo('Delivery en Santa Cruz. Calculamos el costo según tu zona.');
+      showDeliveryInfo('Delivery en Santa Cruz. Calculamos el costo segun tu zona.');
     }
 
   } else if (DOMICILIO_CITIES.indexOf(city) !== -1) {
-    // ── LA PAZ, COCHABAMBA (DOMICILIO) ──
+    // -- LA PAZ, COCHABAMBA (DOMICILIO) --
     if (pickupBtn) pickupBtn.style.opacity = '0.5';
     if (pickupBtn) pickupBtn.style.pointerEvents = 'none';
     if (deliveryBtn) deliveryBtn.style.opacity = '1';
@@ -743,16 +743,16 @@ window.ptcgUpdateDelivery = function() {
     window.ptcgSetDelivery('delivery');
     deliveryFee = 30;
     if (delPrice) delPrice.textContent = '30 Bs';
-    if (delLabel) delLabel.textContent = 'Envío a Domicilio';
+    if (delLabel) delLabel.textContent = 'Envio a Domicilio';
     if (delIcon) delIcon.className = 'ri-box-3-line';
     if (addrField) addrField.style.display = '';
     if (zoneMsg) zoneMsg.style.display = 'none';
     if (shipInfo) shipInfo.style.display = 'none';
 
-    showDeliveryInfo('Envío a domicilio con transportadora (30 Bs fijo). Demora de 2 a 5 días hábiles. La transportadora se comunicará para coordinar la entrega.');
+    showDeliveryInfo('Envio a domicilio con transportadora (30 Bs fijo). Demora de 2 a 5 dias habiles. La transportadora se comunicara para coordinar la entrega.');
 
   } else {
-    // ── RESTO DE BOLIVIA (ENVÍO POR PAGAR) ──
+    // -- RESTO DE BOLIVIA (ENVIO POR PAGAR) --
     if (pickupBtn) pickupBtn.style.opacity = '0.5';
     if (pickupBtn) pickupBtn.style.pointerEvents = 'none';
     if (deliveryBtn) deliveryBtn.style.opacity = '1';
@@ -762,13 +762,13 @@ window.ptcgUpdateDelivery = function() {
     window.ptcgSetDelivery('delivery');
     deliveryFee = 0;
     if (delPrice) delPrice.textContent = '0 Bs';
-    if (delLabel) delLabel.textContent = 'Envío por Pagar';
+    if (delLabel) delLabel.textContent = 'Envio por Pagar';
     if (delIcon) delIcon.className = 'ri-box-3-line';
     if (addrField) addrField.style.display = 'none';
     if (zoneMsg) zoneMsg.style.display = 'none';
     if (shipInfo) shipInfo.style.display = 'none';
 
-    showDeliveryInfo('Envío por pagar contra entrega. Enviamos a la terminal de buses de tu ciudad. El costo del flete lo pagas al recoger en la transportadora.');
+    showDeliveryInfo('Envio por pagar contra entrega. Enviamos a la terminal de buses de tu ciudad. El costo del flete lo pagas al recoger en la transportadora.');
   }
 
   updateTotalDisplay();
@@ -786,13 +786,13 @@ window.ptcgSetDelivery = function(type) {
   if (type === 'pickup') {
     deliveryFee = 0;
     if (addrField) addrField.style.display = 'none';
-    showDeliveryInfo('Recoges tu placa en nuestra tienda (Santa Cruz). Te notificaremos cuando esté lista.');
+    showDeliveryInfo('Recoges tu placa en nuestra tienda (Santa Cruz). Te notificaremos cuando este lista.');
   } else {
     var city = document.getElementById('ptcg-city') ? document.getElementById('ptcg-city').value : '';
     if (SCZ_CITIES.indexOf(city) !== -1) {
       deliveryFee = 10; // base
       if (addrField) addrField.style.display = '';
-      showDeliveryInfo('Delivery en Santa Cruz. Calculamos el costo según tu zona.');
+      showDeliveryInfo('Delivery en Santa Cruz. Calculamos el costo segun tu zona.');
     }
   }
 
@@ -813,7 +813,7 @@ window.ptcgSimZone = function() {
   if (!msg || !txtEl) return;
 
   var fee = 10; // base
-  var zone = 'Estándar';
+  var zone = 'Estandar';
 
   if (txt.includes('norte') || txt.includes('4to') || txt.includes('cuarto') || txt.includes('equipetrol') || txt.includes('av. banzer')) {
     fee = 15;
@@ -825,7 +825,7 @@ window.ptcgSimZone = function() {
     fee = 10;
     zone = 'Centro';
   } else if (txt.length > 4) {
-    zone = 'Estándar (según dirección)';
+    zone = 'Estandar (segun direccion)';
   }
 
   deliveryFee = fee;
