@@ -510,7 +510,7 @@
       <button class="nav-item" data-section="shipping-config" data-perm="settings" onclick="showSection('shipping-config',this)">
         <span class="nav-icon"><i class="ri-truck-line"></i></span> Pasarelas y Envíos
       </button>
-      <button class="nav-item" data-section="print-360" data-perm="admin" onclick="showSection('print-360',this)">
+      <button class="nav-item" data-section="print-360" data-perm="admin" onclick="showSection('print-360',this);if(typeof loadPrintableOrders==='function')loadPrintableOrders();">
         <span class="nav-icon"><i class="ri-printer-line"></i></span> Impresión 360
       </button>
 
@@ -1386,26 +1386,110 @@
       </div>
     </section>
 
-    <!-- ── IMPRESIÓN 360 ── -->
+    <!-- ── IMPRESION 360 ── -->
     <section class="section" id="sec-print-360">
       <div class="page-header">
-        <h2><i class="ri-printer-line"></i> Impresión 360</h2>
-        <p>Genera las plantillas maestras para imprimir placas QR de los pedidos completados.</p>
+        <h2><i class="ri-printer-line"></i> Impresion 360</h2>
+        <p>Selecciona pedidos, configura el diseno de la placa y genera el pliego A4.</p>
       </div>
+
+      <!-- Tabla de pedidos listos para imprimir -->
       <div class="ptcg-index__card" style="margin-bottom:16px;">
-        <div class="table-toolbar" style="margin-bottom:0;">
-          <select class="ptcg-activate__select" id="print-filter-batch">
-            <option value="new">Nuevos (Sin imprimir)</option>
-            <option value="all">Historial completo</option>
-          </select>
-          <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="generatePrintLayout()"><i class="ri-layout-grid-line"></i> Generar Pliego para Imprimir</button>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+          <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:1rem;color:#212121;">Pedidos confirmados</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="loadPrintableOrders()"><i class="ri-refresh-line"></i> Recargar</button>
+            <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="toggleAllPrint(true)">Sel. todos</button>
+            <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="toggleAllPrint(false)">Ninguno</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th style="width:36px;"></th>
+              <th>Codigo</th>
+              <th>Comprador</th>
+              <th>Plan</th>
+              <th>Estado</th>
+              <th>Fecha</th>
+            </tr></thead>
+            <tbody id="print-orders-tbody">
+              <tr><td colspan="6"><div class="empty-state">Cargando...</div></td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
-      <div class="ptcg-index__card" id="print-layout-container" style="display:none; text-align:center;">
-        <p style="margin-bottom:16px; color:#616161;">Vista previa del pliego. Presiona "Imprimir" para enviarlo a la impresora PDF o física.</p>
-        <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="window.print()" style="margin-bottom:20px;"><i class="ri-printer-fill"></i> Imprimir Pliego</button>
-        <div id="print-canvas-area" style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">
-          <!-- Aquí se renderizan los QRs -->
+
+      <!-- Config + Preview -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+
+        <!-- Panel de configuracion -->
+        <div class="ptcg-index__card">
+          <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:0.95rem;color:#212121;margin-bottom:14px;">Configuracion de placa</div>
+          <div style="display:grid;gap:10px;">
+            <div>
+              <label class="ptcg-activate__label">Tipo de placa</label>
+              <select class="ptcg-activate__select" id="print-plate-type" onchange="updatePrintPreview()">
+                <option value="vertical">Vertical (28.6 x 45 mm) ~24 por hoja</option>
+                <option value="horizontal">Horizontal (50 x 28.6 mm) ~40 por hoja</option>
+              </select>
+            </div>
+            <div>
+              <label class="ptcg-activate__label">URL diseno SVG (opcional)</label>
+              <input class="ptcg-activate__input" type="text" id="print-svg-url" placeholder="https://...placa.svg" oninput="updatePrintPreview()" style="width:100%;box-sizing:border-box;">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+              <div>
+                <label class="ptcg-activate__label">QR X (mm)</label>
+                <input class="ptcg-activate__input" type="number" id="print-qr-x" value="4" min="0" step="0.5" oninput="updatePrintPreview()">
+              </div>
+              <div>
+                <label class="ptcg-activate__label">QR Y (mm)</label>
+                <input class="ptcg-activate__input" type="number" id="print-qr-y" value="14" min="0" step="0.5" oninput="updatePrintPreview()">
+              </div>
+              <div>
+                <label class="ptcg-activate__label">QR tam (mm)</label>
+                <input class="ptcg-activate__input" type="number" id="print-qr-size" value="20" min="8" step="1" oninput="updatePrintPreview()">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <div>
+                <label class="ptcg-activate__label">ID texto X (mm)</label>
+                <input class="ptcg-activate__input" type="number" id="print-id-x" value="4" min="0" step="0.5" oninput="updatePrintPreview()">
+              </div>
+              <div>
+                <label class="ptcg-activate__label">ID texto Y (mm)</label>
+                <input class="ptcg-activate__input" type="number" id="print-id-y" value="37" min="0" step="0.5" oninput="updatePrintPreview()">
+              </div>
+            </div>
+            <div style="display:flex;gap:20px;">
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.88rem;font-family:'Plus Jakarta Sans',sans-serif;">
+                <input type="checkbox" id="print-show-logo" checked onchange="updatePrintPreview()"> Logo PETCINGO
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.88rem;font-family:'Plus Jakarta Sans',sans-serif;">
+                <input type="checkbox" id="print-show-scanme" checked onchange="updatePrintPreview()"> Texto "Scan Me"
+              </label>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:14px;">
+            <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="savePrintConfig()"><i class="ri-save-line"></i> Guardar config</button>
+          </div>
+        </div>
+
+        <!-- Vista previa -->
+        <div class="ptcg-index__card" style="display:flex;flex-direction:column;align-items:center;justify-content:flex-start;">
+          <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:0.95rem;color:#212121;margin-bottom:14px;align-self:flex-start;">Vista previa (1 placa)</div>
+          <div id="print-preview-box" style="border:1.5px dashed #C5CAE9;border-radius:8px;padding:12px;display:flex;align-items:center;justify-content:center;min-height:180px;width:100%;"></div>
+          <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="updatePrintPreview()" style="margin-top:12px;"><i class="ri-refresh-line"></i> Actualizar vista previa</button>
+        </div>
+      </div>
+
+      <!-- Botones de generacion -->
+      <div class="ptcg-index__card">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <span id="print-selected-count" style="font-size:0.9rem;color:#757575;font-family:'Plus Jakarta Sans',sans-serif;">0 placa(s) seleccionada(s)</span>
+          <button class="ptcg-index__btn ptcg-index__btn--primary" onclick="generatePrintSheet()"><i class="ri-layout-grid-line"></i> Generar Pliego A4</button>
+          <button class="ptcg-index__btn ptcg-index__btn--secondary" onclick="generatePrintLayout()"><i class="ri-printer-line"></i> Pliego rapido (todos)</button>
         </div>
       </div>
     </section>
@@ -1987,7 +2071,7 @@ setTimeout(function cleanRegSeller() {
   <div style="background:#fff;border-radius:24px;max-width:620px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 50px rgba(0,0,0,0.15);padding:28px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
       <h3 style="font-family:'Sora',sans-serif;font-size:1.3rem;font-weight:800;color:#212121;margin:0;display:flex;align-items:center;gap:10px;"><span id="mod-pet-status" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#BDBDBD;flex-shrink:0;animation:statusPulse 2s infinite;"></span><span id="mod-pet-name">—</span></h3>
-      <button onclick="closePetModal()" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:#757575;line-height:1;"><i data-lucide="x"></i></button>
+      <button onclick="closePetModal()" style="background:rgba(0,0,0,0.05);border:none;cursor:pointer;font-size:1.1rem;color:#757575;line-height:1;padding:6px 10px;border-radius:10px;"><i class="ri-close-line"></i></button>
     </div>
     <div id="mod-pet-content"></div>
   </div>

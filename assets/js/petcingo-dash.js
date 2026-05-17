@@ -1165,6 +1165,17 @@
     setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 370);
   }
 
+  /* Sobrescribe toast() de petcingo.js para usar Liquid Glass en el dashboard */
+  window.toast = function(msg, type) {
+    var alertType = type === 'error' ? 'danger' : type === 'success' ? 'success' : 'info';
+    if (typeof showDashAlert === 'function') {
+      showDashAlert(msg, alertType);
+    } else {
+      var el = document.getElementById('toast');
+      if (el) { el.textContent = msg; el.classList.add('show'); }
+    }
+  };
+
   function showInitialAlerts() {
     setTimeout(function() {
       var ordersBadge = document.getElementById('orders-nav-badge');
@@ -1407,7 +1418,7 @@
   /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE MODAL DETALLE MASCOTA oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
 
   function infoItem(label, value) {
-    return '<div><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;font-family:\'Plus Jakarta Sans\',sans-serif;">' + escFn(label) + '</span><br><span style="font-weight:600;font-size:0.9rem;">' + escFn(value || '') + '</span></div>';
+    return '<div style="display:flex;flex-direction:column;gap:2px;"><span style="font-size:0.7rem;color:#9E9E9E;text-transform:uppercase;font-family:\'Plus Jakarta Sans\',sans-serif;">' + escFn(label) + '</span><span style="font-weight:600;font-size:0.9rem;font-family:\'Plus Jakarta Sans\',sans-serif;">' + escFn(value || '---') + '</span></div>';
   }
 
   window.showPetModal = function(plateId) {
@@ -1439,13 +1450,13 @@
         ? '<img src="' + escFn(d.photoUrl) + '" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid #E0E0E0;flex-shrink:0;" onerror="this.style.display=\'none\'">'
         : '<div style="width:72px;height:72px;border-radius:50%;background:#EEF1FB;display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;">E</div>';
       html += '<div><div style="font-family:monospace;font-size:0.9rem;font-weight:700;color:#4552CC;word-break:break-all;">' + escFn(plateId) + '</div>';
-      html += '<button onclick="copyPetCode(\'' + safe + '\')" style="margin-top:4px;padding:4px 10px;border-radius:8px;border:1px solid #E0E0E0;background:#fff;cursor:pointer;font-size:0.75rem;font-family:\'Plus Jakarta Sans\',sans-serif;display:inline-flex;align-items:center;gap:4px;"><i class="ri-file-copy-line"></i> Copiar cdigo</button></div></div>';
+      html += '<button onclick="copyPetCode(\'' + safe + '\')" style="margin-top:4px;padding:4px 10px;border-radius:8px;border:1px solid #E0E0E0;background:#fff;cursor:pointer;font-size:0.75rem;font-family:\'Plus Jakarta Sans\',sans-serif;display:inline-flex;align-items:center;gap:4px;"><i class="ri-file-copy-line"></i> Copiar codigo</button></div></div>';
 
       /* Datos bisicos */
       html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">';
       html += infoItem('Especie',   d.species || d.petType);
       html += infoItem('Raza',      d.breed);
-      html += infoItem('Gnero',    d.gender);
+      html += infoItem('Genero',    d.gender);
       html += infoItem('Peso',      d.weight ? d.weight + ' kg' : null);
       html += infoItem('Nacimiento', d.birthdate);
       html += infoItem('Color',     d.color);
@@ -1456,7 +1467,7 @@
       /* Dueo */
       if (d.ownerName || d.ownerEmail) {
         html += '<div style="padding:12px 14px;background:#F8F9FB;border-radius:12px;margin-bottom:16px;">';
-        html += '<div style="font-size:0.72rem;color:#9E9E9E;text-transform:uppercase;margin-bottom:8px;font-family:\'Plus Jakarta Sans\',sans-serif;">Dueo</div>';
+        html += '<div style="font-size:0.72rem;color:#9E9E9E;text-transform:uppercase;margin-bottom:8px;font-family:\'Plus Jakarta Sans\',sans-serif;">Dueno</div>';
         html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">';
         html += infoItem('Nombre', d.ownerName);
         html += infoItem('Email',  d.ownerEmail || d.owner_email);
@@ -1482,7 +1493,7 @@
       /* Vacunas */
       html += '<div style="padding:12px 14px;background:#F8F9FB;border-radius:12px;margin-bottom:16px;">';
       html += '<div style="font-size:0.72rem;color:#9E9E9E;text-transform:uppercase;margin-bottom:6px;font-family:\'Plus Jakarta Sans\',sans-serif;">Vacunas</div>';
-      html += '<span style="font-size:0.9rem;font-weight:600;">' + (d.vaccinationStatus === 'yes' ? 'a Al da' : 'a No al da / Sin datos') + '</span>';
+      html += '<span style="font-size:0.9rem;font-weight:600;">' + (d.vaccinationStatus === 'yes' ? 'Si, al dia' : 'No al dia / Sin datos') + '</span>';
       if (d.vaccinationDetails) html += '<br><small style="color:#757575;">' + escFn(d.vaccinationDetails) + '</small>';
       html += '</div>';
 
@@ -1491,7 +1502,7 @@
 
       /* Accin: recuperar clave */
       html += '<button class="ptcg-index__btn ptcg-index__btn--primary" onclick="sendPasswordReset(\'' + safe + '\')" style="width:100%;margin-top:8px;padding:12px;font-size:0.9rem;font-weight:700;">';
-      html += '<i class="ri-key-2-line"></i> Enviar recuperacin de contrasea</button>';
+      html += '<i class="ri-key-2-line"></i> Enviar recuperacion de contrasena</button>';
 
       content.innerHTML = html;
     }).catch(function(e) {
@@ -1605,6 +1616,175 @@
   };
 
   /* oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE IMPRESION 360 oEoEoEoEoEoEoEoEoEoEoEoEoEoEoE */
+
+  var _printSelection = {};
+
+  /* Lee la configuracion actual del panel de diseno */
+  function getPrintConfig() {
+    var type    = (document.getElementById('print-plate-type')  || {}).value  || 'vertical';
+    var svgUrl  = ((document.getElementById('print-svg-url')    || {}).value  || '').trim();
+    var qrX     = parseFloat((document.getElementById('print-qr-x')    || {}).value) || 4;
+    var qrY     = parseFloat((document.getElementById('print-qr-y')    || {}).value) || 14;
+    var qrSize  = parseFloat((document.getElementById('print-qr-size') || {}).value) || 20;
+    var idX     = parseFloat((document.getElementById('print-id-x')    || {}).value) || 4;
+    var idY     = parseFloat((document.getElementById('print-id-y')    || {}).value) || 37;
+    var showLogo   = (document.getElementById('print-show-logo')   || {}).checked !== false;
+    var showScanMe = (document.getElementById('print-show-scanme') || {}).checked !== false;
+    var w = type === 'vertical' ? 28.6 : 50;
+    var h = type === 'vertical' ? 45   : 28.6;
+    return { type: type, w: w, h: h, svgUrl: svgUrl, qrX: qrX, qrY: qrY, qrSize: qrSize, idX: idX, idY: idY, showLogo: showLogo, showScanMe: showScanMe };
+  }
+
+  function updatePrintCount() {
+    var count = 0;
+    Object.keys(_printSelection).forEach(function(id) { if (_printSelection[id]) count++; });
+    var el = document.getElementById('print-selected-count');
+    if (el) el.textContent = count + ' placa(s) seleccionada(s)';
+  }
+
+  window.loadPrintableOrders = function() {
+    var tbody = document.getElementById('print-orders-tbody');
+    if (!tbody) return;
+    var orders = _ordersCache.filter(function(o) {
+      var s = o.data.status;
+      return (s === 'confirmed' || s === 'processing') && o.data.activationCode;
+    });
+    if (orders.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">No hay pedidos confirmados con codigo de activacion.</div></td></tr>';
+      updatePrintCount();
+      return;
+    }
+    var html = '';
+    orders.forEach(function(o) {
+      var d    = o.data;
+      var buyer = escFn((d.buyer ? d.buyer.name : d.buyerName) || '').substring(0, 24);
+      var date  = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toLocaleDateString('es-BO') : '';
+      if (_printSelection[o.id] === undefined) _printSelection[o.id] = true;
+      var chk = _printSelection[o.id] ? 'checked' : '';
+      html += '<tr>';
+      html += '<td><input type="checkbox" ' + chk + ' data-oid="' + escFn(o.id) + '" onchange="togglePrintSelection(this.getAttribute(\'data-oid\'),this.checked)"></td>';
+      html += '<td><code style="font-size:0.8rem;color:#4552CC;">' + escFn(d.activationCode) + '</code></td>';
+      html += '<td>' + buyer + '</td>';
+      html += '<td>' + escFn(d.planName || '') + '</td>';
+      html += '<td><span class="status-badge ' + (d.status||'pending') + '">' + (d.status||'').toUpperCase() + '</span></td>';
+      html += '<td style="font-size:0.8rem;color:#9E9E9E;">' + date + '</td>';
+      html += '</tr>';
+    });
+    tbody.innerHTML = html;
+    updatePrintCount();
+    updatePrintPreview();
+  };
+
+  window.togglePrintSelection = function(orderId, checked) {
+    _printSelection[orderId] = checked;
+    updatePrintCount();
+  };
+
+  window.toggleAllPrint = function(state) {
+    document.querySelectorAll('#print-orders-tbody input[type="checkbox"]').forEach(function(cb) {
+      cb.checked = state;
+      var id = cb.getAttribute('data-oid');
+      if (id) _printSelection[id] = state;
+    });
+    updatePrintCount();
+  };
+
+  window.updatePrintPreview = function() {
+    var box = document.getElementById('print-preview-box');
+    if (!box) return;
+    var cfg   = getPrintConfig();
+    var scale = 4; // 1 mm = 4 px
+    var W = Math.round(cfg.w * scale);
+    var H = Math.round(cfg.h * scale);
+    var bgStyle = cfg.svgUrl
+      ? 'background:url(' + escFn(cfg.svgUrl) + ') no-repeat center/cover;'
+      : 'background:#fff;';
+    var html = '<div style="position:relative;width:' + W + 'px;height:' + H + 'px;border:1px solid #CCC;border-radius:4px;overflow:hidden;' + bgStyle + '">';
+    if (cfg.showLogo) {
+      html += '<div style="position:absolute;top:' + Math.round(2*scale) + 'px;left:' + Math.round(2*scale) + 'px;font-family:\'Sora\',sans-serif;font-size:' + Math.round(1.8*scale) + 'px;font-weight:800;color:#4552CC;letter-spacing:0.05em;">PETCINGO</div>';
+    }
+    var qrS = Math.round(cfg.qrSize * scale);
+    html += '<div style="position:absolute;left:' + Math.round(cfg.qrX*scale) + 'px;top:' + Math.round(cfg.qrY*scale) + 'px;width:' + qrS + 'px;height:' + qrS + 'px;background:#F0F0F0;display:flex;align-items:center;justify-content:center;font-size:' + Math.round(qrS*0.55) + 'px;color:#9E9E9E;"><i class="ri-qr-code-line"></i></div>';
+    html += '<div style="position:absolute;left:' + Math.round(cfg.idX*scale) + 'px;top:' + Math.round(cfg.idY*scale) + 'px;font-family:monospace;font-size:' + Math.round(2.2*scale) + 'px;font-weight:700;color:#212121;letter-spacing:0.08em;">AB1234</div>';
+    if (cfg.showScanMe) {
+      html += '<div style="position:absolute;bottom:' + Math.round(2*scale) + 'px;left:0;right:0;text-align:center;font-size:' + Math.round(1.6*scale) + 'px;color:#757575;font-family:\'Plus Jakarta Sans\',sans-serif;">Scan Me</div>';
+    }
+    html += '</div>';
+    box.innerHTML = html;
+  };
+
+  window.generatePrintSheet = function() {
+    var selected = Object.keys(_printSelection).filter(function(id) { return _printSelection[id]; });
+    if (selected.length === 0) {
+      if (typeof toast === 'function') toast('Selecciona al menos una placa.');
+      return;
+    }
+    var orders = _ordersCache.filter(function(o) { return selected.indexOf(o.id) !== -1 && o.data.activationCode; });
+    if (orders.length === 0) {
+      if (typeof toast === 'function') toast('No hay placas validas para imprimir.');
+      return;
+    }
+    var cfg   = getPrintConfig();
+    var gapX  = 3; var gapY = 3;
+    var cols  = Math.max(1, Math.floor((200 + gapX) / (cfg.w + gapX)));
+    var rows  = Math.max(1, Math.floor((287 + gapY) / (cfg.h + gapY)));
+    var perPage = cols * rows;
+
+    var css = [
+      '*{box-sizing:border-box;margin:0;padding:0;}',
+      'body{font-family:"Plus Jakarta Sans",sans-serif;background:#fff;}',
+      '@page{size:A4;margin:5mm;}',
+      '.page{width:200mm;height:287mm;display:flex;flex-wrap:wrap;gap:' + gapY + 'mm ' + gapX + 'mm;align-content:flex-start;page-break-after:always;}',
+      '.plate{width:' + cfg.w + 'mm;height:' + cfg.h + 'mm;position:relative;overflow:hidden;border:0.3mm solid #DDD;border-radius:1.5mm;background:#fff;page-break-inside:avoid;flex-shrink:0;}',
+      '.p-logo{position:absolute;top:2mm;left:2mm;font-family:"Sora",sans-serif;font-size:4pt;font-weight:800;color:#4552CC;letter-spacing:0.05em;text-transform:uppercase;}',
+      '.p-qr{position:absolute;object-fit:contain;}',
+      '.p-id{position:absolute;font-family:monospace;font-size:5.5pt;font-weight:700;color:#212121;letter-spacing:0.08em;}',
+      '.p-scan{position:absolute;bottom:1.5mm;left:0;right:0;text-align:center;font-size:3.5pt;color:#757575;}',
+      '.no-print{display:block;}',
+      '@media print{.no-print{display:none!important;}.page{page-break-after:always;}}'
+    ].join('\n');
+
+    var win = window.open('', '_blank', 'width=900,height=700');
+    win.document.write('<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">');
+    win.document.write('<title>Pliego Petcingo</title>');
+    win.document.write('<link href="https://fonts.googleapis.com/css2?family=Sora:wght@800&family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet">');
+    win.document.write('<style>' + css + '</style></head><body>');
+    win.document.write('<div class="no-print" style="padding:10px 16px;display:flex;gap:8px;align-items:center;border-bottom:1px solid #E0E0E0;margin-bottom:6mm;">');
+    win.document.write('<span style="font-family:\'Plus Jakarta Sans\',sans-serif;font-weight:700;color:#212121;font-size:0.9rem;">' + orders.length + ' placa(s) | ' + cols + ' x ' + rows + ' por hoja</span>');
+    win.document.write('<button onclick="window.print()" style="background:#4552CC;color:#fff;border:none;padding:8px 20px;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.88rem;">Imprimir</button>');
+    win.document.write('<button onclick="window.close()" style="background:#F5F5F5;border:1px solid #DDD;padding:8px 16px;border-radius:8px;cursor:pointer;">Cerrar</button>');
+    win.document.write('</div><div class="page">');
+
+    orders.forEach(function(o, idx) {
+      if (idx > 0 && idx % perPage === 0) win.document.write('</div><div class="page">');
+      var d    = o.data;
+      var code = d.activationCode;
+      var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent('https://prueb2.dashnexpages.net/activacion/?id=' + code);
+      var svgAttr = cfg.svgUrl ? ' style="background:url(' + escFn(cfg.svgUrl) + ') no-repeat center/cover;"' : '';
+      win.document.write('<div class="plate"' + svgAttr + '>');
+      if (cfg.showLogo)   win.document.write('<div class="p-logo">PETCINGO</div>');
+      win.document.write('<img class="p-qr" src="' + qrUrl + '" style="left:' + cfg.qrX + 'mm;top:' + cfg.qrY + 'mm;width:' + cfg.qrSize + 'mm;height:' + cfg.qrSize + 'mm;" alt="QR">');
+      win.document.write('<div class="p-id" style="left:' + cfg.idX + 'mm;top:' + cfg.idY + 'mm;">' + escFn(code) + '</div>');
+      if (cfg.showScanMe) win.document.write('<div class="p-scan">Scan Me</div>');
+      win.document.write('</div>');
+    });
+
+    win.document.write('</div></body></html>');
+    win.document.close();
+
+    var db2 = db();
+    if (db2) orders.forEach(function(o) { db2.collection('orders').doc(o.id).update({ printed: true }).catch(function(){}); });
+    if (typeof toast === 'function') toast('Pliego generado: ' + orders.length + ' placa(s).');
+  };
+
+  window.savePrintConfig = function() {
+    var db2 = db(); if (!db2) return;
+    var cfg = getPrintConfig();
+    db2.collection('config').doc('print_settings').set(cfg, { merge: true })
+      .then(function() { if (typeof toast === 'function') toast('Configuracion guardada.'); })
+      .catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
+  };
+
   window.generatePrintLayout = function() {
     var filterSel = document.getElementById('print-filter-batch');
     var showAll   = filterSel && filterSel.value === 'all';
