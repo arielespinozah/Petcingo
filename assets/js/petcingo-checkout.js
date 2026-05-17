@@ -614,10 +614,46 @@
           if (!adoc.exists) return batch.commit();
           var ad = adoc.data();
           if (ad.status === 'banned') return batch.commit();
-          return commitWithCommission({
-            rate: ad.commissionRate != null ? ad.commissionRate : 10,
-            name: ad.name || refCode,
-            type: 'afiliado'
+
+          if (ad.commissionRate != null) {
+            return commitWithCommission({
+              rate: ad.commissionRate,
+              name: ad.name || refCode,
+              type: 'afiliado'
+            });
+          }
+
+          // No commissionRate: fetch config/affiliate_levels
+          return db.collection('config').doc('affiliate_levels').get().then(function(ldoc) {
+            var rate = 8; // fallback 8%
+            var totalSales = ad.totalSales || 0;
+            if (ldoc.exists && ldoc.data() && Array.isArray(ldoc.data().levels)) {
+              var levels = ldoc.data().levels;
+              var foundLevel = null;
+              for (var i = 0; i < levels.length; i++) {
+                var min = levels[i].minSales != null ? levels[i].minSales : 0;
+                var max = levels[i].maxSales != null ? levels[i].maxSales : 999999;
+                if (totalSales >= min && totalSales <= max) {
+                  foundLevel = levels[i];
+                  break;
+                }
+              }
+              if (foundLevel && foundLevel.rate != null) {
+                rate = foundLevel.rate;
+              }
+            }
+            return commitWithCommission({
+              rate: rate,
+              name: ad.name || refCode,
+              type: 'afiliado'
+            });
+          }).catch(function() {
+            // fallback in case of query error
+            return commitWithCommission({
+              rate: 8,
+              name: ad.name || refCode,
+              type: 'afiliado'
+            });
           });
         });
       }).catch(function() { return batch.commit(); });
