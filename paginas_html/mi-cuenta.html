@@ -600,7 +600,7 @@
       ? '<button class="ptcg-index__btn ptcg-index__btn--success" type="button" onclick="handleToggleLost(\'' + pid + '\',\'activo\')"><i class="ri-home-heart-line"></i> Marcar como encontrado</button>'
       : '<button class="ptcg-index__btn ptcg-index__btn--danger" type="button" onclick="handleToggleLost(\'' + pid + '\',\'perdido\')"><i class="ri-alarm-warning-line"></i> Reportar como perdido</button>';
 
-    var pubUrl = SITE_BASE + '/perfil-mascota-petcingo/?id=' + encodeURIComponent(pid);
+    var pubUrl = SITE_BASE + '/id/?id=' + encodeURIComponent(pid);
 
     return [
       /* Hero */
@@ -1194,7 +1194,7 @@
      COPY LINK
      ══════════════════════════════════════ */
   window.copyPublicLink = function (plateId) {
-    var url = SITE_BASE + '/perfil-mascota-petcingo/?id=' + plateId;
+    var url = SITE_BASE + '/id/?id=' + plateId;
     navigator.clipboard.writeText(url)
       .then(function () { toast('✓ Enlace copiado al portapapeles', 'success'); })
       .catch(function () { prompt('Copia este enlace:', url); });

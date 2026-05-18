@@ -382,7 +382,7 @@ function renderTable(pets) {
     return;
   }
   var ACT  = 'https://prueb2.dashnexpages.net/activacion/?id=';
-  var PERF = 'https://prueb2.dashnexpages.net/perfil-mascota-petcingo/?id=';
+  var PERF = 'https://prueb2.dashnexpages.net/id/?id=';
   var CLI  = 'https://prueb2.dashnexpages.net/cliente/?id=';
   var rows = [], now = new Date();
   pets.forEach(function(d) {
@@ -743,7 +743,7 @@ window.loadVetPets = function() {
         var fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'—';
         html+='<tr><td class="td-id">'+esc(id)+'</td><td class="td-name">'+esc(d.name||'—')+'</td><td class="td-owner">'+esc(d.ownerName||'—')+'</td>'+
           '<td><span class="badge '+bCls+'">'+bTxt+'</span></td><td class="td-date">'+fecha+'</td>'+
-          '<td class="td-actions"><a href="https://prueb2.dashnexpages.net/perfil-mascota-petcingo/?id='+encodeURIComponent(id)+'" target="_blank" class="btn btn-ghost btn-sm"><i class="ri-eye-line"></i></a></td></tr>';
+          '<td class="td-actions"><a href="https://prueb2.dashnexpages.net/id/?id='+encodeURIComponent(id)+'" target="_blank" class="btn btn-ghost btn-sm"><i class="ri-eye-line"></i></a></td></tr>';
       });
       tbody.innerHTML=html;
     }).catch(function(){
@@ -943,7 +943,7 @@ window.loadShelterPets = function() {
         var fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'—';
         html+='<tr><td class="td-id">'+esc(id)+'</td><td class="td-name">'+esc(d.name||'—')+'</td><td class="td-owner">'+esc(d.ownerName||'—')+'</td>'+
           '<td><span class="badge '+bCls+'">'+bTxt+'</span></td><td class="td-date">'+fecha+'</td>'+
-          '<td class="td-actions"><a href="https://prueb2.dashnexpages.net/perfil-mascota-petcingo/?id='+encodeURIComponent(id)+'" target="_blank" class="btn btn-ghost btn-sm"><i class="ri-eye-line"></i></a></td></tr>';
+          '<td class="td-actions"><a href="https://prueb2.dashnexpages.net/id/?id='+encodeURIComponent(id)+'" target="_blank" class="btn btn-ghost btn-sm"><i class="ri-eye-line"></i></a></td></tr>';
       });
       tbody.innerHTML=html;
     }).catch(function(){
@@ -1577,7 +1577,7 @@ function initClientApp(d, petId, editToken, firestoreDb) {
   var aw  = document.getElementById('auth-wall');   if (aw)  aw.classList.remove('show');
 
   var editUrl    = 'https://prueb2.dashnexpages.net/activacion/?id=' + petId;
-  var profileUrl = 'https://prueb2.dashnexpages.net/perfil-mascota-petcingo/?id=' + petId;
+  var profileUrl = 'https://prueb2.dashnexpages.net/id/?id=' + petId;
 
   /* ── Topbar ── */
   var topName = document.getElementById('top-name');

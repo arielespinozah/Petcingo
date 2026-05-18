@@ -17,26 +17,28 @@
   <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: #F8F9FB !important;
+    background: #F8F9FB;
     min-height: 100vh;
-    font-family: 'Plus Jakarta Sans', /apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-    color: #212121 !important;
-    /webkit-font-smoothing: antialiased;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: #212121;
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* /--- Nav /--- */
+  /* --- Nav --- */
   .rp-nav {
     position: sticky; top: 0; z-index: 100; height: 58px;
     display: flex; align-items: center; justify-content: space-between; padding: 0 28px;
     background: rgba(255,255,255,0.92);
-    backdrop-filter: blur(20px) saturate(200%); /webkit-backdrop-filter: blur(20px) saturate(200%);
+    backdrop-filter: blur(20px) saturate(200%); -webkit-backdrop-filter: blur(20px) saturate(200%);
     border-bottom: 1px solid rgba(0,0,0,0.06);
   }
-  .rp-nav-logo { font-family: 'Sora', sans-serif !important; font-size: 1.05rem; font-weight: 800; color: #4552CC !important; text-decoration: none; }
-  .rp-nav-link { font-size: 0.85rem; font-weight: 600; color: #4552CC !important; text-decoration: none; }
+  .rp-nav-logo-wrap { display: flex; align-items: center; gap: 7px; text-decoration: none; }
+  .rp-nav-logo-wrap img { height: 32px; width: auto; }
+  .rp-nav-logo { font-family: 'Sora', sans-serif; font-size: 1.05rem; font-weight: 800; color: #4552CC; text-decoration: none; }
+  .rp-nav-link { font-size: 0.85rem; font-weight: 600; color: #4552CC; text-decoration: none; display: flex; align-items: center; gap: 5px; }
   .rp-nav-link:hover { text-decoration: underline; }
 
-  /* /--- Hero /--- */
+  /* --- Hero --- */
   #rpu-hero {
     padding: 42px 28px 32px;
     background: linear-gradient(135deg, #EEF1FB 0%, #EEF5FF 55%, #E8F7FD 100%);
@@ -45,33 +47,33 @@
   .rpu-hero-inner { max-width: 880px; margin: 0 auto; }
   .rpu-shelter-badge {
     display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px;
-    border-radius: 99px; background: rgba(69,82,204,0.10); color: #4552CC !important;
+    border-radius: 99px; background: rgba(69,82,204,0.10); color: #4552CC;
     font-size: 0.73rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
     margin-bottom: 14px;
   }
   .rpu-hero-name {
-    font-family: 'Sora', sans-serif !important; font-size: 2rem; font-weight: 800;
+    font-family: 'Sora', sans-serif; font-size: 2rem; font-weight: 800;
     color: #212121; margin-bottom: 7px; line-height: 1.2;
   }
   .rpu-hero-meta { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.84rem; color: #757575; }
   .rpu-hero-meta span { display: flex; align-items: center; gap: 5px; }
   .rpu-hero-meta i { color: #4552CC; }
 
-  /* /--- Filters /--- */
+  /* --- Filters --- */
   #rpu-filters { padding: 16px 28px; background: #fff; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; gap: 9px; flex-wrap: wrap; align-items: center; }
   .rpu-filter-btn {
     padding: 7px 15px; border-radius: 99px; font-size: 0.80rem; font-weight: 600;
-    font-family: 'Plus Jakarta Sans', sans-serif !important; cursor: pointer; border: 1.5px solid #E0E0E0;
+    font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; border: 1.5px solid #E0E0E0;
     background: #fff; color: #757575; transition: all 0.16s;
   }
   .rpu-filter-btn:hover { border-color: #4552CC; color: #4552CC; }
-  .rpu-filter-btn.active { background: #4552CC; color: #fff !important; border-color: #4552CC; }
+  .rpu-filter-btn.active { background: #4552CC; color: #fff; border-color: #4552CC; }
 
-  /* /--- Grid /--- */
+  /* --- Grid --- */
   #rpu-main { max-width: 1100px; margin: 0 auto; padding: 28px 22px; }
   #rpu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(235px, 1fr)); gap: 18px; }
 
-  /* /--- Pet card /--- */
+  /* --- Pet card --- */
   .rpu-pet-card {
     border-radius: 18px; overflow: hidden; background: #fff;
     border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 3px 18px rgba(0,0,0,0.04);
@@ -88,23 +90,23 @@
     font-size: 2.8rem; color: #9E9E9E;
   }
   .rpu-pet-card__body { padding: 14px; }
-  .rpu-pet-card__name { font-family: 'Sora', sans-serif !important; font-size: 1rem; font-weight: 800; color: #212121; margin-bottom: 3px; }
+  .rpu-pet-card__name { font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 800; color: #212121; margin-bottom: 3px; }
   .rpu-pet-card__meta { font-size: 0.78rem; color: #757575; margin-bottom: 11px; }
   .rpu-pet-card__adopt {
     display: flex; align-items: center; justify-content: center; gap: 6px;
     width: 100%; padding: 9px; border-radius: 10px;
-    background: rgba(69,82,204,0.08); color: #4552CC !important; font-weight: 700; font-size: 0.82rem;
-    border: none; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif !important;
+    background: rgba(69,82,204,0.08); color: #4552CC; font-weight: 700; font-size: 0.82rem;
+    border: none; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
     transition: background 0.16s;
   }
   .rpu-pet-card__adopt:hover { background: rgba(69,82,204,0.16); }
 
-  /* /--- Empty / Loading /--- */
+  /* --- Empty / Loading --- */
   .rpu-empty { text-align: center; padding: 56px 20px; color: #9E9E9E; }
   .rpu-empty i { font-size: 2.8rem; margin-bottom: 12px; display: block; color: #BDBDBD; }
   .rpu-empty p { font-size: 0.90rem; }
 
-  /* /--- Modal base /--- */
+  /* --- Modal base --- */
   .rpu-modal-overlay {
     display: none; position: fixed; inset: 0; z-index: 9980;
     background: rgba(0,0,0,0.48); align-items: center; justify-content: center; padding: 20px;
@@ -116,29 +118,30 @@
   }
   .rpu-modal-head {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 22px 14px; border-bottom: 1px solid rgba(0,0,0,0.06); position: sticky; top: 0; background: #fff; z-index: 2;
+    padding: 18px 22px 14px; border-bottom: 1px solid rgba(0,0,0,0.06);
+    position: sticky; top: 0; background: #fff; z-index: 2;
   }
-  .rpu-modal-title { font-family: 'Sora', sans-serif !important; font-size: 1rem; font-weight: 800; color: #212121; }
+  .rpu-modal-title { font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 800; color: #212121; }
   .rpu-modal-close { background: none; border: none; cursor: pointer; font-size: 1.3rem; color: #757575; line-height: 1; }
   .rpu-modal-body { padding: 20px 22px; }
 
-  /* /--- Pet detail /--- */
+  /* --- Pet detail --- */
   .rpu-pet-detail-img { width: 100%; height: 260px; object-fit: cover; border-radius: 14px; margin-bottom: 16px; }
   .rpu-pet-detail-img-placeholder {
     width: 100%; height: 200px; border-radius: 14px; margin-bottom: 16px;
     background: linear-gradient(135deg, #EEF1FB, #E8F7FD);
     display: flex; align-items: center; justify-content: center; font-size: 3.5rem; color: #BDBDBD;
   }
-  .rpu-pet-detail-name { font-family: 'Sora', sans-serif !important; font-size: 1.55rem; font-weight: 800; color: #212121; margin-bottom: 4px; }
+  .rpu-pet-detail-name { font-family: 'Sora', sans-serif; font-size: 1.55rem; font-weight: 800; color: #212121; margin-bottom: 4px; }
   .rpu-pet-chips { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 14px; }
   .rpu-chip { padding: 4px 11px; border-radius: 99px; font-size: 0.73rem; font-weight: 700; background: rgba(69,82,204,0.08); color: #4552CC; }
   .rpu-pet-detail-desc { font-size: 0.875rem; color: #424242; line-height: 1.6; margin-bottom: 18px; }
   .rpu-pet-detail-health { font-size: 0.82rem; color: #757575; margin-bottom: 18px; display: flex; align-items: center; gap: 6px; }
   .rpu-pet-detail-health i { color: #27AE60; }
 
-  /* /--- Adoption form /--- */
+  /* --- Adoption form --- */
   .rpu-form-section-title {
-    font-family: 'Sora', sans-serif !important; font-size: 0.85rem; font-weight: 800;
+    font-family: 'Sora', sans-serif; font-size: 0.85rem; font-weight: 800;
     color: #4552CC; text-transform: uppercase; letter-spacing: 0.05em;
     margin: 18px 0 12px; padding-top: 14px; border-top: 1px solid rgba(0,0,0,0.06);
   }
@@ -148,26 +151,26 @@
   .rpu-req { color: #E74C3C; }
   .rpu-input {
     width: 100%; padding: 10px 13px; font-size: 0.875rem;
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-    color: #212121 !important; background: rgba(255,255,255,0.72) !important;
-    border: 1.5px solid #E0E0E0 !important; border-radius: 10px; outline: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #212121; background: rgba(255,255,255,0.72);
+    border: 1.5px solid #E0E0E0; border-radius: 10px; outline: none;
     transition: border-color 0.18s, box-shadow 0.18s;
-    /webkit-appearance: none; appearance: none;
+    -webkit-appearance: none; appearance: none;
   }
-  .rpu-input:focus { border-color: #4552CC !important; box-shadow: 0 0 0 3px rgba(69,82,204,0.14) !important; }
+  .rpu-input:focus { border-color: #4552CC; box-shadow: 0 0 0 3px rgba(69,82,204,0.14); }
   textarea.rpu-input { resize: vertical; min-height: 80px; }
   select.rpu-input {
     cursor: pointer;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239E9E9E'%3E%3Cpath d='M12 15l-6-6h12z'/%3E%3C/svg%3E") !important;
-    background-repeat: no-repeat !important; background-position: right 11px center !important;
-    background-size: 15px !important; padding-right: 34px !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239E9E9E'%3E%3Cpath d='M12 15l-6-6h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 11px center;
+    background-size: 15px; padding-right: 34px;
   }
   .rpu-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
   @media (max-width: 500px) { .rpu-grid-2 { grid-template-columns: 1fr; } }
   .rpu-radio-group { display: flex; gap: 14px; flex-wrap: wrap; }
   .rpu-radio-label { display: flex; align-items: center; gap: 6px; font-size: 0.875rem; cursor: pointer; }
 
-  /* /--- Terms accordion /--- */
+  /* --- Terms accordion --- */
   .rpu-terms-toggle {
     width: 100%; text-align: left; background: rgba(69,82,204,0.05);
     border: 1.5px solid rgba(69,82,204,0.15); border-radius: 10px;
@@ -181,25 +184,25 @@
   }
   .rpu-terms-body.open { display: block; }
 
-  /* /--- Consent checkbox /--- */
+  /* --- Consent checkbox --- */
   .rpu-consent { display: flex; gap: 9px; align-items: flex-start; margin-bottom: 16px; }
   .rpu-consent input[type=checkbox] { margin-top: 2px; accent-color: #4552CC; width: 16px; height: 16px; flex-shrink: 0; }
   .rpu-consent-text { font-size: 0.80rem; color: #424242; line-height: 1.5; }
 
-  /* /--- Buttons /--- */
+  /* --- Buttons --- */
   .rpu-btn {
-    display: inline-flex !important; align-items: center !important; justify-content: center !important;
+    display: inline-flex; align-items: center; justify-content: center;
     gap: 7px; padding: 12px 20px; border-radius: 12px;
-    font-family: 'Plus Jakarta Sans', sans-serif !important; font-size: 0.875rem; font-weight: 600;
-    cursor: pointer; text-decoration: none !important; transition: all 0.18s;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.875rem; font-weight: 600;
+    cursor: pointer; text-decoration: none; transition: all 0.18s;
     white-space: nowrap; line-height: 1; border: none;
   }
-  .rpu-btn--primary { background: #4552CC !important; color: #fff !important; }
-  .rpu-btn--primary:hover { background: #2E3A9E !important; }
-  .rpu-btn--secondary { background: rgba(69,82,204,0.08) !important; color: #4552CC !important; border: 1.5px solid rgba(69,82,204,0.2) !important; }
-  .rpu-btn:disabled { opacity: 0.5; cursor: not-allowed !important; }
+  .rpu-btn--primary { background: #4552CC; color: #fff; }
+  .rpu-btn--primary:hover { background: #2E3A9E; }
+  .rpu-btn--secondary { background: rgba(69,82,204,0.08); color: #4552CC; border: 1.5px solid rgba(69,82,204,0.2); }
+  .rpu-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  /* /--- Success state /--- */
+  /* --- Success state --- */
   .rpu-success-box {
     text-align: center; padding: 32px 20px;
     background: linear-gradient(135deg, #F0FFF4, #E8F5E9); border-radius: 14px;
@@ -208,13 +211,13 @@
   .rpu-success-box h3 { font-family: 'Sora', sans-serif; font-size: 1.2rem; font-weight: 800; color: #1B5E20; margin-bottom: 7px; }
   .rpu-success-box p { font-size: 0.87rem; color: #388E3C; }
 
-  /* /--- Toast /--- */
+  /* --- Toast --- */
   #rpu-toast {
     position: fixed; bottom: 24px; right: 24px; z-index: 9999;
     padding: 13px 18px; border-radius: 13px;
-    font-family: 'Plus Jakarta Sans', sans-serif !important; font-size: 0.855rem; font-weight: 600;
-    color: #fff !important; max-width: 320px; display: flex; align-items: center; gap: 9px;
-    backdrop-filter: blur(20px) saturate(180%); /webkit-backdrop-filter: blur(20px) saturate(180%);
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.855rem; font-weight: 600;
+    color: #fff; max-width: 320px; display: flex; align-items: center; gap: 9px;
+    backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
     box-shadow: 0 8px 32px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.2);
     transform: translateY(80px); opacity: 0;
     transition: transform 0.32s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s ease;
@@ -228,19 +231,22 @@
   @media (max-width: 520px) {
     .rpu-hero-name { font-size: 1.5rem; }
     #rpu-hero, #rpu-filters, #rpu-main { padding-left: 14px; padding-right: 14px; }
-    .rpu-nav { padding: 0 14px; }
+    .rp-nav { padding: 0 14px; }
   }
   </style>
 </head>
 <body>
 
-<!-- NAV /->
+<!-- NAV -->
 <nav class="rp-nav">
-  <a class="rp-nav-logo" href="#">PETCINGO</a>
-  <a class="rp-nav-link" href="https://prueb2.dashnexpages.net/checkout/"><i class="ri-shopping-cart-line"></i> Tienda</a>
+  <a class="rp-nav-logo-wrap" href="https://prueb2.dashnexpages.net/home/">
+    <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png" alt="Petcingo" loading="lazy" onerror="this.style.display='none'">
+    <span class="rp-nav-logo">PETCINGO</span>
+  </a>
+  <a class="rp-nav-link" href="https://prueb2.dashnexpages.net/planes/"><i class="ri-shopping-cart-line"></i> Tienda</a>
 </nav>
 
-<!-- HERO /->
+<!-- HERO -->
 <div id="rpu-hero">
   <div class="rpu-hero-inner">
     <div id="rpu-loading-hero" style="color:#9E9E9E;font-size:0.875rem;">Cargando refugio...</div>
@@ -260,7 +266,7 @@
   </div>
 </div>
 
-<!-- FILTERS /->
+<!-- FILTERS -->
 <div id="rpu-filters">
   <button class="rpu-filter-btn active" data-species="" onclick="setFilter(this)">Todos</button>
   <button class="rpu-filter-btn" data-species="perro"   onclick="setFilter(this)"><i class="ri-footprint-line"></i> Perros</button>
@@ -270,14 +276,14 @@
   <button class="rpu-filter-btn" data-species="otro"    onclick="setFilter(this)">Otros</button>
 </div>
 
-<!-- GRID /->
+<!-- GRID -->
 <div id="rpu-main">
   <div id="rpu-grid">
     <div class="rpu-empty"><i class="ri-loader-4-line"></i><p>Cargando animales...</p></div>
   </div>
 </div>
 
-<!-- ===== MODAL: Pet Detail ===== /->
+<!-- MODAL: Pet Detail -->
 <div class="rpu-modal-overlay" id="modal-detail">
   <div class="rpu-modal-box" style="max-width:560px;">
     <div class="rpu-modal-head">
@@ -288,7 +294,7 @@
   </div>
 </div>
 
-<!-- ===== MODAL: Solicitud de Adopcion ===== /->
+<!-- MODAL: Solicitud de Adopcion -->
 <div class="rpu-modal-overlay" id="modal-adopt">
   <div class="rpu-modal-box">
     <div class="rpu-modal-head">
@@ -297,10 +303,10 @@
     </div>
     <div class="rpu-modal-body">
       <div id="adopt-form-wrap">
-        <!-- Pet summary /->
+        <!-- Pet summary -->
         <div id="adopt-pet-summary" style="display:flex;gap:12px;align-items:center;margin-bottom:18px;padding:13px;background:#F8F9FB;border-radius:12px;border:1px solid rgba(0,0,0,0.05);"></div>
 
-        <!-- Datos personales /->
+        <!-- Datos personales -->
         <div class="rpu-form-section-title">Tus datos</div>
         <div class="rpu-grid-2">
           <div class="rpu-field">
@@ -327,12 +333,12 @@
           <input class="rpu-input" type="text" id="adp-address" placeholder="Barrio o referencia">
         </div>
 
-        <!-- Cuestionario /->
+        <!-- Cuestionario -->
         <div class="rpu-form-section-title">Cuestionario</div>
         <div class="rpu-field">
           <label class="rpu-label">Tipo de vivienda <span class="rpu-req">*</span></label>
           <select class="rpu-input" id="adp-home-type">
-            <option value="">-- Seleccionar /-</option>
+            <option value="">-- Seleccionar --</option>
             <option value="casa">Casa propia o alquilada</option>
             <option value="apartamento">Apartamento</option>
             <option value="otro">Otro</option>
@@ -348,7 +354,7 @@
         <div class="rpu-field">
           <label class="rpu-label">Experiencia previa con mascotas</label>
           <select class="rpu-input" id="adp-experience">
-            <option value="">-- Seleccionar /-</option>
+            <option value="">-- Seleccionar --</option>
             <option value="ninguna">Ninguna, primera vez</option>
             <option value="basica">Basica, he tenido mascotas antes</option>
             <option value="avanzada">Avanzada, mucha experiencia</option>
@@ -359,7 +365,7 @@
           <textarea class="rpu-input" id="adp-reason" rows="3" placeholder="Cuentanos sobre tu interes y estilo de vida..."></textarea>
         </div>
 
-        <!-- Terminos /->
+        <!-- Terminos -->
         <div class="rpu-form-section-title">Terminos de adopcion</div>
         <button type="button" class="rpu-terms-toggle" onclick="toggleTerms()">
           <span>Ver terminos y condiciones</span>
@@ -379,7 +385,7 @@
         <div id="adp-err" style="display:none;margin-top:10px;font-size:0.80rem;color:#E74C3C;text-align:center;font-weight:600;padding:8px 12px;background:rgba(231,76,60,0.06);border-radius:8px;"></div>
       </div>
 
-      <!-- Success /->
+      <!-- Success -->
       <div id="adopt-success" style="display:none;">
         <div class="rpu-success-box">
           <i class="ri-checkbox-circle-fill"></i>
@@ -394,15 +400,15 @@
   </div>
 </div>
 
-<!-- Toast /->
+<!-- Toast -->
 <div id="rpu-toast"></div>
 
-<!-- ==================== SCRIPTS ==================== /->
+<!-- SCRIPTS -->
 <script>
 (function () {
   'use strict';
 
-  /* /- Firebase init /- */
+  /* -- Firebase init -- */
   var _fbApp = null, _db = null;
   function getApp() {
     if (_fbApp) return _fbApp;
@@ -420,7 +426,7 @@
   }
   function db() { if (!_db) _db = getApp().firestore(); return _db; }
 
-  /* /- State /- */
+  /* -- State -- */
   var _shelterId   = null;
   var _shelterData = null;
   var _allPets     = [];
@@ -428,7 +434,7 @@
   var _currentPet  = null;
   var _toastTimer  = null;
 
-  /* /- Helpers /- */
+  /* -- Helpers -- */
   function esc(s) {
     return String(s == null ? '' : s)
       .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -508,7 +514,7 @@
         _allPets.sort(function (a, b) {
           var ta = a.data.createdAt && a.data.createdAt.toDate ? a.data.createdAt.toDate() : 0;
           var tb = b.data.createdAt && b.data.createdAt.toDate ? b.data.createdAt.toDate() : 0;
-          return tb / ta;
+          return tb - ta;
         });
         $txt('rpu-pet-count', _allPets.length);
         renderGrid();
@@ -531,7 +537,7 @@
       var imgHtml = d.photoUrl
         ? '<img class="rpu-pet-card__img" src="' + esc(d.photoUrl) + '" alt="' + esc(d.name) + '" loading="lazy">'
         : '<div class="rpu-pet-card__img-placeholder"><i class="' + speciesIcon(d.species) + '"></i></div>';
-      var meta = [d.species, d.breed, d.age, d.gender].filter(Boolean).join(' /');
+      var meta = [d.species, d.breed, d.age, d.gender].filter(Boolean).join(' / ');
       h += '<div class="rpu-pet-card" onclick="openDetailModal(\'' + esc(p.id) + '\')">';
       h += imgHtml;
       h += '<div class="rpu-pet-card__body">';
@@ -613,7 +619,7 @@
     var imgHtml = d.photoUrl
       ? '<img src="' + esc(d.photoUrl) + '" style="width:54px;height:54px;object-fit:cover;border-radius:10px;flex-shrink:0;">'
       : '<div style="width:54px;height:54px;background:#EEF1FB;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#9E9E9E;font-size:1.3rem;flex-shrink:0;"><i class="' + speciesIcon(d.species) + '"></i></div>';
-    var meta = [d.species, d.breed].filter(Boolean).join(' /');
+    var meta = [d.species, d.breed].filter(Boolean).join(' / ');
     document.getElementById('adopt-pet-summary').innerHTML =
       imgHtml +
       '<div><div style="font-family:\'Sora\',sans-serif;font-weight:800;font-size:0.95rem;color:#212121;">' + esc(d.name || '-') + '</div>' +
@@ -671,23 +677,23 @@
 
     var d = _currentPet.data;
     var request = {
-      shelterId:       _shelterId,
-      shelterName:     (_shelterData && _shelterData.name) || '',
-      petId:           _currentPet.id,
-      petName:         d.name || '',
-      petSpecies:      d.species || '',
-      applicantName:   name,
-      applicantPhone:  phone,
-      applicantEmail:  $gval('adp-email'),
-      applicantCity:   city,
-      applicantAddress:$gval('adp-address'),
-      homeType:        homeType,
-      hasOtherPets:    otherPets,
-      experience:      $gval('adp-experience'),
-      reason:          reason,
-      status:          'pendiente',
-      createdAt:       firebase.firestore.FieldValue.serverTimestamp(),
-      updatedAt:       firebase.firestore.FieldValue.serverTimestamp()
+      shelterId:        _shelterId,
+      shelterName:      (_shelterData && _shelterData.name) || '',
+      petId:            _currentPet.id,
+      petName:          d.name || '',
+      petSpecies:       d.species || '',
+      applicantName:    name,
+      applicantPhone:   phone,
+      applicantEmail:   $gval('adp-email'),
+      applicantCity:    city,
+      applicantAddress: $gval('adp-address'),
+      homeType:         homeType,
+      hasOtherPets:     otherPets,
+      experience:       $gval('adp-experience'),
+      reason:           reason,
+      status:           'pendiente',
+      createdAt:        firebase.firestore.FieldValue.serverTimestamp(),
+      updatedAt:        firebase.firestore.FieldValue.serverTimestamp()
     };
 
     db().collection('adoption_requests').add(request)
