@@ -4,225 +4,227 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>404 — Página no encontrada · Petcingo</title>
+  <meta name="description" content="La página que buscas no existe. Vuelve al inicio de Petcingo.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://prueb2.dashnexpages.net/assets/fonts/remixicon/remixicon.css" rel="stylesheet">
-  <link href="https://assets.petcingo.com/css/petcingo-core.css" rel="stylesheet">
   <style>
-    /* ============================================================
-       ENCAPSULADO PARA DASHNEX: .ptcg-404 aísla todos los estilos
-       de esta página de error del CSS global de la plataforma.
-       ============================================================ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    background: #F8F9FB; color: #212121;
+    min-height: 100vh; display: flex; flex-direction: column;
+    position: relative; overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
 
-    .ptcg-404, .ptcg-404 * {
-      margin: 0; padding: 0; box-sizing: border-box;
-      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-      color: #1D1D1F;
-      -webkit-font-smoothing: antialiased;
-    }
-    .ptcg-404 a { text-decoration: none; }
-    .ptcg-404 button { cursor: pointer; font-family: inherit; }
+  /* ORBS */
+  .e4-orb {
+    position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
+  }
+  .e4-orb-1 {
+    width: 500px; height: 500px; top: -150px; right: -100px;
+    background: radial-gradient(circle, rgba(69,82,204,0.09) 0%, transparent 70%);
+    animation: orb-float 18s ease-in-out infinite;
+  }
+  .e4-orb-2 {
+    width: 400px; height: 400px; bottom: -100px; left: -100px;
+    background: radial-gradient(circle, rgba(81,203,245,0.08) 0%, transparent 70%);
+    animation: orb-float 24s ease-in-out infinite reverse;
+  }
+  @keyframes orb-float {
+    0%, 100% { transform: translate(0,0); }
+    33%       { transform: translate(20px,-25px); }
+    66%       { transform: translate(-15px,18px); }
+  }
+  @keyframes scale-in {
+    from { transform: scale(0.94); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+  }
 
-    .ptcg-404 {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 24px;
-      position: relative;
-      overflow: hidden;
-      background: linear-gradient(135deg, #F5F0FF 0%, #F5F5F7 50%, #EEFEFF 100%);
-    }
+  /* NAV */
+  .e4-nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 28px; height: 60px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(20px) saturate(200%); -webkit-backdrop-filter: blur(20px) saturate(200%);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .e4-nav-logo { display: flex; align-items: center; gap: 7px; text-decoration: none; }
+  .e4-nav-logo img { height: 28px; width: auto; }
+  .e4-nav-logo-text { font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 800; color: #4552CC; }
+  .e4-nav-link { font-size: 0.85rem; font-weight: 600; color: #4552CC; text-decoration: none; }
+  .e4-nav-link:hover { text-decoration: underline; }
 
-    .ptcg-404__orb {
-      position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
-    }
-    .ptcg-404__orb-1 {
-      width: 500px; height: 500px; top: -150px; right: -100px;
-      background: radial-gradient(circle, rgba(81,0,192,0.10) 0%, transparent 70%);
-      animation: ptcg-orb-float 18s ease-in-out infinite;
-    }
-    .ptcg-404__orb-2 {
-      width: 400px; height: 400px; bottom: -100px; left: -100px;
-      background: radial-gradient(circle, rgba(0,225,243,0.09) 0%, transparent 70%);
-      animation: ptcg-orb-float 24s ease-in-out infinite reverse;
-    }
+  /* CENTRO */
+  .e4-center {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 40px 24px;
+    position: relative; z-index: 1;
+  }
+  .e4-content {
+    text-align: center; max-width: 520px; width: 100%;
+    animation: scale-in 0.45s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
 
-    /* Topbar link */
-    .ptcg-404__top {
-      position: fixed; top: 0; left: 0; right: 0;
-      display: flex; align-items: center; padding: 20px 24px;
-      z-index: 10;
-    }
-    .ptcg-404__logo {
-      display: flex; align-items: center; gap: 8px;
-      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem;
-      color: #5100C0; text-decoration: none;
-    }
+  /* LOGO */
+  .e4-logo { height: 52px; width: auto; margin: 0 auto 28px; display: block; }
+  .e4-logo-fallback {
+    font-family: 'Sora', sans-serif; font-size: 1.6rem; font-weight: 800;
+    color: #4552CC; display: none; margin-bottom: 28px;
+  }
 
-    /* Contenido central */
-    .ptcg-404__content {
-      position: relative; z-index: 1;
-      width: 100%; max-width: 520px;
-      text-align: center;
-      animation: ptcg-scale-in 0.45s cubic-bezier(0.34,1.56,0.64,1) both;
-    }
+  /* NÚMERO 404 */
+  .e4-number-wrap {
+    background: rgba(255,255,255,0.80);
+    border-radius: 24px; border: 1px solid rgba(255,255,255,0.9);
+    box-shadow: 0 8px 40px rgba(69,82,204,0.10);
+    backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+    display: inline-block; padding: 28px 48px; margin-bottom: 32px;
+  }
+  .e4-number {
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(5rem, 15vw, 9rem);
+    font-weight: 800; color: #4552CC;
+    letter-spacing: -0.04em; line-height: 1; display: block;
+  }
+  .e4-icon {
+    font-size: 2.2rem; color: #4552CC; display: block; margin-top: 4px;
+  }
 
-    /* Número 404 con Liquid Glass */
-    .ptcg-404__number-wrap {
-      margin-bottom: 32px;
-    }
-    .ptcg-404__number-card {
-      display: inline-block;
-      border-radius: 28px;
-    }
-    .ptcg-404__number-card .lg-body {
-      padding: 32px 48px;
-    }
-    .ptcg-404__number {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(5rem, 15vw, 9rem);
-      font-weight: 800;
-      color: #5100C0;
-      letter-spacing: -0.04em;
-      line-height: 1;
-      display: block;
-    }
-    .ptcg-404__icon {
-      font-size: 2.5rem;
-      display: block;
-      margin-top: 4px;
-    }
+  .e4-title {
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 800;
+    color: #212121; letter-spacing: -0.025em; margin-bottom: 12px;
+  }
+  .e4-sub {
+    font-size: 0.96rem; color: #757575; line-height: 1.65;
+    max-width: 400px; margin: 0 auto 32px;
+  }
 
-    .ptcg-404__title {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(1.4rem, 4vw, 2rem);
-      font-weight: 800;
-      color: #1D1D1F;
-      letter-spacing: -0.025em;
-      margin-bottom: 12px;
-    }
-    .ptcg-404__sub {
-      font-size: 1rem; color: #86868B; line-height: 1.65;
-      max-width: 400px; margin: 0 auto 36px;
-    }
+  /* BOTONES */
+  .e4-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .e4-btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 13px 24px; border-radius: 13px;
+    background: #4552CC; color: #fff;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; font-weight: 700;
+    border: none; text-decoration: none; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(69,82,204,0.28);
+    transition: background 0.2s, transform 0.15s;
+  }
+  .e4-btn-primary:hover { background: #2E3A9E; transform: translateY(-1px); }
+  .e4-btn-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 13px 24px; border-radius: 13px;
+    background: transparent; color: #616161;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; font-weight: 700;
+    border: 1.5px solid rgba(0,0,0,0.12); text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .e4-btn-ghost:hover { border-color: #4552CC; color: #4552CC; }
 
-    .ptcg-404__actions {
-      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
-    }
+  /* LINKS RÁPIDOS */
+  .e4-quick {
+    margin-top: 40px; display: flex; flex-direction: column; gap: 10px; align-items: center;
+  }
+  .e4-quick-label {
+    font-size: 0.75rem; color: #9E9E9E; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .e4-quick-links { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .e4-quick-link {
+    padding: 7px 14px; border-radius: 99px;
+    background: rgba(69,82,204,0.07); color: #4552CC;
+    font-size: 0.82rem; font-weight: 600; text-decoration: none;
+    transition: background 0.2s;
+  }
+  .e4-quick-link:hover { background: rgba(69,82,204,0.14); }
 
-    /* Botones locales — colores explícitos, nunca heredados */
-    .ptcg-404 .btn-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 13px 24px; border-radius: 999px;
-      background-color: #5100C0 !important;
-      color: #FFFFFF !important;
-      font-size: 0.9rem; font-weight: 600;
-      border: none;
-      box-shadow: 0 4px 16px rgba(81,0,192,0.28);
-      transition: background-color 0.25s ease, transform 0.2s ease;
-    }
-    .ptcg-404 .btn-primary:hover {
-      background-color: #320078 !important; color: #FFFFFF !important;
-      transform: translateY(-1px);
-    }
-    .ptcg-404 .btn-ghost {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 13px 24px; border-radius: 999px;
-      background-color: transparent !important;
-      color: #515154 !important;
-      font-size: 0.9rem; font-weight: 600;
-      border: 1.5px solid rgba(0,0,0,0.12) !important;
-      transition: border-color 0.25s ease, color 0.25s ease;
-    }
-    .ptcg-404 .btn-ghost:hover {
-      border-color: #5100C0 !important;
-      color: #5100C0 !important;
-    }
+  /* FOOTER */
+  .e4-footer {
+    position: relative; z-index: 1;
+    text-align: center; padding: 24px 20px;
+    font-size: 0.80rem; color: #9E9E9E;
+    border-top: 1px solid rgba(0,0,0,0.05); background: #fff;
+  }
+  .e4-footer img { height: 20px; margin: 0 auto 8px; display: block; }
+  .e4-footer a { color: #4552CC; text-decoration: none; }
 
-    /* Links rápidos */
-    .ptcg-404__quick {
-      margin-top: 48px;
-      display: flex; flex-direction: column; gap: 8px; align-items: center;
-    }
-    .ptcg-404__quick-label {
-      font-size: 0.78rem; color: #86868B; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.08em;
-    }
-    .ptcg-404__quick-links {
-      display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
-    }
-    .ptcg-404__quick-links a {
-      padding: 7px 14px; border-radius: 999px;
-      background-color: rgba(81,0,192,0.07);
-      color: #5100C0; font-size: 0.82rem; font-weight: 600;
-      text-decoration: none;
-      transition: background-color 0.25s ease;
-    }
-    .ptcg-404__quick-links a:hover {
-      background-color: rgba(81,0,192,0.14);
-    }
-
-    @media (max-width: 479px) {
-      .ptcg-404__number-card .lg-body { padding: 24px 32px; }
-      .ptcg-404__actions { flex-direction: column; align-items: center; }
-    }
+  @media (max-width: 479px) {
+    .e4-number-wrap { padding: 20px 32px; }
+    .e4-actions { flex-direction: column; align-items: center; }
+    .e4-btn-primary, .e4-btn-ghost { width: 100%; justify-content: center; }
+  }
   </style>
 </head>
 <body>
-<svg style="display:none;position:absolute;width:0;height:0" aria-hidden="true">
-  <defs>
-    <filter id="lg-dist" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
-      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.008" numOctaves="2" seed="92" result="noise"/>
-      <feGaussianBlur in="noise" stdDeviation="2" result="blurred"/>
-      <feDisplacementMap in="SourceGraphic" in2="blurred" scale="70" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-  </defs>
-</svg>
 
-<div class="ptcg-404">
-  <div class="ptcg-404__orb ptcg-404__orb-1" aria-hidden="true"></div>
-  <div class="ptcg-404__orb ptcg-404__orb-2" aria-hidden="true"></div>
+<div class="e4-orb e4-orb-1" aria-hidden="true"></div>
+<div class="e4-orb e4-orb-2" aria-hidden="true"></div>
 
-  <div class="ptcg-404__top">
-    <a href="index.html" class="ptcg-404__logo">🐾 Petcingo</a>
-  </div>
+<!-- NAV -->
+<nav class="e4-nav">
+  <a class="e4-nav-logo" href="https://prueb2.dashnexpages.net/home/">
+    <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png" alt="Petcingo"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+    <span class="e4-nav-logo-text" style="display:none">PETCINGO</span>
+  </a>
+  <a class="e4-nav-link" href="https://prueb2.dashnexpages.net/finalizar-compra/">Planes</a>
+</nav>
 
-  <div class="ptcg-404__content">
-    <div class="ptcg-404__number-wrap">
-      <div class="ptcg-404__number-card lg-card">
-        <div class="lg-base" aria-hidden="true"></div>
-        <div class="lg-body">
-          <span class="ptcg-404__number">404</span>
-          <span class="ptcg-404__icon">🐾</span>
-        </div>
-      </div>
+<!-- CENTRO -->
+<div class="e4-center">
+  <div class="e4-content">
+
+    <img class="e4-logo"
+         src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png"
+         alt="Petcingo"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <div class="e4-logo-fallback">PETCINGO</div>
+
+    <div class="e4-number-wrap">
+      <span class="e4-number">404</span>
+      <i class="ri-map-pin-off-line e4-icon" aria-hidden="true"></i>
     </div>
 
-    <h1 class="ptcg-404__title">¡Esta página se perdió!</h1>
-    <p class="ptcg-404__sub">
-      La página que buscas no existe, fue movida o el enlace está roto. No te preocupes, podemos ayudarte a encontrar lo que necesitas.
+    <h1 class="e4-title">Página no encontrada</h1>
+    <p class="e4-sub">
+      La página que buscas no existe, fue movida o el enlace está roto.
+      No te preocupes — tu mascota sigue protegida.
     </p>
 
-    <div class="ptcg-404__actions">
-      <a href="index.html" class="btn-primary">
+    <div class="e4-actions">
+      <a class="e4-btn-primary" href="https://prueb2.dashnexpages.net/home/">
         <i class="ri-home-line"></i> Ir al inicio
       </a>
-      <a href="catalogo.html" class="btn-ghost">
-        <i class="ri-grid-line"></i> Ver catálogo
+      <a class="e4-btn-ghost" href="https://prueb2.dashnexpages.net/finalizar-compra/">
+        <i class="ri-shield-check-line"></i> Ver planes
       </a>
     </div>
 
-    <div class="ptcg-404__quick">
-      <span class="ptcg-404__quick-label">También puedes visitar</span>
-      <div class="ptcg-404__quick-links">
-        <a href="store.html">Tienda</a>
-        <a href="cart.html">Carrito</a>
-        <a href="login.html">Mi cuenta</a>
+    <div class="e4-quick">
+      <span class="e4-quick-label">También puedes visitar</span>
+      <div class="e4-quick-links">
+        <a class="e4-quick-link" href="https://prueb2.dashnexpages.net/login/"><i class="ri-user-line"></i> Mi cuenta</a>
+        <a class="e4-quick-link" href="https://prueb2.dashnexpages.net/activate/"><i class="ri-qr-code-line"></i> Activar placa</a>
+        <a class="e4-quick-link" href="https://prueb2.dashnexpages.net/ayuda/"><i class="ri-question-line"></i> Ayuda</a>
       </div>
     </div>
+
   </div>
 </div>
+
+<!-- FOOTER -->
+<footer class="e4-footer">
+  <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png"
+       alt="Petcingo" onerror="this.style.display='none'"><br>
+  &copy; 2026 Petcingo &mdash; Sistema de Identificación de Mascotas<br>
+  <a href="https://prueb2.dashnexpages.net/home/">Inicio</a> |
+  <a href="https://prueb2.dashnexpages.net/finalizar-compra/">Planes</a>
+</footer>
+
 </body>
 </html>

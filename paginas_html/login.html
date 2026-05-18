@@ -4,446 +4,370 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ingresar — Petcingo</title>
+  <meta name="description" content="Accede a tu cuenta Petcingo para gestionar el perfil de tu mascota.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://prueb2.dashnexpages.net/assets/fonts/remixicon/remixicon.css" rel="stylesheet">
-  <link href="https://assets.petcingo.com/css/petcingo-core.css" rel="stylesheet">
-
   <style>
-    /* ============================================================
-       ENCAPSULADO PARA DASHNEX: El prefijo .ptcg-login previene que
-       los estilos de Bootstrap 4 inyectados por Dashnex sobrescriban
-       inputs, botones y tarjetas de este formulario.
-       ============================================================ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #212121;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    position: relative; overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
 
-    .ptcg-login, .ptcg-login * {
-      margin: 0; padding: 0; box-sizing: border-box;
-      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-      color: #1D1D1F;
-      -webkit-font-smoothing: antialiased;
-    }
-    .ptcg-login a { text-decoration: none; }
-    .ptcg-login img { display: block; max-width: 100%; }
-    .ptcg-login button { cursor: pointer; font-family: inherit; }
+  /* FONDO GRADIENT */
+  .lg-bg {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 100% 80% at 5% 0%, rgba(69,82,204,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse 80% 70% at 95% 100%, rgba(81,203,245,0.16) 0%, transparent 55%),
+      #F8F9FB;
+    pointer-events: none;
+  }
+  .lg-orb {
+    position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
+    animation: orb-float 20s ease-in-out infinite;
+  }
+  .lg-orb-1 {
+    width: 600px; height: 600px; top: -200px; left: -200px;
+    background: radial-gradient(circle, rgba(69,82,204,0.12) 0%, transparent 70%);
+  }
+  .lg-orb-2 {
+    width: 500px; height: 500px; bottom: -150px; right: -100px;
+    background: radial-gradient(circle, rgba(81,203,245,0.10) 0%, transparent 70%);
+    animation-direction: reverse; animation-duration: 26s;
+  }
+  @keyframes orb-float {
+    0%, 100% { transform: translate(0,0); }
+    33%       { transform: translate(20px,-30px); }
+    66%       { transform: translate(-15px, 20px); }
+  }
+  @keyframes scale-in {
+    from { transform: scale(0.94); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+  }
 
-    .ptcg-login {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      overflow: hidden;
-      background-color: #F5F5F7;
-    }
+  /* TOPBAR */
+  .lg-topbar {
+    position: relative; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 28px;
+  }
+  .lg-topbar-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+  .lg-topbar-logo img { height: 28px; width: auto; }
+  .lg-topbar-logo-text { font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 800; color: #4552CC; }
+  .lg-back {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: 99px;
+    font-size: 0.85rem; font-weight: 500; color: #616161;
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(255,255,255,0.7);
+    backdrop-filter: blur(12px); text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+  }
+  .lg-back:hover { background: rgba(255,255,255,0.8); color: #212121; }
 
-    /* Fondo gradiente inmersivo */
-    .ptcg-login__bg {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      background:
-        radial-gradient(ellipse 100% 80% at 10% 0%, rgba(81,0,192,0.18) 0%, transparent 55%),
-        radial-gradient(ellipse 80% 70% at 90% 100%, rgba(0,225,243,0.14) 0%, transparent 55%),
-        #F5F5F7;
-      pointer-events: none;
-    }
-    .ptcg-login__orb {
-      position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
-    }
-    .ptcg-login__orb-1 {
-      width: 600px; height: 600px; top: -200px; left: -200px;
-      background: radial-gradient(circle, rgba(81,0,192,0.14) 0%, transparent 70%);
-      animation: ptcg-orb-float 20s ease-in-out infinite;
-    }
-    .ptcg-login__orb-2 {
-      width: 500px; height: 500px; bottom: -150px; right: -100px;
-      background: radial-gradient(circle, rgba(0,225,243,0.11) 0%, transparent 70%);
-      animation: ptcg-orb-float 26s ease-in-out infinite reverse;
-    }
+  /* CENTRO */
+  .lg-center {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 20px 24px 40px;
+    position: relative; z-index: 1;
+  }
 
-    /* Barra superior mínima */
-    .ptcg-login__topbar {
-      position: relative; z-index: 10;
-      padding: 20px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .ptcg-login__logo {
-      display: flex; align-items: center; gap: 8px;
-      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem;
-      color: #5100C0;
-      text-decoration: none;
-    }
-    .ptcg-login__back {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 7px 14px; border-radius: 999px;
-      font-size: 0.85rem; font-weight: 500;
-      color: #515154;
-      background-color: rgba(255,255,255,0.4);
-      border: 1px solid rgba(255,255,255,0.6);
-      backdrop-filter: blur(12px);
-      text-decoration: none;
-      transition: background-color 0.25s ease, color 0.25s ease;
-    }
-    .ptcg-login__back:hover {
-      background-color: rgba(255,255,255,0.7);
-      color: #1D1D1F;
-    }
+  /* CARD */
+  .lg-card {
+    width: 100%; max-width: 440px;
+    background: rgba(255,255,255,0.75);
+    border-radius: 28px;
+    border: 1px solid rgba(255,255,255,0.9);
+    box-shadow: 0 12px 60px rgba(69,82,204,0.10), 0 2px 12px rgba(0,0,0,0.05);
+    backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%);
+    padding: 36px 36px 32px;
+    animation: scale-in 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
 
-    /* Área central */
-    .ptcg-login__center {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 24px;
-      position: relative;
-      z-index: 1;
-    }
+  /* HEADER DE CARD */
+  .lg-card-header { text-align: center; margin-bottom: 28px; }
+  .lg-card-logo { height: 60px; width: auto; margin: 0 auto 16px; display: block; }
+  .lg-card-logo-fallback {
+    font-family: 'Sora', sans-serif; font-size: 1.5rem; font-weight: 800;
+    color: #4552CC; display: none; margin-bottom: 16px;
+  }
+  .lg-card-title {
+    font-family: 'Sora', sans-serif; font-size: 1.5rem; font-weight: 800;
+    color: #212121; letter-spacing: -0.025em; margin-bottom: 5px;
+  }
+  .lg-card-sub { font-size: 0.88rem; color: #757575; line-height: 1.5; }
 
-    /* Tarjeta principal con Liquid Glass */
-    .ptcg-login__card {
-      width: 100%;
-      max-width: 440px;
-      border-radius: 32px;
-      animation: ptcg-scale-in 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
-    }
-    .ptcg-login__card .lg-body {
-      padding: 40px;
-    }
+  /* TABS */
+  .lg-tabs {
+    display: flex; background: rgba(0,0,0,0.05); border-radius: 13px; padding: 4px;
+    margin-bottom: 24px;
+  }
+  .lg-tab {
+    flex: 1; padding: 9px; border: none; background: transparent; border-radius: 10px;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.875rem; font-weight: 600;
+    color: #9E9E9E; cursor: pointer;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  }
+  .lg-tab.active { background: #fff; color: #212121; box-shadow: 0 2px 8px rgba(0,0,0,0.10); }
 
-    .ptcg-login__card-header {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-    .ptcg-login__card-icon {
-      width: 64px; height: 64px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, #5100C0, #5151FC);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.8rem;
-      margin: 0 auto 16px;
-      box-shadow: 0 8px 24px rgba(81,0,192,0.28);
-    }
-    .ptcg-login__card-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.6rem; font-weight: 800;
-      color: #1D1D1F;
-      letter-spacing: -0.025em;
-      margin-bottom: 6px;
-    }
-    .ptcg-login__card-sub {
-      font-size: 0.88rem; color: #86868B; line-height: 1.5;
-    }
+  /* ERROR */
+  .lg-error {
+    padding: 10px 14px; border-radius: 10px;
+    background: rgba(235,73,66,0.08); border: 1px solid rgba(235,73,66,0.20);
+    color: #D32F2F; font-size: 0.84rem; font-weight: 500; display: none;
+    margin-bottom: 4px;
+  }
+  .lg-error.show { display: block; }
 
-    /* Tabs login/registro */
-    .ptcg-login__tabs {
-      display: flex;
-      background-color: rgba(0,0,0,0.05);
-      border-radius: 14px;
-      padding: 4px;
-      margin-bottom: 28px;
-    }
-    .ptcg-login__tab {
-      flex: 1; padding: 9px;
-      border: none; background: transparent;
-      border-radius: 11px;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.875rem; font-weight: 600;
-      color: #86868B;
-      cursor: pointer;
-      transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
-    }
-    .ptcg-login__tab.active {
-      background-color: #FFFFFF !important;
-      color: #1D1D1F !important;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
+  /* FORMULARIO */
+  .lg-form { display: flex; flex-direction: column; gap: 15px; }
+  .lg-form-hidden { display: none; flex-direction: column; gap: 15px; }
+  .lg-form-hidden.active { display: flex; }
+  .lg-field { display: flex; flex-direction: column; gap: 5px; }
+  .lg-label { font-size: 0.82rem; font-weight: 600; color: #616161; letter-spacing: 0.01em; }
+  .lg-input-wrap { position: relative; }
+  .lg-input-icon {
+    position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+    color: #9E9E9E; font-size: 1rem; pointer-events: none;
+  }
+  .lg-input {
+    width: 100%; padding: 12px 14px 12px 40px;
+    border-radius: 13px;
+    background: rgba(255,255,255,0.7);
+    color: #212121; border: 1.5px solid rgba(0,0,0,0.09);
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.95rem; font-weight: 400;
+    outline: none; -webkit-appearance: none; appearance: none;
+    backdrop-filter: blur(8px);
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  }
+  .lg-input::placeholder { color: #BDBDBD; }
+  .lg-input:focus {
+    border-color: #4552CC;
+    background: rgba(255,255,255,0.92);
+    box-shadow: 0 0 0 3px rgba(69,82,204,0.12);
+    color: #212121;
+  }
+  .lg-pwd-toggle {
+    position: absolute; right: 13px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; color: #9E9E9E; font-size: 1rem; cursor: pointer; padding: 4px;
+    display: flex; align-items: center;
+  }
+  .lg-pwd-toggle:hover { color: #4552CC; }
+  .lg-forgot {
+    text-align: right; font-size: 0.8rem; color: #4552CC; font-weight: 500;
+    cursor: pointer; margin-top: -6px;
+  }
+  .lg-forgot:hover { color: #2E3A9E; }
 
-    /* Formulario */
-    .ptcg-login__form { display: flex; flex-direction: column; gap: 16px; }
-    .ptcg-login__form-hidden { display: none; }
-    .ptcg-login__form-hidden.active { display: flex; flex-direction: column; gap: 16px; }
+  /* BOTÓN PRINCIPAL */
+  .lg-submit {
+    width: 100%; padding: 14px; border-radius: 13px;
+    background: #4552CC; color: #fff;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.95rem; font-weight: 700;
+    border: none; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(69,82,204,0.28);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-top: 2px;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  }
+  .lg-submit:hover { background: #2E3A9E; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(69,82,204,0.35); }
+  .lg-submit:active { transform: translateY(0); }
+  .lg-submit.loading { opacity: 0.7; pointer-events: none; }
 
-    .ptcg-login__field { display: flex; flex-direction: column; gap: 6px; }
-    .ptcg-login__label {
-      font-size: 0.82rem; font-weight: 600; color: #515154; letter-spacing: 0.01em;
-    }
-    .ptcg-login__input-wrap {
-      position: relative;
-    }
-    .ptcg-login__input-icon {
-      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-      color: #86868B; font-size: 1rem; pointer-events: none;
-    }
-    .ptcg-login__input {
-      width: 100%;
-      padding: 12px 14px 12px 40px;
-      border-radius: 14px;
-      background-color: rgba(255,255,255,0.65) !important;
-      color: #1D1D1F !important;
-      border: 1.5px solid rgba(0,0,0,0.10) !important;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 400;
-      outline: none;
-      transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
-      -webkit-appearance: none;
-      appearance: none;
-      backdrop-filter: blur(8px);
-    }
-    .ptcg-login__input::placeholder { color: #86868B; }
-    .ptcg-login__input:focus {
-      border-color: #5100C0 !important;
-      background-color: rgba(255,255,255,0.9) !important;
-      box-shadow: 0 0 0 3px rgba(81,0,192,0.12) !important;
-      color: #1D1D1F !important;
-    }
-    .ptcg-login__input-toggle {
-      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-      background: none; border: none; color: #86868B; font-size: 1rem; cursor: pointer;
-      padding: 4px;
-      display: flex; align-items: center;
-    }
-    .ptcg-login__input-toggle:hover { color: #5100C0; }
+  /* DIVISOR */
+  .lg-divider {
+    display: flex; align-items: center; gap: 12px; margin: 2px 0;
+  }
+  .lg-divider::before, .lg-divider::after {
+    content: ''; flex: 1; height: 1px; background: rgba(0,0,0,0.08);
+  }
+  .lg-divider span { font-size: 0.78rem; color: #9E9E9E; white-space: nowrap; }
 
-    .ptcg-login__forgot {
-      text-align: right; font-size: 0.8rem; color: #5100C0;
-      font-weight: 500; margin-top: -8px;
-      cursor: pointer;
-    }
-    .ptcg-login__forgot:hover { color: #320078; }
+  /* BOTÓN GOOGLE */
+  .lg-google {
+    width: 100%; padding: 12px; border-radius: 13px;
+    background: #fff; color: #212121;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; font-weight: 600;
+    border: 1.5px solid rgba(0,0,0,0.12); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .lg-google:hover { background: #F8F9FB; border-color: rgba(0,0,0,0.20); }
+  .lg-google-icon { width: 18px; height: 18px; flex-shrink: 0; }
 
-    /* Botón de acción principal */
-    .ptcg-login__submit {
-      width: 100%;
-      padding: 14px;
-      border-radius: 14px;
-      background-color: #5100C0 !important; /* forzado vs Dashnex */
-      color: #FFFFFF !important;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.95rem; font-weight: 700;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 4px 16px rgba(81,0,192,0.30);
-      transition: background-color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      margin-top: 4px;
-    }
-    .ptcg-login__submit:hover {
-      background-color: #320078 !important;
-      color: #FFFFFF !important;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(81,0,192,0.38);
-    }
-    .ptcg-login__submit:active { transform: translateY(0); }
-    .ptcg-login__submit.loading { opacity: 0.7; pointer-events: none; }
+  /* TÉRMINOS */
+  .lg-terms { font-size: 0.76rem; color: #9E9E9E; text-align: center; line-height: 1.5; }
+  .lg-terms a { color: #4552CC; font-weight: 500; }
+  .lg-terms a:hover { color: #2E3A9E; }
 
-    /* Divisor */
-    .ptcg-login__divider {
-      display: flex; align-items: center; gap: 12px;
-      margin: 4px 0;
-    }
-    .ptcg-login__divider::before,
-    .ptcg-login__divider::after {
-      content: ''; flex: 1;
-      height: 1px; background-color: rgba(0,0,0,0.08);
-    }
-    .ptcg-login__divider span {
-      font-size: 0.78rem; color: #86868B; white-space: nowrap;
-    }
+  /* FOOTER */
+  .lg-footer {
+    position: relative; z-index: 1;
+    text-align: center; padding: 16px 20px;
+    font-size: 0.75rem; color: #9E9E9E;
+  }
+  .lg-footer a { color: #4552CC; text-decoration: none; }
 
-    /* Botón Google */
-    .ptcg-login__google {
-      width: 100%;
-      padding: 12px;
-      border-radius: 14px;
-      background-color: #FFFFFF !important;
-      color: #1D1D1F !important;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.9rem; font-weight: 600;
-      border: 1.5px solid rgba(0,0,0,0.12) !important;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      transition: background-color 0.25s ease, border-color 0.25s ease;
-    }
-    .ptcg-login__google:hover {
-      background-color: #F5F5F7 !important;
-      border-color: rgba(0,0,0,0.2) !important;
-      color: #1D1D1F !important;
-    }
-    .ptcg-login__google-icon { width: 18px; height: 18px; }
-
-    .ptcg-login__terms {
-      font-size: 0.76rem; color: #86868B; text-align: center; line-height: 1.5;
-    }
-    .ptcg-login__terms a { color: #5100C0; font-weight: 500; }
-    .ptcg-login__terms a:hover { color: #320078; }
-
-    /* Error message */
-    .ptcg-login__error {
-      padding: 10px 14px;
-      border-radius: 10px;
-      background-color: rgba(255,59,48,0.08);
-      border: 1px solid rgba(255,59,48,0.2);
-      color: #FF3B30;
-      font-size: 0.84rem; font-weight: 500;
-      display: none;
-    }
-    .ptcg-login__error.show { display: block; }
-
-    /* Responsive */
-    @media (max-width: 479px) {
-      .ptcg-login__card .lg-body { padding: 28px 20px; }
-      .ptcg-login__card-title { font-size: 1.35rem; }
-    }
+  @media (max-width: 479px) {
+    .lg-card { padding: 24px 20px; }
+    .lg-card-title { font-size: 1.3rem; }
+  }
   </style>
 </head>
 <body>
-<svg style="display:none;position:absolute;width:0;height:0" aria-hidden="true">
-  <defs>
-    <filter id="lg-dist" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
-      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.008" numOctaves="2" seed="92" result="noise"/>
-      <feGaussianBlur in="noise" stdDeviation="2" result="blurred"/>
-      <feDisplacementMap in="SourceGraphic" in2="blurred" scale="70" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-  </defs>
-</svg>
 
-<div class="ptcg-login">
-  <div class="ptcg-login__bg" aria-hidden="true"></div>
-  <div class="ptcg-login__orb ptcg-login__orb-1" aria-hidden="true"></div>
-  <div class="ptcg-login__orb ptcg-login__orb-2" aria-hidden="true"></div>
+<div class="lg-bg" aria-hidden="true"></div>
+<div class="lg-orb lg-orb-1" aria-hidden="true"></div>
+<div class="lg-orb lg-orb-2" aria-hidden="true"></div>
 
-  <!-- Topbar -->
-  <div class="ptcg-login__topbar">
-    <a href="index.html" class="ptcg-login__logo">🐾 Petcingo</a>
-    <a href="index.html" class="ptcg-login__back">
-      <i class="ri-arrow-left-line"></i> Volver
-    </a>
-  </div>
+<!-- TOPBAR -->
+<div class="lg-topbar">
+  <a class="lg-topbar-logo" href="https://prueb2.dashnexpages.net/home/">
+    <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png" alt="Petcingo"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+    <span class="lg-topbar-logo-text" style="display:none">PETCINGO</span>
+  </a>
+  <a class="lg-back" href="https://prueb2.dashnexpages.net/home/">
+    <i class="ri-arrow-left-line"></i> Volver
+  </a>
+</div>
 
-  <!-- Centro -->
-  <div class="ptcg-login__center">
-    <div class="ptcg-login__card lg-card">
-      <div class="lg-base" aria-hidden="true"></div>
-      <div class="lg-body">
+<!-- CENTRO -->
+<div class="lg-center">
+  <div class="lg-card">
 
-        <div class="ptcg-login__card-header">
-          <div class="ptcg-login__card-icon">🐾</div>
-          <h1 class="ptcg-login__card-title">Bienvenido</h1>
-          <p class="ptcg-login__card-sub">Ingresa a tu cuenta o crea una nueva</p>
-        </div>
-
-        <!-- Tabs -->
-        <div class="ptcg-login__tabs" role="tablist">
-          <button class="ptcg-login__tab active" id="tab-login" role="tab" aria-selected="true" aria-controls="panel-login" onclick="switchTab('login')">
-            Ingresar
-          </button>
-          <button class="ptcg-login__tab" id="tab-register" role="tab" aria-selected="false" aria-controls="panel-register" onclick="switchTab('register')">
-            Registrarse
-          </button>
-        </div>
-
-        <!-- Mensaje de error -->
-        <div class="ptcg-login__error" id="auth-error" role="alert"></div>
-
-        <!-- Panel Ingresar -->
-        <div id="panel-login" class="ptcg-login__form" role="tabpanel" aria-labelledby="tab-login">
-          <div class="ptcg-login__field">
-            <label class="ptcg-login__label" for="login-email">Correo electrónico</label>
-            <div class="ptcg-login__input-wrap">
-              <i class="ri-mail-line ptcg-login__input-icon" aria-hidden="true"></i>
-              <input id="login-email" class="ptcg-login__input" type="email" placeholder="tu@email.com" autocomplete="email" required>
-            </div>
-          </div>
-          <div class="ptcg-login__field">
-            <label class="ptcg-login__label" for="login-password">Contraseña</label>
-            <div class="ptcg-login__input-wrap">
-              <i class="ri-lock-line ptcg-login__input-icon" aria-hidden="true"></i>
-              <input id="login-password" class="ptcg-login__input" type="password" placeholder="••••••••" autocomplete="current-password" required>
-              <button class="ptcg-login__input-toggle" type="button" aria-label="Mostrar contraseña" onclick="togglePwd('login-password',this)">
-                <i class="ri-eye-off-line"></i>
-              </button>
-            </div>
-            <div class="ptcg-login__forgot" onclick="handleForgot()">¿Olvidaste tu contraseña?</div>
-          </div>
-          <button class="ptcg-login__submit" id="btn-login" onclick="handleLogin()">
-            <i class="ri-login-box-line"></i> Ingresar
-          </button>
-          <div class="ptcg-login__divider"><span>o continúa con</span></div>
-          <button class="ptcg-login__google" onclick="handleGoogle()">
-            <svg class="ptcg-login__google-icon" viewBox="0 0 24 24" fill="none">
-              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-            </svg>
-            Continuar con Google
-          </button>
-          <p class="ptcg-login__terms">
-            Al ingresar aceptas nuestros <a href="#">Términos de Servicio</a> y <a href="#">Política de Privacidad</a>
-          </p>
-        </div>
-
-        <!-- Panel Registrarse -->
-        <div id="panel-register" class="ptcg-login__form-hidden" role="tabpanel" aria-labelledby="tab-register">
-          <div class="ptcg-login__field">
-            <label class="ptcg-login__label" for="reg-name">Nombre completo</label>
-            <div class="ptcg-login__input-wrap">
-              <i class="ri-user-line ptcg-login__input-icon" aria-hidden="true"></i>
-              <input id="reg-name" class="ptcg-login__input" type="text" placeholder="Tu nombre" autocomplete="name" required>
-            </div>
-          </div>
-          <div class="ptcg-login__field">
-            <label class="ptcg-login__label" for="reg-email">Correo electrónico</label>
-            <div class="ptcg-login__input-wrap">
-              <i class="ri-mail-line ptcg-login__input-icon" aria-hidden="true"></i>
-              <input id="reg-email" class="ptcg-login__input" type="email" placeholder="tu@email.com" autocomplete="email" required>
-            </div>
-          </div>
-          <div class="ptcg-login__field">
-            <label class="ptcg-login__label" for="reg-password">Contraseña</label>
-            <div class="ptcg-login__input-wrap">
-              <i class="ri-lock-line ptcg-login__input-icon" aria-hidden="true"></i>
-              <input id="reg-password" class="ptcg-login__input" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" required>
-              <button class="ptcg-login__input-toggle" type="button" aria-label="Mostrar contraseña" onclick="togglePwd('reg-password',this)">
-                <i class="ri-eye-off-line"></i>
-              </button>
-            </div>
-          </div>
-          <button class="ptcg-login__submit" id="btn-register" onclick="handleRegister()">
-            <i class="ri-user-add-line"></i> Crear cuenta
-          </button>
-          <div class="ptcg-login__divider"><span>o regístrate con</span></div>
-          <button class="ptcg-login__google" onclick="handleGoogle()">
-            <svg class="ptcg-login__google-icon" viewBox="0 0 24 24" fill="none">
-              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-            </svg>
-            Continuar con Google
-          </button>
-          <p class="ptcg-login__terms">
-            Al registrarte aceptas nuestros <a href="#">Términos de Servicio</a> y <a href="#">Política de Privacidad</a>
-          </p>
-        </div>
-
-      </div>
+    <div class="lg-card-header">
+      <img class="lg-card-logo"
+           src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png"
+           alt="Petcingo"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+      <div class="lg-card-logo-fallback">PETCINGO</div>
+      <h1 class="lg-card-title">Bienvenido</h1>
+      <p class="lg-card-sub">Ingresa a tu cuenta o crea una nueva</p>
     </div>
+
+    <!-- TABS -->
+    <div class="lg-tabs" role="tablist">
+      <button class="lg-tab active" id="tab-login" role="tab" aria-selected="true"
+              onclick="switchTab('login')">Ingresar</button>
+      <button class="lg-tab" id="tab-register" role="tab" aria-selected="false"
+              onclick="switchTab('register')">Registrarse</button>
+    </div>
+
+    <!-- ERROR -->
+    <div class="lg-error" id="auth-error" role="alert"></div>
+
+    <!-- PANEL LOGIN -->
+    <div id="panel-login" class="lg-form" role="tabpanel">
+      <div class="lg-field">
+        <label class="lg-label" for="login-email">Correo electrónico</label>
+        <div class="lg-input-wrap">
+          <i class="ri-mail-line lg-input-icon" aria-hidden="true"></i>
+          <input id="login-email" class="lg-input" type="email" placeholder="tu@email.com"
+                 autocomplete="email" required>
+        </div>
+      </div>
+      <div class="lg-field">
+        <label class="lg-label" for="login-password">Contraseña</label>
+        <div class="lg-input-wrap">
+          <i class="ri-lock-line lg-input-icon" aria-hidden="true"></i>
+          <input id="login-password" class="lg-input" type="password" placeholder="••••••••"
+                 autocomplete="current-password" required>
+          <button class="lg-pwd-toggle" type="button" aria-label="Mostrar contraseña"
+                  onclick="togglePwd('login-password',this)">
+            <i class="ri-eye-off-line"></i>
+          </button>
+        </div>
+        <div class="lg-forgot" onclick="handleForgot()">¿Olvidaste tu contraseña?</div>
+      </div>
+      <button class="lg-submit" id="btn-login" onclick="handleLogin()">
+        <i class="ri-login-box-line"></i> Ingresar
+      </button>
+      <div class="lg-divider"><span>o continúa con</span></div>
+      <button class="lg-google" onclick="handleGoogle()">
+        <svg class="lg-google-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Continuar con Google
+      </button>
+      <p class="lg-terms">
+        Al ingresar aceptas nuestros <a href="#">Términos de Servicio</a> y <a href="#">Política de Privacidad</a>
+      </p>
+    </div>
+
+    <!-- PANEL REGISTRO -->
+    <div id="panel-register" class="lg-form-hidden" role="tabpanel">
+      <div class="lg-field">
+        <label class="lg-label" for="reg-name">Nombre completo</label>
+        <div class="lg-input-wrap">
+          <i class="ri-user-line lg-input-icon" aria-hidden="true"></i>
+          <input id="reg-name" class="lg-input" type="text" placeholder="Tu nombre"
+                 autocomplete="name" required>
+        </div>
+      </div>
+      <div class="lg-field">
+        <label class="lg-label" for="reg-email">Correo electrónico</label>
+        <div class="lg-input-wrap">
+          <i class="ri-mail-line lg-input-icon" aria-hidden="true"></i>
+          <input id="reg-email" class="lg-input" type="email" placeholder="tu@email.com"
+                 autocomplete="email" required>
+        </div>
+      </div>
+      <div class="lg-field">
+        <label class="lg-label" for="reg-password">Contraseña</label>
+        <div class="lg-input-wrap">
+          <i class="ri-lock-line lg-input-icon" aria-hidden="true"></i>
+          <input id="reg-password" class="lg-input" type="password" placeholder="Mínimo 8 caracteres"
+                 autocomplete="new-password" required>
+          <button class="lg-pwd-toggle" type="button" aria-label="Mostrar contraseña"
+                  onclick="togglePwd('reg-password',this)">
+            <i class="ri-eye-off-line"></i>
+          </button>
+        </div>
+      </div>
+      <button class="lg-submit" id="btn-register" onclick="handleRegister()">
+        <i class="ri-user-add-line"></i> Crear cuenta
+      </button>
+      <div class="lg-divider"><span>o regístrate con</span></div>
+      <button class="lg-google" onclick="handleGoogle()">
+        <svg class="lg-google-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Continuar con Google
+      </button>
+      <p class="lg-terms">
+        Al registrarte aceptas nuestros <a href="#">Términos de Servicio</a> y <a href="#">Política de Privacidad</a>
+      </p>
+    </div>
+
   </div>
 </div>
 
-<div id="ptcg-toast-wrap" aria-live="polite"></div>
+<div class="lg-footer">
+  &copy; 2026 <a href="https://prueb2.dashnexpages.net/home/">Petcingo</a> — Sistema de Identificación de Mascotas
+</div>
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://assets.petcingo.com/js/petcingo-core.js"></script>
 <script>
-  // Firebase config — reemplazar con config de producción
-  const FIREBASE_CONFIG = {
+(function () {
+  'use strict';
+
+  var FIREBASE_CONFIG = {
     apiKey: 'AIzaSyAEE3yLFFsJTMORNFLYZWW2_DNHwzF0hE8',
     authDomain: 'petcingo-43096.firebaseapp.com',
     projectId: 'petcingo-43096',
@@ -452,111 +376,105 @@
     appId: '1:679546185536:web:ceccd210b7c73b296f7ca5'
   };
   if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
-  const auth = firebase.auth();
+  var auth = firebase.auth();
 
   function switchTab(tab) {
-    const isLogin = tab === 'login';
+    var isLogin = tab === 'login';
     document.getElementById('tab-login').classList.toggle('active', isLogin);
     document.getElementById('tab-register').classList.toggle('active', !isLogin);
-    document.getElementById('panel-login').style.display = isLogin ? 'flex' : 'none';
-    const reg = document.getElementById('panel-register');
-    reg.style.display = isLogin ? 'none' : 'flex';
-    reg.classList.toggle('active', !isLogin);
+    var pLogin = document.getElementById('panel-login');
+    var pReg   = document.getElementById('panel-register');
+    pLogin.style.display = isLogin ? 'flex' : 'none';
+    pReg.style.display   = isLogin ? 'none'  : 'flex';
+    pReg.classList.toggle('active', !isLogin);
     hideError();
   }
+  window.switchTab = switchTab;
 
   function showError(msg) {
-    const el = document.getElementById('auth-error');
+    var el = document.getElementById('auth-error');
     el.textContent = msg; el.classList.add('show');
   }
-  function hideError() {
-    document.getElementById('auth-error').classList.remove('show');
-  }
+  function hideError() { document.getElementById('auth-error').classList.remove('show'); }
 
   function togglePwd(inputId, btn) {
-    const inp = document.getElementById(inputId);
-    const icon = btn.querySelector('i');
-    if (inp.type === 'password') {
-      inp.type = 'text';
-      icon.className = 'ri-eye-line';
-    } else {
-      inp.type = 'password';
-      icon.className = 'ri-eye-off-line';
-    }
+    var inp = document.getElementById(inputId);
+    var icon = btn.querySelector('i');
+    if (inp.type === 'password') { inp.type = 'text'; icon.className = 'ri-eye-line'; }
+    else { inp.type = 'password'; icon.className = 'ri-eye-off-line'; }
   }
+  window.togglePwd = togglePwd;
 
   function setLoading(btnId, loading) {
-    const btn = document.getElementById(btnId);
+    var btn = document.getElementById(btnId);
     btn.classList.toggle('loading', loading);
     btn.disabled = loading;
   }
 
   function handleLogin() {
-    const email = document.getElementById('login-email').value.trim();
-    const pass = document.getElementById('login-password').value;
+    var email = document.getElementById('login-email').value.trim();
+    var pass  = document.getElementById('login-password').value;
     hideError();
     if (!email || !pass) { showError('Completa todos los campos.'); return; }
     setLoading('btn-login', true);
     auth.signInWithEmailAndPassword(email, pass)
-      .then(() => { window.location.href = 'index.html'; })
-      .catch(err => {
-        setLoading('btn-login', false);
-        showError(getErrorMsg(err.code));
-      });
+      .then(function () { window.location.href = 'https://prueb2.dashnexpages.net/home/'; })
+      .catch(function (err) { setLoading('btn-login', false); showError(getErrorMsg(err.code)); });
   }
+  window.handleLogin = handleLogin;
 
   function handleRegister() {
-    const name  = document.getElementById('reg-name').value.trim();
-    const email = document.getElementById('reg-email').value.trim();
-    const pass  = document.getElementById('reg-password').value;
+    var name  = document.getElementById('reg-name').value.trim();
+    var email = document.getElementById('reg-email').value.trim();
+    var pass  = document.getElementById('reg-password').value;
     hideError();
     if (!name || !email || !pass) { showError('Completa todos los campos.'); return; }
     if (pass.length < 8) { showError('La contraseña debe tener al menos 8 caracteres.'); return; }
     setLoading('btn-register', true);
     auth.createUserWithEmailAndPassword(email, pass)
-      .then(cred => cred.user.updateProfile({ displayName: name }))
-      .then(() => { window.location.href = 'index.html'; })
-      .catch(err => {
-        setLoading('btn-register', false);
-        showError(getErrorMsg(err.code));
-      });
+      .then(function (cred) { return cred.user.updateProfile({ displayName: name }); })
+      .then(function () { window.location.href = 'https://prueb2.dashnexpages.net/home/'; })
+      .catch(function (err) { setLoading('btn-register', false); showError(getErrorMsg(err.code)); });
   }
+  window.handleRegister = handleRegister;
 
   function handleGoogle() {
-    const provider = new firebase.auth.GoogleAuthProvider();
+    var provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider)
-      .then(() => { window.location.href = 'index.html'; })
-      .catch(err => showError(getErrorMsg(err.code)));
+      .then(function () { window.location.href = 'https://prueb2.dashnexpages.net/home/'; })
+      .catch(function (err) { showError(getErrorMsg(err.code)); });
   }
+  window.handleGoogle = handleGoogle;
 
   function handleForgot() {
-    const email = document.getElementById('login-email').value.trim();
+    var email = document.getElementById('login-email').value.trim();
     if (!email) { showError('Escribe tu correo primero.'); return; }
     auth.sendPasswordResetEmail(email)
-      .then(() => Ptcg.toast('Enlace enviado a ' + email, 'success'))
-      .catch(err => showError(getErrorMsg(err.code)));
+      .then(function () { showError('Enlace enviado a ' + email + '. Revisa tu correo.'); })
+      .catch(function (err) { showError(getErrorMsg(err.code)); });
   }
+  window.handleForgot = handleForgot;
 
   function getErrorMsg(code) {
-    const msgs = {
-      'auth/user-not-found': 'No existe cuenta con este correo.',
-      'auth/wrong-password': 'Contraseña incorrecta.',
-      'auth/email-already-in-use': 'Este correo ya está registrado.',
-      'auth/invalid-email': 'Correo inválido.',
-      'auth/weak-password': 'Contraseña muy débil.',
-      'auth/too-many-requests': 'Demasiados intentos. Intenta más tarde.',
-      'auth/popup-blocked': 'El popup fue bloqueado. Permite popups en tu navegador.',
+    var msgs = {
+      'auth/user-not-found':      'No existe cuenta con este correo.',
+      'auth/wrong-password':      'Contraseña incorrecta.',
+      'auth/email-already-in-use':'Este correo ya está registrado.',
+      'auth/invalid-email':       'Correo inválido.',
+      'auth/weak-password':       'Contraseña muy débil.',
+      'auth/too-many-requests':   'Demasiados intentos. Intenta más tarde.',
+      'auth/popup-blocked':       'El popup fue bloqueado. Permite popups en tu navegador.',
+      'auth/invalid-credential':  'Credenciales inválidas. Verifica tu correo y contraseña.'
     };
     return msgs[code] || 'Ocurrió un error. Intenta de nuevo.';
   }
 
-  // Redirigir si ya está autenticado
-  auth.onAuthStateChanged(user => {
-    if (user) window.location.href = 'index.html';
+  auth.onAuthStateChanged(function (user) {
+    if (user) window.location.href = 'https://prueb2.dashnexpages.net/home/';
   });
 
-  // Inicializar panel correcto según hash
   if (window.location.hash === '#register') switchTab('register');
+}());
 </script>
 </body>
 </html>

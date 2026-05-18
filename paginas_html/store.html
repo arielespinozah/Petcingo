@@ -4,592 +4,105 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tienda — Petcingo</title>
+  <meta name="description" content="Tienda Petcingo — Placas NFC + QR para mascotas. Elige tu plan.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://prueb2.dashnexpages.net/assets/fonts/remixicon/remixicon.css" rel="stylesheet">
-  <link href="https://assets.petcingo.com/css/petcingo-core.css" rel="stylesheet">
   <style>
-    /* ============================================================
-       ENCAPSULADO PARA DASHNEX: .ptcg-store aísla la tienda del CSS
-       global. Especial atención en inputs de búsqueda y filtros pill
-       que Dashnex suele sobrescribir con su Bootstrap 4.
-       ============================================================ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    background: #F8F9FB; color: #212121; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    -webkit-font-smoothing: antialiased;
+  }
+  .st-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 28px; height: 60px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(20px) saturate(200%); -webkit-backdrop-filter: blur(20px) saturate(200%);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .st-nav-logo { display: flex; align-items: center; gap: 7px; text-decoration: none; }
+  .st-nav-logo img { height: 28px; width: auto; }
+  .st-nav-logo-text { font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 800; color: #4552CC; }
+  .st-nav-link { font-size: 0.85rem; font-weight: 600; color: #4552CC; text-decoration: none; }
+  .st-nav-link:hover { text-decoration: underline; }
 
-    .ptcg-store, .ptcg-store * {
-      margin: 0; padding: 0; box-sizing: border-box;
-      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-      color: #1D1D1F;
-      -webkit-font-smoothing: antialiased;
-    }
-    .ptcg-store a { text-decoration: none; }
-    .ptcg-store img { display: block; max-width: 100%; }
-    .ptcg-store button, .ptcg-store input, .ptcg-store select {
-      cursor: pointer; font-family: inherit;
-    }
+  .st-center {
+    text-align: center; padding: 40px 24px; max-width: 480px;
+    position: relative; z-index: 1;
+  }
+  .st-logo-wrap { margin-bottom: 28px; }
+  .st-logo-wrap img { height: 48px; width: auto; margin: 0 auto; display: block; }
+  .st-logo-fallback { font-family: 'Sora', sans-serif; font-size: 1.6rem; font-weight: 800; color: #4552CC; display: none; }
+  .st-spinner {
+    width: 40px; height: 40px; border: 3px solid rgba(69,82,204,0.15);
+    border-top-color: #4552CC; border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 20px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .st-title {
+    font-family: 'Sora', sans-serif; font-size: 1.3rem; font-weight: 800;
+    color: #212121; margin-bottom: 8px;
+  }
+  .st-sub { font-size: 0.9rem; color: #757575; line-height: 1.6; margin-bottom: 24px; }
+  .st-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    padding: 13px 28px; border-radius: 13px;
+    background: #4552CC; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 700; text-decoration: none;
+    transition: background 0.18s; box-shadow: 0 4px 16px rgba(69,82,204,0.25);
+  }
+  .st-btn:hover { background: #2E3A9E; }
 
-    .ptcg-store {
-      min-height: 100vh;
-      background-color: #F5F5F7;
-      background-image:
-        radial-gradient(ellipse 70% 50% at 80% 0%, rgba(81,0,192,0.07) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 40% at 10% 100%, rgba(0,225,243,0.06) 0%, transparent 60%);
-    }
-
-    /* == Hero de la tienda == */
-    .ptcg-store .store-hero {
-      background: linear-gradient(135deg, #5100C0 0%, #5151FC 50%, #00E1F3 100%);
-      padding: 60px 0;
-      position: relative;
-      overflow: hidden;
-    }
-    .ptcg-store .store-hero::before {
-      content: ''; position: absolute; inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-      pointer-events: none;
-    }
-    .ptcg-store .store-hero__inner {
-      max-width: 1200px; margin: 0 auto; padding: 0 24px;
-      position: relative; z-index: 1;
-      text-align: center;
-    }
-    .ptcg-store .store-hero__tag {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 5px 14px; border-radius: 999px;
-      background-color: rgba(255,255,255,0.15); color: #FFFFFF;
-      font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
-      margin-bottom: 16px; backdrop-filter: blur(8px);
-    }
-    .ptcg-store .store-hero__title {
-      font-family: 'Syne', sans-serif; font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 800;
-      color: #FFFFFF; letter-spacing: -0.025em; margin-bottom: 12px;
-    }
-    .ptcg-store .store-hero__sub {
-      font-size: 1rem; color: rgba(255,255,255,0.8); margin-bottom: 32px;
-    }
-
-    /* Barra de búsqueda hero */
-    .ptcg-store .search-bar {
-      max-width: 560px; margin: 0 auto;
-      display: flex; gap: 8px; align-items: center;
-    }
-    .ptcg-store .search-wrap {
-      flex: 1; position: relative;
-    }
-    .ptcg-store .search-icon {
-      position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
-      color: #86868B; font-size: 1rem; pointer-events: none;
-    }
-    .ptcg-store .search-input {
-      width: 100%; padding: 14px 16px 14px 44px;
-      border-radius: 14px;
-      background-color: rgba(255,255,255,0.95) !important;
-      color: #1D1D1F !important;
-      border: none !important;
-      font-size: 0.95rem; outline: none;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.15);
-      -webkit-appearance: none;
-    }
-    .ptcg-store .search-input::placeholder { color: #86868B; }
-    .ptcg-store .search-btn {
-      padding: 14px 20px; border-radius: 14px;
-      background-color: #FFFFFF !important; color: #5100C0 !important;
-      font-size: 0.9rem; font-weight: 700; border: none;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.15);
-      display: flex; align-items: center; gap: 6px;
-      white-space: nowrap;
-      transition: background-color 0.2s ease;
-    }
-    .ptcg-store .search-btn:hover { background-color: #F5F0FF !important; }
-
-    /* == Category pills == */
-    .ptcg-store .store-body {
-      max-width: 1200px; margin: 0 auto; padding: 40px 24px;
-    }
-
-    .ptcg-store .cat-pills {
-      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px;
-    }
-    .ptcg-store .cat-pill {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 8px 16px; border-radius: 999px;
-      font-size: 0.85rem; font-weight: 600;
-      background-color: #FFFFFF !important; color: #515154 !important;
-      border: 1.5px solid rgba(0,0,0,0.09) !important;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .ptcg-store .cat-pill:hover {
-      border-color: #5100C0 !important; color: #5100C0 !important;
-    }
-    .ptcg-store .cat-pill.active {
-      background-color: #5100C0 !important; color: #FFFFFF !important;
-      border-color: #5100C0 !important;
-      box-shadow: 0 2px 10px rgba(81,0,192,0.25);
-    }
-
-    /* == Toolbar == */
-    .ptcg-store .store-toolbar {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 12px; flex-wrap: wrap; margin-bottom: 24px;
-    }
-    .ptcg-store .store-toolbar__count { font-size: 0.88rem; color: #86868B; }
-    .ptcg-store .store-toolbar__count strong { color: #1D1D1F; }
-    .ptcg-store .store-sort {
-      padding: 9px 14px; border-radius: 12px;
-      border: 1.5px solid rgba(0,0,0,0.10) !important;
-      background-color: #FFFFFF !important; color: #1D1D1F !important;
-      font-size: 0.85rem; font-weight: 500;
-      outline: none; appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2386868B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: right 12px center;
-      padding-right: 32px;
-    }
-
-    /* == Grid == */
-    .ptcg-store .store-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-    }
-
-    /* Tarjeta producto tienda (liquid glass) */
-    .ptcg-store .prod-card {
-      border-radius: 20px; cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-    .ptcg-store .prod-card:hover { transform: translateY(-3px); }
-    .ptcg-store .prod-card .lg-body { padding: 0; }
-    .ptcg-store .prod-card__img {
-      height: 180px; border-radius: 19px 19px 0 0;
-      background: linear-gradient(135deg, #EBE3FF, #DDFBFE);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 3.2rem; position: relative; overflow: hidden;
-    }
-    .ptcg-store .prod-card__badge {
-      position: absolute; top: 8px; left: 8px;
-      padding: 3px 8px; border-radius: 999px;
-      font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
-      background-color: #5100C0; color: #FFFFFF;
-    }
-    .ptcg-store .prod-card__badge.new  { background-color: #34C759; }
-    .ptcg-store .prod-card__badge.hot  { background-color: #FF3B30; }
-    .ptcg-store .prod-card__badge.sale { background-color: #FF9500; color: #1D1D1F; }
-    .ptcg-store .prod-card__fav {
-      position: absolute; top: 8px; right: 8px;
-      width: 28px; height: 28px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      background-color: rgba(255,255,255,0.85); color: #86868B;
-      border: none; font-size: 0.85rem; cursor: pointer;
-      backdrop-filter: blur(4px);
-      transition: color 0.2s ease;
-    }
-    .ptcg-store .prod-card__fav:hover { color: #FF3B30; }
-    .ptcg-store .prod-card__info { padding: 14px; }
-    .ptcg-store .prod-card__cat {
-      font-size: 0.68rem; font-weight: 700; color: #5100C0;
-      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;
-    }
-    .ptcg-store .prod-card__name {
-      font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700;
-      color: #1D1D1F; margin-bottom: 6px; line-height: 1.3;
-    }
-    .ptcg-store .prod-card__stars { color: #FF9500; font-size: 0.7rem; margin-bottom: 8px; }
-    .ptcg-store .prod-card__stars span { color: #86868B; }
-    .ptcg-store .prod-card__bottom {
-      display: flex; align-items: center; justify-content: space-between; gap: 6px;
-    }
-    .ptcg-store .prod-card__price {
-      font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 800;
-      color: #5100C0; display: block;
-    }
-    .ptcg-store .prod-card__old { font-size: 0.72rem; color: #86868B; text-decoration: line-through; }
-    .ptcg-store .prod-card__add {
-      width: 30px; height: 30px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      background-color: #5100C0 !important; color: #FFFFFF !important;
-      border: none; font-size: 1rem; flex-shrink: 0;
-      transition: background-color 0.2s ease, transform 0.15s ease;
-    }
-    .ptcg-store .prod-card__add:hover { background-color: #320078 !important; transform: scale(1.1); }
-
-    /* == Load more == */
-    .ptcg-store .load-more-wrap { text-align: center; margin-top: 48px; }
-    .ptcg-store .load-more-btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 14px 32px; border-radius: 999px;
-      background-color: rgba(81,0,192,0.09) !important; color: #5100C0 !important;
-      font-size: 0.9rem; font-weight: 600; border: none;
-      transition: background-color 0.2s ease;
-    }
-    .ptcg-store .load-more-btn:hover { background-color: rgba(81,0,192,0.15) !important; color: #320078 !important; }
-
-    /* == Responsive == */
-    @media (max-width: 767px) {
-      .ptcg-store .store-hero { padding: 44px 0; }
-      .ptcg-store .search-bar { flex-direction: column; }
-      .ptcg-store .search-btn { width: 100%; justify-content: center; }
-      .ptcg-store .store-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-      .ptcg-store .prod-card__img { height: 140px; font-size: 2.6rem; }
-      .ptcg-store .store-body { padding: 24px 16px; }
-    }
-    @media (min-width: 768px) and (max-width: 1023px) {
-      .ptcg-store .store-grid { grid-template-columns: repeat(3, 1fr); }
-    }
+  .st-footer {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    text-align: center; padding: 16px 20px;
+    font-size: 0.75rem; color: #9E9E9E;
+    border-top: 1px solid rgba(0,0,0,0.05); background: #fff;
+  }
+  .st-footer a { color: #4552CC; text-decoration: none; }
   </style>
 </head>
 <body>
-<svg style="display:none;position:absolute;width:0;height:0" aria-hidden="true">
-  <defs>
-    <filter id="lg-dist" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
-      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.008" numOctaves="2" seed="92" result="noise"/>
-      <feGaussianBlur in="noise" stdDeviation="2" result="blurred"/>
-      <feDisplacementMap in="SourceGraphic" in2="blurred" scale="70" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-  </defs>
-</svg>
 
-<div class="ptcg-store">
+<nav class="st-nav">
+  <a class="st-nav-logo" href="https://prueb2.dashnexpages.net/home/">
+    <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png" alt="Petcingo"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+    <span class="st-nav-logo-text" style="display:none">PETCINGO</span>
+  </a>
+  <a class="st-nav-link" href="https://prueb2.dashnexpages.net/finalizar-compra/">Ver planes</a>
+</nav>
 
-  <!-- NAVBAR -->
-  <nav class="ptcg-navbar">
-    <div class="ptcg-navbar__inner">
-      <a href="index.html" class="ptcg-navbar__logo">🐾 <span>Petcingo</span></a>
-      <div class="ptcg-navbar__links">
-        <a href="catalogo.html"><i class="ri-grid-line"></i> Catálogo</a>
-        <a href="store.html"><i class="ri-store-2-fill"></i> Tienda</a>
-        <a href="cart.html" class="ptcg-navbar__cart">
-          <i class="ri-shopping-cart-line"></i> Carrito
-          <span class="ptcg-navbar__cart-badge">0</span>
-        </a>
-        <a href="login.html" class="ptcg-nav-cta"><i class="ri-user-line"></i> Ingresar</a>
-      </div>
-      <button class="ptcg-navbar__hamburger" aria-label="Menú" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-    <div class="ptcg-navbar__mobile">
-      <a href="catalogo.html"><i class="ri-grid-line"></i> Catálogo</a>
-      <a href="store.html"><i class="ri-store-2-line"></i> Tienda</a>
-      <a href="cart.html"><i class="ri-shopping-cart-line"></i> Carrito</a>
-      <a href="login.html" class="ptcg-nav-cta-mobile"><i class="ri-user-line"></i> Ingresar</a>
-    </div>
-  </nav>
-
-  <!-- Hero de la tienda -->
-  <div class="store-hero" aria-label="Tienda Petcingo">
-    <div class="store-hero__inner">
-      <div class="store-hero__tag"><i class="ri-store-2-line"></i> Tienda oficial</div>
-      <h1 class="store-hero__title">Todo para tu mascota</h1>
-      <p class="store-hero__sub">Más de 150 productos seleccionados con amor para tu compañero</p>
-      <div class="search-bar" role="search">
-        <div class="search-wrap">
-          <i class="ri-search-line search-icon" aria-hidden="true"></i>
-          <input class="search-input" type="search" id="search-q" placeholder="Buscar productos, marcas..." aria-label="Buscar">
-        </div>
-        <button class="search-btn" onclick="doSearch()">
-          <i class="ri-search-line"></i> Buscar
-        </button>
-      </div>
-    </div>
+<div class="st-center">
+  <div class="st-logo-wrap">
+    <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png"
+         alt="Petcingo"
+         onerror="this.style.display='none';document.querySelector('.st-logo-fallback').style.display='block'">
+    <span class="st-logo-fallback">PETCINGO</span>
   </div>
+  <div class="st-spinner" id="spinner"></div>
+  <div class="st-title">Redirigiendo a nuestra tienda...</div>
+  <p class="st-sub">Te llevamos a la página de planes donde podrás elegir el Tag Pet ID, Pack Familiar o Preventa.</p>
+  <a class="st-btn" href="https://prueb2.dashnexpages.net/finalizar-compra/">
+    <i class="ri-arrow-right-circle-line"></i> Ver planes ahora
+  </a>
+</div>
 
-  <!-- Cuerpo principal -->
-  <div class="store-body">
+<footer class="st-footer">
+  &copy; 2026 <a href="https://prueb2.dashnexpages.net/home/">Petcingo</a> — Sistema de Identificación de Mascotas
+</footer>
 
-    <!-- Category pills -->
-    <div class="cat-pills" role="group" aria-label="Filtrar por categoría">
-      <button class="cat-pill active" onclick="filterCat(this,'todos')">
-        <i class="ri-apps-line"></i> Todos
-      </button>
-      <button class="cat-pill" onclick="filterCat(this,'collares')">
-        <i class="ri-map-pin-line"></i> GPS
-      </button>
-      <button class="cat-pill" onclick="filterCat(this,'alimentos')">
-        🍗 Alimentos
-      </button>
-      <button class="cat-pill" onclick="filterCat(this,'juguetes')">
-        🎾 Juguetes
-      </button>
-      <button class="cat-pill" onclick="filterCat(this,'salud')">
-        💊 Salud
-      </button>
-      <button class="cat-pill" onclick="filterCat(this,'higiene')">
-        🛁 Higiene
-      </button>
-      <button class="cat-pill" onclick="filterCat(this,'camas')">
-        🛏️ Camas
-      </button>
-    </div>
-
-    <!-- Toolbar -->
-    <div class="store-toolbar">
-      <span class="store-toolbar__count"><strong id="visible-count">12</strong> productos</span>
-      <select class="store-sort" aria-label="Ordenar por" onchange="Ptcg.toast('Ordenando por: '+this.selectedOptions[0].text)">
-        <option>Más populares</option>
-        <option>Precio: menor a mayor</option>
-        <option>Precio: mayor a menor</option>
-        <option>Más recientes</option>
-        <option>Mejor valorados</option>
-      </select>
-    </div>
-
-    <!-- Grid de productos -->
-    <div class="store-grid" id="store-grid">
-
-      <div class="prod-card lg-card" data-cat="collares" data-ptcg-anim>
-        <div class="lg-base" aria-hidden="true"></div>
-        <div class="lg-body">
-          <div class="prod-card__img">🦮
-            <span class="prod-card__badge new">Nuevo</span>
-            <button class="prod-card__fav" aria-label="Favorito" onclick="toggleFav(event,this)"><i class="ri-heart-line"></i></button>
-          </div>
-          <div class="prod-card__info">
-            <div class="prod-card__cat">GPS</div>
-            <div class="prod-card__name">Collar GPS Pro Tracker</div>
-            <div class="prod-card__stars">★★★★★ <span>(128)</span></div>
-            <div class="prod-card__bottom">
-              <div><span class="prod-card__price">Bs. 349</span><span class="prod-card__old">Bs. 420</span></div>
-              <button class="prod-card__add" aria-label="Agregar" onclick="Ptcg.Cart.add({id:'gps-001',name:'Collar GPS Pro',price:349,variant:''})"><i class="ri-add-line"></i></button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card lg-card" data-cat="alimentos" data-ptcg-anim data-ptcg-delay="50">
-        <div class="lg-base" aria-hidden="true"></div>
-        <div class="lg-body">
-          <div class="prod-card__img">🍗
-            <span class="prod-card__badge hot">Hot</span>
-            <button class="prod-card__fav" aria-label="Favorito" onclick="toggleFav(event,this)"><i class="ri-heart-line"></i></button>
-          </div>
-          <div class="prod-card__info">
-            <div class="prod-card__cat">Alimentos</div>
-            <div class="prod-card__name">Snacks Naturales Premium</div>
-            <div class="prod-card__stars">★★★★☆ <span>(84)</span></div>
-            <div class="prod-card__bottom">
-              <div><span class="prod-card__price">Bs. 89</span></div>
-              <button class="prod-card__add" aria-label="Agregar" onclick="Ptcg.Cart.add({id:'sna-001',name:'Snacks Naturales',price:89,variant:''})"><i class="ri-add-line"></i></button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card lg-card" data-cat="juguetes" data-ptcg-anim data-ptcg-delay="100">
-        <div class="lg-base" aria-hidden="true"></div>
-        <div class="lg-body">
-          <div class="prod-card__img">🎾
-            <span class="prod-card__badge sale">-20%</span>
-            <button class="prod-card__fav" aria-label="Favorito" onclick="toggleFav(event,this)"><i class="ri-heart-line"></i></button>
-          </div>
-          <div class="prod-card__info">
-            <div class="prod-card__cat">Juguetes</div>
-            <div class="prod-card__name">Kit Juguetes Interactivos</div>
-            <div class="prod-card__stars">★★★★★ <span>(61)</span></div>
-            <div class="prod-card__bottom">
-              <div><span class="prod-card__price">Bs. 129</span><span class="prod-card__old">Bs. 159</span></div>
-              <button class="prod-card__add" aria-label="Agregar" onclick="Ptcg.Cart.add({id:'toy-001',name:'Kit Juguetes',price:129,variant:''})"><i class="ri-add-line"></i></button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card lg-card" data-cat="higiene" data-ptcg-anim data-ptcg-delay="150">
-        <div class="lg-base" aria-hidden="true"></div>
-        <div class="lg-body">
-          <div class="prod-card__img">🛁
-            <button class="prod-card__fav" aria-label="Favorito" onclick="toggleFav(event,this)"><i class="ri-heart-line"></i></button>
-          </div>
-          <div class="prod-card__info">
-            <div class="prod-card__cat">Higiene</div>
-            <div class="prod-card__name">Shampoo Perros Sensibles</div>
-            <div class="prod-card__stars">★★★★☆ <span>(45)</span></div>
-            <div class="prod-card__bottom">
-              <div><span class="prod-card__price">Bs. 65</span></div>
-              <button class="prod-card__add" aria-label="Agregar" onclick="Ptcg.Cart.add({id:'hyg-001',name:'Shampoo Sensible',price:65,variant:''})"><i class="ri-add-line"></i></button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card lg-card" data-cat="salud" data-ptcg-anim data-ptcg-delay="200">
-        <div class="lg-base" aria-hidden="true"></div>
-        <div class="lg-body">
-          <div class="prod-card__img">💊
-            <button class="prod-card__fav" aria-label="Favorito" onclick="toggleFav(event,this)"><i class="ri-heart-line"></i></button>
-          </div>
-          <div class="prod-card__info">
-            <div class="prod-card__cat">Salud</div>
-            <div class="prod-card__name">Vitaminas Caninas Premium</div>
-            <div class="prod-card__stars">★★★★★ <span>(92)</span></div>
-            <div class="prod-card__bottom">
-              <div><span class="prod-card__price">Bs. 145</span></div>
-              <button class="prod-card__add" aria-label="Agregar" onclick="Ptcg.Cart.add({id:'sal-001',name:'Vitaminas Caninas',price:145,variant:''})"><i class="ri-add-line"></i></button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card lg-card" data-cat="camas" data-ptcg-anim data-ptcg-delay="250">
-        <div class="lg-base" aria-hidden="true"></div>
-        <div class="lg-body">
-          <div class="prod-card__img">🛏️
-            <span class="prod-card__badge new">Nuevo</span>
-            <button class="prod-card__fav" aria-label="Favorito" onclick="toggleFav(event,this)"><i class="ri-heart-line"></i></button>
-          </div>
-          <div class="prod-card__info">
-            <div class="prod-card__cat">Camas</div>
-            <div class="prod-card__name">Cama Ortopédica Premium</div>
-            <div class="prod-card__stars">★★★★★ <span>(37)</span></div>
-            <div class="prod-card__bottom">
-              <div><span class="prod-card__price">Bs. 289</span><span class="prod-card__old">Bs. 349</span></div>
-              <button class="prod-card__add" aria-label="Agregar" onclick="Ptcg.Cart.add({id:'bed-001',name:'Cama Ortopédica',price:289,variant:''})"><i class="ri-add-line"></i></button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card lg-card" data-cat="collares" data-ptcg-anim data-ptcg-delay="300">
-        <div class="lg-base" aria-hidden="true"></div>
-        <div class="lg-body">
-          <div class="prod-card__img">📡
-            <button class="prod-card__fav" aria-label="Favorito" onclick="toggleFav(event,this)"><i class="ri-heart-line"></i></button>
-          </div>
-          <div class="prod-card__info">
-            <div class="prod-card__cat">GPS</div>
-            <div class="prod-card__name">Placa QR + NFC SmartPet</div>
-            <div class="prod-card__stars">★★★★★ <span>(203)</span></div>
-            <div class="prod-card__bottom">
-              <div><span class="prod-card__price">Bs. 79</span></div>
-              <button class="prod-card__add" aria-label="Agregar" onclick="Ptcg.Cart.add({id:'qr-001',name:'Placa QR SmartPet',price:79,variant:''})"><i class="ri-add-line"></i></button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card lg-card" data-cat="alimentos" data-ptcg-anim data-ptcg-delay="350">
-        <div class="lg-base" aria-hidden="true"></div>
-        <div class="lg-body">
-          <div class="prod-card__img">🥩
-            <button class="prod-card__fav" aria-label="Favorito" onclick="toggleFav(event,this)"><i class="ri-heart-line"></i></button>
-          </div>
-          <div class="prod-card__info">
-            <div class="prod-card__cat">Alimentos</div>
-            <div class="prod-card__name">Croquetas Gourmet Adultos</div>
-            <div class="prod-card__stars">★★★★☆ <span>(56)</span></div>
-            <div class="prod-card__bottom">
-              <div><span class="prod-card__price">Bs. 119</span></div>
-              <button class="prod-card__add" aria-label="Agregar" onclick="Ptcg.Cart.add({id:'cro-001',name:'Croquetas Gourmet',price:119,variant:''})"><i class="ri-add-line"></i></button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /#store-grid -->
-
-    <!-- Load more -->
-    <div class="load-more-wrap">
-      <button class="load-more-btn" onclick="loadMore()">
-        <i class="ri-refresh-line"></i> Cargar más productos
-      </button>
-    </div>
-
-  </div><!-- /.store-body -->
-
-  <!-- FOOTER -->
-  <footer class="ptcg-footer">
-    <div class="ptcg-footer__inner">
-      <div class="ptcg-footer__grid">
-        <div>
-          <div class="ptcg-footer__logo">🐾 Petcingo</div>
-          <p class="ptcg-footer__desc">La plataforma de mascotas más completa de Bolivia.</p>
-          <div class="ptcg-footer__socials">
-            <a href="#" aria-label="Instagram"><i class="ri-instagram-line"></i></a>
-            <a href="#" aria-label="Facebook"><i class="ri-facebook-fill"></i></a>
-            <a href="#" aria-label="WhatsApp"><i class="ri-whatsapp-line"></i></a>
-          </div>
-        </div>
-        <div>
-          <div class="ptcg-footer__col-title">Tienda</div>
-          <ul class="ptcg-footer__col-links">
-            <li><a href="catalogo.html">Catálogo</a></li>
-            <li><a href="cart.html">Carrito</a></li>
-          </ul>
-        </div>
-        <div>
-          <div class="ptcg-footer__col-title">Cuenta</div>
-          <ul class="ptcg-footer__col-links">
-            <li><a href="login.html">Ingresar</a></li>
-          </ul>
-        </div>
-        <div>
-          <div class="ptcg-footer__col-title">Legal</div>
-          <ul class="ptcg-footer__col-links">
-            <li><a href="#">Privacidad</a></li>
-            <li><a href="#">Términos</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="ptcg-footer__bottom">
-        <span>© 2025 Petcingo · Bolivia</span>
-      </div>
-    </div>
-  </footer>
-
-</div><!-- /.ptcg-store -->
-
-<div id="ptcg-toast-wrap" aria-live="polite"></div>
-
-<script src="https://assets.petcingo.com/js/petcingo-core.js"></script>
 <script>
-  function filterCat(pill, cat) {
-    document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
-    pill.classList.add('active');
-
-    const cards = document.querySelectorAll('#store-grid .prod-card');
-    let count = 0;
-    cards.forEach(c => {
-      const match = cat === 'todos' || c.dataset.cat === cat;
-      c.style.display = match ? '' : 'none';
-      if (match) count++;
-    });
-    document.getElementById('visible-count').textContent = count;
-  }
-
-  function doSearch() {
-    const q = document.getElementById('search-q').value.trim().toLowerCase();
-    if (!q) { filterCat(document.querySelector('.cat-pill'), 'todos'); return; }
-    const cards = document.querySelectorAll('#store-grid .prod-card');
-    let count = 0;
-    cards.forEach(c => {
-      const name = c.querySelector('.prod-card__name').textContent.toLowerCase();
-      const cat  = c.querySelector('.prod-card__cat').textContent.toLowerCase();
-      const match = name.includes(q) || cat.includes(q);
-      c.style.display = match ? '' : 'none';
-      if (match) count++;
-    });
-    document.getElementById('visible-count').textContent = count;
-    Ptcg.toast(count > 0 ? count + ' resultado(s) para "' + q + '"' : 'Sin resultados para "' + q + '"', count > 0 ? '' : 'error');
-  }
-
-  function toggleFav(e, btn) {
-    e.stopPropagation();
-    btn.classList.toggle('active');
-    const icon = btn.querySelector('i');
-    icon.className = btn.classList.contains('active') ? 'ri-heart-fill' : 'ri-heart-line';
-    btn.style.color = btn.classList.contains('active') ? '#FF3B30' : '';
-    Ptcg.toast(btn.classList.contains('active') ? 'Agregado a favoritos ♥' : 'Eliminado de favoritos');
-  }
-
-  function loadMore() {
-    Ptcg.toast('Cargando más productos...');
-  }
-
-  // Buscar al presionar Enter
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('search-q').addEventListener('keydown', e => {
-      if (e.key === 'Enter') doSearch();
-    });
-  });
+setTimeout(function () {
+  var params = window.location.search;
+  window.location.replace('https://prueb2.dashnexpages.net/finalizar-compra/' + (params || ''));
+}, 1800);
 </script>
 </body>
 </html>
