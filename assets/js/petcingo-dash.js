@@ -2465,6 +2465,7 @@
         var actionDropdown = '<div class="ptcg-actions-menu" style="position:relative;display:inline-block;">' +
           '<button class="ptcg-actions-toggle" onclick="toggleActionsMenu(this, event)" style="background:none;border:1.5px solid #E0E0E0;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem;color:#757575;line-height:1;">...</button>' +
           '<div class="ptcg-actions-dropdown" style="display:none;position:absolute;right:0;top:100%;z-index:500;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);min-width:180px;padding:6px 0;margin-top:4px;">' +
+            '<a style="' + dropdownStyle + 'text-decoration:none;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" href="https://prueb2.dashnexpages.net/panel-afiliados/?auto='+doc.id+'" target="_blank"><i class="ri-external-link-line"></i> Ir a panel</a>' +
             suspDropdownBtn +
             banDropdownBtn +
           '</div>' +

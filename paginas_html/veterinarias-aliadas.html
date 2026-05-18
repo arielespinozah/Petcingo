@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Veterinarias Aliadas - Petcingo</title>
+  <meta name="description" content="Une tu veterinaria a la red de protecci&oacute;n animal de Petcingo. Aumenta tus clientes y ofrece identificaci&oacute;n inteligente.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://prueb2.dashnexpages.net/assets/fonts/remixicon/remixicon.css" rel="stylesheet">
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #F3F3F3;
+    min-height: 100vh;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: #212121;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- NAV ---- */
+  .vta-nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 28px; height: 60px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(20px) saturate(200%);
+    -webkit-backdrop-filter: blur(20px) saturate(200%);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .vta-nav-logo { display: flex; align-items: center; gap: 7px; text-decoration: none; }
+  .vta-nav-logo img { height: 32px; width: auto; }
+  .vta-nav-logo-text {
+    font-family: 'Sora', sans-serif; font-size: 1.1rem; font-weight: 800; color: #4552CC;
+  }
+  .vta-nav-link {
+    font-size: 0.85rem; font-weight: 600; color: #4552CC;
+    text-decoration: none; display: flex; align-items: center; gap: 5px;
+  }
+  .vta-nav-link:hover { text-decoration: underline; }
+
+  /* ---- HERO ---- */
+  .vta-hero {
+    background: linear-gradient(135deg, #1A1060 0%, #4552CC 52%, #0E8FBF 100%);
+    padding: 72px 20px 64px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .vta-hero::before {
+    content: ''; position: absolute; top: -100px; right: -100px;
+    width: 420px; height: 420px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(81,203,245,0.18) 0%, transparent 68%);
+    pointer-events: none;
+  }
+  .vta-hero::after {
+    content: ''; position: absolute; bottom: -80px; left: -80px;
+    width: 340px; height: 340px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 68%);
+    pointer-events: none;
+  }
+  .vta-hero-inner {
+    position: relative; z-index: 1;
+    max-width: 720px; margin: 0 auto;
+  }
+  .vta-hero-badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 6px 16px; border-radius: 99px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff; font-size: 0.72rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.09em;
+    margin-bottom: 22px;
+  }
+  .vta-hero-badge-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #51CBF5;
+    box-shadow: 0 0 6px rgba(81,203,245,0.8);
+    flex-shrink: 0;
+  }
+  .vta-hero-title {
+    font-family: 'Sora', sans-serif; font-size: 2.6rem; font-weight: 800;
+    color: #fff; line-height: 1.14; letter-spacing: -0.03em;
+    margin-bottom: 18px;
+  }
+  .vta-hero-title span { color: #51CBF5; }
+  .vta-hero-sub {
+    font-size: 1.05rem; color: rgba(255,255,255,0.82); line-height: 1.65; margin-bottom: 36px;
+  }
+  .vta-hero-cta {
+    display: inline-flex; align-items: center; gap: 9px;
+    padding: 15px 32px; border-radius: 14px;
+    background: #fff; color: #4552CC;
+    font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 800;
+    text-decoration: none; transition: transform 0.18s, box-shadow 0.18s;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.22);
+  }
+  .vta-hero-cta:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(0,0,0,0.28); }
+  .vta-hero-cta i { font-size: 1.1rem; }
+  .vta-hero-note {
+    margin-top: 14px; font-size: 0.78rem; color: rgba(255,255,255,0.60);
+  }
+
+  /* ---- SHARED SECTION ---- */
+  .vta-section { max-width: 1080px; margin: 0 auto; padding: 56px 20px; }
+  .vta-section-title {
+    font-family: 'Sora', sans-serif; font-size: 1.6rem; font-weight: 800;
+    color: #212121; text-align: center; margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  .vta-section-sub {
+    text-align: center; color: #757575; font-size: 0.93rem; margin-bottom: 40px; line-height: 1.6;
+  }
+
+  /* ---- BENEFICIOS ---- */
+  .vta-benefits {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
+  }
+  .vta-benefit {
+    background: #fff; border-radius: 20px; padding: 28px 24px;
+    border: 1.5px solid rgba(0,0,0,0.06);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .vta-benefit:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(69,82,204,0.10); }
+  .vta-benefit-icon {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: rgba(69,82,204,0.10); color: #4552CC;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px; font-size: 1.5rem;
+    box-shadow: 0 4px 12px rgba(69,82,204,0.12);
+  }
+  .vta-benefit h4 {
+    font-family: 'Sora', sans-serif; font-size: 0.98rem; font-weight: 800;
+    color: #212121; margin-bottom: 8px;
+  }
+  .vta-benefit p { font-size: 0.85rem; color: #616161; line-height: 1.6; }
+
+  /* ---- PRUEBA SOCIAL ---- */
+  .vta-social-wrap {
+    background: linear-gradient(135deg, #4552CC 0%, #51CBF5 100%);
+    padding: 52px 20px;
+  }
+  .vta-social-inner { max-width: 1080px; margin: 0 auto; }
+  .vta-social-stat-row {
+    display: flex; gap: 0; justify-content: center; flex-wrap: wrap; margin-bottom: 40px;
+  }
+  .vta-social-stat {
+    text-align: center; padding: 0 32px; border-right: 1px solid rgba(255,255,255,0.20);
+  }
+  .vta-social-stat:last-child { border-right: none; }
+  .vta-social-stat-val {
+    font-family: 'Sora', sans-serif; font-size: 2.2rem; font-weight: 800; color: #fff;
+  }
+  .vta-social-stat-lbl {
+    font-size: 0.75rem; color: rgba(255,255,255,0.75);
+    text-transform: uppercase; letter-spacing: 0.07em;
+  }
+
+  /* ---- FORMULARIO ---- */
+  .vta-form-wrap {
+    background: #fff; border-radius: 22px; padding: 40px 36px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+    max-width: 680px; margin: 0 auto;
+  }
+  .vta-form-header { text-align: center; margin-bottom: 28px; }
+  .vta-form-header-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 13px; border-radius: 99px;
+    background: rgba(69,82,204,0.10); color: #4552CC;
+    font-size: 0.70rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+  .vta-form-header h2 {
+    font-family: 'Sora', sans-serif; font-size: 1.45rem; font-weight: 800;
+    color: #212121; margin-bottom: 8px; letter-spacing: -0.02em;
+  }
+  .vta-form-header p { font-size: 0.88rem; color: #757575; line-height: 1.6; }
+
+  .vta-form { display: flex; flex-direction: column; gap: 16px; }
+  .vta-field { display: flex; flex-direction: column; gap: 5px; }
+  .vta-label {
+    font-size: 0.82rem; font-weight: 700; color: #424242;
+  }
+  .vta-label span { color: #4552CC; }
+  .vta-input, .vta-textarea, .vta-select {
+    padding: 12px 14px; border-radius: 11px;
+    border: 1.5px solid rgba(0,0,0,0.12);
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.92rem; color: #212121;
+    background: #FAFAFA; outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    width: 100%;
+  }
+  .vta-input:focus, .vta-textarea:focus, .vta-select:focus {
+    border-color: #4552CC;
+    box-shadow: 0 0 0 3px rgba(69,82,204,0.12);
+    background: #fff;
+  }
+  .vta-textarea { resize: vertical; min-height: 100px; }
+  .vta-check-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 14px; border-radius: 11px; background: rgba(69,82,204,0.05);
+    border: 1.5px solid rgba(69,82,204,0.12); cursor: pointer;
+  }
+  .vta-check-row input[type="checkbox"] {
+    width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px;
+    accent-color: #4552CC; cursor: pointer;
+  }
+  .vta-check-label { font-size: 0.84rem; color: #424242; line-height: 1.5; cursor: pointer; }
+
+  .vta-submit-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 15px 24px; border-radius: 13px; border: none; cursor: pointer;
+    background: linear-gradient(135deg, #4552CC 0%, #3A8ECC 100%);
+    color: #fff; font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 800;
+    width: 100%; transition: opacity 0.18s, transform 0.18s;
+    box-shadow: 0 6px 24px rgba(69,82,204,0.32);
+  }
+  .vta-submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(69,82,204,0.38); }
+  .vta-submit-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+  .vta-form-error {
+    display: none; padding: 12px 14px; border-radius: 11px;
+    background: rgba(211,47,47,0.07); border: 1.5px solid rgba(211,47,47,0.20);
+    color: #C62828; font-size: 0.84rem; line-height: 1.5;
+  }
+  .vta-form-success {
+    display: none; text-align: center; padding: 32px 20px;
+  }
+  .vta-form-success-icon {
+    width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 16px;
+    background: rgba(39,174,96,0.12); color: #27AE60;
+    display: flex; align-items: center; justify-content: center; font-size: 2rem;
+  }
+  .vta-form-success h3 {
+    font-family: 'Sora', sans-serif; font-size: 1.25rem; font-weight: 800;
+    color: #212121; margin-bottom: 8px;
+  }
+  .vta-form-success p { font-size: 0.88rem; color: #616161; line-height: 1.65; }
+  .vta-form-success-note {
+    margin-top: 14px; padding: 12px 14px; border-radius: 11px;
+    background: rgba(69,82,204,0.07); border: 1.5px solid rgba(69,82,204,0.15);
+    font-size: 0.82rem; color: #4552CC; font-weight: 600;
+  }
+
+  /* ---- EXCLUSIVIDAD ---- */
+  .vta-exclusive {
+    background: #212121; padding: 36px 20px; text-align: center;
+  }
+  .vta-exclusive-inner { max-width: 600px; margin: 0 auto; }
+  .vta-exclusive i { font-size: 1.4rem; color: #51CBF5; margin-bottom: 10px; display: block; }
+  .vta-exclusive h3 {
+    font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 800; color: #fff; margin-bottom: 8px;
+  }
+  .vta-exclusive p { font-size: 0.85rem; color: rgba(255,255,255,0.60); line-height: 1.65; }
+
+  /* ---- FOOTER ---- */
+  .vta-footer {
+    text-align: center; padding: 24px 20px;
+    font-size: 0.80rem; color: #9E9E9E;
+    border-top: 1px solid rgba(0,0,0,0.05); background: #fff;
+  }
+  .vta-footer a { color: #4552CC; text-decoration: none; }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 600px) {
+    .vta-hero-title { font-size: 1.8rem; }
+    .vta-nav { padding: 0 14px; }
+    .vta-section { padding: 40px 14px; }
+    .vta-form-wrap { padding: 28px 18px; }
+    .vta-section-title { font-size: 1.3rem; }
+    .vta-social-stat { padding: 0 16px; }
+    .vta-social-stat-val { font-size: 1.6rem; }
+  }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="vta-nav">
+  <a class="vta-nav-logo" href="https://prueb2.dashnexpages.net/home/">
+    <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png" alt="Petcingo" loading="lazy" onerror="this.style.display='none'">
+    <span class="vta-nav-logo-text">PETCINGO</span>
+  </a>
+  <a class="vta-nav-link" href="https://prueb2.dashnexpages.net/home/"><i class="ri-arrow-left-line"></i> Inicio</a>
+</nav>
+
+<!-- HERO -->
+<div class="vta-hero">
+  <div class="vta-hero-inner">
+    <div class="vta-hero-badge">
+      <span class="vta-hero-badge-dot"></span>
+      PROGRAMA PARA CL&Iacute;NICAS VETERINARIAS
+    </div>
+    <h1 class="vta-hero-title">
+      Lleva tu veterinaria al siguiente nivel.<br>
+      <span>&Uacute;nete a la Red Petcingo.</span>
+    </h1>
+    <p class="vta-hero-sub">
+      Aparece de forma prioritaria en nuestro directorio nacional de cl&iacute;nicas,
+      consigue nuevos clientes y ofrece a tus pacientes placas inteligentes NFC+QR.
+    </p>
+    <a class="vta-hero-cta" href="#registro">
+      <i class="ri-health-book-line"></i> Registrar mi veterinaria
+    </a>
+    <p class="vta-hero-note">Sin mensualidades ni costos fijos de suscripci&oacute;n</p>
+  </div>
+</div>
+
+<!-- BENEFICIOS -->
+<div class="vta-section">
+  <h2 class="vta-section-title">Beneficios exclusivos para ti</h2>
+  <p class="vta-section-sub">Todo lo que ganas al unirte a la red veterinaria aliada.</p>
+  <div class="vta-benefits">
+    <div class="vta-benefit">
+      <div class="vta-benefit-icon"><i class="ri-user-search-line"></i></div>
+      <h4>Flujo de clientes directos</h4>
+      <p>
+        Los usuarios de Petcingo que buscan cl&iacute;nicas de emergencia o veterinarias recomendadas
+        en su zona son derivados de forma prioritaria a tu cl&iacute;nica aliada.
+      </p>
+    </div>
+    <div class="vta-benefit">
+      <div class="vta-benefit-icon"><i class="ri-map-pin-line"></i></div>
+      <h4>Perfil digital premium</h4>
+      <p>
+        Tendr&aacute;s tu propia p&aacute;gina web en nuestro directorio p&uacute;blico para mostrar servicios,
+        horarios de atenci&oacute;n, direcci&oacute;n f&iacute;sica, ubicaci&oacute;n GPS y bot&oacute;n de contacto directo.
+      </p>
+    </div>
+    <div class="vta-benefit">
+      <div class="vta-benefit-icon"><i class="ri-shield-check-line"></i></div>
+      <h4>Placas inteligentes NFC+QR</h4>
+      <p>
+        Vende y configura de forma oficial las placas Petcingo para tus clientes habituales.
+        Consigue ingresos adicionales con un margen de ganancia sumamente atractivo.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- PRUEBA SOCIAL -->
+<div class="vta-social-wrap">
+  <div class="vta-social-inner">
+    <div class="vta-social-stat-row">
+      <div class="vta-social-stat">
+        <div class="vta-social-stat-val">45+</div>
+        <div class="vta-social-stat-lbl">Veterinarias aliadas</div>
+      </div>
+      <div class="vta-social-stat">
+        <div class="vta-social-stat-val">5,000+</div>
+        <div class="vta-social-stat-lbl">Mascotas protegidas</div>
+      </div>
+      <div class="vta-social-stat">
+        <div class="vta-social-stat-val">24/7</div>
+        <div class="vta-social-stat-lbl">Protecci&oacute;n garantizada</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FORMULARIO -->
+<div class="vta-section" id="registro">
+  <div class="vta-form-wrap">
+    <div class="vta-form-header">
+      <div class="vta-form-header-badge"><i class="ri-health-book-line"></i> &Uacute;nete a nosotros</div>
+      <h2>Formulario de postulaci&oacute;n</h2>
+      <p>
+        Completa los datos de tu cl&iacute;nica. Nuestro equipo t&eacute;cnico evaluar&aacute; tu solicitud
+        y te contactar&aacute; en un plazo de 24 a 48 horas laborables.
+      </p>
+    </div>
+
+    <div id="vta-form-error" class="vta-form-error" role="alert"></div>
+
+    <form class="vta-form" id="vta-form" novalidate>
+      <div class="vta-field">
+        <label class="vta-label" for="vta-nombre">Nombre de la Veterinaria / Cl&iacute;nica <span>*</span></label>
+        <input class="vta-input" type="text" id="vta-nombre" name="nombre" placeholder="Ej: Veterinaria Huellas" required>
+      </div>
+      <div class="vta-field">
+        <label class="vta-label" for="vta-contacto">Persona de contacto <span>*</span></label>
+        <input class="vta-input" type="text" id="vta-contacto" name="contacto" placeholder="Nombre completo" required>
+      </div>
+      <div class="vta-field">
+        <label class="vta-label" for="vta-telefono">Tel&eacute;fono / WhatsApp de contacto <span>*</span></label>
+        <input class="vta-input" type="tel" id="vta-telefono" name="telefono" placeholder="+591 7XXXXXXX" required>
+      </div>
+      <div class="vta-field">
+        <label class="vta-label" for="vta-email">Correo electr&oacute;nico <span>*</span></label>
+        <input class="vta-input" type="email" id="vta-email" name="email" placeholder="clinica@veterinaria.com" required>
+      </div>
+      <div class="vta-field">
+        <label class="vta-label" for="vta-ciudad">Ciudad <span>*</span></label>
+        <select class="vta-select" id="vta-ciudad" name="ciudad" required>
+          <option value="">Selecciona tu ciudad...</option>
+          <option value="Santa Cruz">Santa Cruz</option>
+          <option value="La Paz">La Paz</option>
+          <option value="Cochabamba">Cochabamba</option>
+          <option value="Tarija">Tarija</option>
+          <option value="Sucre">Sucre</option>
+          <option value="Oruro">Oruro</option>
+          <option value="Potos&iacute;">Potos&iacute;</option>
+          <option value="Beni">Beni</option>
+          <option value="Pando">Pando</option>
+        </select>
+      </div>
+      <div class="vta-field">
+        <label class="vta-label" for="vta-direccion">Direcci&oacute;n de la cl&iacute;nica <span>*</span></label>
+        <input class="vta-input" type="text" id="vta-direccion" name="direccion" placeholder="Calle, n&uacute;mero, zona o barrio" required>
+      </div>
+      <div class="vta-field">
+        <label class="vta-label" for="vta-servicios">&iquest;Qu&eacute; servicios principales ofrece? <span>*</span></label>
+        <textarea class="vta-textarea" id="vta-servicios" name="servicios"
+          placeholder="Ej: Consulta m&eacute;dica, Cirug&iacute;a menor y mayor, Radiograf&iacute;as, Ecograf&iacute;as, Laboratorio, Vacunaci&oacute;n, Peluquer&iacute;a, Hospedaje..."
+          required></textarea>
+      </div>
+      <div class="vta-field">
+        <label class="vta-label" for="vta-motivo">&iquest;Por qu&eacute; deseas unirte al programa de Veterinarias Aliadas? <span>*</span></label>
+        <textarea class="vta-textarea" id="vta-motivo" name="motivo"
+          placeholder="Com&eacute;ntanos brevemente qu&eacute; te motiv&oacute; y c&oacute;mo te gustar&iacute;a colaborar con la red..."
+          required></textarea>
+      </div>
+      <label class="vta-check-row" for="vta-terminos">
+        <input type="checkbox" id="vta-terminos" name="terminos" required>
+        <span class="vta-check-label">
+          Acepto ser contactado por Petcingo y declaro que toda la informaci&oacute;n brindada es real y fidedigna.
+        </span>
+      </label>
+      <button class="vta-submit-btn" type="submit" id="vta-submit-btn">
+        <i class="ri-send-plane-line"></i>
+        Postular mi Veterinaria
+      </button>
+    </form>
+
+    <div class="vta-form-success" id="vta-form-success">
+      <div class="vta-form-success-icon"><i class="ri-checkbox-circle-line"></i></div>
+      <h3>Solicitud enviada</h3>
+      <p>
+        Hemos recibido los datos de tu veterinaria con &eacute;xito.
+        Uno de nuestros asesores de alianzas veterinarias se contactar&aacute; contigo a la brevedad por WhatsApp o correo.
+      </p>
+      <div class="vta-form-success-note">
+        <i class="ri-time-line"></i> Tiempo de respuesta: 24 a 48 horas h&aacute;biles
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EXCLUSIVIDAD -->
+<div class="vta-exclusive">
+  <div class="vta-exclusive-inner">
+    <i class="ri-shield-star-line"></i>
+    <h3>Seguridad y Confianza</h3>
+    <p>
+      En Petcingo cuidamos la reputaci&oacute;n de nuestra red aliada. Todas las cl&iacute;nicas pasan por un proceso
+      de validaci&oacute;n antes de ser publicadas en el directorio oficial para garantizar a los due&ntilde;os de mascotas
+      la mejor calidad de atenci&oacute;n.
+    </p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="vta-footer">
+  <p>
+    &copy; 2025 Petcingo &mdash; Sistema de Identificaci&oacute;n de Mascotas &nbsp;|&nbsp;
+    <a href="https://prueb2.dashnexpages.net/home/">Inicio</a> &nbsp;|&nbsp;
+    <a href="https://prueb2.dashnexpages.net/producto/">Planes</a> &nbsp;|&nbsp;
+    <a href="https://prueb2.dashnexpages.net/activacion/">Activar placa</a>
+  </p>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var FIREBASE_CONFIG = {
+    apiKey:            'AIzaSyAEE3yLFFsJTMORNFLYZWW2_DNHwzF0hE8',
+    authDomain:        'petcingo-43096.firebaseapp.com',
+    projectId:         'petcingo-43096',
+    storageBucket:     'petcingo-43096.firebasestorage.app',
+    messagingSenderId: '679546185536',
+    appId:             '1:679546185536:web:ceccd210b7c73b296f7ca5'
+  };
+
+  var app, db;
+  try { app = firebase.initializeApp(FIREBASE_CONFIG, 'ptcg-vets'); }
+  catch (e) { app = firebase.app('ptcg-vets'); }
+  db = firebase.firestore(app);
+
+  var form      = document.getElementById('vta-form');
+  var errBox    = document.getElementById('vta-form-error');
+  var successEl = document.getElementById('vta-form-success');
+  var submitBtn = document.getElementById('vta-submit-btn');
+
+  function showError(msg) {
+    errBox.textContent = msg;
+    errBox.style.display = 'block';
+    errBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  function clearError() { errBox.style.display = 'none'; errBox.textContent = ''; }
+
+  function trim(id) { return (document.getElementById(id) || {}).value.trim() || ''; }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    clearError();
+
+    var nombre    = trim('vta-nombre');
+    var contacto  = trim('vta-contacto');
+    var telefono  = trim('vta-telefono');
+    var email     = trim('vta-email');
+    var ciudad    = trim('vta-ciudad');
+    var direccion = trim('vta-direccion');
+    var servicios = trim('vta-servicios');
+    var motivo    = trim('vta-motivo');
+    var terminos  = document.getElementById('vta-terminos').checked;
+
+    if (!nombre)    { showError('Por favor ingresa el nombre de la veterinaria.'); return; }
+    if (!contacto)  { showError('Por favor ingresa la persona de contacto.'); return; }
+    if (!telefono)  { showError('Por favor ingresa tu n&uacute;mero de tel&eacute;fono o WhatsApp.'); return; }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showError('Ingresa un correo electr&oacute;nico v&aacute;lido.'); return;
+    }
+    if (!ciudad)    { showError('Por favor selecciona tu ciudad.'); return; }
+    if (!direccion) { showError('Por favor ingresa la direcci&oacute;n de la cl&iacute;nica.'); return; }
+    if (!servicios || servicios.length < 10) {
+      showError('Describe brevemente los servicios que ofrece la veterinaria (m&iacute;nimo 10 caracteres).'); return;
+    }
+    if (!motivo || motivo.length < 15) {
+      showError('Por favor describe tu motivo para unirte a nosotros (m&iacute;nimo 15 caracteres).'); return;
+    }
+    if (!terminos) {
+      showError('Debes aceptar que declare que la informaci&oacute;n brindada es real.'); return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="ri-loader-4-line"></i> Enviando...';
+
+    var payload = {
+      nombre:    nombre,
+      contacto:  contacto,
+      telefono:  telefono,
+      email:     email,
+      ciudad:    ciudad,
+      direccion: direccion,
+      servicios: servicios,
+      motivo:    motivo,
+      estado:    'pendiente',
+      creadoEn:  firebase.firestore.FieldValue.serverTimestamp(),
+      origen:    window.location.href
+    };
+
+    db.collection('veterinary_applications').add(payload)
+      .then(function () {
+        form.style.display = 'none';
+        successEl.style.display = 'block';
+        successEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      })
+      .catch(function (err) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="ri-send-plane-line"></i> Postular mi Veterinaria';
+        showError('No se pudo enviar tu solicitud. Intenta nuevamente en unos momentos.');
+        console.error('veterinary_application error:', err);
+      });
+  });
+}());
+</script>
+
+</body>
+</html>

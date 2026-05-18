@@ -462,7 +462,7 @@ function renderTable(pets) {
     return;
   }
   var ACT  = 'https://prueb2.dashnexpages.net/activacion/?id=';
-  var PERF = 'https://prueb2.dashnexpages.net/id/?id=';
+  var PERF = 'https://prueb2.dashnexpages.net/mascota/?id=';
   var CLI  = 'https://prueb2.dashnexpages.net/mi-cuenta/?id=';
   var now  = new Date();
   
@@ -1428,6 +1428,7 @@ function loadShelters() {
           '<div class="ptcg-actions-dropdown" style="display:none;position:absolute;right:0;top:100%;z-index:500;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);min-width:180px;padding:6px 0;margin-top:4px;">' +
             '<button style="' + dropdownStyle + '" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="openShelterDetail(\''+doc.id+'\')"><i class="ri-settings-3-line"></i> Placas</button>' +
             '<button style="' + dropdownStyle + '" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="editShelter(\''+doc.id+'\',\''+encodeData(d)+'\')"><i class="ri-edit-line"></i> Editar</button>' +
+            '<a style="' + dropdownStyle + 'text-decoration:none;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" href="https://prueb2.dashnexpages.net/refugio/?id='+doc.id+'" target="_blank"><i class="ri-eye-line"></i> Ver perfil publico</a>' +
             '<a style="' + dropdownStyle + 'text-decoration:none;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" href="https://prueb2.dashnexpages.net/refugio-panel-control/?auto='+doc.id+'" target="_blank"><i class="ri-external-link-line"></i> Ir a panel</a>' +
             suspDropdownBtn +
             banDropdownBtn +
@@ -4281,7 +4282,7 @@ window.loadAffiliates = function() {
               + '<td style="padding:10px 8px;text-align:right;color:#1E255E">$' + (a.totalSales || 0).toFixed(2) + '</td>'
               + '<td style="padding:10px 8px;text-align:right;color:#22C55E;font-weight:700">$' + (a.totalEarned || 0).toFixed(2) + '</td>'
               + '<td style="padding:10px 8px;text-align:right;color:#FFC837;font-weight:700">$' + (a.pendingPayout || 0).toFixed(2) + '</td>'
-              + '<td style="padding:10px 8px;text-align:center"><button onclick="markAffPaid(\'' + a.id + '\',' + (a.pendingPayout||0) + ')" style="padding:5px 10px;background:rgba(34,197,94,.1);color:#22C55E;border:none;border-radius:7px;font-size:.75rem;cursor:pointer;font-weight:600">Marcar pagado</button></td>'
+              + '<td style="padding:10px 8px;text-align:center;display:flex;gap:6px;justify-content:center"><a href="https://prueb2.dashnexpages.net/panel-afiliados/?auto=' + a.id + '" target="_blank" style="padding:5px 10px;background:rgba(69,82,204,.1);color:#4552CC;border-radius:7px;font-size:.75rem;cursor:pointer;font-weight:600;text-decoration:none"><i class="ri-external-link-line"></i> Panel</a><button onclick="markAffPaid(\'' + a.id + '\',' + (a.pendingPayout||0) + ')" style="padding:5px 10px;background:rgba(34,197,94,.1);color:#22C55E;border:none;border-radius:7px;font-size:.75rem;cursor:pointer;font-weight:600">Marcar pagado</button></td>'
               + '</tr>';
           }).join('') + '</tbody></table></div>';
       }
