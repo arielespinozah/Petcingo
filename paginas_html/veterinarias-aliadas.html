@@ -270,6 +270,75 @@
   }
   .vta-footer a { color: #4552CC; text-decoration: none; }
 
+  /* ---- POR QUE UNIRTE ---- */
+  .vta-why { max-width: 1080px; margin: 0 auto; padding: 0 20px 56px; }
+  .vta-why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .vta-why-card {
+    background: #fff; border-radius: 18px; padding: 22px 20px;
+    border: 1.5px solid rgba(0,0,0,0.06);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.04);
+    display: flex; align-items: flex-start; gap: 14px;
+    transition: transform 0.18s, box-shadow 0.18s;
+  }
+  .vta-why-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(69,82,204,0.10); }
+  .vta-why-card-num {
+    width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+    background: rgba(69,82,204,0.10); color: #4552CC;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Sora', sans-serif; font-size: 0.95rem; font-weight: 800;
+  }
+  .vta-why-card-title { font-family: 'Sora', sans-serif; font-size: 0.92rem; font-weight: 800; color: #212121; margin-bottom: 4px; }
+  .vta-why-card-desc { font-size: 0.83rem; color: #616161; line-height: 1.6; }
+
+  /* ---- PLANES COMPARATIVA ---- */
+  .vta-plans-wrap { background: #fff; border-radius: 22px; padding: 36px 28px; max-width: 1080px; margin: 0 auto 56px; }
+  .vta-plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .vta-plan-col {
+    border-radius: 16px; padding: 24px 20px;
+    border: 1.5px solid rgba(0,0,0,0.08);
+    display: flex; flex-direction: column;
+  }
+  .vta-plan-col.featured { border-color: #4552CC; box-shadow: 0 4px 24px rgba(69,82,204,0.14); }
+  .vta-plan-col-badge {
+    font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;
+    color: #fff; background: #4552CC; border-radius: 99px; padding: 3px 10px;
+    display: inline-block; margin-bottom: 10px; width: fit-content;
+  }
+  .vta-plan-col-name { font-family: 'Sora', sans-serif; font-size: 1.1rem; font-weight: 800; color: #212121; margin-bottom: 4px; }
+  .vta-plan-col-price { font-family: 'Sora', sans-serif; font-size: 1.6rem; font-weight: 800; color: #4552CC; margin-bottom: 4px; }
+  .vta-plan-col-sub { font-size: 0.75rem; color: #9E9E9E; margin-bottom: 16px; }
+  .vta-plan-col-feats { list-style: none; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .vta-plan-col-feats li { display: flex; align-items: flex-start; gap: 8px; font-size: 0.83rem; color: #424242; }
+  .vta-plan-col-feats li i { flex-shrink: 0; margin-top: 1px; font-size: 0.9rem; }
+  .vta-plan-col-feats li i.ok { color: #27AE60; }
+  .vta-plan-col-feats li i.no { color: #BDBDBD; }
+  .vta-plan-col-feats li.dimmed { color: #BDBDBD; }
+
+  /* ---- FAQ VETERINARIAS ---- */
+  .vta-faq { max-width: 720px; margin: 0 auto; padding: 56px 20px 0; }
+  .vta-faq-item {
+    background: #fff; border-radius: 14px; margin-bottom: 10px;
+    border: 1.5px solid rgba(0,0,0,0.06);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+    overflow: hidden;
+  }
+  .vta-faq-q {
+    width: 100%; text-align: left; padding: 18px 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    background: none; border: none; cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.92rem; font-weight: 700; color: #212121;
+    transition: background 0.16s;
+  }
+  .vta-faq-q:hover { background: rgba(69,82,204,0.04); }
+  .vta-faq-q i { color: #4552CC; flex-shrink: 0; font-size: 1rem; transition: transform 0.22s; }
+  .vta-faq-item.open .vta-faq-q i { transform: rotate(45deg); }
+  .vta-faq-a {
+    display: none; padding: 0 20px 18px;
+    font-size: 0.88rem; color: #616161; line-height: 1.7;
+    border-top: 1px solid rgba(0,0,0,0.04);
+  }
+  .vta-faq-item.open .vta-faq-a { display: block; }
+
   /* ---- RESPONSIVE ---- */
   @media (max-width: 600px) {
     .vta-hero-title { font-size: 1.8rem; }
@@ -301,15 +370,16 @@
   <div class="vta-hero-inner">
     <div class="vta-hero-badge">
       <span class="vta-hero-badge-dot"></span>
-      PROGRAMA PARA CL&Iacute;NICAS VETERINARIAS
+      ALIANZA ESTRAT&Eacute;GICA &middot; SIN COSTO DE ENTRADA
     </div>
     <h1 class="vta-hero-title">
-      Lleva tu veterinaria al siguiente nivel.<br>
-      <span>&Uacute;nete a la Red Petcingo.</span>
+      Tu veterinaria merece ser encontrada.<br>
+      <span>Recibe clientes todos los dias.</span>
     </h1>
     <p class="vta-hero-sub">
-      Aparece de forma prioritaria en nuestro directorio nacional de cl&iacute;nicas,
-      consigue nuevos clientes y ofrece a tus pacientes placas inteligentes NFC+QR.
+      Miles de duenos de mascotas buscan donde atender a sus animales.
+      Aparece en el directorio de Petcingo y recibe contactos directos todos los dias.
+      Sin inversion inicial. Sin contratos.
     </p>
     <a class="vta-hero-cta" href="#registro">
       <i class="ri-health-book-line"></i> Registrar mi veterinaria
@@ -350,6 +420,109 @@
   </div>
 </div>
 
+<!-- POR QUE UNIRTE -->
+<div class="vta-why">
+  <h2 class="vta-section-title">Por que unirte a Petcingo?</h2>
+  <p class="vta-section-sub">Datos concretos de lo que significa ser veterinaria aliada.</p>
+  <div class="vta-why-grid">
+    <div class="vta-why-card">
+      <div class="vta-why-card-num"><i class="ri-user-heart-line"></i></div>
+      <div class="vta-why-card-body">
+        <div class="vta-why-card-title">5,000+ duenos te buscan cada mes</div>
+        <div class="vta-why-card-desc">Mas de 5,000 duenos de mascotas visitan nuestro directorio mensualmente buscando veterinarias por ciudad y especialidad.</div>
+      </div>
+    </div>
+    <div class="vta-why-card">
+      <div class="vta-why-card-num"><i class="ri-search-line"></i></div>
+      <div class="vta-why-card-body">
+        <div class="vta-why-card-title">Aparece en busquedas filtradas</div>
+        <div class="vta-why-card-desc">Tu perfil aparece en busquedas por ciudad, especialidad y horario: abierto ahora, emergencias 24h, cirugia, laboratorio.</div>
+      </div>
+    </div>
+    <div class="vta-why-card">
+      <div class="vta-why-card-num"><i class="ri-whatsapp-line"></i></div>
+      <div class="vta-why-card-body">
+        <div class="vta-why-card-title">Contacto directo por WhatsApp</div>
+        <div class="vta-why-card-desc">Los clientes te contactan directo desde tu perfil publico. Sin intermediarios, sin formularios, sin friccion.</div>
+      </div>
+    </div>
+    <div class="vta-why-card">
+      <div class="vta-why-card-num"><i class="ri-money-dollar-circle-line"></i></div>
+      <div class="vta-why-card-body">
+        <div class="vta-why-card-title">Vende placas con comision</div>
+        <div class="vta-why-card-desc">Vendes placas Petcingo con comision directa. Sin inversion inicial. Nuevo ingreso sin cambiar tu operacion actual.</div>
+      </div>
+    </div>
+    <div class="vta-why-card">
+      <div class="vta-why-card-num"><i class="ri-heart-line"></i></div>
+      <div class="vta-why-card-body">
+        <div class="vta-why-card-title">Visibilidad en refugios aliados</div>
+        <div class="vta-why-card-desc">Si eres Solidaria, apareces en el panel de refugios aliados. Mas visibilidad, mas impacto social, mas clientes comprometidos.</div>
+      </div>
+    </div>
+    <div class="vta-why-card">
+      <div class="vta-why-card-num"><i class="ri-close-circle-line"></i></div>
+      <div class="vta-why-card-body">
+        <div class="vta-why-card-title">Sin contratos forzosos</div>
+        <div class="vta-why-card-desc">Puedes darte de baja cuando quieras. No hay permanencia minima, penalidades ni compromisos a largo plazo.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PLANES COMPARATIVA -->
+<div style="max-width:1080px;margin:0 auto;padding:0 20px 56px;">
+  <div class="vta-plans-wrap">
+    <h2 class="vta-section-title" style="margin-bottom:8px;">Planes para veterinarias</h2>
+    <p class="vta-section-sub" style="margin-bottom:28px;">Empieza gratis. Crece con nosotros.</p>
+    <div class="vta-plans-grid">
+      <div class="vta-plan-col">
+        <div class="vta-plan-col-name">Aliado</div>
+        <div class="vta-plan-col-price">Gratis</div>
+        <div class="vta-plan-col-sub">Para siempre</div>
+        <ul class="vta-plan-col-feats">
+          <li><i class="ri-check-line ok"></i> Perfil en el directorio</li>
+          <li><i class="ri-check-line ok"></i> Boton WhatsApp directo</li>
+          <li><i class="ri-check-line ok"></i> Ciudad y especialidades</li>
+          <li><i class="ri-check-line ok"></i> Venta de placas con comision</li>
+          <li class="dimmed"><i class="ri-close-line no"></i> Destacado en busquedas</li>
+          <li class="dimmed"><i class="ri-close-line no"></i> Badge Solidaria</li>
+          <li class="dimmed"><i class="ri-close-line no"></i> Panel de estadisticas</li>
+        </ul>
+      </div>
+      <div class="vta-plan-col featured">
+        <div class="vta-plan-col-badge">Mas popular</div>
+        <div class="vta-plan-col-name">Premium</div>
+        <div class="vta-plan-col-price">Bs 99<span style="font-size:1rem;font-weight:500;">/mes</span></div>
+        <div class="vta-plan-col-sub">Facturacion mensual</div>
+        <ul class="vta-plan-col-feats">
+          <li><i class="ri-check-line ok"></i> Todo lo del plan Aliado</li>
+          <li><i class="ri-check-line ok"></i> Destacado en busquedas</li>
+          <li><i class="ri-check-line ok"></i> Foto y galeria de la clinica</li>
+          <li><i class="ri-check-line ok"></i> Horarios y dias de atencion</li>
+          <li><i class="ri-check-line ok"></i> Panel de estadisticas</li>
+          <li><i class="ri-check-line ok"></i> Notificaciones de contacto</li>
+          <li class="dimmed"><i class="ri-close-line no"></i> Badge Solidaria</li>
+        </ul>
+      </div>
+      <div class="vta-plan-col">
+        <div class="vta-plan-col-name">Solidario</div>
+        <div class="vta-plan-col-price">Gratis</div>
+        <div class="vta-plan-col-sub">Con condiciones</div>
+        <ul class="vta-plan-col-feats">
+          <li><i class="ri-check-line ok"></i> Todo lo del plan Aliado</li>
+          <li><i class="ri-check-line ok"></i> Badge Solidaria visible</li>
+          <li><i class="ri-check-line ok"></i> Aparece en panel de refugios</li>
+          <li><i class="ri-check-line ok"></i> Atencion gratuita a rescatados</li>
+          <li><i class="ri-check-line ok"></i> Descuento en placas para refugios</li>
+          <li class="dimmed"><i class="ri-close-line no"></i> Panel de estadisticas</li>
+          <li class="dimmed"><i class="ri-close-line no"></i> Galeria de la clinica</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- PRUEBA SOCIAL -->
 <div class="vta-social-wrap">
   <div class="vta-social-inner">
@@ -360,13 +533,81 @@
       </div>
       <div class="vta-social-stat">
         <div class="vta-social-stat-val">5,000+</div>
-        <div class="vta-social-stat-lbl">Mascotas protegidas</div>
+        <div class="vta-social-stat-lbl">Duenos buscan cada mes</div>
       </div>
       <div class="vta-social-stat">
-        <div class="vta-social-stat-val">24/7</div>
-        <div class="vta-social-stat-lbl">Protecci&oacute;n garantizada</div>
+        <div class="vta-social-stat-val">Bs 99</div>
+        <div class="vta-social-stat-lbl">Plan premium al mes</div>
       </div>
     </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;max-width:1080px;margin:0 auto;">
+      <div style="background:rgba(255,255,255,0.12);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.20);border-radius:18px;padding:22px 20px;">
+        <p style="font-size:0.92rem;color:rgba(255,255,255,0.92);line-height:1.65;margin-bottom:16px;font-style:italic;">"Desde que estoy en Petcingo, recibo 5 consultas nuevas por semana. No tuve que invertir nada y la gente llega directo por WhatsApp desde el perfil."</p>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.20);border:2px solid rgba(255,255,255,0.30);display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-size:0.88rem;font-weight:800;color:#fff;flex-shrink:0;">M</div>
+          <div>
+            <div style="font-family:'Sora',sans-serif;font-size:0.86rem;font-weight:700;color:#fff;">Dra. Mendoza</div>
+            <div style="font-size:0.75rem;color:rgba(255,255,255,0.65);">Clinica VetHuellas &mdash; Santa Cruz</div>
+          </div>
+        </div>
+      </div>
+      <div style="background:rgba(255,255,255,0.12);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.20);border-radius:18px;padding:22px 20px;">
+        <p style="font-size:0.92rem;color:rgba(255,255,255,0.92);line-height:1.65;margin-bottom:16px;font-style:italic;">"Mis clientes valoran que aparezco como Solidaria. Sienten que su dinero apoya una causa. Eso fideliza mas que cualquier descuento."</p>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.20);border:2px solid rgba(255,255,255,0.30);display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-size:0.88rem;font-weight:800;color:#fff;flex-shrink:0;">R</div>
+          <div>
+            <div style="font-family:'Sora',sans-serif;font-size:0.86rem;font-weight:700;color:#fff;">Dr. Rojas</div>
+            <div style="font-size:0.75rem;color:rgba(255,255,255,0.65);">AnimalCare &mdash; Cochabamba</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ VETERINARIAS -->
+<div class="vta-faq">
+  <h2 class="vta-section-title">Preguntas frecuentes</h2>
+  <p class="vta-section-sub" style="margin-bottom:28px;">Respuestas directas para veterinarias que quieren unirse.</p>
+
+  <div class="vta-faq-item">
+    <button class="vta-faq-q" onclick="vtaToggleFaq(this)">
+      <span>Cuanto cuesta aparecer en el directorio?</span>
+      <i class="ri-add-line"></i>
+    </button>
+    <div class="vta-faq-a">El plan Aliado es 100% gratuito y permanente. Nunca pagas para aparecer en el directorio basico. El plan Premium cuesta Bs 99 al mes y te da visibilidad prioritaria y estadisticas.</div>
+  </div>
+
+  <div class="vta-faq-item">
+    <button class="vta-faq-q" onclick="vtaToggleFaq(this)">
+      <span>En cuanto tiempo aparece mi veterinaria en el directorio?</span>
+      <i class="ri-add-line"></i>
+    </button>
+    <div class="vta-faq-a">Una vez validada tu solicitud, tu perfil aparece en el directorio en 24 a 48 horas. Nuestro equipo revisa cada solicitud manualmente antes de publicar.</div>
+  </div>
+
+  <div class="vta-faq-item">
+    <button class="vta-faq-q" onclick="vtaToggleFaq(this)">
+      <span>Como funciona la venta de placas Petcingo?</span>
+      <i class="ri-add-line"></i>
+    </button>
+    <div class="vta-faq-a">Recibes un enlace de referido. Cuando un cliente compra una placa a traves de tu enlace, recibes comision directa. No manejas stock ni cobros. Solo recomiendas.</div>
+  </div>
+
+  <div class="vta-faq-item">
+    <button class="vta-faq-q" onclick="vtaToggleFaq(this)">
+      <span>Que significa ser veterinaria Solidaria?</span>
+      <i class="ri-add-line"></i>
+    </button>
+    <div class="vta-faq-a">El programa Solidario es un acuerdo voluntario: tu veterinaria ofrece atencion gratuita o con descuento a animales rescatados de refugios aliados. A cambio, apareces con el badge Solidaria y ganas visibilidad especial en el directorio.</div>
+  </div>
+
+  <div class="vta-faq-item">
+    <button class="vta-faq-q" onclick="vtaToggleFaq(this)">
+      <span>Puedo darme de baja cuando quiera?</span>
+      <i class="ri-add-line"></i>
+    </button>
+    <div class="vta-faq-a">Si. No hay contratos ni permanencia minima. Puedes solicitar dar de baja tu perfil en cualquier momento enviando un correo a nuestro equipo de alianzas.</div>
   </div>
 </div>
 
@@ -415,6 +656,21 @@
           <option value="Beni">Beni</option>
           <option value="Pando">Pando</option>
         </select>
+      </div>
+      <div class="vta-field">
+        <label class="vta-label" for="vta-vet-nombre">Nombre de la veterinaria <span>*</span></label>
+        <input class="vta-input" type="text" id="vta-vet-nombre" name="vet_nombre" placeholder="Ej: Clinica Huellas Felices" required>
+      </div>
+      <div class="vta-field">
+        <label class="vta-label">Especialidades principales (selecciona las que aplican)</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px;background:#FAFAFA;border:1.5px solid rgba(0,0,0,0.12);border-radius:11px;">
+          <label style="display:flex;align-items:center;gap:8px;font-size:0.84rem;color:#424242;cursor:pointer;"><input type="checkbox" name="esp" value="cirugia" style="accent-color:#4552CC;"> Cirugia</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:0.84rem;color:#424242;cursor:pointer;"><input type="checkbox" name="esp" value="emergencias" style="accent-color:#4552CC;"> Emergencias 24h</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:0.84rem;color:#424242;cursor:pointer;"><input type="checkbox" name="esp" value="laboratorio" style="accent-color:#4552CC;"> Laboratorio</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:0.84rem;color:#424242;cursor:pointer;"><input type="checkbox" name="esp" value="radiologia" style="accent-color:#4552CC;"> Radiologia</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:0.84rem;color:#424242;cursor:pointer;"><input type="checkbox" name="esp" value="peluqueria" style="accent-color:#4552CC;"> Peluqueria</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:0.84rem;color:#424242;cursor:pointer;"><input type="checkbox" name="esp" value="vacunacion" style="accent-color:#4552CC;"> Vacunacion</label>
+        </div>
       </div>
       <div class="vta-field">
         <label class="vta-label" for="vta-direccion">Direcci&oacute;n de la cl&iacute;nica <span>*</span></label>
@@ -472,13 +728,36 @@
 </div>
 
 <!-- FOOTER -->
-<footer class="vta-footer">
-  <p>
-    &copy; 2025 Petcingo &mdash; Sistema de Identificaci&oacute;n de Mascotas &nbsp;|&nbsp;
-    <a href="https://prueb2.dashnexpages.net/home/">Inicio</a> &nbsp;|&nbsp;
-    <a href="https://prueb2.dashnexpages.net/producto/">Planes</a> &nbsp;|&nbsp;
-    <a href="https://prueb2.dashnexpages.net/activacion/">Activar placa</a>
-  </p>
+<footer style="background:#1A1A2E;color:rgba(255,255,255,0.7);padding:40px 20px 24px;font-size:0.82rem;line-height:1.8;">
+  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:28px;">
+    <div>
+      <span style="font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:800;color:#fff;">PETCINGO</span>
+      <p style="margin-top:6px;font-size:0.78rem;">Sistema de Identificacion Inteligente para Mascotas. Tecnologia NFC + QR. Hecho en Bolivia.</p>
+    </div>
+    <div>
+      <h4 style="color:#fff;font-size:0.82rem;margin-bottom:8px;">Producto</h4>
+      <a href="https://prueb2.dashnexpages.net/planes/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Tag Pet ID</a>
+      <a href="https://prueb2.dashnexpages.net/planes/?plan=familiar" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Pack Familiar</a>
+      <a href="https://prueb2.dashnexpages.net/activacion/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Activar placa</a>
+      <a href="https://prueb2.dashnexpages.net/mi-cuenta/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Perfil de mascota</a>
+    </div>
+    <div>
+      <h4 style="color:#fff;font-size:0.82rem;margin-bottom:8px;">Ecosistema</h4>
+      <a href="https://prueb2.dashnexpages.net/afiliados/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Programa de Afiliados</a>
+      <a href="https://prueb2.dashnexpages.net/veterinarias-aliadas/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Veterinarias Aliadas</a>
+      <a href="https://prueb2.dashnexpages.net/refugio/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Refugios</a>
+      <a href="https://prueb2.dashnexpages.net/ayuda/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Campanas Solidarias</a>
+    </div>
+    <div>
+      <h4 style="color:#fff;font-size:0.82rem;margin-bottom:8px;">Legal</h4>
+      <a href="https://prueb2.dashnexpages.net/terminos/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Terminos de Uso</a>
+      <a href="https://prueb2.dashnexpages.net/privacidad/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Politica de Privacidad</a>
+      <a href="https://prueb2.dashnexpages.net/contacto/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Contacto</a>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:24px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);font-size:0.72rem;color:rgba(255,255,255,0.4);">
+    &copy; 2026 Petcingo. Todos los derechos reservados.
+  </div>
 </footer>
 
 <script>
@@ -557,6 +836,8 @@
       direccion: direccion,
       servicios: servicios,
       motivo:    motivo,
+      vetNombre:     trim('vta-vet-nombre'),
+      especialidades: Array.from(document.querySelectorAll('input[name="esp"]:checked')).map(function(cb) { return cb.value; }),
       estado:    'pendiente',
       creadoEn:  firebase.firestore.FieldValue.serverTimestamp(),
       origen:    window.location.href
@@ -576,6 +857,13 @@
       });
   });
 }());
+
+function vtaToggleFaq(btn) {
+  var item = btn.parentElement;
+  var isOpen = item.classList.contains('open');
+  document.querySelectorAll('.vta-faq-item.open').forEach(function(el) { el.classList.remove('open'); });
+  if (!isOpen) item.classList.add('open');
+}
 </script>
 
 </body>

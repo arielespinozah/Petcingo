@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terminos de Uso - Petcingo</title>
+  <meta name="description" content="Terminos y condiciones de uso de la plataforma Petcingo. Conoce tus derechos y obligaciones como usuario.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://prueb2.dashnexpages.net/assets/fonts/remixicon/remixicon.css" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background: #F3F3F3;
+      color: #212121;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    .tou-nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; height: 60px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(20px) saturate(200%);
+      -webkit-backdrop-filter: blur(20px) saturate(200%);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .tou-nav-logo {
+      display: flex; align-items: center; gap: 8px; text-decoration: none;
+    }
+    .tou-nav-logo-text {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.05rem; font-weight: 800; color: #4552CC;
+    }
+    .tou-nav-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.85rem; font-weight: 600; color: #4552CC;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .tou-nav-link:hover { opacity: 0.75; }
+
+    /* HERO */
+    .tou-hero {
+      background: linear-gradient(135deg, #4552CC 0%, #3040B8 60%, #51CBF5 100%);
+      padding: 56px 24px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .tou-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(81,203,245,0.25) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .tou-hero-label {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 99px;
+      padding: 5px 14px;
+      font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.9);
+      letter-spacing: 0.04em; text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .tou-hero h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800; color: #fff;
+      letter-spacing: -0.03em; line-height: 1.15;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .tou-hero-date {
+      font-size: 0.83rem; color: rgba(255,255,255,0.7);
+      position: relative;
+    }
+
+    /* CONTENIDO PRINCIPAL */
+    .tou-main {
+      flex: 1;
+      padding: 48px 24px 64px;
+    }
+    .tou-card {
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.85);
+      border: 1px solid rgba(255,255,255,0.9);
+      border-radius: 24px;
+      box-shadow: 0 8px 48px rgba(69,82,204,0.09), 0 2px 12px rgba(0,0,0,0.04);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      padding: 48px;
+      overflow: hidden;
+    }
+
+    .tou-intro {
+      font-size: 0.95rem; color: #555;
+      line-height: 1.7; margin-bottom: 40px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid rgba(69,82,204,0.1);
+    }
+
+    /* SECCIONES */
+    .tou-section {
+      margin-bottom: 36px;
+    }
+    .tou-section:last-child { margin-bottom: 0; }
+
+    .tou-section-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 14px;
+    }
+    .tou-section-num {
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, #4552CC, #51CBF5);
+      border-radius: 8px;
+      font-family: 'Sora', sans-serif;
+      font-size: 0.75rem; font-weight: 800; color: #fff;
+      flex-shrink: 0;
+    }
+    .tou-section h2 {
+      font-family: 'Sora', sans-serif;
+      font-size: 1rem; font-weight: 700; color: #1A1A2E;
+      letter-spacing: -0.01em;
+    }
+    .tou-section p {
+      font-size: 0.92rem; color: #444;
+      line-height: 1.75;
+      padding-left: 44px;
+    }
+    .tou-section a {
+      color: #4552CC; text-decoration: none; font-weight: 600;
+    }
+    .tou-section a:hover { text-decoration: underline; }
+
+    .tou-divider {
+      height: 1px;
+      background: rgba(69,82,204,0.08);
+      margin: 28px 0;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 640px) {
+      .tou-card { padding: 28px 20px; border-radius: 16px; }
+      .tou-section p { padding-left: 0; margin-top: 8px; }
+      .tou-nav { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="tou-nav">
+    <a href="https://prueb2.dashnexpages.net/" class="tou-nav-logo">
+      <span class="tou-nav-logo-text">PETCINGO</span>
+    </a>
+    <a href="https://prueb2.dashnexpages.net/" class="tou-nav-link">
+      <i class="ri-arrow-left-line"></i> Volver al inicio
+    </a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="tou-hero">
+    <div class="tou-hero-label">
+      <i class="ri-file-text-line"></i> Documento legal
+    </div>
+    <h1>T&eacute;rminos de Uso</h1>
+    <p class="tou-hero-date">Actualizaci&oacute;n: 18 de mayo de 2026</p>
+  </section>
+
+  <!-- CONTENIDO -->
+  <main class="tou-main">
+    <div class="tou-card">
+
+      <p class="tou-intro">
+        Por favor, lee estos t&eacute;rminos con atenci&oacute;n antes de usar los servicios de Petcingo.
+        Al acceder a nuestra plataforma, confirmas haber le&iacute;do, comprendido y aceptado estas condiciones.
+      </p>
+
+      <!-- 1 -->
+      <div class="tou-section">
+        <div class="tou-section-header">
+          <div class="tou-section-num">1</div>
+          <h2>Aceptaci&oacute;n de los t&eacute;rminos</h2>
+        </div>
+        <p>Al acceder o usar los servicios de Petcingo, aceptas quedar vinculado por estos T&eacute;rminos de Uso. Si no est&aacute;s de acuerdo con alguna de las condiciones aqu&iacute; descritas, no utilices los servicios. El uso continuado de la plataforma despu&eacute;s de la publicaci&oacute;n de cambios implica la aceptaci&oacute;n de los nuevos t&eacute;rminos.</p>
+      </div>
+      <div class="tou-divider"></div>
+
+      <!-- 2 -->
+      <div class="tou-section">
+        <div class="tou-section-header">
+          <div class="tou-section-num">2</div>
+          <h2>Descripci&oacute;n del servicio</h2>
+        </div>
+        <p>Petcingo es un sistema de identificaci&oacute;n inteligente para mascotas que combina placas f&iacute;sicas NFC y QR con perfiles digitales en l&iacute;nea. El servicio incluye la venta de placas personalizadas, la activaci&oacute;n de perfiles de mascota y el acceso a la plataforma de gesti&oacute;n para due&ntilde;os, refugios y veterinarias aliadas.</p>
+      </div>
+      <div class="tou-divider"></div>
+
+      <!-- 3 -->
+      <div class="tou-section">
+        <div class="tou-section-header">
+          <div class="tou-section-num">3</div>
+          <h2>Registro y cuenta</h2>
+        </div>
+        <p>Para acceder a funciones avanzadas, debes crear una cuenta con informaci&oacute;n veraz y actualizada. Eres responsable de mantener la confidencialidad de tus credenciales de acceso y de todas las actividades realizadas bajo tu cuenta. Petcingo no ser&aacute; responsable por accesos no autorizados derivados del descuido del usuario en la protecci&oacute;n de sus credenciales.</p>
+      </div>
+      <div class="tou-divider"></div>
+
+      <!-- 4 -->
+      <div class="tou-section">
+        <div class="tou-section-header">
+          <div class="tou-section-num">4</div>
+          <h2>Compras y pagos</h2>
+        </div>
+        <p>Los precios est&aacute;n expresados en bolivianos (Bs) e incluyen impuestos aplicables. Petcingo acepta transferencias bancarias y pagos digitales disponibles en la plataforma. Una vez confirmado el pago, el pedido se procesa dentro de las 24 horas h&aacute;biles siguientes. Todos los precios pueden estar sujetos a cambios sin previo aviso, aunque las &oacute;rdenes ya confirmadas mantienen el precio original.</p>
+      </div>
+      <div class="tou-divider"></div>
+
+      <!-- 5 -->
+      <div class="tou-section">
+        <div class="tou-section-header">
+          <div class="tou-section-num">5</div>
+          <h2>Env&iacute;os y entregas</h2>
+        </div>
+        <p>Petcingo realiza env&iacute;os a todo Bolivia. El tiempo de entrega estimado es de 3 a 7 d&iacute;as h&aacute;biles seg&uacute;n la ciudad de destino. Los costos de env&iacute;o se informan al momento de la compra antes de confirmar el pedido. Petcingo no se responsabiliza por demoras causadas por la empresa de transporte o situaciones de fuerza mayor.</p>
+      </div>
+      <div class="tou-divider"></div>
+
+      <!-- 6 -->
+      <div class="tou-section">
+        <div class="tou-section-header">
+          <div class="tou-section-num">6</div>
+          <h2>Devoluciones y reembolsos</h2>
+        </div>
+        <p>Se acepta devoluci&oacute;n dentro de los 7 d&iacute;as naturales de recibido el producto, siempre que el art&iacute;culo est&eacute; en condiciones originales y no haya sido activado digitalmente. Las placas con grabado personalizado no son elegibles para devoluci&oacute;n. Para iniciar una devoluci&oacute;n, contacta a <a href="mailto:soporte@petcingo.com.bo">soporte@petcingo.com.bo</a> con tu n&uacute;mero de pedido.</p>
+      </div>
+      <div class="tou-divider"></div>
+
+      <!-- 7 -->
+      <div class="tou-section">
+        <div class="tou-section-header">
+          <div class="tou-section-num">7</div>
+          <h2>Uso de la placa y perfil digital</h2>
+        </div>
+        <p>El usuario es responsable de la informaci&oacute;n cargada en el perfil de su mascota, incluyendo fotos, datos de contacto y estado de adopci&oacute;n. La placa y el perfil son intransferibles sin autorizaci&oacute;n de Petcingo. Petcingo no se responsabiliza por el uso que terceros hagan de la informaci&oacute;n p&uacute;blica del perfil accedida mediante el escaneo de la placa.</p>
+      </div>
+      <div class="tou-divider"></div>
+
+      <!-- 8 -->
+      <div class="tou-section">
+        <div class="tou-section-header">
+          <div class="tou-section-num">8</div>
+          <h2>Responsabilidad del usuario</h2>
+        </div>
+        <p>El usuario se compromete a no usar el servicio para fines ilegales, no difundir informaci&oacute;n falsa ni enga&ntilde;osa en los perfiles, no interferir con el funcionamiento de la plataforma y no intentar acceder sin autorizaci&oacute;n a datos de otros usuarios. El incumplimiento puede resultar en la suspensi&oacute;n o eliminaci&oacute;n permanente de la cuenta.</p>
+      </div>
+      <div class="tou-divider"></div>
+
+      <!-- 9 -->
+      <div class="tou-section">
+        <div class="tou-section-header">
+          <div class="tou-section-num">9</div>
+          <h2>Limitaci&oacute;n de responsabilidad de Petcingo</h2>
+        </div>
+        <p>Petcingo no garantiza la disponibilidad continua e ininterrumpida del servicio. Petcingo no se hace responsable por p&eacute;rdidas o da&ntilde;os derivados del mal uso del sistema, fallas t&eacute;cnicas de terceros, interrupciones del servicio de internet o causas de fuerza mayor. En ning&uacute;n caso la responsabilidad de Petcingo superar&aacute; el monto pagado por el usuario en los &uacute;ltimos 30 d&iacute;as.</p>
+      </div>
+      <div class="tou-divider"></div>
+
+      <!-- 10 -->
+      <div class="tou-section">
+        <div class="tou-section-header">
+          <div class="tou-section-num">10</div>
+          <h2>Modificaciones a los t&eacute;rminos</h2>
+        </div>
+        <p>Petcingo se reserva el derecho de modificar estos t&eacute;rminos en cualquier momento. Los cambios se notificar&aacute;n en la plataforma y/o por correo electr&oacute;nico, y entrar&aacute;n en vigor 7 d&iacute;as despu&eacute;s de su publicaci&oacute;n. Si no est&aacute;s de acuerdo con los cambios, puedes cancelar tu cuenta antes de que entren en vigor.</p>
+      </div>
+      <div class="tou-divider"></div>
+
+      <!-- 11 -->
+      <div class="tou-section">
+        <div class="tou-section-header">
+          <div class="tou-section-num">11</div>
+          <h2>Contacto</h2>
+        </div>
+        <p>Para consultas sobre estos t&eacute;rminos, escribe a <a href="mailto:legal@petcingo.com.bo">legal@petcingo.com.bo</a> o comun&iacute;cate con nuestro equipo de soporte a trav&eacute;s de <a href="https://prueb2.dashnexpages.net/contacto/" target="_blank">nuestra p&aacute;gina de contacto</a>. Tambi&eacute;n puedes contactarnos por WhatsApp al n&uacute;mero disponible en la plataforma.</p>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer style="background:#1A1A2E;color:rgba(255,255,255,0.7);padding:40px 20px 24px;font-size:0.82rem;line-height:1.8;">
+    <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:28px;">
+      <div>
+        <span style="font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:800;color:#fff;">PETCINGO</span>
+        <p style="margin-top:6px;font-size:0.78rem;">Sistema de Identificacion Inteligente para Mascotas. Tecnologia NFC + QR. Hecho en Bolivia.</p>
+      </div>
+      <div>
+        <h4 style="color:#fff;font-size:0.82rem;margin-bottom:8px;">Producto</h4>
+        <a href="https://prueb2.dashnexpages.net/planes/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Tag Pet ID</a>
+        <a href="https://prueb2.dashnexpages.net/planes/?plan=familiar" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Pack Familiar</a>
+        <a href="https://prueb2.dashnexpages.net/activacion/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Activar placa</a>
+        <a href="https://prueb2.dashnexpages.net/mi-cuenta/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Perfil de mascota</a>
+      </div>
+      <div>
+        <h4 style="color:#fff;font-size:0.82rem;margin-bottom:8px;">Ecosistema</h4>
+        <a href="https://prueb2.dashnexpages.net/afiliados/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Programa de Afiliados</a>
+        <a href="https://prueb2.dashnexpages.net/veterinarias-aliadas/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Veterinarias Aliadas</a>
+        <a href="https://prueb2.dashnexpages.net/refugio/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Refugios</a>
+        <a href="https://prueb2.dashnexpages.net/ayuda/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Campanas Solidarias</a>
+      </div>
+      <div>
+        <h4 style="color:#fff;font-size:0.82rem;margin-bottom:8px;">Legal</h4>
+        <a href="https://prueb2.dashnexpages.net/terminos/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Terminos de Uso</a>
+        <a href="https://prueb2.dashnexpages.net/privacidad/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Politica de Privacidad</a>
+        <a href="https://prueb2.dashnexpages.net/contacto/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Contacto</a>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:24px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);font-size:0.72rem;color:rgba(255,255,255,0.4);">
+      &copy; 2026 Petcingo. Todos los derechos reservados.
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Politica de Privacidad - Petcingo</title>
+  <meta name="description" content="Conoce como Petcingo recopila, usa y protege tus datos personales y los de tu mascota.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://prueb2.dashnexpages.net/assets/fonts/remixicon/remixicon.css" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background: #F3F3F3;
+      color: #212121;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    .prv-nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; height: 60px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(20px) saturate(200%);
+      -webkit-backdrop-filter: blur(20px) saturate(200%);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .prv-nav-logo {
+      display: flex; align-items: center; gap: 8px; text-decoration: none;
+    }
+    .prv-nav-logo-text {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.05rem; font-weight: 800; color: #4552CC;
+    }
+    .prv-nav-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.85rem; font-weight: 600; color: #4552CC;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .prv-nav-link:hover { opacity: 0.75; }
+
+    /* HERO */
+    .prv-hero {
+      background: linear-gradient(135deg, #1A1A2E 0%, #2D2F6E 60%, #4552CC 100%);
+      padding: 56px 24px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .prv-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 30% 50%, rgba(81,203,245,0.2) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .prv-hero-label {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 99px;
+      padding: 5px 14px;
+      font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.85);
+      letter-spacing: 0.04em; text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .prv-hero h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800; color: #fff;
+      letter-spacing: -0.03em; line-height: 1.15;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .prv-hero-date {
+      font-size: 0.83rem; color: rgba(255,255,255,0.65);
+      position: relative;
+    }
+
+    /* CONTENIDO */
+    .prv-main {
+      flex: 1;
+      padding: 48px 24px 64px;
+    }
+    .prv-card {
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.85);
+      border: 1px solid rgba(255,255,255,0.9);
+      border-radius: 24px;
+      box-shadow: 0 8px 48px rgba(69,82,204,0.09), 0 2px 12px rgba(0,0,0,0.04);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      padding: 48px;
+    }
+
+    .prv-intro {
+      font-size: 0.95rem; color: #555;
+      line-height: 1.7; margin-bottom: 40px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid rgba(69,82,204,0.1);
+    }
+
+    /* SECCIONES */
+    .prv-section {
+      margin-bottom: 36px;
+    }
+    .prv-section:last-child { margin-bottom: 0; }
+
+    .prv-section-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 14px;
+    }
+    .prv-section-num {
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, #1A1A2E, #4552CC);
+      border-radius: 8px;
+      font-family: 'Sora', sans-serif;
+      font-size: 0.75rem; font-weight: 800; color: #fff;
+      flex-shrink: 0;
+    }
+    .prv-section h2 {
+      font-family: 'Sora', sans-serif;
+      font-size: 1rem; font-weight: 700; color: #1A1A2E;
+      letter-spacing: -0.01em;
+    }
+    .prv-section p {
+      font-size: 0.92rem; color: #444;
+      line-height: 1.75;
+      padding-left: 44px;
+    }
+    .prv-section a {
+      color: #4552CC; text-decoration: none; font-weight: 600;
+    }
+    .prv-section a:hover { text-decoration: underline; }
+
+    /* CHIPS de datos */
+    .prv-chips {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      padding-left: 44px; margin-top: 10px;
+    }
+    .prv-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(69,82,204,0.07);
+      border: 1px solid rgba(69,82,204,0.15);
+      border-radius: 99px;
+      padding: 4px 12px;
+      font-size: 0.78rem; font-weight: 600; color: #4552CC;
+    }
+
+    .prv-divider {
+      height: 1px;
+      background: rgba(69,82,204,0.08);
+      margin: 28px 0;
+    }
+
+    /* ALERTA de buenas practicas */
+    .prv-alert {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: rgba(81,203,245,0.08);
+      border: 1px solid rgba(81,203,245,0.25);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-top: 32px;
+    }
+    .prv-alert i { color: #4552CC; font-size: 1.1rem; margin-top: 2px; flex-shrink: 0; }
+    .prv-alert p { font-size: 0.85rem; color: #444; line-height: 1.6; padding-left: 0; }
+
+    /* RESPONSIVE */
+    @media (max-width: 640px) {
+      .prv-card { padding: 28px 20px; border-radius: 16px; }
+      .prv-section p { padding-left: 0; margin-top: 8px; }
+      .prv-chips { padding-left: 0; }
+      .prv-nav { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="prv-nav">
+    <a href="https://prueb2.dashnexpages.net/" class="prv-nav-logo">
+      <span class="prv-nav-logo-text">PETCINGO</span>
+    </a>
+    <a href="https://prueb2.dashnexpages.net/" class="prv-nav-link">
+      <i class="ri-arrow-left-line"></i> Volver al inicio
+    </a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="prv-hero">
+    <div class="prv-hero-label">
+      <i class="ri-shield-check-line"></i> Privacidad y datos
+    </div>
+    <h1>Pol&iacute;tica de Privacidad</h1>
+    <p class="prv-hero-date">Actualizaci&oacute;n: 18 de mayo de 2026</p>
+  </section>
+
+  <!-- CONTENIDO -->
+  <main class="prv-main">
+    <div class="prv-card">
+
+      <p class="prv-intro">
+        En Petcingo valoramos y protegemos tu privacidad. Esta pol&iacute;tica describe qu&eacute; informaci&oacute;n recopilamos,
+        c&oacute;mo la usamos y qu&eacute; controles tienes sobre ella. Al usar nuestros servicios, aceptas las pr&aacute;cticas
+        descritas en este documento.
+      </p>
+
+      <!-- 1 -->
+      <div class="prv-section">
+        <div class="prv-section-header">
+          <div class="prv-section-num">1</div>
+          <h2>Informaci&oacute;n que recopilamos</h2>
+        </div>
+        <p>Recopilamos la informaci&oacute;n necesaria para brindarte el servicio. Esto incluye:</p>
+        <div class="prv-chips">
+          <span class="prv-chip"><i class="ri-user-line"></i> Nombre y apellido</span>
+          <span class="prv-chip"><i class="ri-mail-line"></i> Correo electr&oacute;nico</span>
+          <span class="prv-chip"><i class="ri-phone-line"></i> Tel&eacute;fono</span>
+          <span class="prv-chip"><i class="ri-map-pin-line"></i> Direcci&oacute;n de env&iacute;o</span>
+          <span class="prv-chip"><i class="ri-heart-line"></i> Datos de la mascota</span>
+          <span class="prv-chip"><i class="ri-shopping-bag-line"></i> Historial de compras</span>
+          <span class="prv-chip"><i class="ri-bar-chart-line"></i> Datos de navegaci&oacute;n (cookies an&oacute;nimas)</span>
+        </div>
+      </div>
+      <div class="prv-divider"></div>
+
+      <!-- 2 -->
+      <div class="prv-section">
+        <div class="prv-section-header">
+          <div class="prv-section-num">2</div>
+          <h2>Uso de la informaci&oacute;n</h2>
+        </div>
+        <p>Usamos tu informaci&oacute;n para procesar pedidos y coordinar env&iacute;os, activar y gestionar perfiles digitales de mascotas, enviarte comunicaciones relacionadas con el servicio (confirmaciones, soporte, actualizaciones) y mejorar la plataforma mediante an&aacute;lisis de uso agregado y an&oacute;nimo. No utilizamos tu informaci&oacute;n para publicidad de terceros.</p>
+      </div>
+      <div class="prv-divider"></div>
+
+      <!-- 3 -->
+      <div class="prv-section">
+        <div class="prv-section-header">
+          <div class="prv-section-num">3</div>
+          <h2>Almacenamiento y seguridad</h2>
+        </div>
+        <p>Los datos de cuenta y perfil se almacenan en Firebase (Google Cloud) con cifrado en tr&aacute;nsito (TLS) y en reposo (AES-256). Los archivos multimedia como fotos de mascotas se almacenan en Cloudflare R2 con acceso controlado. Implementamos medidas t&eacute;cnicas y organizativas para proteger tu informaci&oacute;n frente a accesos no autorizados, p&eacute;rdida o divulgaci&oacute;n.</p>
+      </div>
+      <div class="prv-divider"></div>
+
+      <!-- 4 -->
+      <div class="prv-section">
+        <div class="prv-section-header">
+          <div class="prv-section-num">4</div>
+          <h2>Compartici&oacute;n con terceros</h2>
+        </div>
+        <p>No vendemos, alquilamos ni compartimos tus datos personales con fines comerciales. Podemos compartir informaci&oacute;n limitada con proveedores de log&iacute;stica y env&iacute;o exclusivamente para completar tu pedido, o con autoridades competentes cuando la ley boliviana as&iacute; lo exija. Todos los proveedores est&aacute;n sujetos a acuerdos de confidencialidad.</p>
+      </div>
+      <div class="prv-divider"></div>
+
+      <!-- 5 -->
+      <div class="prv-section">
+        <div class="prv-section-header">
+          <div class="prv-section-num">5</div>
+          <h2>Derechos del usuario</h2>
+        </div>
+        <p>Tienes derecho a acceder a los datos que tenemos sobre ti, corregir informaci&oacute;n inexacta o incompleta, solicitar la eliminaci&oacute;n de tu cuenta y datos asociados, y oponerte al procesamiento en determinadas circunstancias. Para ejercer cualquiera de estos derechos, escribe a <a href="mailto:privacidad@petcingo.com.bo">privacidad@petcingo.com.bo</a> desde el correo registrado en tu cuenta.</p>
+      </div>
+      <div class="prv-divider"></div>
+
+      <!-- 6 -->
+      <div class="prv-section">
+        <div class="prv-section-header">
+          <div class="prv-section-num">6</div>
+          <h2>Cookies</h2>
+        </div>
+        <p>Usamos cookies propias y an&oacute;nimas para mantener tu sesi&oacute;n activa, recordar preferencias y analizar el rendimiento de la plataforma. No usamos cookies de seguimiento publicitario de terceros. Puedes configurar tu navegador para rechazar cookies, aunque algunas funciones del servicio pueden verse afectadas. Para m&aacute;s informaci&oacute;n sobre gesti&oacute;n de cookies, consulta la documentaci&oacute;n de tu navegador.</p>
+      </div>
+      <div class="prv-divider"></div>
+
+      <!-- 7 -->
+      <div class="prv-section">
+        <div class="prv-section-header">
+          <div class="prv-section-num">7</div>
+          <h2>Cambios a esta pol&iacute;tica</h2>
+        </div>
+        <p>Notificaremos cambios relevantes a esta pol&iacute;tica por correo electr&oacute;nico y/o mediante un aviso destacado en la plataforma, con al menos 7 d&iacute;as de anticipaci&oacute;n antes de que entren en vigor. Te recomendamos revisar esta p&aacute;gina peri&oacute;dicamente. La fecha de &uacute;ltima actualizaci&oacute;n siempre estar&aacute; visible en la cabecera de este documento.</p>
+      </div>
+      <div class="prv-divider"></div>
+
+      <!-- 8 -->
+      <div class="prv-section">
+        <div class="prv-section-header">
+          <div class="prv-section-num">8</div>
+          <h2>Contacto</h2>
+        </div>
+        <p>Para consultas, solicitudes o reclamos relacionados con la privacidad de tus datos, contacta a nuestro equipo en <a href="mailto:privacidad@petcingo.com.bo">privacidad@petcingo.com.bo</a>. Nos comprometemos a responder en un plazo m&aacute;ximo de 5 d&iacute;as h&aacute;biles.</p>
+      </div>
+
+      <div class="prv-alert">
+        <i class="ri-shield-check-fill"></i>
+        <p>Petcingo nunca te pedir&aacute; contrase&ntilde;as por correo electr&oacute;nico ni WhatsApp. Si recibes una solicitud de este tipo, no la atiendas y rep&oacute;rtala a <a href="mailto:soporte@petcingo.com.bo" style="color:#4552CC;font-weight:600;">soporte@petcingo.com.bo</a>.</p>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer style="background:#1A1A2E;color:rgba(255,255,255,0.7);padding:40px 20px 24px;font-size:0.82rem;line-height:1.8;">
+    <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:28px;">
+      <div>
+        <span style="font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:800;color:#fff;">PETCINGO</span>
+        <p style="margin-top:6px;font-size:0.78rem;">Sistema de Identificacion Inteligente para Mascotas. Tecnologia NFC + QR. Hecho en Bolivia.</p>
+      </div>
+      <div>
+        <h4 style="color:#fff;font-size:0.82rem;margin-bottom:8px;">Producto</h4>
+        <a href="https://prueb2.dashnexpages.net/planes/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Tag Pet ID</a>
+        <a href="https://prueb2.dashnexpages.net/planes/?plan=familiar" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Pack Familiar</a>
+        <a href="https://prueb2.dashnexpages.net/activacion/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Activar placa</a>
+        <a href="https://prueb2.dashnexpages.net/mi-cuenta/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Perfil de mascota</a>
+      </div>
+      <div>
+        <h4 style="color:#fff;font-size:0.82rem;margin-bottom:8px;">Ecosistema</h4>
+        <a href="https://prueb2.dashnexpages.net/afiliados/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Programa de Afiliados</a>
+        <a href="https://prueb2.dashnexpages.net/veterinarias-aliadas/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Veterinarias Aliadas</a>
+        <a href="https://prueb2.dashnexpages.net/refugio/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Refugios</a>
+        <a href="https://prueb2.dashnexpages.net/ayuda/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Campanas Solidarias</a>
+      </div>
+      <div>
+        <h4 style="color:#fff;font-size:0.82rem;margin-bottom:8px;">Legal</h4>
+        <a href="https://prueb2.dashnexpages.net/terminos/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Terminos de Uso</a>
+        <a href="https://prueb2.dashnexpages.net/privacidad/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Politica de Privacidad</a>
+        <a href="https://prueb2.dashnexpages.net/contacto/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Contacto</a>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:24px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);font-size:0.72rem;color:rgba(255,255,255,0.4);">
+      &copy; 2026 Petcingo. Todos los derechos reservados.
+    </div>
+  </footer>
+
+</body>
+</html>

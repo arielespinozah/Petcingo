@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacto - Petcingo</title>
+  <meta name="description" content="Contacta al equipo de Petcingo. Soporte tecnico, compras, afiliados y veterinarias aliadas. Respondemos en menos de 24 horas habiles.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://prueb2.dashnexpages.net/assets/fonts/remixicon/remixicon.css" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background: #F3F3F3;
+      color: #212121;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    .cnt-nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; height: 60px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(20px) saturate(200%);
+      -webkit-backdrop-filter: blur(20px) saturate(200%);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .cnt-nav-logo {
+      display: flex; align-items: center; gap: 8px; text-decoration: none;
+    }
+    .cnt-nav-logo-text {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.05rem; font-weight: 800; color: #4552CC;
+    }
+    .cnt-nav-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.85rem; font-weight: 600; color: #4552CC;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .cnt-nav-link:hover { opacity: 0.75; }
+
+    /* HERO */
+    .cnt-hero {
+      background: linear-gradient(135deg, #4552CC 0%, #3040B8 50%, #2C52D8 100%);
+      padding: 56px 24px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cnt-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 80% 30%, rgba(81,203,245,0.28) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .cnt-hero-label {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 99px;
+      padding: 5px 14px;
+      font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.9);
+      letter-spacing: 0.04em; text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .cnt-hero h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800; color: #fff;
+      letter-spacing: -0.03em; line-height: 1.15;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .cnt-hero-sub {
+      font-size: 0.92rem; color: rgba(255,255,255,0.75);
+      position: relative;
+    }
+
+    /* MAIN */
+    .cnt-main {
+      flex: 1;
+      padding: 48px 24px 64px;
+    }
+    .cnt-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* TARJETA CANALES */
+    .cnt-channels {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid rgba(255,255,255,0.9);
+      border-radius: 20px;
+      box-shadow: 0 4px 24px rgba(69,82,204,0.08);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      padding: 28px 32px;
+    }
+    .cnt-channels-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 0.82rem; font-weight: 700;
+      color: #888; letter-spacing: 0.06em; text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .cnt-channels-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+    }
+    .cnt-channel-item {
+      display: flex; align-items: center; gap: 12px;
+      background: #F8F9FB;
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 12px;
+      padding: 14px 16px;
+      text-decoration: none;
+      color: #212121;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+    }
+    .cnt-channel-item:hover {
+      border-color: #4552CC;
+      box-shadow: 0 4px 16px rgba(69,82,204,0.12);
+      transform: translateY(-2px);
+    }
+    .cnt-channel-icon {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+    .cnt-channel-icon--wa  { background: rgba(37,211,102,0.12); color: #25D366; }
+    .cnt-channel-icon--em  { background: rgba(69,82,204,0.10); color: #4552CC; }
+    .cnt-channel-icon--ig  { background: rgba(193,53,132,0.10); color: #C13584; }
+    .cnt-channel-label {
+      font-size: 0.72rem; font-weight: 600;
+      color: #888; text-transform: uppercase; letter-spacing: 0.04em;
+      line-height: 1.2; display: block;
+    }
+    .cnt-channel-value {
+      font-size: 0.85rem; font-weight: 700; color: #212121;
+      display: block; margin-top: 2px;
+    }
+
+    /* TARJETA FORMULARIO */
+    .cnt-form-card {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid rgba(255,255,255,0.9);
+      border-radius: 20px;
+      box-shadow: 0 4px 24px rgba(69,82,204,0.08);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      padding: 32px;
+    }
+    .cnt-form-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.1rem; font-weight: 800; color: #1A1A2E;
+      margin-bottom: 6px;
+    }
+    .cnt-form-desc {
+      font-size: 0.85rem; color: #888;
+      margin-bottom: 24px;
+    }
+
+    /* FORM */
+    .cnt-form {
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .cnt-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .cnt-field {
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .cnt-label {
+      font-size: 0.8rem; font-weight: 600; color: #444;
+    }
+    .cnt-label span { color: #4552CC; }
+
+    .cnt-input,
+    .cnt-select,
+    .cnt-textarea {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.9rem; color: #212121;
+      background: #F8F9FB;
+      border: 1.5px solid rgba(0,0,0,0.1);
+      border-radius: 10px;
+      padding: 12px 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .cnt-input:focus,
+    .cnt-select:focus,
+    .cnt-textarea:focus {
+      border-color: #4552CC;
+      box-shadow: 0 0 0 3px rgba(69,82,204,0.12);
+      background: #fff;
+    }
+    .cnt-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234552CC' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+    .cnt-textarea {
+      resize: vertical;
+      min-height: 120px;
+      line-height: 1.6;
+    }
+
+    .cnt-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 14px 28px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #4552CC, #3040B8);
+      color: #fff;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.92rem; font-weight: 700;
+      border: none; cursor: pointer;
+      box-shadow: 0 4px 18px rgba(69,82,204,0.30);
+      transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+      align-self: flex-start;
+    }
+    .cnt-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(69,82,204,0.38);
+    }
+    .cnt-btn:active { transform: translateY(0); }
+    .cnt-btn:disabled {
+      opacity: 0.6; cursor: not-allowed; transform: none;
+    }
+
+    /* ESTADO CARGANDO */
+    .cnt-spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: cnt-spin 0.7s linear infinite;
+      display: none;
+    }
+    @keyframes cnt-spin { to { transform: rotate(360deg); } }
+
+    /* MENSAJE EXITO */
+    .cnt-success {
+      display: none;
+      flex-direction: column; align-items: center;
+      text-align: center; gap: 12px;
+      padding: 40px 20px;
+    }
+    .cnt-success-icon {
+      width: 64px; height: 64px;
+      background: linear-gradient(135deg, #4552CC, #51CBF5);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; color: #fff;
+    }
+    .cnt-success h3 {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.15rem; font-weight: 800; color: #1A1A2E;
+    }
+    .cnt-success p {
+      font-size: 0.88rem; color: #666; line-height: 1.6;
+      max-width: 380px;
+    }
+    .cnt-success-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.85rem; font-weight: 600; color: #4552CC;
+      text-decoration: none; margin-top: 4px;
+    }
+    .cnt-success-link:hover { text-decoration: underline; }
+
+    /* MENSAJE ERROR */
+    .cnt-error-msg {
+      display: none;
+      background: rgba(220,53,69,0.08);
+      border: 1px solid rgba(220,53,69,0.2);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.83rem; color: #b91c1c;
+      align-items: center; gap: 8px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 560px) {
+      .cnt-row { grid-template-columns: 1fr; }
+      .cnt-channels-grid { grid-template-columns: 1fr; }
+      .cnt-form-card { padding: 24px 20px; }
+      .cnt-channels { padding: 24px 20px; }
+      .cnt-nav { padding: 0 16px; }
+      .cnt-btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="cnt-nav">
+    <a href="https://prueb2.dashnexpages.net/" class="cnt-nav-logo">
+      <span class="cnt-nav-logo-text">PETCINGO</span>
+    </a>
+    <a href="https://prueb2.dashnexpages.net/" class="cnt-nav-link">
+      <i class="ri-arrow-left-line"></i> Volver al inicio
+    </a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="cnt-hero">
+    <div class="cnt-hero-label">
+      <i class="ri-customer-service-2-line"></i> Soporte
+    </div>
+    <h1>Contacto</h1>
+    <p class="cnt-hero-sub">Respondemos en menos de 24 horas h&aacute;biles</p>
+  </section>
+
+  <!-- MAIN -->
+  <main class="cnt-main">
+    <div class="cnt-wrap">
+
+      <!-- CANALES DE CONTACTO -->
+      <div class="cnt-channels">
+        <p class="cnt-channels-title">Canales directos</p>
+        <div class="cnt-channels-grid">
+
+          <a href="https://wa.me/59170000000" target="_blank" rel="noopener" class="cnt-channel-item">
+            <div class="cnt-channel-icon cnt-channel-icon--wa">
+              <i class="ri-whatsapp-line"></i>
+            </div>
+            <div>
+              <span class="cnt-channel-label">WhatsApp</span>
+              <span class="cnt-channel-value">+591 70000000</span>
+            </div>
+          </a>
+
+          <a href="mailto:soporte@petcingo.com.bo" class="cnt-channel-item">
+            <div class="cnt-channel-icon cnt-channel-icon--em">
+              <i class="ri-mail-send-line"></i>
+            </div>
+            <div>
+              <span class="cnt-channel-label">Email</span>
+              <span class="cnt-channel-value">soporte@petcingo.com.bo</span>
+            </div>
+          </a>
+
+          <a href="https://instagram.com/petcingo.bo" target="_blank" rel="noopener" class="cnt-channel-item">
+            <div class="cnt-channel-icon cnt-channel-icon--ig">
+              <i class="ri-instagram-line"></i>
+            </div>
+            <div>
+              <span class="cnt-channel-label">Instagram</span>
+              <span class="cnt-channel-value">@petcingo.bo</span>
+            </div>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- FORMULARIO -->
+      <div class="cnt-form-card">
+        <h2 class="cnt-form-title">Env&iacute;anos un mensaje</h2>
+        <p class="cnt-form-desc">Completa el formulario y te contactamos a la brevedad.</p>
+
+        <!-- FORM VISIBLE -->
+        <form class="cnt-form" id="cntForm" novalidate>
+
+          <div class="cnt-row">
+            <div class="cnt-field">
+              <label class="cnt-label" for="cntNombre">Nombre <span>*</span></label>
+              <input
+                type="text"
+                id="cntNombre"
+                class="cnt-input"
+                placeholder="Tu nombre completo"
+                required
+                autocomplete="name"
+              />
+            </div>
+            <div class="cnt-field">
+              <label class="cnt-label" for="cntEmail">Correo electr&oacute;nico <span>*</span></label>
+              <input
+                type="email"
+                id="cntEmail"
+                class="cnt-input"
+                placeholder="correo@ejemplo.com"
+                required
+                autocomplete="email"
+              />
+            </div>
+          </div>
+
+          <div class="cnt-field">
+            <label class="cnt-label" for="cntAsunto">Asunto <span>*</span></label>
+            <select id="cntAsunto" class="cnt-select" required>
+              <option value="" disabled selected>Selecciona un asunto</option>
+              <option value="Soporte tecnico">Soporte t&eacute;cnico</option>
+              <option value="Compras y envios">Compras y env&iacute;os</option>
+              <option value="Afiliados">Afiliados</option>
+              <option value="Veterinarias">Veterinarias</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+
+          <div class="cnt-field">
+            <label class="cnt-label" for="cntMensaje">Mensaje <span>*</span></label>
+            <textarea
+              id="cntMensaje"
+              class="cnt-textarea"
+              placeholder="Describe tu consulta con el mayor detalle posible..."
+              required
+            ></textarea>
+          </div>
+
+          <!-- Error inline -->
+          <div class="cnt-error-msg" id="cntErrorMsg">
+            <i class="ri-error-warning-line"></i>
+            <span id="cntErrorText">Por favor completa todos los campos obligatorios.</span>
+          </div>
+
+          <button type="submit" class="cnt-btn" id="cntSubmitBtn">
+            <i class="ri-send-plane-line" id="cntBtnIcon"></i>
+            <span id="cntBtnText">Enviar mensaje</span>
+            <div class="cnt-spinner" id="cntSpinner"></div>
+          </button>
+
+        </form>
+
+        <!-- EXITO -->
+        <div class="cnt-success" id="cntSuccess">
+          <div class="cnt-success-icon">
+            <i class="ri-check-line"></i>
+          </div>
+          <h3>Mensaje recibido</h3>
+          <p>Tu mensaje fue recibido. Te respondemos en menos de 24 horas h&aacute;biles.</p>
+          <a href="https://prueb2.dashnexpages.net/" class="cnt-success-link">
+            <i class="ri-arrow-left-line"></i> Volver al inicio
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer style="background:#1A1A2E;color:rgba(255,255,255,0.7);padding:40px 20px 24px;font-size:0.82rem;line-height:1.8;">
+    <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:28px;">
+      <div>
+        <span style="font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:800;color:#fff;">PETCINGO</span>
+        <p style="margin-top:6px;font-size:0.78rem;">Sistema de Identificacion Inteligente para Mascotas. Tecnologia NFC + QR. Hecho en Bolivia.</p>
+      </div>
+      <div>
+        <h4 style="color:#fff;font-size:0.82rem;margin-bottom:8px;">Producto</h4>
+        <a href="https://prueb2.dashnexpages.net/planes/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Tag Pet ID</a>
+        <a href="https://prueb2.dashnexpages.net/planes/?plan=familiar" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Pack Familiar</a>
+        <a href="https://prueb2.dashnexpages.net/activacion/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Activar placa</a>
+        <a href="https://prueb2.dashnexpages.net/mi-cuenta/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Perfil de mascota</a>
+      </div>
+      <div>
+        <h4 style="color:#fff;font-size:0.82rem;margin-bottom:8px;">Ecosistema</h4>
+        <a href="https://prueb2.dashnexpages.net/afiliados/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Programa de Afiliados</a>
+        <a href="https://prueb2.dashnexpages.net/veterinarias-aliadas/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Veterinarias Aliadas</a>
+        <a href="https://prueb2.dashnexpages.net/refugio/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Refugios</a>
+        <a href="https://prueb2.dashnexpages.net/ayuda/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Campanas Solidarias</a>
+      </div>
+      <div>
+        <h4 style="color:#fff;font-size:0.82rem;margin-bottom:8px;">Legal</h4>
+        <a href="https://prueb2.dashnexpages.net/terminos/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Terminos de Uso</a>
+        <a href="https://prueb2.dashnexpages.net/privacidad/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Politica de Privacidad</a>
+        <a href="https://prueb2.dashnexpages.net/contacto/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Contacto</a>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:24px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);font-size:0.72rem;color:rgba(255,255,255,0.4);">
+      &copy; 2026 Petcingo. Todos los derechos reservados.
+    </div>
+  </footer>
+
+  <!-- FIREBASE SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // ---- Firebase init ----
+      var FIREBASE_CONFIG = {
+        apiKey:            'AIzaSyAEE3yLFFsJTMORNFLYZWW2_DNHwzF0hE8',
+        authDomain:        'petcingo-43096.firebaseapp.com',
+        projectId:         'petcingo-43096',
+        storageBucket:     'petcingo-43096.firebasestorage.app',
+        messagingSenderId: '679546185536',
+        appId:             '1:679546185536:web:ceccd210b7c73b296f7ca5'
+      };
+
+      if (!firebase.apps.length) {
+        firebase.initializeApp(FIREBASE_CONFIG);
+      }
+
+      var db = firebase.firestore();
+
+      // ---- DOM refs ----
+      var form       = document.getElementById('cntForm');
+      var btnSubmit  = document.getElementById('cntSubmitBtn');
+      var btnIcon    = document.getElementById('cntBtnIcon');
+      var btnText    = document.getElementById('cntBtnText');
+      var spinner    = document.getElementById('cntSpinner');
+      var successEl  = document.getElementById('cntSuccess');
+      var errorMsg   = document.getElementById('cntErrorMsg');
+      var errorText  = document.getElementById('cntErrorText');
+
+      var fieldNombre  = document.getElementById('cntNombre');
+      var fieldEmail   = document.getElementById('cntEmail');
+      var fieldAsunto  = document.getElementById('cntAsunto');
+      var fieldMensaje = document.getElementById('cntMensaje');
+
+      // ---- Helpers ----
+      function setLoading(on) {
+        btnSubmit.disabled = on;
+        spinner.style.display   = on ? 'block' : 'none';
+        btnIcon.style.display   = on ? 'none'  : 'inline';
+        btnText.textContent     = on ? 'Enviando...' : 'Enviar mensaje';
+      }
+
+      function showError(msg) {
+        errorText.textContent   = msg;
+        errorMsg.style.display  = 'flex';
+      }
+
+      function hideError() {
+        errorMsg.style.display  = 'none';
+      }
+
+      function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+
+      // ---- Submit ----
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        hideError();
+
+        var nombre  = fieldNombre.value.trim();
+        var email   = fieldEmail.value.trim();
+        var asunto  = fieldAsunto.value;
+        var mensaje = fieldMensaje.value.trim();
+
+        // Validacion basica
+        if (!nombre) {
+          showError('Por favor ingresa tu nombre.');
+          fieldNombre.focus();
+          return;
+        }
+        if (!email || !isValidEmail(email)) {
+          showError('Por favor ingresa un correo electronico valido.');
+          fieldEmail.focus();
+          return;
+        }
+        if (!asunto) {
+          showError('Por favor selecciona un asunto.');
+          fieldAsunto.focus();
+          return;
+        }
+        if (!mensaje || mensaje.length < 10) {
+          showError('Por favor escribe un mensaje de al menos 10 caracteres.');
+          fieldMensaje.focus();
+          return;
+        }
+
+        setLoading(true);
+
+        var payload = {
+          nombre:   nombre,
+          email:    email,
+          asunto:   asunto,
+          mensaje:  mensaje,
+          creadoEn: firebase.firestore.FieldValue.serverTimestamp(),
+          estado:   'nuevo'
+        };
+
+        db.collection('contact_messages').add(payload)
+          .then(function () {
+            setLoading(false);
+            form.style.display    = 'none';
+            successEl.style.display = 'flex';
+          })
+          .catch(function (err) {
+            setLoading(false);
+            showError('No pudimos enviar tu mensaje. Intenta de nuevo o escribenos directamente a soporte@petcingo.com.bo.');
+            console.error('Firestore error:', err);
+          });
+      });
+
+      // Limpiar error al escribir
+      [fieldNombre, fieldEmail, fieldAsunto, fieldMensaje].forEach(function (el) {
+        el.addEventListener('input', hideError);
+        el.addEventListener('change', hideError);
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

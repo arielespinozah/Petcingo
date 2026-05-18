@@ -374,6 +374,81 @@
   }
   .afl-footer a { color: #4552CC; text-decoration: none; }
 
+  /* ---- MATERIAL MARKETING ---- */
+  .afl-mkt { max-width: 1080px; margin: 0 auto; padding: 56px 20px; }
+  .afl-mkt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .afl-mkt-card {
+    background: #fff; border-radius: 18px; padding: 24px 20px;
+    border: 1.5px solid rgba(0,0,0,0.06);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.04);
+    transition: transform 0.18s, box-shadow 0.18s;
+  }
+  .afl-mkt-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(69,82,204,0.10); }
+  .afl-mkt-card-icon {
+    width: 48px; height: 48px; border-radius: 14px; margin-bottom: 14px;
+    background: linear-gradient(135deg, #4552CC 0%, #51CBF5 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; color: #fff;
+    box-shadow: 0 4px 14px rgba(69,82,204,0.28);
+  }
+  .afl-mkt-card-title { font-family: 'Sora', sans-serif; font-size: 0.95rem; font-weight: 800; color: #212121; margin-bottom: 6px; }
+  .afl-mkt-card-desc { font-size: 0.83rem; color: #616161; line-height: 1.6; }
+
+  /* ---- FAQ ---- */
+  .afl-faq { max-width: 720px; margin: 0 auto; padding: 56px 20px; }
+  .afl-faq-item {
+    background: #fff; border-radius: 14px; margin-bottom: 10px;
+    border: 1.5px solid rgba(0,0,0,0.06);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+    overflow: hidden;
+  }
+  .afl-faq-q {
+    width: 100%; text-align: left; padding: 18px 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    background: none; border: none; cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.92rem; font-weight: 700; color: #212121;
+    transition: background 0.16s;
+  }
+  .afl-faq-q:hover { background: rgba(69,82,204,0.04); }
+  .afl-faq-q i { color: #4552CC; flex-shrink: 0; font-size: 1rem; transition: transform 0.22s; }
+  .afl-faq-item.open .afl-faq-q i { transform: rotate(45deg); }
+  .afl-faq-a {
+    display: none; padding: 0 20px 18px;
+    font-size: 0.88rem; color: #616161; line-height: 1.7;
+    border-top: 1px solid rgba(0,0,0,0.04);
+  }
+  .afl-faq-item.open .afl-faq-a { display: block; }
+
+  /* ---- CIERRE FINAL ---- */
+  .afl-closing {
+    background: linear-gradient(135deg, #1A1060 0%, #4552CC 52%, #0E8FBF 100%);
+    padding: 72px 20px; text-align: center; position: relative; overflow: hidden;
+  }
+  .afl-closing::before {
+    content: ''; position: absolute; top: -80px; right: -80px;
+    width: 340px; height: 340px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(81,203,245,0.18) 0%, transparent 68%);
+    pointer-events: none;
+  }
+  .afl-closing-inner { position: relative; z-index: 1; max-width: 620px; margin: 0 auto; }
+  .afl-closing h2 {
+    font-family: 'Sora', sans-serif; font-size: 2rem; font-weight: 800;
+    color: #fff; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 14px;
+  }
+  .afl-closing h2 span { color: #51CBF5; }
+  .afl-closing p {
+    font-size: 0.98rem; color: rgba(255,255,255,0.80); line-height: 1.7; margin-bottom: 32px;
+  }
+  .afl-closing-btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    padding: 15px 32px; border-radius: 14px;
+    background: #fff; color: #4552CC;
+    font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 800;
+    text-decoration: none; transition: transform 0.18s, box-shadow 0.18s;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.22);
+  }
+  .afl-closing-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(0,0,0,0.28); }
+
   /* ---- RESPONSIVE ---- */
   @media (max-width: 600px) {
     .afl-hero-title { font-size: 1.8rem; }
@@ -559,6 +634,34 @@
   </div>
 </div>
 
+<!-- MATERIAL DE MARKETING -->
+<div class="afl-mkt">
+  <h2 class="afl-section-title">Todo el material que necesitas, listo para usar</h2>
+  <p class="afl-section-sub">No necesitas disenar nada. Desde tu panel de afiliado descargas todo el contenido profesional para empezar a vender hoy.</p>
+  <div class="afl-mkt-grid">
+    <div class="afl-mkt-card">
+      <div class="afl-mkt-card-icon"><i class="ri-image-2-line"></i></div>
+      <div class="afl-mkt-card-title">Imagenes para redes</div>
+      <div class="afl-mkt-card-desc">Stories, posts cuadrados y banners listos para Instagram, Facebook y TikTok. Diseno profesional Petcingo.</div>
+    </div>
+    <div class="afl-mkt-card">
+      <div class="afl-mkt-card-icon"><i class="ri-video-line"></i></div>
+      <div class="afl-mkt-card-title">Videos editables</div>
+      <div class="afl-mkt-card-desc">Clips cortos para TikTok y Reels. Muestran el producto, como funciona y los beneficios de la placa Petcingo.</div>
+    </div>
+    <div class="afl-mkt-card">
+      <div class="afl-mkt-card-icon"><i class="ri-file-text-line"></i></div>
+      <div class="afl-mkt-card-title">Textos y guiones</div>
+      <div class="afl-mkt-card-desc">Copys persuasivos para WhatsApp, descripciones para tus publicaciones y respuestas a preguntas frecuentes.</div>
+    </div>
+    <div class="afl-mkt-card">
+      <div class="afl-mkt-card-icon"><i class="ri-rocket-line"></i></div>
+      <div class="afl-mkt-card-title">Guia de estrategias</div>
+      <div class="afl-mkt-card-desc">Las 5 formas mas efectivas de vender: grupos de mascotas, veterinarias, influencers, familia y amigos.</div>
+    </div>
+  </div>
+</div>
+
 <!-- PRUEBA SOCIAL -->
 <div class="afl-social-wrap">
   <div class="afl-social-inner">
@@ -679,6 +782,60 @@
   </div>
 </div>
 
+<!-- FAQ AFILIADOS -->
+<div class="afl-faq">
+  <h2 class="afl-section-title">Preguntas frecuentes</h2>
+  <p class="afl-section-sub" style="margin-bottom:28px;">Lo que todos los afiliados quieren saber antes de empezar.</p>
+
+  <div class="afl-faq-item">
+    <button class="afl-faq-q" onclick="aflToggleFaq(this)">
+      <span>Necesito invertir dinero para ser afiliado?</span>
+      <i class="ri-add-line"></i>
+    </button>
+    <div class="afl-faq-a">No. El programa es 100% gratuito. No pagas nada por unirte ni por mantener tu cuenta activa.</div>
+  </div>
+
+  <div class="afl-faq-item">
+    <button class="afl-faq-q" onclick="aflToggleFaq(this)">
+      <span>Como recibo mis comisiones?</span>
+      <i class="ri-add-line"></i>
+    </button>
+    <div class="afl-faq-a">Transferencia bancaria directa a tu cuenta. Los pagos se procesan los primeros 5 dias de cada mes por todas las ventas del mes anterior.</div>
+  </div>
+
+  <div class="afl-faq-item">
+    <button class="afl-faq-q" onclick="aflToggleFaq(this)">
+      <span>Cuanto puedo ganar realmente?</span>
+      <i class="ri-add-line"></i>
+    </button>
+    <div class="afl-faq-a">Depende de tu esfuerzo. El afiliado promedio gana Bs 800 al mes. Los top afiliados superan Bs 4,000 al mes. No hay techo de ganancias.</div>
+  </div>
+
+  <div class="afl-faq-item">
+    <button class="afl-faq-q" onclick="aflToggleFaq(this)">
+      <span>Puedo vender desde cualquier ciudad de Bolivia?</span>
+      <i class="ri-add-line"></i>
+    </button>
+    <div class="afl-faq-a">Si. Petcingo envia a todo el pais. Tu solo compartes tu enlace, nosotros nos encargamos del envio, cobro y soporte al cliente. Tu cobras comision.</div>
+  </div>
+
+  <div class="afl-faq-item">
+    <button class="afl-faq-q" onclick="aflToggleFaq(this)">
+      <span>Como se cuantas ventas hice?</span>
+      <i class="ri-add-line"></i>
+    </button>
+    <div class="afl-faq-a">Tu panel de afiliado muestra en tiempo real cada venta generada, la comision acumulada, el estado de tus pagos y el historial completo.</div>
+  </div>
+
+  <div class="afl-faq-item">
+    <button class="afl-faq-q" onclick="aflToggleFaq(this)">
+      <span>Hay un minimo de ventas para seguir en el programa?</span>
+      <i class="ri-add-line"></i>
+    </button>
+    <div class="afl-faq-a">No hay minimo mensual. Pero si no generas ventas durante 6 meses consecutivos, tu cuenta puede ser desactivada para dar oportunidad a nuevos afiliados comprometidos.</div>
+  </div>
+</div>
+
 <!-- EXCLUSIVIDAD -->
 <div class="afl-exclusive">
   <div class="afl-exclusive-inner">
@@ -692,14 +849,46 @@
   </div>
 </div>
 
+<!-- CIERRE FINAL -->
+<div class="afl-closing">
+  <div class="afl-closing-inner">
+    <h2>No necesitas experiencia.<br><span>Solo necesitas amar a los animales.</span></h2>
+    <p>Cada placa que recomiendas protege a una mascota. Cada comision que ganas mejora tu vida. No es un trabajo, es compartir algo en lo que crees.</p>
+    <a class="afl-closing-btn" href="#solicitud"><i class="ri-award-line"></i> Quiero ser afiliado</a>
+  </div>
+</div>
+
 <!-- FOOTER -->
-<footer class="afl-footer">
-  <p>
-    &copy; 2025 Petcingo &mdash; Sistema de Identificacion de Mascotas &nbsp;|&nbsp;
-    <a href="https://prueb2.dashnexpages.net/home/">Inicio</a> &nbsp;|&nbsp;
-    <a href="https://prueb2.dashnexpages.net/producto/">Planes</a> &nbsp;|&nbsp;
-    <a href="https://prueb2.dashnexpages.net/activacion/">Activar placa</a>
-  </p>
+<footer style="background:#1A1A2E;color:rgba(255,255,255,0.7);padding:40px 20px 24px;font-size:0.82rem;line-height:1.8;">
+  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:28px;">
+    <div>
+      <span style="font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:800;color:#fff;">PETCINGO</span>
+      <p style="margin-top:6px;font-size:0.78rem;">Sistema de Identificacion Inteligente para Mascotas. Tecnologia NFC + QR. Hecho en Bolivia.</p>
+    </div>
+    <div>
+      <h4 style="color:#fff;font-size:0.82rem;margin-bottom:8px;">Producto</h4>
+      <a href="https://prueb2.dashnexpages.net/planes/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Tag Pet ID</a>
+      <a href="https://prueb2.dashnexpages.net/planes/?plan=familiar" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Pack Familiar</a>
+      <a href="https://prueb2.dashnexpages.net/activacion/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Activar placa</a>
+      <a href="https://prueb2.dashnexpages.net/mi-cuenta/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Perfil de mascota</a>
+    </div>
+    <div>
+      <h4 style="color:#fff;font-size:0.82rem;margin-bottom:8px;">Ecosistema</h4>
+      <a href="https://prueb2.dashnexpages.net/afiliados/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Programa de Afiliados</a>
+      <a href="https://prueb2.dashnexpages.net/veterinarias-aliadas/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Veterinarias Aliadas</a>
+      <a href="https://prueb2.dashnexpages.net/refugio/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Refugios</a>
+      <a href="https://prueb2.dashnexpages.net/ayuda/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Campanas Solidarias</a>
+    </div>
+    <div>
+      <h4 style="color:#fff;font-size:0.82rem;margin-bottom:8px;">Legal</h4>
+      <a href="https://prueb2.dashnexpages.net/terminos/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Terminos de Uso</a>
+      <a href="https://prueb2.dashnexpages.net/privacidad/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Politica de Privacidad</a>
+      <a href="https://prueb2.dashnexpages.net/contacto/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Contacto</a>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:24px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);font-size:0.72rem;color:rgba(255,255,255,0.4);">
+    &copy; 2026 Petcingo. Todos los derechos reservados.
+  </div>
 </footer>
 
 <script>
@@ -783,6 +972,13 @@
       });
   });
 }());
+
+function aflToggleFaq(btn) {
+  var item = btn.parentElement;
+  var isOpen = item.classList.contains('open');
+  document.querySelectorAll('.afl-faq-item.open').forEach(function(el) { el.classList.remove('open'); });
+  if (!isOpen) item.classList.add('open');
+}
 </script>
 
 </body>
