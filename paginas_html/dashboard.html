@@ -737,12 +737,19 @@
         <div id="vet-form-wrap" class="collapsible-form">
           <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.05rem;display:flex;align-items:center;gap:8px;margin-top:20px;"><i class="ri-hospital-line"></i> Datos de la Veterinaria</div>
           <div class="ptcg-activate__form-row">
-            <div class="form-group full"><label class="ptcg-activate__label">Nombre *</label><input class="ptcg-activate__input" type="text" id="vet-name" placeholder="Ej: Clínica Veterinaria Arco Iris" maxlength="80"/></div>
-            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Contacto / Responsable *</label><input class="ptcg-activate__input" type="text" id="vet-contact" placeholder="Ej: Dr. Juan Pérez" maxlength="60"/></div>
-            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Prefijo de Placa * <span style="color:var(--error)">●</span></label><input class="ptcg-activate__input" type="text" id="vet-prefix" placeholder="Ej: VET-LP (sin espacios)" maxlength="20" oninput="this.value=this.value.toUpperCase().replace(/\s/g,'')"/></div>
-            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Teléfono</label><input class="ptcg-activate__input" type="tel" id="vet-phone" placeholder="+591 76543210" maxlength="20"/></div>
+            <div class="form-group full"><label class="ptcg-activate__label">Nombre *</label><input class="ptcg-activate__input" type="text" id="vet-name" placeholder="Ej: Clinica Veterinaria Arco Iris" maxlength="80"/></div>
+            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Contacto / Responsable *</label><input class="ptcg-activate__input" type="text" id="vet-contact" placeholder="Ej: Dr. Juan Perez" maxlength="60"/></div>
+            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Prefijo de Placa *</label><input class="ptcg-activate__input" type="text" id="vet-prefix" placeholder="Ej: VET-LP (sin espacios)" maxlength="20" oninput="this.value=this.value.toUpperCase().replace(/\s/g,'')"/></div>
+            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Telefono</label><input class="ptcg-activate__input" type="tel" id="vet-phone" placeholder="+591 76543210" maxlength="20"/></div>
+            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">WhatsApp</label><input class="ptcg-activate__input" type="text" id="vet-whatsapp" placeholder="71234567" maxlength="20"/></div>
             <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Ciudad</label><input class="ptcg-activate__input" type="text" id="vet-city" placeholder="Ej: La Paz" maxlength="40"/></div>
             <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Email</label><input class="ptcg-activate__input" type="email" id="vet-email" placeholder="contacto@veterinaria.com" maxlength="80"/></div>
+            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Link Google Maps</label><input class="ptcg-activate__input" type="text" id="vet-gps-link" placeholder="https://maps.google.com/..." maxlength="300"/></div>
+            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Nivel</label><select class="ptcg-activate__select" id="vet-level"><option value="aliado">Aliado</option><option value="premium">Premium</option><option value="solidario">Solidario</option><option value="emergencias24h">Emergencias 24h</option></select></div>
+            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Comision %</label><input class="ptcg-activate__input" type="number" id="vet-commission-rate" placeholder="20" min="0" max="100" value="20"/></div>
+            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Usuario (panel)</label><input class="ptcg-activate__input" type="text" id="vet-username" placeholder="vet.arcoiris" maxlength="40" oninput="this.value=this.value.toLowerCase().replace(/\s/g,'')"/></div>
+            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Contrasena (panel)</label><input class="ptcg-activate__input" type="password" id="vet-password" placeholder="Min. 6 caracteres" maxlength="40"/></div>
+            <div class="ptcg-activate__form-group" style="display:flex;align-items:center;gap:8px;padding-top:22px;"><input type="checkbox" id="vet-is24h" style="width:18px;height:18px;cursor:pointer;"><label class="ptcg-activate__label" for="vet-is24h" style="cursor:pointer;margin:0;">Atencion 24 horas</label></div>
           </div>
           <button class="ptcg-index__btn ptcg-index__btn--primary" id="btn-save-vet" onclick="saveVet()" style="margin-top:8px;">Guardar Veterinaria</button>
         </div>
@@ -751,7 +758,7 @@
         <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px" style="margin-bottom:16px"><i class="ri-list-check-2"></i> Veterinarias Registradas<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="margin-left:auto" onclick="loadVets()"><i class="ri-refresh-line"></i></button></div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Nombre</th><th>Prefijo</th><th>Contacto</th><th>Ciudad</th><th>Teléfono</th><th>Registrado</th><th>Acciones</th></tr></thead>
+            <thead><tr><th>Nombre</th><th>Ciudad</th><th>Telefono</th><th>Nivel</th><th>Comision %</th><th>Estado</th><th>Acciones</th></tr></thead>
             <tbody id="vets-tbody"><tr><td colspan="7"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></td></tr></tbody>
           </table>
         </div>
@@ -2327,11 +2334,19 @@
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
         <div><label class="ptcg-activate__label">Contacto</label><input class="ptcg-activate__input" type="text" id="ev-contact" maxlength="60" style="width:100%;box-sizing:border-box;"/></div>
         <div><label class="ptcg-activate__label">Ciudad</label><input class="ptcg-activate__input" type="text" id="ev-city" maxlength="40" style="width:100%;box-sizing:border-box;"/></div>
-        <div><label class="ptcg-activate__label">Teléfono</label><input class="ptcg-activate__input" type="tel" id="ev-phone" maxlength="20" style="width:100%;box-sizing:border-box;"/></div>
+        <div><label class="ptcg-activate__label">Telefono</label><input class="ptcg-activate__input" type="tel" id="ev-phone" maxlength="20" style="width:100%;box-sizing:border-box;"/></div>
+        <div><label class="ptcg-activate__label">WhatsApp</label><input class="ptcg-activate__input" type="text" id="ev-whatsapp" maxlength="20" style="width:100%;box-sizing:border-box;" placeholder="71234567"/></div>
         <div><label class="ptcg-activate__label">Prefijo QR</label><input class="ptcg-activate__input" type="text" id="ev-prefix" maxlength="10" oninput="this.value=this.value.toUpperCase()" style="width:100%;box-sizing:border-box;"/></div>
+        <div><label class="ptcg-activate__label">Comision %</label><input class="ptcg-activate__input" type="number" id="ev-commission-rate" min="0" max="100" style="width:100%;box-sizing:border-box;"/></div>
+        <div><label class="ptcg-activate__label">Nivel</label><select class="ptcg-activate__select" id="ev-level" style="width:100%;box-sizing:border-box;"><option value="aliado">Aliado</option><option value="premium">Premium</option><option value="solidario">Solidario</option><option value="emergencias24h">Emergencias 24h</option></select></div>
+        <div><label class="ptcg-activate__label">Estado</label><select class="ptcg-activate__select" id="ev-status" style="width:100%;box-sizing:border-box;"><option value="active">Activo</option><option value="suspended">Suspendido</option><option value="banned">Baneado</option></select></div>
+        <div><label class="ptcg-activate__label">Usuario (panel)</label><input class="ptcg-activate__input" type="text" id="ev-username" maxlength="40" oninput="this.value=this.value.toLowerCase().replace(/\s/g,'')" style="width:100%;box-sizing:border-box;"/></div>
+        <div><label class="ptcg-activate__label">Contrasena <span style="font-weight:400;font-size:0.68rem;color:#9E9E9E;">(vacio = no cambiar)</span></label><input class="ptcg-activate__input" type="password" id="ev-password" maxlength="40" style="width:100%;box-sizing:border-box;"/></div>
       </div>
-      <div><label class="ptcg-activate__label">Dirección</label><input class="ptcg-activate__input" type="text" id="ev-address" maxlength="120" style="width:100%;box-sizing:border-box;"/></div>
+      <div><label class="ptcg-activate__label">Direccion</label><input class="ptcg-activate__input" type="text" id="ev-address" maxlength="120" style="width:100%;box-sizing:border-box;"/></div>
+      <div><label class="ptcg-activate__label">Link Google Maps</label><input class="ptcg-activate__input" type="text" id="ev-gps-link" maxlength="300" style="width:100%;box-sizing:border-box;" placeholder="https://maps.google.com/..."/></div>
       <div><label class="ptcg-activate__label">Email</label><input class="ptcg-activate__input" type="email" id="ev-email" maxlength="80" style="width:100%;box-sizing:border-box;"/></div>
+      <div style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="ev-is24h" style="width:18px;height:18px;cursor:pointer;"><label class="ptcg-activate__label" for="ev-is24h" style="cursor:pointer;margin:0;">Atencion 24 horas</label></div>
     </div>
     <div style="display:flex;gap:10px;">
       <button class="ptcg-index__btn ptcg-index__btn--secondary" onclick="closeVetModal()" style="flex:1;">Cancelar</button>

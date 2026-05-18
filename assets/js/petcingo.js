@@ -1116,12 +1116,21 @@ window.saveVet = function() {
     phone:document.getElementById('vet-phone').value.trim(),
     city:document.getElementById('vet-city').value.trim(),
     email:document.getElementById('vet-email').value.trim(),
-    logoUrl:(document.getElementById('vet-logo')||{value:''}).value.trim(),
+    whatsapp:(document.getElementById('vet-whatsapp')||{value:''}).value.trim(),
+    gpsLink:(document.getElementById('vet-gps-link')||{value:''}).value.trim(),
+    level:(document.getElementById('vet-level')||{value:'aliado'}).value||'aliado',
+    is24h:!!(document.getElementById('vet-is24h')||{checked:false}).checked,
+    commissionRate:parseFloat((document.getElementById('vet-commission-rate')||{value:'20'}).value)||20,
+    status:'active',
+    username:(document.getElementById('vet-username')||{value:''}).value.trim().toLowerCase(),
+    password:(document.getElementById('vet-password')||{value:''}).value,
+    services:[],
     createdAt:firebase.firestore.FieldValue.serverTimestamp()
   }).then(function() {
     toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Veterinaria registrada.');
-    ['vet-name','vet-contact','vet-prefix','vet-phone','vet-city','vet-email','vet-logo'].forEach(function(id){ var el=document.getElementById(id); if(el)el.value=''; });
-    var cp=document.getElementById('vet-create-panel'); if(cp)cp.style.display='none';
+    ['vet-name','vet-contact','vet-prefix','vet-phone','vet-city','vet-email','vet-whatsapp','vet-gps-link','vet-username','vet-password'].forEach(function(id){ var el=document.getElementById(id); if(el)el.value=''; });
+    var i24El=document.getElementById('vet-is24h'); if(i24El)i24El.checked=false;
+    var fw=document.getElementById('vet-form-wrap'); if(fw)fw.classList.remove('open');
     loadVets(); loadSellersCache(); loadRegisterSelect();
     addLog('created_vet',name,_dash.currentUser&&_dash.currentUser.name);
   }).catch(function(e){toast('âŒ '+e.message);})
@@ -1139,23 +1148,46 @@ function loadVets() {
       if(snap.empty){tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><p>No hay veterinarias aun.</p></div></td></tr>';return;}
       var html='';
       snap.forEach(function(doc){
-        var d=doc.data(), fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'--';
-        var prefBadge=d.prefix?'<span style="background:rgba(69,82,204,.12);border:1px solid rgba(69,82,204,.25);border-radius:6px;padding:2px 8px;font-size:.75rem;color:#7C8EE8;font-family:monospace">'+esc(d.prefix)+'</span>':'--';
-        
-        var dropdownStyle = "display:block;width:100%;text-align:left;padding:8px 14px;border:none;background:transparent;font-size:0.82rem;color:#424242;cursor:pointer;white-space:nowrap;";
-        var actionDropdown = '<div class="ptcg-actions-menu" style="position:relative;display:inline-block;">' +
-          '<button class="ptcg-actions-toggle" onclick="toggleActionsMenu(this, event)" style="background:none;border:1.5px solid #E0E0E0;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem;color:#757575;line-height:1;">...</button>' +
-          '<div class="ptcg-actions-dropdown" style="display:none;position:absolute;right:0;top:100%;z-index:500;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);min-width:180px;padding:6px 0;margin-top:4px;">' +
-            '<button style="' + dropdownStyle + '" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="openVetDetail(\''+doc.id+'\')"><i class="ri-settings-3-line"></i> Placas</button>' +
-            '<button style="' + dropdownStyle + '" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="editVet(\''+doc.id+'\',\''+encodeData(d)+'\')"><i class="ri-edit-line"></i> Editar</button>' +
-            '<button style="' + dropdownStyle + 'color:#f43f5e;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="deleteRecord(\'veterinarias\',\''+doc.id+'\',\'loadVets\')"><i class="ri-delete-bin-line"></i> Eliminar</button>' +
-          '</div>' +
+        var d=doc.data();
+        var status=d.status||'active';
+        var statusColor=status==='active'?'#2ECC71':status==='suspended'?'#E67E22':'#E74C3C';
+        var statusBg=status==='active'?'rgba(46,204,113,.12)':status==='suspended'?'rgba(230,126,34,.12)':'rgba(231,76,60,.12)';
+        var statusLabel=status==='active'?'Activo':status==='suspended'?'Suspendido':'Baneado';
+        var statusBadge='<span style="padding:3px 9px;border-radius:99px;font-size:.70rem;font-weight:700;background:'+statusBg+';color:'+statusColor+';">'+statusLabel+'</span>';
+        var level=d.level||'aliado';
+        var lvMap={aliado:{bg:'rgba(69,82,204,.10)',color:'#4552CC',label:'Aliado'},premium:{bg:'rgba(168,85,247,.10)',color:'#A855F7',label:'Premium'},solidario:{bg:'rgba(16,185,129,.10)',color:'#10B981',label:'Solidario'},emergencias24h:{bg:'rgba(231,76,60,.10)',color:'#E74C3C',label:'24h'}};
+        var lv=lvMap[level]||lvMap.aliado;
+        var levelBadge='<span style="padding:3px 9px;border-radius:99px;font-size:.70rem;font-weight:700;background:'+lv.bg+';color:'+lv.color+';">'+lv.label+'</span>';
+        var rate=d.commissionRate!=null?d.commissionRate:20;
+        var rateCell='<input type="number" min="0" max="100" value="'+rate+'" id="rate-vt-'+doc.id+'" style="width:48px;padding:2px 5px;border:1px solid #E0E0E0;border-radius:6px;font-size:.78rem;text-align:center;">'+
+          '<button onclick="saveVetRate(\''+doc.id+'\')" style="padding:2px 8px;background:#4552CC;color:#fff;border:none;border-radius:6px;font-size:.70rem;cursor:pointer;margin-left:3px;">OK</button>';
+        var ds='display:block;width:100%;text-align:left;padding:8px 14px;border:none;background:transparent;font-size:0.82rem;color:#424242;cursor:pointer;white-space:nowrap;';
+        var suspLabel=status==='active'?'<i class="ri-pause-circle-line"></i> Suspender':(status==='suspended'?'<i class="ri-play-circle-line"></i> Activar':'');
+        var suspBtn=suspLabel?'<button style="'+ds+'color:#E67E22;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="setVetStatus(\''+doc.id+'\',\''+esc(d.name||'')+'\',\'suspended\')">'+suspLabel+'</button>':'';
+        if(status==='suspended'){suspBtn='<button style="'+ds+'color:#2ECC71;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="setVetStatus(\''+doc.id+'\',\''+esc(d.name||'')+'\',\'active\')">'+suspLabel+'</button>';}
+        var banLabel=status!=='banned'?'<i class="ri-forbid-line"></i> Banear':'<i class="ri-checkbox-circle-line"></i> Activar';
+        var banColor=status!=='banned'?'#E74C3C':'#2ECC71';
+        var banTarget=status!=='banned'?'banned':'active';
+        var banBtn='<button style="'+ds+'color:'+banColor+';" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="setVetStatus(\''+doc.id+'\',\''+esc(d.name||'')+'\',\''+banTarget+'\')">'+banLabel+'</button>';
+        var actionDropdown='<div class="ptcg-actions-menu" style="position:relative;display:inline-block;">'+
+          '<button class="ptcg-actions-toggle" onclick="toggleActionsMenu(this,event)" style="background:none;border:1.5px solid #E0E0E0;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem;color:#757575;line-height:1;">...</button>'+
+          '<div class="ptcg-actions-dropdown" style="display:none;position:absolute;right:0;top:100%;z-index:500;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);min-width:200px;padding:6px 0;margin-top:4px;">'+
+            '<button style="'+ds+'" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="openVetDetail(\''+doc.id+'\')"><i class="ri-settings-3-line"></i> Placas</button>'+
+            '<button style="'+ds+'" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="editVet(\''+doc.id+'\',\''+encodeData(d)+'\')"><i class="ri-edit-line"></i> Editar</button>'+
+            '<a style="'+ds+'text-decoration:none;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" href="https://prueb2.dashnexpages.net/veterinaria/?id='+doc.id+'" target="_blank"><i class="ri-eye-line"></i> Ver perfil publico</a>'+
+            '<a style="'+ds+'text-decoration:none;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" href="https://prueb2.dashnexpages.net/veterinaria-panel/?auto='+doc.id+'" target="_blank"><i class="ri-external-link-line"></i> Ir a panel</a>'+
+            suspBtn+banBtn+
+            '<button style="'+ds+'color:#f43f5e;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="deleteRecord(\'veterinarias\',\''+doc.id+'\',\'loadVets\')"><i class="ri-delete-bin-line"></i> Eliminar</button>'+
+          '</div>'+
         '</div>';
-
-        html+='<tr><td class="td-name">'+esc(d.name||'--')+'</td><td>'+prefBadge+'</td><td>'+esc(d.contact||'--')+'</td>'+
-          '<td class="td-owner">'+esc(d.city||'--')+'</td><td class="td-owner">'+esc(d.phone||'--')+'</td>'+
-          '<td class="td-date">'+fecha+'</td>'+
-          '<td class="td-actions">'+actionDropdown+'</td></tr>';
+        html+='<tr>';
+        html+='<td class="td-name">'+esc(d.name||'--')+'</td>';
+        html+='<td>'+esc(d.city||'--')+'</td>';
+        html+='<td>'+esc(d.phone||'--')+'</td>';
+        html+='<td>'+levelBadge+'</td>';
+        html+='<td style="white-space:nowrap;">'+rateCell+'</td>';
+        html+='<td>'+statusBadge+'</td>';
+        html+='<td class="td-actions" style="white-space:nowrap;">'+actionDropdown+'</td></tr>';
       });
       tbody.innerHTML=html;
     }).catch(function(e){tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><p>Error: '+esc(e.message)+'</p></div></td></tr>';});
@@ -1166,8 +1198,14 @@ window.editVet = function(vetId, dataJson) {
   var d;
   try { d = JSON.parse(dataJson); } catch(e) { d = {}; }
   var fields = { 'ev-name':d.name, 'ev-contact':d.contact, 'ev-city':d.city,
-    'ev-phone':d.phone, 'ev-address':d.address, 'ev-prefix':d.prefix, 'ev-email':d.email };
+    'ev-phone':d.phone, 'ev-address':d.address, 'ev-prefix':d.prefix, 'ev-email':d.email,
+    'ev-whatsapp':d.whatsapp, 'ev-gps-link':d.gpsLink,
+    'ev-commission-rate':d.commissionRate!=null?d.commissionRate:20,
+    'ev-username':d.username, 'ev-password':'' };
   Object.keys(fields).forEach(function(id){ var el=document.getElementById(id); if(el) el.value=fields[id]||''; });
+  var lvEl=document.getElementById('ev-level'); if(lvEl)lvEl.value=d.level||'aliado';
+  var stEl=document.getElementById('ev-status'); if(stEl)stEl.value=d.status||'active';
+  var i24El=document.getElementById('ev-is24h'); if(i24El)i24El.checked=!!d.is24h;
   document.getElementById('ev-vet-id').value = vetId;
   var modal = document.getElementById('vet-edit-modal');
   if (modal) modal.style.display='flex';
@@ -1189,8 +1227,16 @@ window.updateVet = function() {
     phone:   document.getElementById('ev-phone').value.trim(),
     address: document.getElementById('ev-address').value.trim(),
     prefix:  document.getElementById('ev-prefix').value.trim().toUpperCase(),
-    email:   document.getElementById('ev-email') ? document.getElementById('ev-email').value.trim() : ''
+    email:   document.getElementById('ev-email') ? document.getElementById('ev-email').value.trim() : '',
+    whatsapp: document.getElementById('ev-whatsapp') ? document.getElementById('ev-whatsapp').value.trim() : '',
+    gpsLink:  document.getElementById('ev-gps-link') ? document.getElementById('ev-gps-link').value.trim() : '',
+    level:    document.getElementById('ev-level') ? document.getElementById('ev-level').value : 'aliado',
+    is24h:    !!(document.getElementById('ev-is24h') && document.getElementById('ev-is24h').checked),
+    commissionRate: document.getElementById('ev-commission-rate') ? (parseFloat(document.getElementById('ev-commission-rate').value)||20) : 20,
+    status:   document.getElementById('ev-status') ? document.getElementById('ev-status').value : 'active',
+    username: document.getElementById('ev-username') ? document.getElementById('ev-username').value.trim().toLowerCase() : ''
   };
+  var pwEl=document.getElementById('ev-password'); if(pwEl&&pwEl.value)update.password=pwEl.value;
   var btn = document.getElementById('btn-update-vet');
   if (btn) { btn.disabled=true; btn.innerHTML='<i class="ri-loader-4-line"></i> Guardando...'; }
   db().collection('veterinarias').doc(vetId).update(update)
@@ -1425,6 +1471,33 @@ window.setShelterStatus=function(id,name,newStatus){
       var lbl={active:'Reactivado',suspended:'Suspendido',banned:'Baneado'};
       toast('<i class="ri-check-line" style="color:#2ECC71;"></i> '+(lbl[newStatus]||newStatus)+': '+name);
       loadShelters();
+    }).catch(function(e){toast('Error: '+e.message);});
+};
+
+window.saveVetRate=function(id){
+  var inp=document.getElementById('rate-vt-'+id);
+  if(!inp)return;
+  var rate=parseFloat(inp.value);
+  if(isNaN(rate)||rate<0||rate>100){toast('Porcentaje invalido (0-100)');return;}
+  db().collection('veterinarias').doc(id).update({commissionRate:rate})
+    .then(function(){toast('<i class="ri-check-line" style="color:#2ECC71;"></i> Comision actualizada: '+rate+'%');})
+    .catch(function(e){toast('Error: '+e.message);});
+};
+
+window.setVetStatus=function(id,name,newStatus){
+  var reason='';
+  if(newStatus!=='active'){
+    reason=window.prompt('Motivo para '+(newStatus==='banned'?'banear':'suspender')+' a '+name+' (opcional):')||'';
+  }
+  var update={status:newStatus};
+  if(newStatus==='suspended'){update.suspendedAt=firebase.firestore.FieldValue.serverTimestamp();update.suspendedReason=reason;}
+  if(newStatus==='banned'){update.bannedAt=firebase.firestore.FieldValue.serverTimestamp();update.bannedReason=reason;}
+  if(newStatus==='active'){update.reactivatedAt=firebase.firestore.FieldValue.serverTimestamp();}
+  db().collection('veterinarias').doc(id).update(update)
+    .then(function(){
+      var lbl={active:'Reactivado',suspended:'Suspendido',banned:'Baneado'};
+      toast('<i class="ri-check-line" style="color:#2ECC71;"></i> '+(lbl[newStatus]||newStatus)+': '+name);
+      loadVets();
     }).catch(function(e){toast('Error: '+e.message);});
 };
 

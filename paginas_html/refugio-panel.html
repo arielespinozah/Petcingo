@@ -210,6 +210,7 @@
   .rp-sec { display: none; animation: rp-fade 0.22s ease-out; }
   .rp-sec.active { display: block; }
   @keyframes rp-fade { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes rp-spin  { to { transform: rotate(360deg); } }
 
   /* ---- Utilities ---- */
   .rp-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
@@ -274,6 +275,7 @@
       <button class="rp-tab"        data-tab="finanzas"     onclick="rpTab('finanzas')"><i class="ri-money-dollar-circle-line"></i> Finanzas</button>
       <button class="rp-tab"        data-tab="solicitudes" onclick="rpTab('solicitudes')"><i class="ri-file-list-line"></i> Solicitudes</button>
       <button class="rp-tab"        data-tab="perfil"      onclick="rpTab('perfil')"><i class="ri-settings-3-line"></i> Perfil</button>
+      <button class="rp-tab"        data-tab="solidarias"  onclick="rpTab('solidarias')"><i class="ri-heart-pulse-line"></i> Vet. Solidarias</button>
     </div>
   </div>
 
@@ -612,6 +614,24 @@
       </div>
     </section>
 
+    <!-- -- VETERINARIAS SOLIDARIAS -- -->
+    <section class="rp-sec" id="sec-solidarias">
+      <div class="rp-page-header">
+        <h2><i class="ri-heart-pulse-line"></i> Veterinarias Solidarias</h2>
+        <p>Clinicas y veterinarias que ofrecen precios especiales para clientes Petcingo.</p>
+      </div>
+
+      <div id="solidarias-loading" style="text-align:center;padding:32px;color:#9E9E9E;font-size:.88rem;">
+        <i class="ri-loader-4-line" style="font-size:1.8rem;display:block;margin-bottom:8px;animation:rp-spin .8s linear infinite"></i>
+        Cargando veterinarias solidarias...
+      </div>
+      <div id="solidarias-grid" style="display:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px"></div>
+      <div id="solidarias-empty" style="display:none;text-align:center;padding:40px;color:#9E9E9E;">
+        <i class="ri-search-line" style="font-size:2.4rem;display:block;color:#D9DEF5;margin-bottom:8px"></i>
+        No hay veterinarias solidarias activas en este momento.
+      </div>
+    </section>
+
   </div><!-- #rp-main -->
 </div><!-- #rp-panel -->
 
@@ -806,6 +826,7 @@
     if (tab === 'finanzas')    rpLoadFinanzas();
     if (tab === 'solicitudes') rpLoadSolicitudes();
     if (tab === 'perfil')      rpFillProfile();
+    if (tab === 'solidarias')  rpLoadSolidarias();
   };
 
   /* ====================================
@@ -873,6 +894,65 @@
       h += '<td class="rp-green">Bs ' + com + '</td></tr>';
     });
     tbody.innerHTML = h;
+  }
+
+  /* ====================================
+     VETERINARIAS SOLIDARIAS
+     ==================================== */
+  var _solidariasLoaded = false;
+
+  function rpLoadSolidarias() {
+    if (_solidariasLoaded) return;
+    var loading = document.getElementById('solidarias-loading');
+    var grid    = document.getElementById('solidarias-grid');
+    var empty   = document.getElementById('solidarias-empty');
+    if (!loading) return;
+    loading.style.display = 'block';
+    if (grid)  grid.style.display  = 'none';
+    if (empty) empty.style.display = 'none';
+    db().collection('veterinarias')
+      .where('level',  '==', 'solidario')
+      .where('status', '==', 'active')
+      .get()
+      .then(function(snap) {
+        loading.style.display = 'none';
+        if (snap.empty) { if (empty) empty.style.display = 'block'; return; }
+        var html = '';
+        snap.forEach(function(doc) {
+          var v = doc.data();
+          var svcs = Array.isArray(v.services) ? v.services.slice(0, 3) : [];
+          var svcHtml = svcs.map(function(s) {
+            return '<span style="font-size:.68rem;font-weight:600;padding:2px 8px;border-radius:99px;background:#D5F5E3;color:#1a7a45;border:1px solid #A9DFBF">' + esc(s.name) + '</span>';
+          }).join('');
+          var logoHtml = v.logoUrl
+            ? '<img src="' + esc(v.logoUrl) + '" alt="" style="width:100%;height:100%;object-fit:cover">'
+            : '<i class="ri-hospital-line" style="font-size:1.6rem;color:#1a7a45"></i>';
+          var waNum = (v.whatsapp || v.phone || '').replace(/\D/g, '');
+          var waBtn = waNum
+            ? '<a href="https://wa.me/' + esc(waNum) + '?text=Hola%2C+los+encuentro+en+Petcingo+como+veterinaria+solidaria" target="_blank" rel="noopener" class="rp-btn rp-btn--success rp-btn--sm"><i class="ri-whatsapp-line"></i> WhatsApp</a>'
+            : '';
+          html += '<div class="rp-card" style="margin-bottom:0">' +
+            '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">' +
+              '<div style="width:48px;height:48px;border-radius:12px;background:#D5F5E3;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">' + logoHtml + '</div>' +
+              '<div style="flex:1;min-width:0">' +
+                '<div style="font-family:\'Sora\',sans-serif;font-size:.95rem;font-weight:800;color:#212121;line-height:1.2">' + esc(v.name) + '</div>' +
+                '<div style="font-size:.75rem;color:#9E9E9E;display:flex;align-items:center;gap:4px"><i class="ri-map-pin-line"></i>' + esc(v.city || '') + '</div>' +
+              '</div>' +
+            '</div>' +
+            (svcHtml ? '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px">' + svcHtml + '</div>' : '') +
+            '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
+              waBtn +
+              '<a href="/veterinaria/?id=' + esc(doc.id) + '" class="rp-btn rp-btn--secondary rp-btn--sm" target="_blank"><i class="ri-eye-line"></i> Ver perfil</a>' +
+            '</div>' +
+          '</div>';
+        });
+        if (grid) { grid.innerHTML = html; grid.style.display = 'grid'; }
+        _solidariasLoaded = true;
+      })
+      .catch(function(e) {
+        if (loading) loading.style.display = 'none';
+        toast('Error cargando veterinarias solidarias: ' + e.message, 'error');
+      });
   }
 
   /* ====================================

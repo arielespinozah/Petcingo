@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Veterinaria - Petcingo</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://prueb2.dashnexpages.net/assets/fonts/remixicon/remixicon.css" rel="stylesheet">
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1472.0.min.js"></script>
+
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #F8F9FB;
+    min-height: 100vh;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: #212121;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- Buttons ---- */
+  .vp-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 7px; padding: 11px 18px; border-radius: 12px;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.875rem; font-weight: 600;
+    cursor: pointer; text-decoration: none; transition: all 0.18s;
+    white-space: nowrap; line-height: 1; border: none;
+  }
+  .vp-btn--primary   { background: #4552CC; color: #fff; }
+  .vp-btn--primary:hover { background: #2E3A9E; }
+  .vp-btn--secondary { background: rgba(69,82,204,0.08); color: #4552CC; border: 1.5px solid rgba(69,82,204,0.2); }
+  .vp-btn--danger    { background: rgba(231,76,60,0.10); color: #E74C3C; border: 1.5px solid rgba(231,76,60,0.3); }
+  .vp-btn--success   { background: rgba(46,204,113,0.10); color: #2ECC71; border: 1.5px solid rgba(46,204,113,0.3); }
+  .vp-btn--sm { padding: 7px 13px; font-size: 0.78rem; }
+  .vp-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ---- Card ---- */
+  .vp-card {
+    position: relative; overflow: hidden; isolation: isolate;
+    border-radius: 20px; border: 1px solid rgba(255,255,255,.95);
+    box-shadow: 0 8px 40px rgba(69,82,204,.09), 0 2px 8px rgba(69,82,204,.04), inset 0 1px 0 rgba(255,255,255,1);
+    padding: 22px; background: #fff; margin-bottom: 16px;
+  }
+  .vp-card::before {
+    content: ''; position: absolute; inset: 0;
+    backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%);
+    background: rgba(255,255,255,.72); z-index: 0;
+  }
+  .vp-card > * { position: relative; z-index: 2; }
+
+  /* ---- Stats ---- */
+  .vp-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 13px; margin-bottom: 18px; }
+  .vp-stat { border-radius: 18px; padding: 18px; background: #fff; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 3px 16px rgba(0,0,0,0.02); display: flex; flex-direction: column; }
+  .vp-stat__icon { font-size: 1.6rem; margin-bottom: 10px; color: #4552CC; }
+  .vp-stat__value { font-family: 'Sora', sans-serif; font-size: 1.7rem; font-weight: 800; color: #212121; line-height: 1; margin-bottom: 4px; }
+  .vp-stat__label { font-size: 0.80rem; color: #757575; font-weight: 600; }
+
+  /* ---- Tables ---- */
+  .vp-table-wrap { width: 100%; overflow-x: auto; background: #fff; border-radius: 14px; border: 1px solid rgba(0,0,0,0.05); }
+  .vp-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
+  .vp-table th { padding: 11px 13px; border-bottom: 1px solid rgba(0,0,0,0.05); color: #757575; font-weight: 600; white-space: nowrap; }
+  .vp-table td { padding: 11px 13px; border-bottom: 1px solid rgba(0,0,0,0.04); color: #212121; vertical-align: middle; }
+  .vp-table tr:last-child td { border-bottom: none; }
+  .vp-empty { text-align: center; padding: 28px; color: #9E9E9E; font-size: 0.85rem; }
+
+  /* ---- Badges ---- */
+  .vp-badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 99px; font-size: 0.70rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+  .vp-badge--pendiente { background: #FFF3E0; color: #E65100; border: 1px solid rgba(255,152,0,0.3); }
+  .vp-badge--pagado    { background: #E8F5E9; color: #1B5E20; border: 1px solid rgba(76,175,80,0.3); }
+  .vp-badge--confirmed { background: #E8F5E9; color: #1B5E20; border: 1px solid rgba(76,175,80,0.3); }
+  .vp-badge--pending   { background: #FFF3E0; color: #E65100; border: 1px solid rgba(255,152,0,0.3); }
+
+  /* ---- Forms ---- */
+  .vp-field { display: flex; flex-direction: column; gap: 5px; }
+  .vp-label { font-size: 0.79rem; font-weight: 600; color: #424242; }
+  .vp-input {
+    width: 100%; padding: 10px 13px; font-size: 0.875rem;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 400;
+    color: #212121; background: rgba(255,255,255,0.72);
+    border: 1.5px solid #E0E0E0; border-radius: 10px; outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    -webkit-appearance: none; appearance: none;
+  }
+  .vp-input:focus { border-color: #4552CC; box-shadow: 0 0 0 3px rgba(69,82,204,0.14); }
+  .vp-input[readonly] { background: #F5F5F5; cursor: default; }
+  textarea.vp-input { resize: vertical; min-height: 72px; }
+  select.vp-input {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239E9E9E'%3E%3Cpath d='M12 15l-6-6h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 11px center; background-size: 15px; padding-right: 34px;
+  }
+  .vp-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+  .vp-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 13px; }
+  @media (max-width: 580px) { .vp-grid-2, .vp-grid-3 { grid-template-columns: 1fr; } }
+
+  /* ---- Section header ---- */
+  .vp-sec-title {
+    font-family: 'Sora', sans-serif; font-size: 0.88rem; font-weight: 700; color: #212121;
+    display: flex; align-items: center; gap: 7px;
+    border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom: 10px; margin-bottom: 15px;
+  }
+  .vp-sec-title i { color: #4552CC; }
+
+  /* ---- Page header ---- */
+  .vp-page-header { margin-bottom: 18px; }
+  .vp-page-header h2 { font-family: 'Sora', sans-serif; font-size: 1.5rem; font-weight: 800; color: #212121; display: flex; align-items: center; gap: 9px; }
+  .vp-page-header h2 i { color: #4552CC; }
+  .vp-page-header p { font-size: 0.85rem; color: #757575; margin-top: 4px; }
+
+  /* ---- Ref box ---- */
+  .vp-ref-box { display: flex; gap: 8px; align-items: center; }
+  .vp-ref-input { flex: 1; padding: 9px 13px; border: 1.5px solid #E0E0E0; border-radius: 10px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.82rem; background: #F5F5F5; color: #424242; outline: none; }
+
+  /* ---- Toast ---- */
+  #vp-toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+    padding: 13px 18px; border-radius: 13px;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.855rem; font-weight: 600;
+    color: #fff; max-width: 320px; display: flex; align-items: center; gap: 9px;
+    backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.2);
+    transform: translateY(80px); opacity: 0;
+    transition: transform 0.32s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s ease;
+    pointer-events: none;
+  }
+  #vp-toast.vp-show { transform: translateY(0); opacity: 1; }
+  #vp-toast.vp-success { background: rgba(39,174,96,0.94); }
+  #vp-toast.vp-error   { background: rgba(231,76,60,0.94); }
+  #vp-toast.vp-info    { background: rgba(69,82,204,0.94); }
+  #vp-toast.vp-warning { background: rgba(230,126,34,0.94); }
+
+  /* ---- Login ---- */
+  #vp-login {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #EEF1FB 0%, #EEF5FF 50%, #E8F7FD 100%); padding: 20px;
+  }
+  .vp-login-card {
+    width: 100%; max-width: 400px; position: relative; overflow: hidden; isolation: isolate;
+    border-radius: 26px; border: 1px solid rgba(255,255,255,.95);
+    box-shadow: 0 16px 64px rgba(69,82,204,.14), inset 0 1px 0 rgba(255,255,255,1);
+    padding: 38px 30px; background: #fff;
+  }
+  .vp-login-card::before {
+    content: ''; position: absolute; inset: 0;
+    backdrop-filter: blur(40px) saturate(200%); background: rgba(255,255,255,.80); z-index: 0;
+  }
+  .vp-login-card > * { position: relative; z-index: 2; }
+  .vp-login-logo { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 24px; }
+  .vp-login-logo-text { font-family: 'Sora', sans-serif; font-size: 1.45rem; font-weight: 800; color: #4552CC; letter-spacing: -0.02em; }
+  .vp-login-title { font-family: 'Sora', sans-serif; font-size: 1.35rem; font-weight: 800; color: #212121; text-align: center; margin-bottom: 5px; }
+  .vp-login-sub { font-size: 0.85rem; color: #757575; text-align: center; margin-bottom: 26px; line-height: 1.55; }
+  #vp-login-err { font-size: 0.80rem; color: #E74C3C; text-align: center; margin-top: 10px; display: none; font-weight: 600; padding: 8px 12px; background: rgba(231,76,60,0.06); border-radius: 8px; }
+
+  /* ---- Topbar ---- */
+  #vp-topbar {
+    position: sticky; top: 0; z-index: 100; height: 58px;
+    display: flex; align-items: center; justify-content: space-between; padding: 0 22px; gap: 14px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(20px) saturate(200%);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .vp-tb-logo { font-family: 'Sora', sans-serif; font-size: 1.05rem; font-weight: 800; color: #4552CC; flex-shrink: 0; }
+  .vp-tb-center { display: flex; align-items: center; gap: 9px; flex: 1; justify-content: center; overflow: hidden; }
+  .vp-tb-name { font-weight: 700; font-size: 0.92rem; color: #212121; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
+  .vp-tb-badge { padding: 3px 9px; border-radius: 99px; background: rgba(69,82,204,0.10); color: #4552CC; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+
+  /* ---- Tabs ---- */
+  #vp-tabs { background: #fff; border-bottom: 1px solid rgba(0,0,0,0.06); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  #vp-tabs::-webkit-scrollbar { display: none; }
+  .vp-tabs-inner { display: flex; min-width: max-content; padding: 0 14px; }
+  .vp-tab {
+    display: flex; align-items: center; gap: 6px; padding: 13px 18px;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.845rem; font-weight: 600;
+    color: #757575; background: transparent; border: none;
+    border-bottom: 2.5px solid transparent; cursor: pointer;
+    white-space: nowrap; transition: all 0.18s;
+  }
+  .vp-tab:hover { color: #4552CC; background: rgba(69,82,204,0.04); }
+  .vp-tab.active { color: #4552CC; border-bottom-color: #4552CC; }
+
+  /* ---- Sections ---- */
+  #vp-main { padding: 24px 22px; max-width: 1160px; margin: 0 auto; }
+  .vp-sec { display: none; animation: vp-fade 0.22s ease-out; }
+  .vp-sec.active { display: block; }
+  @keyframes vp-fade { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ---- Servicios cards ---- */
+  .vp-svc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .vp-svc-card { border: 1.5px solid #E0E0E0; border-radius: 14px; padding: 14px; position: relative; background: #fff; }
+  .vp-svc-icon { font-size: 1.8rem; color: #4552CC; margin-bottom: 6px; }
+  .vp-svc-name { font-weight: 700; font-size: 0.88rem; color: #212121; margin-bottom: 3px; }
+  .vp-svc-desc { font-size: 0.78rem; color: #757575; margin-bottom: 6px; }
+  .vp-svc-price { font-size: 0.82rem; font-weight: 700; color: #4552CC; }
+  .vp-svc-actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 4px; }
+
+  /* ---- Horario ---- */
+  .vp-schedule-row { display: grid; grid-template-columns: 100px 1fr 1fr auto; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .vp-schedule-day { font-size: 0.82rem; font-weight: 700; color: #424242; }
+  @media (max-width: 460px) {
+    #vp-topbar { padding: 0 12px; }
+    #vp-main { padding: 14px 12px; }
+  }
+  .vp-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .vp-muted { font-size: 0.82rem; color: #757575; }
+  .vp-green { color: #27AE60; font-weight: 700; }
+  .vp-photo-thumb { width: 72px; height: 72px; object-fit: cover; border-radius: 10px; border: 1.5px solid #E0E0E0; display: none; }
+  </style>
+</head>
+<body>
+
+<!-- ==================== LOGIN ==================== -->
+<div id="vp-login">
+  <div class="vp-login-card">
+    <div class="vp-login-logo">
+      <i class="ri-stethoscope-line" style="font-size:1.5rem;color:#4552CC;"></i>
+      <span class="vp-login-logo-text">PETCINGO</span>
+    </div>
+    <div class="vp-login-title">Panel Veterinaria</div>
+    <div class="vp-login-sub">Ingresa con las credenciales asignadas por el administrador.</div>
+
+    <div class="vp-field" style="margin-bottom:13px;">
+      <label class="vp-label" for="vp-lu">Usuario</label>
+      <input class="vp-input" type="text" id="vp-lu" placeholder="usuario.veterinaria" autocomplete="username" autocapitalize="none" spellcheck="false">
+    </div>
+    <div class="vp-field" style="margin-bottom:6px;">
+      <label class="vp-label" for="vp-lp">Contrasena</label>
+      <input class="vp-input" type="password" id="vp-lp" placeholder="&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;" autocomplete="current-password" onkeydown="if(event.key==='Enter')vpLogin()">
+    </div>
+    <div id="vp-login-err"></div>
+    <button class="vp-btn vp-btn--primary" style="width:100%;margin-top:14px;" id="vp-login-btn" onclick="vpLogin()">
+      <i class="ri-login-box-line"></i> Ingresar
+    </button>
+  </div>
+</div>
+
+<!-- ==================== PANEL ==================== -->
+<div id="vp-panel" style="display:none;">
+
+  <!-- TOPBAR -->
+  <div id="vp-topbar">
+    <span class="vp-tb-logo">PETCINGO</span>
+    <div class="vp-tb-center">
+      <span class="vp-tb-name" id="vp-vet-name">Veterinaria</span>
+      <span class="vp-tb-badge" id="vp-level-badge">Aliado</span>
+    </div>
+    <button class="vp-btn vp-btn--danger vp-btn--sm" onclick="vpLogout()">
+      <i class="ri-logout-box-line"></i> Cerrar sesion
+    </button>
+  </div>
+
+  <!-- TABS -->
+  <div id="vp-tabs">
+    <div class="vp-tabs-inner">
+      <button class="vp-tab active" data-tab="resumen"   onclick="vpTab('resumen')"><i class="ri-dashboard-line"></i> Resumen</button>
+      <button class="vp-tab"       data-tab="perfil"     onclick="vpTab('perfil')"><i class="ri-settings-3-line"></i> Mi Perfil</button>
+      <button class="vp-tab"       data-tab="servicios"  onclick="vpTab('servicios')"><i class="ri-stethoscope-line"></i> Servicios</button>
+      <button class="vp-tab"       data-tab="ventas"     onclick="vpTab('ventas')"><i class="ri-shopping-bag-line"></i> Ventas</button>
+      <button class="vp-tab"       data-tab="finanzas"   onclick="vpTab('finanzas')"><i class="ri-money-dollar-circle-line"></i> Finanzas</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="vp-main">
+
+    <!-- RESUMEN -->
+    <section class="vp-sec active" id="vp-sec-resumen">
+      <div class="vp-page-header">
+        <h2><i class="ri-dashboard-line"></i> Resumen</h2>
+        <p>Vista general de tu actividad en Petcingo.</p>
+      </div>
+      <div class="vp-stats">
+        <div class="vp-stat">
+          <div class="vp-stat__icon"><i class="ri-shopping-bag-line"></i></div>
+          <div class="vp-stat__value" id="vp-s-ventas-mes">-</div>
+          <div class="vp-stat__label">Ventas este mes</div>
+        </div>
+        <div class="vp-stat">
+          <div class="vp-stat__icon"><i class="ri-money-dollar-circle-line"></i></div>
+          <div class="vp-stat__value" id="vp-s-monto-mes">-</div>
+          <div class="vp-stat__label">Monto generado (Bs)</div>
+        </div>
+        <div class="vp-stat">
+          <div class="vp-stat__icon"><i class="ri-coin-line"></i></div>
+          <div class="vp-stat__value" id="vp-s-comisiones">-</div>
+          <div class="vp-stat__label">Comisiones pendientes (Bs)</div>
+        </div>
+        <div class="vp-stat">
+          <div class="vp-stat__icon"><i class="ri-links-line"></i></div>
+          <div class="vp-stat__value" id="vp-s-ventas-total">-</div>
+          <div class="vp-stat__label">Ventas totales</div>
+        </div>
+      </div>
+      <div class="vp-card">
+        <div class="vp-sec-title"><i class="ri-link"></i> Enlace de referido</div>
+        <p class="vp-muted" style="margin-bottom:11px;">Comparte este enlace para que tus clientes puedan comprar planes Petcingo y ganar comision.</p>
+        <div class="vp-ref-box">
+          <input class="vp-ref-input" type="text" id="vp-ref-resumen" readonly>
+          <button class="vp-btn vp-btn--secondary vp-btn--sm" onclick="vpCopyRef()"><i class="ri-file-copy-line"></i> Copiar</button>
+        </div>
+      </div>
+      <div class="vp-card">
+        <div class="vp-sec-title"><i class="ri-history-line"></i> Ultimas ventas</div>
+        <div class="vp-table-wrap">
+          <table class="vp-table">
+            <thead><tr><th>Fecha</th><th>Codigo</th><th>Plan</th><th>Monto</th><th>Comision</th></tr></thead>
+            <tbody id="vp-tb-recent"><tr><td colspan="5"><div class="vp-empty">Cargando...</div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- MI PERFIL -->
+    <section class="vp-sec" id="vp-sec-perfil">
+      <div class="vp-page-header">
+        <h2><i class="ri-settings-3-line"></i> Mi Perfil</h2>
+        <p>Actualiza los datos publicos de tu veterinaria.</p>
+      </div>
+
+      <div class="vp-card">
+        <div class="vp-sec-title"><i class="ri-building-4-line"></i> Datos de la veterinaria</div>
+        <div class="vp-grid-2" style="margin-bottom:12px;">
+          <div class="vp-field">
+            <label class="vp-label">Nombre de la veterinaria</label>
+            <input class="vp-input" type="text" id="vp-prof-name" placeholder="Nombre oficial" maxlength="80">
+          </div>
+          <div class="vp-field">
+            <label class="vp-label">Telefono</label>
+            <input class="vp-input" type="text" id="vp-prof-phone" placeholder="71234567" maxlength="20">
+          </div>
+          <div class="vp-field">
+            <label class="vp-label">WhatsApp</label>
+            <input class="vp-input" type="text" id="vp-prof-whatsapp" placeholder="71234567" maxlength="20">
+          </div>
+          <div class="vp-field">
+            <label class="vp-label">Ciudad</label>
+            <input class="vp-input" type="text" id="vp-prof-city" placeholder="Ej: Santa Cruz" maxlength="40">
+          </div>
+        </div>
+        <div class="vp-field" style="margin-bottom:12px;">
+          <label class="vp-label">Zona / Direccion</label>
+          <input class="vp-input" type="text" id="vp-prof-address" placeholder="Ej: Av. Irala 456, Zona Norte" maxlength="120">
+        </div>
+        <div class="vp-field" style="margin-bottom:12px;">
+          <label class="vp-label">Link de Google Maps</label>
+          <input class="vp-input" type="text" id="vp-prof-gps" placeholder="https://maps.google.com/?q=..." maxlength="300">
+        </div>
+        <div class="vp-grid-2" style="margin-bottom:12px;">
+          <div class="vp-field">
+            <label class="vp-label">Nivel (asignado por admin)</label>
+            <input class="vp-input" type="text" id="vp-prof-level" readonly>
+          </div>
+          <div class="vp-field" id="vp-24h-field" style="display:none;">
+            <label class="vp-label">Atencion 24h</label>
+            <input class="vp-input" type="text" id="vp-prof-is24h" readonly value="Si">
+          </div>
+        </div>
+      </div>
+
+      <div class="vp-card">
+        <div class="vp-sec-title"><i class="ri-image-line"></i> Logo y portada</div>
+        <div class="vp-grid-2" style="margin-bottom:12px;">
+          <div class="vp-field">
+            <label class="vp-label">Logo (cuadrado, min 200x200)</label>
+            <input type="file" id="vp-logo-file" accept="image/*" onchange="vpPreviewLogo(this)">
+            <img id="vp-logo-prev" class="vp-photo-thumb" alt="logo" style="margin-top:5px;">
+            <span id="vp-logo-status" class="vp-muted" style="margin-top:3px;display:block;"></span>
+          </div>
+          <div class="vp-field">
+            <label class="vp-label">Foto de portada (horizontal)</label>
+            <input type="file" id="vp-cover-file" accept="image/*" onchange="vpPreviewCover(this)">
+            <img id="vp-cover-prev" class="vp-photo-thumb" alt="portada" style="margin-top:5px;">
+            <span id="vp-cover-status" class="vp-muted" style="margin-top:3px;display:block;"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="vp-card">
+        <div class="vp-sec-title"><i class="ri-time-line"></i> Horario de atencion</div>
+        <p class="vp-muted" style="margin-bottom:14px;">Configura tu horario semanal. Marca "Cerrado" si no atiendes ese dia.</p>
+        <div id="vp-schedule-rows"></div>
+      </div>
+
+      <button class="vp-btn vp-btn--primary" onclick="vpSavePerfil()">
+        <i class="ri-save-line"></i> Guardar cambios
+      </button>
+    </section>
+
+    <!-- SERVICIOS -->
+    <section class="vp-sec" id="vp-sec-servicios">
+      <div class="vp-page-header">
+        <h2><i class="ri-stethoscope-line"></i> Servicios</h2>
+        <p>Gestiona los servicios que ofreces en tu veterinaria.</p>
+      </div>
+
+      <div class="vp-row" style="margin-bottom:14px;">
+        <button class="vp-btn vp-btn--primary" onclick="vpToggleSvcForm()">
+          <i class="ri-add-line"></i> Agregar servicio
+        </button>
+      </div>
+
+      <div class="vp-card" id="vp-svc-form" style="display:none;">
+        <div class="vp-sec-title"><i class="ri-add-circle-line"></i> <span id="vp-svc-form-title">Nuevo servicio</span></div>
+        <input type="hidden" id="vp-svc-editing-id">
+        <div class="vp-grid-2" style="margin-bottom:12px;">
+          <div class="vp-field">
+            <label class="vp-label">Nombre del servicio *</label>
+            <input class="vp-input" type="text" id="vp-svc-name" placeholder="Ej: Consulta general" maxlength="60">
+          </div>
+          <div class="vp-field">
+            <label class="vp-label">Icono</label>
+            <select class="vp-input" id="vp-svc-icon">
+              <option value="ri-stethoscope-line">Consulta (estetoscopio)</option>
+              <option value="ri-surgical-mask-line">Cirugia (mascarilla)</option>
+              <option value="ri-syringe-line">Vacunacion (jeringa)</option>
+              <option value="ri-scissors-line">Peluqueria (tijeras)</option>
+              <option value="ri-microscope-line">Laboratorio (microscopio)</option>
+              <option value="ri-heart-pulse-line">Cardiologia (corazon)</option>
+              <option value="ri-hotel-line">Internacion (cama)</option>
+              <option value="ri-truck-line">Ambulancia (camion)</option>
+              <option value="ri-thermometer-line">Control temp. (termometro)</option>
+              <option value="ri-bone-line">Ortopedia (hueso)</option>
+            </select>
+          </div>
+          <div class="vp-field">
+            <label class="vp-label">Precio (Bs, opcional)</label>
+            <input class="vp-input" type="text" id="vp-svc-price" placeholder="Ej: 100">
+          </div>
+          <div class="vp-field" id="vp-svc-solidarity-wrap" style="display:none;">
+            <label class="vp-label">Precio solidario (Bs)</label>
+            <input class="vp-input" type="text" id="vp-svc-solidarity-price" placeholder="Ej: 70">
+          </div>
+        </div>
+        <div class="vp-field" style="margin-bottom:14px;">
+          <label class="vp-label">Descripcion breve</label>
+          <input class="vp-input" type="text" id="vp-svc-desc" placeholder="Ej: Revision completa del animal" maxlength="100">
+        </div>
+        <div class="vp-row">
+          <button class="vp-btn vp-btn--primary" onclick="vpSaveServicio()"><i class="ri-save-line"></i> Guardar servicio</button>
+          <button class="vp-btn vp-btn--secondary" onclick="vpToggleSvcForm()">Cancelar</button>
+        </div>
+      </div>
+
+      <div class="vp-svc-grid" id="vp-svc-list">
+        <div class="vp-empty" style="grid-column:1/-1;">Cargando servicios...</div>
+      </div>
+    </section>
+
+    <!-- VENTAS -->
+    <section class="vp-sec" id="vp-sec-ventas">
+      <div class="vp-page-header">
+        <h2><i class="ri-shopping-bag-line"></i> Ventas</h2>
+        <p>Historial de placas vendidas a traves de tu enlace.</p>
+      </div>
+      <div class="vp-card">
+        <div class="vp-sec-title"><i class="ri-link"></i> Tu enlace de referido</div>
+        <p class="vp-muted" style="margin-bottom:11px;">Por cada venta generada ganas comision automaticamente.</p>
+        <div class="vp-ref-box">
+          <input class="vp-ref-input" type="text" id="vp-ref-ventas" readonly>
+          <button class="vp-btn vp-btn--secondary vp-btn--sm" onclick="vpCopyRef()"><i class="ri-file-copy-line"></i> Copiar</button>
+        </div>
+      </div>
+      <div class="vp-row" style="margin-bottom:13px;">
+        <select class="vp-input" id="vp-filter-month" style="max-width:170px;" onchange="vpLoadVentas()">
+          <option value="">Todos los meses</option>
+        </select>
+        <select class="vp-input" id="vp-filter-status" style="max-width:170px;" onchange="vpLoadVentas()">
+          <option value="">Todos los estados</option>
+          <option value="confirmed">Confirmado</option>
+          <option value="pending">Pendiente</option>
+          <option value="processing">Procesando</option>
+        </select>
+        <button class="vp-btn vp-btn--secondary vp-btn--sm" onclick="vpLoadVentas()"><i class="ri-refresh-line"></i></button>
+      </div>
+      <div class="vp-card">
+        <div class="vp-table-wrap">
+          <table class="vp-table">
+            <thead><tr><th>Fecha</th><th>Codigo</th><th>Plan</th><th>Total</th><th>Comision</th><th>Estado</th></tr></thead>
+            <tbody id="vp-tb-ventas"><tr><td colspan="6"><div class="vp-empty">Cargando...</div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINANZAS -->
+    <section class="vp-sec" id="vp-sec-finanzas">
+      <div class="vp-page-header">
+        <h2><i class="ri-money-dollar-circle-line"></i> Finanzas</h2>
+        <p>Comisiones y configuracion de pago.</p>
+      </div>
+      <div class="vp-stats" style="grid-template-columns:repeat(auto-fit,minmax(195px,1fr));">
+        <div class="vp-stat">
+          <div class="vp-stat__icon"><i class="ri-time-line"></i></div>
+          <div class="vp-stat__value" id="vp-fin-pendiente">-</div>
+          <div class="vp-stat__label">Comisiones pendientes (Bs)</div>
+        </div>
+        <div class="vp-stat">
+          <div class="vp-stat__icon"><i class="ri-checkbox-circle-line"></i></div>
+          <div class="vp-stat__value" id="vp-fin-pagado">-</div>
+          <div class="vp-stat__label">Total pagado (Bs)</div>
+        </div>
+        <div class="vp-stat">
+          <div class="vp-stat__icon"><i class="ri-calendar-check-line"></i></div>
+          <div class="vp-stat__value" id="vp-fin-ultimo">-</div>
+          <div class="vp-stat__label">Ultimo pago recibido</div>
+        </div>
+      </div>
+      <div class="vp-card">
+        <div class="vp-sec-title"><i class="ri-history-line"></i> Historial de comisiones</div>
+        <div class="vp-table-wrap">
+          <table class="vp-table">
+            <thead><tr><th>Fecha</th><th>Descripcion</th><th>Monto (Bs)</th><th>Estado</th></tr></thead>
+            <tbody id="vp-tb-comisiones"><tr><td colspan="4"><div class="vp-empty">Cargando...</div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="vp-card">
+        <div class="vp-sec-title"><i class="ri-bank-line"></i> Cuenta bancaria</div>
+        <p class="vp-muted" style="margin-bottom:15px;">Ingresa tus datos para recibir pagos de comisiones.</p>
+        <div class="vp-grid-2" style="margin-bottom:12px;">
+          <div class="vp-field">
+            <label class="vp-label">Banco</label>
+            <input class="vp-input" type="text" id="vp-bank-name" placeholder="Ej: Banco Mercantil Santa Cruz">
+          </div>
+          <div class="vp-field">
+            <label class="vp-label">Tipo de cuenta</label>
+            <select class="vp-input" id="vp-bank-type">
+              <option value="">-- Seleccionar --</option>
+              <option value="ahorro">Caja de ahorro</option>
+              <option value="corriente">Cuenta corriente</option>
+            </select>
+          </div>
+          <div class="vp-field">
+            <label class="vp-label">Numero de cuenta</label>
+            <input class="vp-input" type="text" id="vp-bank-number" placeholder="1234567890">
+          </div>
+          <div class="vp-field">
+            <label class="vp-label">Titular</label>
+            <input class="vp-input" type="text" id="vp-bank-owner" placeholder="Nombre del titular">
+          </div>
+        </div>
+        <button class="vp-btn vp-btn--primary" onclick="vpSaveBankAccount()">
+          <i class="ri-save-line"></i> Guardar datos bancarios
+        </button>
+      </div>
+    </section>
+
+  </div><!-- #vp-main -->
+</div><!-- #vp-panel -->
+
+<!-- Toast -->
+<div id="vp-toast"></div>
+
+<!-- ==================== SCRIPTS ==================== -->
+<script>
+(function () {
+  'use strict';
+
+  /* -- Firebase init -- */
+  var _fbApp = null;
+  var _db    = null;
+  function getApp() {
+    if (_fbApp) return _fbApp;
+    var cfg = {
+      apiKey:            'AIzaSyAEE3yLFFsJTMORNFLYZWW2_DNHwzF0hE8',
+      authDomain:        'petcingo-43096.firebaseapp.com',
+      projectId:         'petcingo-43096',
+      storageBucket:     'petcingo-43096.firebasestorage.app',
+      messagingSenderId: '679546185536',
+      appId:             '1:679546185536:web:ceccd210b7c73b296f7ca5'
+    };
+    try { _fbApp = firebase.app('petcingo-vp'); }
+    catch(e) { _fbApp = firebase.initializeApp(cfg, 'petcingo-vp'); }
+    return _fbApp;
+  }
+  function db() {
+    if (!_db) _db = getApp().firestore();
+    return _db;
+  }
+
+  /* -- State -- */
+  var _vid  = null;
+  var _vdat = null;
+  var _ventasAll = [];
+  var _toastTimer = null;
+
+  /* -- URL param helper -- */
+  function getParam(name) {
+    return new URLSearchParams(window.location.search).get(name) || '';
+  }
+
+  /* -- XSS escape -- */
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  /* -- Toast -- */
+  function toast(msg, type) {
+    var el = document.getElementById('vp-toast');
+    if (!el) return;
+    el.textContent = msg;
+    el.className = 'vp-show vp-' + (type || 'info');
+    clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(function () { el.className = ''; }, 3200);
+  }
+
+  /* -- Helpers -- */
+  function $txt(id, val) { var el = document.getElementById(id); if (el) el.textContent = String(val); }
+  function $val(id, val) { var el = document.getElementById(id); if (el) el.value = String(val == null ? '' : val); }
+  function $gval(id)     { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
+  function refUrl()      { return 'https://prueb2.dashnexpages.net/producto/?ref=' + (_vid || ''); }
+
+  function setRefLinks() {
+    var url = refUrl();
+    ['vp-ref-resumen','vp-ref-ventas'].forEach(function (id) { $val(id, url); });
+  }
+
+  function tsDate(ts) {
+    if (!ts) return '-';
+    var d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleDateString('es-BO');
+  }
+
+  /* -- Image compress -- */
+  function compressImage(file, maxW, startQ, targetBytes) {
+    maxW = maxW || 600; startQ = startQ || 0.78; targetBytes = targetBytes || 100000;
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onerror = function () { reject(new Error('No se pudo leer el archivo.')); };
+      reader.onload  = function (e) {
+        var img = new Image();
+        img.onerror = function () { reject(new Error('Imagen invalida.')); };
+        img.onload  = function () {
+          var canvas = document.createElement('canvas');
+          var w = img.naturalWidth, h = img.naturalHeight;
+          if (w > maxW) { h = Math.round(h * (maxW / w)); w = maxW; }
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          (function loop(q) {
+            canvas.toBlob(function (blob) {
+              if (!blob) { reject(new Error('Error al comprimir.')); return; }
+              if (blob.size > targetBytes && q > 0.28) loop(+(q - 0.08).toFixed(2));
+              else resolve(blob);
+            }, 'image/jpeg', q);
+          }(startQ));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  /* -- R2 upload -- */
+  function vpUploadToR2(blob, key, statusEl, cb) {
+    function upd(msg) { if (statusEl) statusEl.textContent = msg; }
+    upd('Subiendo imagen...');
+    if (typeof AWS === 'undefined') { upd('AWS SDK no disponible.'); cb(''); return; }
+    AWS.config.update({
+      accessKeyId:     '6496db9c407984025f99bc0dc6a23264',
+      secretAccessKey: 'b270005e8ebf9eef779db72012a0ea6206a9f281eba9d07e0b15f78016c2d94d'
+    });
+    var s3 = new AWS.S3({ endpoint: 'https://c11712fefc3437b619d76c69ecc14901.r2.cloudflarestorage.com', signatureVersion: 'v4', s3ForcePathStyle: true });
+    s3.upload({ Bucket: 'petcingo', Key: key, Body: blob, ContentType: 'image/jpeg' }, function (err) {
+      if (err) { upd('Error: ' + err.message); cb(''); return; }
+      upd('Imagen subida.');
+      cb('https://pub-cb882f9b206543b28ea81fcadac0f4b2.r2.dev/' + key);
+    });
+  }
+
+  /* ====================================
+     LOGIN / AUTO-LOGIN
+     ==================================== */
+  (function tryRestore() {
+    var sid  = sessionStorage.getItem('vp_vid');
+    var sdat = sessionStorage.getItem('vp_vdat');
+    if (!sid || !sdat) { checkAutoParam(); return; }
+    try { _vid = sid; _vdat = JSON.parse(sdat); showPanel(); }
+    catch(e) { checkAutoParam(); }
+  })();
+
+  function checkAutoParam() {
+    var autoId = getParam('auto');
+    if (!autoId) return;
+    db().collection('veterinarias').doc(autoId).get()
+      .then(function(doc) {
+        if (!doc.exists) return;
+        var d = doc.data();
+        if (d.status === 'banned' || d.status === 'suspended') return;
+        _vid  = doc.id;
+        _vdat = d;
+        sessionStorage.setItem('vp_vid',  _vid);
+        sessionStorage.setItem('vp_vdat', JSON.stringify(_vdat));
+        showPanel();
+      }).catch(function () {});
+  }
+
+  window.vpLogin = function () {
+    var username = $gval('vp-lu').toLowerCase();
+    var password = $gval('vp-lp');
+    var errEl    = document.getElementById('vp-login-err');
+    var btn      = document.getElementById('vp-login-btn');
+    errEl.style.display = 'none';
+    if (!username || !password) { errEl.style.display = 'block'; errEl.textContent = 'Completa todos los campos.'; return; }
+    btn.disabled = true;
+    btn.innerHTML = '<i class="ri-loader-4-line"></i> Verificando...';
+
+    db().collection('veterinarias').where('username', '==', username).limit(5).get()
+      .then(function (snap) {
+        var found = null;
+        snap.forEach(function (doc) {
+          var d = doc.data();
+          if (String(d.password) === String(password)) found = { id: doc.id, data: d };
+        });
+        if (!found) { showErr('Credenciales incorrectas.'); resetBtn(); return; }
+        if (found.data.status === 'banned' || found.data.status === 'suspended') {
+          var reason = found.data.status === 'banned' ? (found.data.bannedReason || '') : (found.data.suspendedReason || '');
+          var msg    = found.data.status === 'banned' ? 'Tu cuenta ha sido baneada.' : 'Tu cuenta esta suspendida.';
+          showErr(msg + (reason ? ' Motivo: ' + reason : '') + ' Contacta al administrador.');
+          resetBtn(); return;
+        }
+        _vid  = found.id;
+        _vdat = found.data;
+        sessionStorage.setItem('vp_vid',  _vid);
+        sessionStorage.setItem('vp_vdat', JSON.stringify(_vdat));
+        showPanel();
+      })
+      .catch(function (e) { showErr('Error de conexion: ' + e.message); resetBtn(); });
+
+    function showErr(msg) { errEl.style.display = 'block'; errEl.textContent = msg; }
+    function resetBtn() { btn.disabled = false; btn.innerHTML = '<i class="ri-login-box-line"></i> Ingresar'; }
+  };
+
+  window.vpLogout = function () {
+    sessionStorage.removeItem('vp_vid');
+    sessionStorage.removeItem('vp_vdat');
+    _vid = null; _vdat = null;
+    document.getElementById('vp-panel').style.display = 'none';
+    document.getElementById('vp-login').style.display = 'flex';
+    $val('vp-lu', ''); $val('vp-lp', '');
+  };
+
+  function showPanel() {
+    document.getElementById('vp-login').style.display = 'none';
+    document.getElementById('vp-panel').style.display = 'block';
+    $txt('vp-vet-name', _vdat.name || 'Veterinaria');
+    var lvMap = { aliado: 'Aliado', premium: 'Premium', solidario: 'Solidario', emergencias24h: '24h' };
+    $txt('vp-level-badge', lvMap[_vdat.level || 'aliado'] || 'Aliado');
+    setRefLinks();
+    vpLoadResumen();
+    vpPopulateMonths();
+    vpBuildScheduleRows();
+  }
+
+  /* ====================================
+     TAB SWITCHING
+     ==================================== */
+  window.vpTab = function (tab) {
+    document.querySelectorAll('.vp-tab').forEach(function (b) {
+      b.classList.toggle('active', b.getAttribute('data-tab') === tab);
+    });
+    document.querySelectorAll('.vp-sec').forEach(function (s) {
+      s.classList.toggle('active', s.id === 'vp-sec-' + tab);
+    });
+    if (tab === 'ventas')   vpLoadVentas();
+    if (tab === 'finanzas') vpLoadFinanzas();
+    if (tab === 'perfil')   vpFillPerfil();
+    if (tab === 'servicios') vpLoadServicios();
+  };
+
+  /* ====================================
+     RESUMEN
+     ==================================== */
+  function vpLoadResumen() {
+    var now        = new Date();
+    var monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    var monthEnd   = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    db().collection('orders').where('ref', '==', _vid).get()
+      .then(function (snap) {
+        var countM = 0, montoM = 0, total = 0, rows = [];
+        snap.forEach(function (doc) {
+          var d = doc.data();
+          var ts = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : null;
+          if (ts && ts >= monthStart && ts < monthEnd) { countM++; montoM += parseFloat(d.total || 0); }
+          total++;
+          rows.push({ id: doc.id, data: d });
+        });
+        _ventasAll = rows;
+        $txt('vp-s-ventas-mes',   countM);
+        $txt('vp-s-monto-mes',    'Bs ' + montoM.toFixed(0));
+        $txt('vp-s-ventas-total', total);
+        rows.sort(function (a, b) {
+          var ta = a.data.createdAt && a.data.createdAt.toDate ? a.data.createdAt.toDate() : 0;
+          var tb = b.data.createdAt && b.data.createdAt.toDate ? b.data.createdAt.toDate() : 0;
+          return tb - ta;
+        });
+        renderRecentSales(rows.slice(0, 5));
+      }).catch(function (e) { toast('Error ventas: ' + e.message, 'error'); });
+
+    db().collection('commissions').where('entityId', '==', _vid).where('status', '==', 'pendiente').get()
+      .then(function (snap) {
+        var total = 0;
+        snap.forEach(function (d) { total += parseFloat(d.data().amount || 0); });
+        $txt('vp-s-comisiones', 'Bs ' + total.toFixed(0));
+      }).catch(function () {});
+  }
+
+  function renderRecentSales(rows) {
+    var tbody = document.getElementById('vp-tb-recent');
+    if (!tbody) return;
+    if (!rows.length) { tbody.innerHTML = '<tr><td colspan="5"><div class="vp-empty">Sin ventas aun.</div></td></tr>'; return; }
+    var rate = _vdat && _vdat.commissionRate != null ? _vdat.commissionRate / 100 : 0.20;
+    var h = '';
+    rows.forEach(function (r) {
+      var d = r.data, total = parseFloat(d.total || 0), com = (total * rate).toFixed(0);
+      h += '<tr><td>' + esc(tsDate(d.createdAt)) + '</td>';
+      h += '<td><code style="font-size:0.78rem;color:#4552CC;">' + esc(d.activationCode || '-') + '</code></td>';
+      h += '<td>' + esc(d.planName || '-') + '</td>';
+      h += '<td>Bs ' + total.toFixed(0) + '</td>';
+      h += '<td class="vp-green">Bs ' + com + '</td></tr>';
+    });
+    tbody.innerHTML = h;
+  }
+
+  /* ====================================
+     COPY REF
+     ==================================== */
+  window.vpCopyRef = function () {
+    var url = refUrl();
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(function () { toast('Enlace copiado.', 'success'); });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = url; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+      toast('Enlace copiado.', 'success');
+    }
+  };
+
+  /* ====================================
+     MI PERFIL
+     ==================================== */
+  function vpFillPerfil() {
+    if (!_vdat) return;
+    $val('vp-prof-name',     _vdat.name    || '');
+    $val('vp-prof-phone',    _vdat.phone   || '');
+    $val('vp-prof-whatsapp', _vdat.whatsapp|| '');
+    $val('vp-prof-city',     _vdat.city    || '');
+    $val('vp-prof-address',  _vdat.address || '');
+    $val('vp-prof-gps',      _vdat.gpsLink || '');
+    var lvMap = { aliado: 'Aliado', premium: 'Premium', solidario: 'Solidario', emergencias24h: 'Emergencias 24h' };
+    $val('vp-prof-level', lvMap[_vdat.level || 'aliado'] || 'Aliado');
+    var f24 = document.getElementById('vp-24h-field');
+    if (f24) f24.style.display = _vdat.is24h ? 'block' : 'none';
+    if (_vdat.logoUrl) {
+      var lp = document.getElementById('vp-logo-prev');
+      if (lp) { lp.src = _vdat.logoUrl; lp.style.display = 'block'; }
+    }
+    if (_vdat.coverUrl) {
+      var cp = document.getElementById('vp-cover-prev');
+      if (cp) { cp.src = _vdat.coverUrl; cp.style.display = 'block'; }
+    }
+    vpFillSchedule();
+  }
+
+  window.vpSavePerfil = function () {
+    var update = {
+      name:     $gval('vp-prof-name'),
+      phone:    $gval('vp-prof-phone'),
+      whatsapp: $gval('vp-prof-whatsapp'),
+      city:     $gval('vp-prof-city'),
+      address:  $gval('vp-prof-address'),
+      gpsLink:  $gval('vp-prof-gps'),
+      schedule: vpCollectSchedule()
+    };
+    if (!update.name) { toast('El nombre es obligatorio.', 'error'); return; }
+
+    var logoFile  = document.getElementById('vp-logo-file').files[0];
+    var coverFile = document.getElementById('vp-cover-file').files[0];
+
+    function doSave() {
+      db().collection('veterinarias').doc(_vid).update(update)
+        .then(function () {
+          Object.assign(_vdat, update);
+          sessionStorage.setItem('vp_vdat', JSON.stringify(_vdat));
+          toast('Perfil actualizado.', 'success');
+        })
+        .catch(function (e) { toast('Error: ' + e.message, 'error'); });
+    }
+
+    if (logoFile) {
+      var lStat = document.getElementById('vp-logo-status');
+      compressImage(logoFile, 600, 0.82, 120000).then(function (blob) {
+        vpUploadToR2(blob, 'vets/' + _vid + '-logo-' + Date.now() + '.jpg', lStat, function (url) {
+          if (url) update.logoUrl = url;
+          if (coverFile) uploadCover();
+          else doSave();
+        });
+      });
+    } else if (coverFile) {
+      uploadCover();
+    } else {
+      doSave();
+    }
+
+    function uploadCover() {
+      var cStat = document.getElementById('vp-cover-status');
+      compressImage(coverFile, 1200, 0.78, 200000).then(function (blob) {
+        vpUploadToR2(blob, 'vets/' + _vid + '-cover-' + Date.now() + '.jpg', cStat, function (url) {
+          if (url) update.coverUrl = url;
+          doSave();
+        });
+      });
+    }
+  };
+
+  window.vpPreviewLogo = function (input) {
+    var file = input.files && input.files[0];
+    var prev = document.getElementById('vp-logo-prev');
+    if (!file || !prev) return;
+    var reader = new FileReader();
+    reader.onload = function (e) { prev.src = e.target.result; prev.style.display = 'block'; };
+    reader.readAsDataURL(file);
+  };
+
+  window.vpPreviewCover = function (input) {
+    var file = input.files && input.files[0];
+    var prev = document.getElementById('vp-cover-prev');
+    if (!file || !prev) return;
+    var reader = new FileReader();
+    reader.onload = function (e) { prev.src = e.target.result; prev.style.display = 'block'; };
+    reader.readAsDataURL(file);
+  };
+
+  /* ====================================
+     HORARIO
+     ==================================== */
+  var DAYS = [
+    { key: 'monday',    label: 'Lunes'    },
+    { key: 'tuesday',   label: 'Martes'   },
+    { key: 'wednesday', label: 'Miercoles' },
+    { key: 'thursday',  label: 'Jueves'   },
+    { key: 'friday',    label: 'Viernes'  },
+    { key: 'saturday',  label: 'Sabado'   },
+    { key: 'sunday',    label: 'Domingo'  }
+  ];
+
+  function vpBuildScheduleRows() {
+    var container = document.getElementById('vp-schedule-rows');
+    if (!container) return;
+    var h = '';
+    DAYS.forEach(function (d) {
+      h += '<div class="vp-schedule-row" id="vp-srow-' + d.key + '">';
+      h += '<span class="vp-schedule-day">' + d.label + '</span>';
+      h += '<input class="vp-input" type="time" id="vp-sch-' + d.key + '-open" value="08:00" style="padding:8px 10px;">';
+      h += '<input class="vp-input" type="time" id="vp-sch-' + d.key + '-close" value="18:00" style="padding:8px 10px;">';
+      h += '<label style="display:flex;align-items:center;gap:4px;font-size:0.78rem;white-space:nowrap;"><input type="checkbox" id="vp-sch-' + d.key + '-closed" onchange="vpToggleDayClosed(\'' + d.key + '\',this.checked)"> Cerrado</label>';
+      h += '</div>';
+    });
+    container.innerHTML = h;
+  }
+
+  window.vpToggleDayClosed = function (key, closed) {
+    var openEl  = document.getElementById('vp-sch-' + key + '-open');
+    var closeEl = document.getElementById('vp-sch-' + key + '-close');
+    if (openEl)  openEl.disabled  = closed;
+    if (closeEl) closeEl.disabled = closed;
+  };
+
+  function vpFillSchedule() {
+    if (!_vdat || !_vdat.schedule) return;
+    DAYS.forEach(function (d) {
+      var s = _vdat.schedule[d.key];
+      if (!s) return;
+      var openEl   = document.getElementById('vp-sch-' + d.key + '-open');
+      var closeEl  = document.getElementById('vp-sch-' + d.key + '-close');
+      var closedEl = document.getElementById('vp-sch-' + d.key + '-closed');
+      if (openEl)   openEl.value    = s.open  || '08:00';
+      if (closeEl)  closeEl.value   = s.close || '18:00';
+      if (closedEl) closedEl.checked = !!s.closed;
+      vpToggleDayClosed(d.key, !!s.closed);
+    });
+  }
+
+  function vpCollectSchedule() {
+    var schedule = {};
+    DAYS.forEach(function (d) {
+      var openEl   = document.getElementById('vp-sch-' + d.key + '-open');
+      var closeEl  = document.getElementById('vp-sch-' + d.key + '-close');
+      var closedEl = document.getElementById('vp-sch-' + d.key + '-closed');
+      schedule[d.key] = {
+        open:   openEl  ? openEl.value  : '08:00',
+        close:  closeEl ? closeEl.value : '18:00',
+        closed: closedEl ? closedEl.checked : false
+      };
+    });
+    return schedule;
+  }
+
+  /* ====================================
+     SERVICIOS
+     ==================================== */
+  function vpLoadServicios() {
+    if (!_vdat) return;
+    var services = Array.isArray(_vdat.services) ? _vdat.services : [];
+    var grid = document.getElementById('vp-svc-list');
+    if (!grid) return;
+    var solidWrap = document.getElementById('vp-svc-solidarity-wrap');
+    if (solidWrap) solidWrap.style.display = (_vdat.level === 'solidario') ? 'flex' : 'none';
+    if (!services.length) { grid.innerHTML = '<div class="vp-empty" style="grid-column:1/-1;">No hay servicios aun. Agrega el primero.</div>'; return; }
+    var h = '';
+    services.forEach(function (svc) {
+      h += '<div class="vp-svc-card">';
+      h += '<div class="vp-svc-icon"><i class="' + esc(svc.icon || 'ri-stethoscope-line') + '"></i></div>';
+      h += '<div class="vp-svc-name">' + esc(svc.name) + '</div>';
+      h += '<div class="vp-svc-desc">' + esc(svc.description || '') + '</div>';
+      if (svc.price) h += '<div class="vp-svc-price">Bs ' + esc(svc.price) + '</div>';
+      if (svc.solidarityPrice) h += '<div class="vp-svc-price" style="color:#10B981;">Solidario: Bs ' + esc(svc.solidarityPrice) + '</div>';
+      h += '<div class="vp-svc-actions">';
+      h += '<button class="vp-btn vp-btn--secondary vp-btn--sm" onclick="vpEditServicio(\'' + esc(svc.id) + '\')"><i class="ri-edit-line"></i></button>';
+      h += '<button class="vp-btn vp-btn--danger vp-btn--sm" onclick="vpDeleteServicio(\'' + esc(svc.id) + '\')"><i class="ri-delete-bin-line"></i></button>';
+      h += '</div></div>';
+    });
+    grid.innerHTML = h;
+  }
+
+  window.vpToggleSvcForm = function () {
+    var f = document.getElementById('vp-svc-form');
+    if (!f) return;
+    var open = f.style.display !== 'none';
+    f.style.display = open ? 'none' : 'block';
+    if (!open) { vpClearSvcForm(); }
+  };
+
+  function vpClearSvcForm() {
+    $val('vp-svc-editing-id', '');
+    $val('vp-svc-name', ''); $val('vp-svc-desc', '');
+    $val('vp-svc-price', ''); $val('vp-svc-solidarity-price', '');
+    $val('vp-svc-icon', 'ri-stethoscope-line');
+    $txt('vp-svc-form-title', 'Nuevo servicio');
+  }
+
+  window.vpEditServicio = function (svcId) {
+    var services = Array.isArray(_vdat.services) ? _vdat.services : [];
+    var svc = null;
+    services.forEach(function (s) { if (s.id === svcId) svc = s; });
+    if (!svc) return;
+    $val('vp-svc-editing-id', svcId);
+    $val('vp-svc-name', svc.name || '');
+    $val('vp-svc-desc', svc.description || '');
+    $val('vp-svc-price', svc.price || '');
+    $val('vp-svc-solidarity-price', svc.solidarityPrice || '');
+    $val('vp-svc-icon', svc.icon || 'ri-stethoscope-line');
+    $txt('vp-svc-form-title', 'Editar servicio');
+    document.getElementById('vp-svc-form').style.display = 'block';
+    document.getElementById('vp-svc-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  window.vpSaveServicio = function () {
+    var name = $gval('vp-svc-name');
+    if (!name) { toast('El nombre del servicio es obligatorio.', 'error'); return; }
+    var editingId = $gval('vp-svc-editing-id');
+    var services = Array.isArray(_vdat.services) ? _vdat.services.slice() : [];
+    var svcData = {
+      id:             editingId || ('svc-' + Date.now()),
+      name:           name,
+      description:    $gval('vp-svc-desc'),
+      price:          $gval('vp-svc-price'),
+      solidarityPrice:$gval('vp-svc-solidarity-price'),
+      icon:           $gval('vp-svc-icon') || 'ri-stethoscope-line'
+    };
+    if (editingId) {
+      var idx = -1;
+      services.forEach(function (s, i) { if (s.id === editingId) idx = i; });
+      if (idx >= 0) services[idx] = svcData; else services.push(svcData);
+    } else {
+      services.push(svcData);
+    }
+    db().collection('veterinarias').doc(_vid).update({ services: services })
+      .then(function () {
+        _vdat.services = services;
+        sessionStorage.setItem('vp_vdat', JSON.stringify(_vdat));
+        vpLoadServicios();
+        vpToggleSvcForm();
+        toast('Servicio guardado.', 'success');
+      })
+      .catch(function (e) { toast('Error: ' + e.message, 'error'); });
+  };
+
+  window.vpDeleteServicio = function (svcId) {
+    if (!confirm('Eliminar este servicio?')) return;
+    var services = (Array.isArray(_vdat.services) ? _vdat.services : []).filter(function (s) { return s.id !== svcId; });
+    db().collection('veterinarias').doc(_vid).update({ services: services })
+      .then(function () {
+        _vdat.services = services;
+        sessionStorage.setItem('vp_vdat', JSON.stringify(_vdat));
+        vpLoadServicios();
+        toast('Servicio eliminado.', 'success');
+      })
+      .catch(function (e) { toast('Error: ' + e.message, 'error'); });
+  };
+
+  /* ====================================
+     VENTAS
+     ==================================== */
+  function vpPopulateMonths() {
+    var sel = document.getElementById('vp-filter-month');
+    if (!sel) return;
+    var now = new Date();
+    var h = '<option value="">Todos los meses</option>';
+    for (var i = 0; i < 12; i++) {
+      var d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      var val = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+      h += '<option value="' + val + '">' + d.toLocaleDateString('es-BO', { month: 'long', year: 'numeric' }) + '</option>';
+    }
+    sel.innerHTML = h;
+  }
+
+  window.vpLoadVentas = function () {
+    var tbody = document.getElementById('vp-tb-ventas');
+    if (!tbody) return;
+    var filterMonth  = $gval('vp-filter-month');
+    var filterStatus = $gval('vp-filter-status');
+    var rate = _vdat && _vdat.commissionRate != null ? _vdat.commissionRate / 100 : 0.20;
+    var rows = _ventasAll.filter(function (r) {
+      var d = r.data;
+      if (filterStatus && d.status !== filterStatus) return false;
+      if (filterMonth && d.createdAt) {
+        var ts = d.createdAt.toDate ? d.createdAt.toDate() : new Date(d.createdAt);
+        var ym = ts.getFullYear() + '-' + String(ts.getMonth() + 1).padStart(2, '0');
+        if (ym !== filterMonth) return false;
+      }
+      return true;
+    });
+    if (!rows.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="vp-empty">Sin ventas.</div></td></tr>'; return; }
+    var h = '';
+    rows.forEach(function (r) {
+      var d = r.data, total = parseFloat(d.total || 0), com = (total * rate).toFixed(0);
+      var st = d.status || 'pending';
+      var badge = '<span class="vp-badge vp-badge--' + esc(st) + '">' + esc(st.toUpperCase()) + '</span>';
+      h += '<tr><td>' + esc(tsDate(d.createdAt)) + '</td>';
+      h += '<td><code style="font-size:0.78rem;color:#4552CC;">' + esc(d.activationCode || '-') + '</code></td>';
+      h += '<td>' + esc(d.planName || '-') + '</td>';
+      h += '<td>Bs ' + total.toFixed(0) + '</td>';
+      h += '<td class="vp-green">Bs ' + com + '</td>';
+      h += '<td>' + badge + '</td></tr>';
+    });
+    tbody.innerHTML = h;
+  };
+
+  /* ====================================
+     FINANZAS
+     ==================================== */
+  function vpLoadFinanzas() {
+    db().collection('commissions').where('entityId', '==', _vid).get()
+      .then(function (snap) {
+        var pending = 0, paid = 0, lastPaidDate = '-';
+        var rows = [];
+        snap.forEach(function (doc) {
+          var d = doc.data();
+          var amount = parseFloat(d.amount || 0);
+          if (d.status === 'pendiente') pending += amount;
+          else if (d.status === 'pagado') {
+            paid += amount;
+            var ts = d.paidAt && d.paidAt.toDate ? d.paidAt.toDate() : null;
+            if (ts) lastPaidDate = tsDate({ toDate: function () { return ts; } });
+          }
+          rows.push({ id: doc.id, data: d });
+        });
+        $txt('vp-fin-pendiente', 'Bs ' + pending.toFixed(0));
+        $txt('vp-fin-pagado',    'Bs ' + paid.toFixed(0));
+        $txt('vp-fin-ultimo',    lastPaidDate);
+        rows.sort(function (a, b) {
+          var ta = a.data.createdAt && a.data.createdAt.toDate ? a.data.createdAt.toDate() : 0;
+          var tb = b.data.createdAt && b.data.createdAt.toDate ? b.data.createdAt.toDate() : 0;
+          return tb - ta;
+        });
+        renderComisiones(rows);
+      }).catch(function () {});
+
+    if (_vdat && _vdat.bankAccount) {
+      var ba = _vdat.bankAccount;
+      $val('vp-bank-name',   ba.bank   || '');
+      $val('vp-bank-type',   ba.type   || '');
+      $val('vp-bank-number', ba.number || '');
+      $val('vp-bank-owner',  ba.owner  || '');
+    }
+  }
+
+  function renderComisiones(rows) {
+    var tbody = document.getElementById('vp-tb-comisiones');
+    if (!tbody) return;
+    if (!rows.length) { tbody.innerHTML = '<tr><td colspan="4"><div class="vp-empty">Sin comisiones registradas.</div></td></tr>'; return; }
+    var h = '';
+    rows.forEach(function (r) {
+      var d = r.data;
+      var st = d.status || 'pendiente';
+      var badge = '<span class="vp-badge vp-badge--' + esc(st) + '">' + esc(st.toUpperCase()) + '</span>';
+      h += '<tr><td>' + esc(tsDate(d.createdAt)) + '</td><td>' + esc(d.description || '-') + '</td><td class="vp-green">Bs ' + parseFloat(d.amount || 0).toFixed(0) + '</td><td>' + badge + '</td></tr>';
+    });
+    tbody.innerHTML = h;
+  }
+
+  window.vpSaveBankAccount = function () {
+    var ba = {
+      bank:   $gval('vp-bank-name'),
+      type:   $gval('vp-bank-type'),
+      number: $gval('vp-bank-number'),
+      owner:  $gval('vp-bank-owner')
+    };
+    db().collection('veterinarias').doc(_vid).update({ bankAccount: ba })
+      .then(function () {
+        _vdat.bankAccount = ba;
+        sessionStorage.setItem('vp_vdat', JSON.stringify(_vdat));
+        toast('Datos bancarios guardados.', 'success');
+      })
+      .catch(function (e) { toast('Error: ' + e.message, 'error'); });
+  };
+
+})();
+</script>
+</body>
+</html>

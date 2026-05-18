@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Veterinaria - Petcingo</title>
+  <meta name="description" content="Perfil de veterinaria asociada a Petcingo. Servicios, horarios y contacto directo.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://prueb2.dashnexpages.net/assets/fonts/remixicon/remixicon.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#F8F9FB;color:#212121;min-height:100vh}
+a{color:inherit;text-decoration:none}
+i[class^="ri-"],i[class*=" ri-"]{font-family:'remixicon'!important;font-style:normal!important}
+
+/* -- Topbar -- */
+.vp-topbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(0,0,0,.06);height:60px;display:flex;align-items:center;padding:0 20px;gap:16px}
+.vp-topbar__logo{font-family:'Sora',sans-serif;font-weight:800;font-size:1.1rem;color:#4552CC;text-decoration:none;letter-spacing:-.02em}
+.vp-topbar__back{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;color:#616161;text-decoration:none;transition:color .2s}
+.vp-topbar__back:hover{color:#4552CC}
+.vp-topbar__back i{font-size:.9rem}
+.vp-topbar__sep{color:#E0E0E0;font-size:1.2rem;line-height:1}
+
+/* -- Container -- */
+.vp-wrap{max-width:780px;margin:0 auto;padding:0 16px 80px}
+
+/* -- Loading / Error states -- */
+.vp-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;min-height:60vh;color:#9E9E9E;font-size:.88rem}
+.vp-loading__spinner{width:36px;height:36px;border:3px solid #D9DEF5;border-top-color:#4552CC;border-radius:50%;animation:vp-spin .8s linear infinite}
+@keyframes vp-spin{to{transform:rotate(360deg)}}
+.vp-error{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:60vh;text-align:center;padding:24px}
+.vp-error i{font-size:3rem;color:#E0E0E0}
+.vp-error h2{font-family:'Sora',sans-serif;font-size:1.2rem;font-weight:700;color:#424242}
+.vp-error p{font-size:.85rem;color:#9E9E9E;max-width:320px;line-height:1.6}
+.vp-error a{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:10px 20px;border-radius:10px;background:#4552CC;color:#fff;font-size:.84rem;font-weight:700}
+
+/* -- Cover -- */
+.vp-cover{width:100%;height:180px;background:linear-gradient(135deg,#4552CC 0%,#51CBF5 100%);position:relative;overflow:hidden;border-radius:0 0 24px 24px}
+.vp-cover img{width:100%;height:100%;object-fit:cover}
+.vp-cover-fallback{display:flex;align-items:center;justify-content:center;width:100%;height:100%}
+.vp-cover-fallback i{font-size:4rem;color:rgba(255,255,255,.25)}
+
+/* -- Profile header -- */
+.vp-header{display:flex;flex-direction:column;gap:8px;padding:0 4px;margin-top:-24px;position:relative}
+.vp-logo-wrap{width:80px;height:80px;border-radius:20px;border:3px solid #fff;background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.12);overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.vp-logo-wrap img{width:100%;height:100%;object-fit:cover}
+.vp-logo-fallback{display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:linear-gradient(135deg,#EEF1FB,#D9DEF5)}
+.vp-logo-fallback i{font-size:2rem;color:#4552CC}
+.vp-header-row{display:flex;align-items:flex-start;gap:14px}
+.vp-header-info{display:flex;flex-direction:column;gap:6px;padding-top:6px;flex:1;min-width:0}
+.vp-badges{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.vp-badge{display:inline-flex;align-items:center;gap:4px;font-size:.62rem;font-weight:800;padding:3px 9px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.vp-badge--aliado{background:#D9DEF5;color:#4552CC}
+.vp-badge--premium{background:#EDE9F8;color:#7E22CE}
+.vp-badge--solidario{background:#D5F5E3;color:#1a7a45}
+.vp-badge--emergencias24h{background:#FDE8E8;color:#C0392B}
+.vp-badge--open{background:rgba(46,204,113,.15);color:#1a7a45;border:1px solid rgba(46,204,113,.3)}
+.vp-badge--closed{background:#FFF5F5;color:#C0392B;border:1px solid #FECACA}
+.vp-name{font-family:'Sora',sans-serif;font-size:1.4rem;font-weight:800;color:#212121;line-height:1.2}
+.vp-city{font-size:.82rem;color:#9E9E9E;display:flex;align-items:center;gap:5px}
+.vp-city i{font-size:.88rem}
+
+/* -- Action buttons -- */
+.vp-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.vp-btn{display:inline-flex;align-items:center;gap:7px;padding:11px 18px;border-radius:12px;font-size:.84rem;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;border:none;cursor:pointer;text-decoration:none;transition:transform .15s,box-shadow .15s}
+.vp-btn:hover{transform:translateY(-1px)}
+.vp-btn--wa{background:#25D366;color:#fff;box-shadow:0 4px 14px rgba(37,211,102,.3)}
+.vp-btn--wa:hover{background:#1EB85B;box-shadow:0 6px 20px rgba(37,211,102,.4)}
+.vp-btn--gps{background:#4552CC;color:#fff;box-shadow:0 4px 14px rgba(69,82,204,.3)}
+.vp-btn--gps:hover{background:#2E3A9E;box-shadow:0 6px 20px rgba(69,82,204,.4)}
+.vp-btn--phone{background:#F5F5F5;color:#424242;border:1px solid #E0E0E0}
+.vp-btn--phone:hover{background:#EEE}
+.vp-btn i{font-size:.95rem}
+
+/* -- Address line -- */
+.vp-address{font-size:.82rem;color:#757575;display:flex;align-items:flex-start;gap:7px;line-height:1.55;margin-top:4px}
+.vp-address i{font-size:.95rem;color:#9E9E9E;flex-shrink:0;margin-top:1px}
+
+/* -- Divider -- */
+.vp-divider{height:1px;background:linear-gradient(90deg,transparent,#E0E0E0,transparent);margin:28px 0}
+
+/* -- Section title -- */
+.vp-sec-title{font-family:'Sora',sans-serif;font-size:1rem;font-weight:800;color:#212121;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.vp-sec-title i{font-size:1.1rem;color:#4552CC}
+
+/* -- Services grid -- */
+.vp-svc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.vp-svc-card{border-radius:16px;background:#fff;border:1px solid #EEE;box-shadow:0 2px 10px rgba(69,82,204,.05);padding:16px;display:flex;flex-direction:column;gap:6px}
+.vp-svc-header{display:flex;align-items:center;gap:8px}
+.vp-svc-icon{width:36px;height:36px;border-radius:10px;background:#EEF1FB;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.vp-svc-icon i{font-size:1rem;color:#4552CC}
+.vp-svc-name{font-size:.9rem;font-weight:700;color:#212121;line-height:1.25}
+.vp-svc-desc{font-size:.78rem;color:#757575;line-height:1.55}
+.vp-svc-prices{display:flex;flex-direction:column;gap:3px;margin-top:2px}
+.vp-svc-price{font-size:.82rem;font-weight:700;color:#4552CC}
+.vp-svc-price--solidario{font-size:.78rem;font-weight:700;color:#1a7a45;display:flex;align-items:center;gap:5px}
+.vp-svc-price--solidario i{font-size:.82rem}
+.vp-svc-empty{font-size:.84rem;color:#9E9E9E;padding:20px 0;text-align:center}
+
+/* -- Schedule -- */
+.vp-schedule{display:flex;flex-direction:column;gap:8px}
+.vp-schedule-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:10px;background:#fff;border:1px solid #F0F0F0}
+.vp-schedule-row--today{background:#EEF1FB;border-color:#D9DEF5}
+.vp-schedule-day{font-size:.84rem;font-weight:700;color:#424242;min-width:100px}
+.vp-schedule-day--today{color:#4552CC}
+.vp-schedule-hours{font-size:.82rem;color:#616161;display:flex;align-items:center;gap:6px}
+.vp-schedule-hours--closed{color:#BDBDBD;font-style:italic}
+.vp-schedule-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.vp-schedule-dot--open{background:#2ECC71}
+.vp-schedule-dot--closed{background:#E0E0E0}
+
+/* -- Disclaimer -- */
+.vp-disclaimer{font-size:.72rem;color:#BDBDBD;line-height:1.72;text-align:center;margin-top:32px;padding:0 8px}
+
+/* -- Solidario banner -- */
+.vp-solidario-banner{border-radius:16px;background:linear-gradient(135deg,#D5F5E3,#A9DFBF);border:1px solid #A9DFBF;padding:16px 20px;display:flex;align-items:flex-start;gap:12px;margin-bottom:28px}
+.vp-solidario-banner i{font-size:1.6rem;color:#1a7a45;flex-shrink:0;margin-top:2px}
+.vp-solidario-banner-title{font-size:.9rem;font-weight:800;color:#1a7a45;margin-bottom:3px}
+.vp-solidario-banner-desc{font-size:.78rem;color:#2d7a50;line-height:1.55}
+
+/* -- Not found -- */
+.hidden{display:none!important}
+
+/* -- Responsive -- */
+@media(max-width:599px){
+  .vp-name{font-size:1.15rem}
+  .vp-svc-grid{grid-template-columns:1fr!important}
+  .vp-actions{gap:8px}
+  .vp-btn{padding:10px 14px;font-size:.80rem}
+}
+  </style>
+</head>
+<body>
+
+<!-- Topbar -->
+<div class="vp-topbar">
+  <a class="vp-topbar__logo" href="/">PETCINGO</a>
+  <span class="vp-topbar__sep">|</span>
+  <a class="vp-topbar__back" href="/#vetdir">
+    <i class="ri-arrow-left-line"></i> Directorio
+  </a>
+</div>
+
+<!-- Loading -->
+<div id="vp-loading" class="vp-loading">
+  <div class="vp-loading__spinner"></div>
+  <span>Cargando perfil...</span>
+</div>
+
+<!-- Error -->
+<div id="vp-error" class="vp-error hidden">
+  <i class="ri-error-warning-line"></i>
+  <h2>Veterinaria no encontrada</h2>
+  <p>El enlace puede ser incorrecto o la veterinaria ya no esta disponible.</p>
+  <a href="/#vetdir"><i class="ri-arrow-left-line"></i> Volver al directorio</a>
+</div>
+
+<!-- Profile content -->
+<div id="vp-content" class="hidden">
+
+  <!-- Cover -->
+  <div class="vp-cover" id="vp-cover-el">
+    <span class="vp-cover-fallback"><i class="ri-hospital-line"></i></span>
+  </div>
+
+  <div class="vp-wrap">
+
+    <!-- Header -->
+    <div class="vp-header">
+      <div class="vp-header-row">
+        <div class="vp-logo-wrap" id="vp-logo-el">
+          <div class="vp-logo-fallback"><i class="ri-hospital-line"></i></div>
+        </div>
+        <div class="vp-header-info">
+          <div class="vp-badges" id="vp-badges-el"></div>
+          <div class="vp-name" id="vp-name-el"></div>
+          <div class="vp-city" id="vp-city-el"><i class="ri-map-pin-line"></i><span></span></div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="vp-actions" id="vp-actions-el"></div>
+
+      <!-- Address -->
+      <div class="vp-address hidden" id="vp-address-el">
+        <i class="ri-map-pin-2-line"></i>
+        <span id="vp-address-text"></span>
+      </div>
+    </div>
+
+    <div class="vp-divider"></div>
+
+    <!-- Solidario banner -->
+    <div id="vp-solidario-banner" class="vp-solidario-banner hidden">
+      <i class="ri-heart-pulse-line"></i>
+      <div>
+        <div class="vp-solidario-banner-title">Veterinaria Solidaria Petcingo</div>
+        <div class="vp-solidario-banner-desc">
+          Esta veterinaria ofrece precios especiales para clientes Petcingo.
+          Los precios solidarios se aplican segun criterio del medico veterinario.
+        </div>
+      </div>
+    </div>
+
+    <!-- Servicios -->
+    <div id="vp-sec-servicios">
+      <div class="vp-sec-title"><i class="ri-stethoscope-line"></i> Servicios</div>
+      <div class="vp-svc-grid" id="vp-svc-grid-el">
+        <div class="vp-svc-empty">No se registraron servicios aun.</div>
+      </div>
+    </div>
+
+    <div class="vp-divider"></div>
+
+    <!-- Horario -->
+    <div id="vp-sec-horario">
+      <div class="vp-sec-title"><i class="ri-time-line"></i> Horario de atencion</div>
+      <div class="vp-schedule" id="vp-schedule-el"></div>
+    </div>
+
+    <!-- Disclaimer -->
+    <p class="vp-disclaimer">
+      Los horarios, servicios y precios son provistos por la veterinaria y pueden variar sin previo aviso.
+      Petcingo no garantiza disponibilidad en tiempo real ni es responsable de la calidad de los servicios prestados.
+      El programa Solidario es un acuerdo voluntario entre la veterinaria y Petcingo.
+      Ante cualquier emergencia, contacte directamente a la veterinaria.
+    </p>
+
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  var FIREBASE_CONFIG = {
+    apiKey: 'AIzaSyAEE3yLFFsJTMORNFLYZWW2_DNHwzF0hE8',
+    authDomain: 'petcingo-43096.firebaseapp.com',
+    projectId: 'petcingo-43096',
+    storageBucket: 'petcingo-43096.firebasestorage.app',
+    messagingSenderId: '679546185536',
+    appId: '1:679546185536:web:ceccd210b7c73b296f7ca5'
+  };
+
+  var app, db;
+  try { app = firebase.initializeApp(FIREBASE_CONFIG, 'ptcg-vet-pub'); }
+  catch (e) { app = firebase.app('ptcg-vet-pub'); }
+  db = firebase.firestore(app);
+
+  var DAY_LABELS = {
+    monday: 'Lunes', tuesday: 'Martes', wednesday: 'Miercoles',
+    thursday: 'Jueves', friday: 'Viernes', saturday: 'Sabado', sunday: 'Domingo'
+  };
+  var DAY_ORDER = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+  var TODAY_KEY = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'][new Date().getDay()];
+
+  function getParam(name) {
+    return new URLSearchParams(window.location.search).get(name);
+  }
+
+  function esc(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function timeToMin(t) {
+    if (!t) return 0;
+    var p = t.split(':');
+    return parseInt(p[0], 10) * 60 + parseInt(p[1] || '0', 10);
+  }
+
+  function isOpenNow(schedule, is24h) {
+    if (is24h) return true;
+    if (!schedule) return false;
+    var tz  = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/La_Paz' }));
+    var d   = schedule[TODAY_KEY];
+    if (!d || d.closed) return false;
+    if (!d.open || !d.close) return true;
+    var cur = tz.getHours() * 60 + tz.getMinutes();
+    return cur >= timeToMin(d.open) && cur < timeToMin(d.close);
+  }
+
+  function setEl(id, html) {
+    var el = document.getElementById(id);
+    if (el) el.innerHTML = html;
+  }
+
+  function show(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.remove('hidden');
+  }
+
+  function hide(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+  }
+
+  function renderProfile(id, data) {
+    /* Cover */
+    var coverEl = document.getElementById('vp-cover-el');
+    if (coverEl && data.coverUrl) {
+      coverEl.innerHTML = '<img src="' + esc(data.coverUrl) + '" alt="Portada ' + esc(data.name) + '" loading="lazy">';
+    }
+    /* Logo */
+    var logoEl = document.getElementById('vp-logo-el');
+    if (logoEl && data.logoUrl) {
+      logoEl.innerHTML = '<img src="' + esc(data.logoUrl) + '" alt="Logo ' + esc(data.name) + '" loading="lazy">';
+    }
+    /* Name */
+    setEl('vp-name-el', esc(data.name || 'Veterinaria'));
+    /* City */
+    var cityEl = document.getElementById('vp-city-el');
+    if (cityEl) cityEl.querySelector('span').textContent = data.city || '';
+    /* Badges */
+    var levelMap = { aliado: 'Aliado', premium: 'Premium', solidario: 'Solidario', emergencias24h: '24h Emergencias' };
+    var lvl = data.level || 'aliado';
+    var levelLabel = levelMap[lvl] || lvl;
+    var open = isOpenNow(data.schedule, data.is24h);
+    var openLabel = open ? 'Abierto ahora' : 'Cerrado';
+    var openClass = open ? 'vp-badge--open' : 'vp-badge--closed';
+    var openIcon  = open ? 'ri-record-circle-fill' : 'ri-close-circle-line';
+    var bHtml = '<span class="vp-badge vp-badge--' + esc(lvl) + '">' + esc(levelLabel) + '</span>';
+    bHtml += '<span class="vp-badge ' + openClass + '"><i class="' + openIcon + '"></i>' + openLabel + '</span>';
+    if (data.is24h) bHtml += '<span class="vp-badge vp-badge--emergencias24h"><i class="ri-alarm-warning-line"></i> 24h</span>';
+    setEl('vp-badges-el', bHtml);
+    /* Actions */
+    var actHtml = '';
+    var waNum = (data.whatsapp || '').replace(/\D/g, '');
+    if (waNum) {
+      actHtml += '<a href="https://wa.me/' + esc(waNum) + '?text=Hola%2C+los+encuentro+en+Petcingo" class="vp-btn vp-btn--wa" target="_blank" rel="noopener"><i class="ri-whatsapp-line"></i> WhatsApp</a>';
+    }
+    if (data.gpsLink) {
+      actHtml += '<a href="' + esc(data.gpsLink) + '" class="vp-btn vp-btn--gps" target="_blank" rel="noopener"><i class="ri-map-pin-line"></i> Como llegar</a>';
+    }
+    if (data.phone) {
+      actHtml += '<a href="tel:' + esc(data.phone) + '" class="vp-btn vp-btn--phone"><i class="ri-phone-line"></i> ' + esc(data.phone) + '</a>';
+    }
+    setEl('vp-actions-el', actHtml);
+    /* Address */
+    if (data.address) {
+      show('vp-address-el');
+      setEl('vp-address-text', esc(data.address));
+    }
+    /* Solidario banner */
+    if (lvl === 'solidario') show('vp-solidario-banner');
+    /* Page title */
+    document.title = esc(data.name) + ' - Petcingo';
+    /* Services */
+    renderServices(data.services || [], lvl === 'solidario');
+    /* Schedule */
+    renderSchedule(data.schedule, data.is24h);
+    /* Show content */
+    hide('vp-loading');
+    show('vp-content');
+  }
+
+  function renderServices(services, isSolidario) {
+    var grid = document.getElementById('vp-svc-grid-el');
+    if (!grid) return;
+    if (!services.length) {
+      grid.innerHTML = '<div class="vp-svc-empty">No se registraron servicios aun.</div>';
+      return;
+    }
+    grid.innerHTML = services.map(function(s) {
+      var iconName = s.icon || 'ri-stethoscope-line';
+      var pricesHtml = '';
+      if (s.price) {
+        pricesHtml += '<div class="vp-svc-price">Bs. ' + esc(String(s.price)) + '</div>';
+      }
+      if (isSolidario && s.solidarioPrice) {
+        pricesHtml += '<div class="vp-svc-price--solidario"><i class="ri-heart-pulse-line"></i> Solidario: Bs. ' + esc(String(s.solidarioPrice)) + '</div>';
+      }
+      return '<div class="vp-svc-card">' +
+        '<div class="vp-svc-header">' +
+          '<div class="vp-svc-icon"><i class="' + esc(iconName) + '"></i></div>' +
+          '<div class="vp-svc-name">' + esc(s.name) + '</div>' +
+        '</div>' +
+        (s.desc ? '<div class="vp-svc-desc">' + esc(s.desc) + '</div>' : '') +
+        (pricesHtml ? '<div class="vp-svc-prices">' + pricesHtml + '</div>' : '') +
+      '</div>';
+    }).join('');
+  }
+
+  function renderSchedule(schedule, is24h) {
+    var cont = document.getElementById('vp-schedule-el');
+    if (!cont) return;
+    if (is24h && !schedule) {
+      cont.innerHTML = '<div class="vp-schedule-row"><span class="vp-schedule-day" style="color:#C0392B">Abierto 24 horas, los 7 dias</span></div>';
+      return;
+    }
+    if (!schedule) {
+      cont.innerHTML = '<div class="vp-schedule-row"><span class="vp-schedule-day">Horario no disponible</span></div>';
+      return;
+    }
+    cont.innerHTML = DAY_ORDER.map(function(key) {
+      var d = schedule[key] || {};
+      var isToday = key === TODAY_KEY;
+      var rowClass = isToday ? 'vp-schedule-row vp-schedule-row--today' : 'vp-schedule-row';
+      var dayClass = isToday ? 'vp-schedule-day vp-schedule-day--today' : 'vp-schedule-day';
+      if (d.closed) {
+        return '<div class="' + rowClass + '">' +
+          '<span class="' + dayClass + '">' + DAY_LABELS[key] + '</span>' +
+          '<span class="vp-schedule-hours vp-schedule-hours--closed"><span class="vp-schedule-dot vp-schedule-dot--closed"></span>Cerrado</span>' +
+        '</div>';
+      }
+      var hours = (d.open && d.close) ? d.open + ' - ' + d.close : 'Horario no definido';
+      return '<div class="' + rowClass + '">' +
+        '<span class="' + dayClass + '">' + DAY_LABELS[key] + '</span>' +
+        '<span class="vp-schedule-hours"><span class="vp-schedule-dot vp-schedule-dot--open"></span>' + esc(hours) + '</span>' +
+      '</div>';
+    }).join('');
+  }
+
+  /* -- Init -- */
+  var vetId = getParam('id');
+  if (!vetId) {
+    hide('vp-loading');
+    show('vp-error');
+  } else {
+    db.collection('veterinarias').doc(vetId).get()
+      .then(function(doc) {
+        if (!doc.exists || doc.data().status === 'banned') {
+          hide('vp-loading');
+          show('vp-error');
+          return;
+        }
+        renderProfile(doc.id, doc.data());
+      })
+      .catch(function() {
+        hide('vp-loading');
+        show('vp-error');
+      });
+  }
+
+})();
+</script>
+
+</body>
+</html>

@@ -415,6 +415,73 @@
     max-width: 1060px !important;
   }
 }
+/* ── Vet Directory dinamico ── */
+.ptcg-index__vetdir{padding:100px 0;background:linear-gradient(160deg,#EEF1FB 0%,#F0F4FF 50%,#E8F7FD 100%)}
+.ptcg-index__vetdir-filters{margin-bottom:32px;display:flex;flex-direction:column;gap:16px}
+.ptcg-index__vetdir-filter-row{display:flex;flex-wrap:wrap;gap:8px}
+.ptcg-index__vetdir-filter-row--flex{align-items:center;justify-content:space-between}
+.ptcg-index__vetdir-spec-tabs{display:flex;flex-wrap:wrap;gap:6px}
+.ptcg-index__vetdir-spec-tab{border:1.5px solid #D9DEF5;background:#fff;color:#4552CC!important;font-size:.78rem;font-weight:700;padding:5px 14px;border-radius:99px;cursor:pointer;transition:all .2s;font-family:'Plus Jakarta Sans',sans-serif!important}
+.ptcg-index__vetdir-spec-tab.is-active,.ptcg-index__vetdir-spec-tab:hover{background:#4552CC!important;color:#fff!important;border-color:#4552CC}
+.ptcg-index__vetdir-toggles{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.ptcg-index__vetdir-toggle{display:inline-flex;align-items:center;gap:7px;cursor:pointer;user-select:none;font-size:.82rem;font-weight:600;color:#616161!important}
+.ptcg-index__vetdir-toggle input{accent-color:#4552CC;width:16px;height:16px;cursor:pointer}
+.ptcg-index__vetdir-toggle--green input{accent-color:#2ECC71}
+.ptcg-index__vetdir-toggle span i{font-family:'remixicon'!important;font-style:normal!important}
+.ptcg-index__vetdir-loading{display:flex;align-items:center;justify-content:center;gap:12px;padding:60px 0;color:#9E9E9E!important;font-size:.88rem}
+.ptcg-index__vetdir-spinner{width:28px;height:28px;border:3px solid #D9DEF5;border-top-color:#4552CC;border-radius:50%;animation:ptcg-spin 0.8s linear infinite}
+@keyframes ptcg-spin{to{transform:rotate(360deg)}}
+.ptcg-index__vetdir-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:32px}
+.ptcg-index__vetdir-card{position:relative;border-radius:20px;overflow:hidden;background:#fff!important;border:1px solid #EEE;box-shadow:0 4px 20px rgba(69,82,204,.07),inset 0 1px 0 rgba(255,255,255,1);transition:transform .25s,box-shadow .25s}
+.ptcg-index__vetdir-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(69,82,204,.14)}
+.ptcg-index__vetdir-cover{height:110px;background:linear-gradient(135deg,#4552CC,#51CBF5);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.ptcg-index__vetdir-cover img{width:100%;height:100%;object-fit:cover}
+.ptcg-index__vetdir-cover-fallback{display:flex;align-items:center;justify-content:center;width:100%;height:100%}
+.ptcg-index__vetdir-cover-fallback i{font-family:'remixicon'!important;font-style:normal!important;color:rgba(255,255,255,.4)!important;font-size:2.8rem}
+.ptcg-index__vetdir-logo{position:absolute;bottom:-22px;left:16px;width:48px;height:48px;border-radius:12px;background:#fff;border:2px solid #fff;box-shadow:0 4px 16px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.ptcg-index__vetdir-logo img{width:100%;height:100%;object-fit:cover}
+.ptcg-index__vetdir-logo-fallback{display:flex;align-items:center;justify-content:center;width:100%;height:100%}
+.ptcg-index__vetdir-logo-fallback i{font-size:1.4rem;font-family:'remixicon'!important;font-style:normal!important;color:#4552CC!important}
+.ptcg-index__vetdir-open{position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;gap:4px;font-size:.62rem;font-weight:800;padding:3px 9px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ptcg-index__vetdir-open--yes{background:rgba(46,204,113,.85);color:#fff!important}
+.ptcg-index__vetdir-open--no{background:rgba(0,0,0,.45);color:rgba(255,255,255,.9)!important}
+.ptcg-index__vetdir-open i{font-family:'remixicon'!important;font-style:normal!important}
+.ptcg-index__vetdir-body{padding:32px 16px 16px}
+.ptcg-index__vetdir-level{display:inline-flex;align-items:center;gap:4px;font-size:.62rem;font-weight:800;padding:3px 9px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.ptcg-index__vetdir-level--aliado{background:#D9DEF5;color:#4552CC!important}
+.ptcg-index__vetdir-level--premium{background:#EDE9F8;color:#7E22CE!important}
+.ptcg-index__vetdir-level--solidario{background:#D5F5E3;color:#1a7a45!important}
+.ptcg-index__vetdir-level--emergencias24h{background:#FDE8E8;color:#C0392B!important}
+.ptcg-index__vetdir-name{font-family:'Sora',sans-serif!important;font-size:1rem;font-weight:800;color:#212121!important;margin-bottom:4px;line-height:1.3}
+.ptcg-index__vetdir-city{font-size:.78rem;color:#9E9E9E!important;margin-bottom:10px;display:flex;align-items:center;gap:4px}
+.ptcg-index__vetdir-city i{font-family:'remixicon'!important;font-style:normal!important;font-size:.85rem}
+.ptcg-index__vetdir-svcs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}
+.ptcg-index__vetdir-svc{font-size:.65rem;font-weight:600;padding:3px 8px;border-radius:99px;background:#F0F4FF;color:#4552CC!important;border:1px solid #D9DEF5}
+.ptcg-index__vetdir-actions{display:flex;gap:8px}
+.ptcg-index__vetdir-wa{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:9px 14px;border-radius:10px;background:#25D366!important;color:#fff!important;font-size:.78rem;font-weight:700;text-decoration:none!important;transition:background .2s}
+.ptcg-index__vetdir-wa:hover{background:#1EB85B!important}
+.ptcg-index__vetdir-wa i{font-family:'remixicon'!important;font-style:normal!important}
+.ptcg-index__vetdir-profile{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:9px 14px;border-radius:10px;background:#4552CC!important;color:#fff!important;font-size:.78rem;font-weight:700;text-decoration:none!important;transition:background .2s}
+.ptcg-index__vetdir-profile:hover{background:#2E3A9E!important}
+.ptcg-index__vetdir-profile i{font-family:'remixicon'!important;font-style:normal!important}
+.ptcg-index__vetdir-empty{display:flex;flex-direction:column;align-items:center;gap:12px;padding:60px 0;color:#9E9E9E!important;font-size:.88rem;text-align:center}
+.ptcg-index__vetdir-empty i{font-size:2.8rem;font-family:'remixicon'!important;font-style:normal!important;color:#D9DEF5!important}
+.ptcg-index__vetdir-disclaimer{font-size:.72rem;color:#BDBDBD!important;text-align:center;max-width:600px;margin:0 auto;line-height:1.72}
+/* Emergency button */
+.ptcg-index__emergency-btn{position:fixed;bottom:90px;right:20px;z-index:350;display:flex;align-items:center;gap:8px;background:#C0392B!important;color:#fff!important;border:none;border-radius:99px;padding:12px 20px;font-size:.82rem;font-weight:800;cursor:pointer;box-shadow:0 6px 24px rgba(192,57,43,.4);transition:transform .2s,box-shadow .2s;font-family:'Plus Jakarta Sans',sans-serif!important;white-space:nowrap}
+.ptcg-index__emergency-btn:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 10px 32px rgba(192,57,43,.55)}
+.ptcg-index__emergency-btn i{font-size:1.1rem;font-family:'remixicon'!important;font-style:normal!important;animation:ptcg-pulse-warn 1.4s ease-in-out infinite}
+@keyframes ptcg-pulse-warn{0%,100%{opacity:1}50%{opacity:.5}}
+@media(max-width:767px){
+  .ptcg-index__vetdir{padding:64px 0}
+  .ptcg-index__vetdir-grid{grid-template-columns:1fr!important}
+  .ptcg-index__vetdir-filter-row--flex{flex-direction:column;align-items:flex-start}
+  .ptcg-index__emergency-btn{bottom:calc(var(--ptcg-tabbar-h,64px) + 12px);right:14px;padding:10px 14px}
+  .ptcg-index__emergency-btn span{display:none}
+}
+@media(min-width:768px) and (max-width:1023px){
+  .ptcg-index__vetdir-grid{grid-template-columns:repeat(2,1fr)!important}
+}
   </style>
 </head>
 <body>
@@ -1195,6 +1262,57 @@
   </section>
 
   <!-- ══════════════════════════════════════
+       DIRECTORIO VETERINARIAS (dinamico)
+  ══════════════════════════════════════ -->
+  <section class="ptcg-index__vetdir" id="vetdir" aria-labelledby="ptcg-vetdir-h">
+    <div class="ptcg-index__container">
+      <div class="ptcg-index__dir-header ptcg-index__fade-up">
+        <div class="ptcg-index__sec-tag"><i class="ri-hospital-line"></i> Directorio</div>
+        <h2 class="ptcg-index__sec-title" id="ptcg-vetdir-h">Veterinarias asociadas</h2>
+        <p class="ptcg-index__sec-sub ptcg-index__sec-sub--center">
+          Encuentra atencion veterinaria de confianza. Todas verificadas por Petcingo.
+        </p>
+      </div>
+      <div class="ptcg-index__vetdir-filters ptcg-index__fade-up">
+        <div class="ptcg-index__vetdir-filter-row" id="ptcg-vetdir-cities">
+          <button class="ptcg-index__city-tab is-active" data-vdcity="all" onclick="vdSetCityFilter(this)">
+            <i class="ri-map-line"></i> Todas
+          </button>
+        </div>
+        <div class="ptcg-index__vetdir-filter-row ptcg-index__vetdir-filter-row--flex">
+          <div id="ptcg-vetdir-specs" class="ptcg-index__vetdir-spec-tabs">
+            <button class="ptcg-index__vetdir-spec-tab is-active" data-vdspec="all" onclick="vdSetSpecFilter(this)">Todos</button>
+          </div>
+          <div class="ptcg-index__vetdir-toggles">
+            <label class="ptcg-index__vetdir-toggle">
+              <input type="checkbox" id="vd-open-now" onchange="applyVetFilters()">
+              <span><i class="ri-time-line"></i> Abierto ahora</span>
+            </label>
+            <label class="ptcg-index__vetdir-toggle ptcg-index__vetdir-toggle--green">
+              <input type="checkbox" id="vd-solidaria" onchange="applyVetFilters()">
+              <span><i class="ri-heart-pulse-line"></i> Solo solidarias</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div id="ptcg-vetdir-loading" class="ptcg-index__vetdir-loading">
+        <div class="ptcg-index__vetdir-spinner"></div>
+        <span>Cargando veterinarias...</span>
+      </div>
+      <div id="ptcg-vetdir-grid" class="ptcg-index__vetdir-grid" hidden></div>
+      <div id="ptcg-vetdir-empty" class="ptcg-index__vetdir-empty" hidden>
+        <i class="ri-search-line"></i>
+        <p>No hay veterinarias con los filtros seleccionados.</p>
+      </div>
+      <p class="ptcg-index__vetdir-disclaimer">
+        * Los horarios y servicios son provistos por las veterinarias y pueden variar.
+        Petcingo no garantiza disponibilidad en tiempo real.
+        El programa Solidario es un acuerdo voluntario entre la veterinaria y Petcingo.
+      </p>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
        DIRECTORIO
   ══════════════════════════════════════ -->
   <section class="ptcg-index__dir" id="dir" aria-labelledby="ptcg-dir-h">
@@ -1686,6 +1804,12 @@
   <div class="ptcg-index__toast-wrap" id="ptcg-toast-wrap" aria-live="polite" aria-atomic="false"></div>
 </div>
 
+<!-- ══ EMERGENCY FLOAT ══ -->
+<button class="ptcg-index__emergency-btn" id="ptcg-emergency-btn" onclick="emergencyMode()" aria-label="Emergencia veterinaria">
+  <i class="ri-alarm-warning-fill"></i>
+  <span>Necesito ayuda ahora</span>
+</button>
+
 <!-- ══ WHATSAPP FLOAT ══ -->
 <a class="ptcg-wa-float" href="https://wa.me/59170000000?text=Hola%2C+quiero+saber+más+sobre+Petcingo"
    target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">
@@ -2001,6 +2125,170 @@
       tabs.forEach(function (t) { t.classList.toggle('is-active', t.dataset.tab === active); });
     }, { passive: true });
   })();
+
+  /* ── Vet Directory dinamico ── */
+  var _vdData = [];
+
+  window.loadVetDirectory = function() {
+    var loading = document.getElementById('ptcg-vetdir-loading');
+    var grid    = document.getElementById('ptcg-vetdir-grid');
+    var empty   = document.getElementById('ptcg-vetdir-empty');
+    if (!loading || !grid) return;
+    loading.style.display = 'flex';
+    grid.hidden = true;
+    empty.hidden = true;
+    db.collection('veterinarias').where('status', '==', 'active').get()
+      .then(function(snap) {
+        _vdData = [];
+        snap.forEach(function(d) { _vdData.push(Object.assign({ _id: d.id }, d.data())); });
+        _vdBuildFilters();
+        applyVetFilters();
+        loading.style.display = 'none';
+      })
+      .catch(function(e) {
+        loading.style.display = 'none';
+        console.warn('Error cargando veterinarias:', e);
+      });
+  };
+
+  function _vdBuildFilters() {
+    var citySet = {};
+    _vdData.forEach(function(v) { if (v.city) citySet[v.city] = true; });
+    var cityRow = document.getElementById('ptcg-vetdir-cities');
+    if (cityRow) {
+      var ch = '<button class="ptcg-index__city-tab is-active" data-vdcity="all" onclick="vdSetCityFilter(this)">' +
+               '<i class="ri-map-line"></i> Todas</button>';
+      Object.keys(citySet).sort().forEach(function(c) {
+        ch += '<button class="ptcg-index__city-tab" data-vdcity="' + _vdEsc(c) + '" onclick="vdSetCityFilter(this)">' +
+              '<i class="ri-map-pin-line"></i> ' + _vdEsc(c) + '</button>';
+      });
+      cityRow.innerHTML = ch;
+    }
+    var svcSet = {};
+    _vdData.forEach(function(v) {
+      if (Array.isArray(v.services)) {
+        v.services.forEach(function(s) { if (s.name) svcSet[s.name] = true; });
+      }
+    });
+    var specCont = document.getElementById('ptcg-vetdir-specs');
+    if (specCont) {
+      var sh = '<button class="ptcg-index__vetdir-spec-tab is-active" data-vdspec="all" onclick="vdSetSpecFilter(this)">Todos</button>';
+      Object.keys(svcSet).sort().slice(0, 8).forEach(function(s) {
+        sh += '<button class="ptcg-index__vetdir-spec-tab" data-vdspec="' + _vdEsc(s) + '" onclick="vdSetSpecFilter(this)">' + _vdEsc(s) + '</button>';
+      });
+      specCont.innerHTML = sh;
+    }
+  }
+
+  window.vdSetCityFilter = function(el) {
+    document.querySelectorAll('#ptcg-vetdir-cities .ptcg-index__city-tab').forEach(function(b) { b.classList.remove('is-active'); });
+    el.classList.add('is-active');
+    applyVetFilters();
+  };
+
+  window.vdSetSpecFilter = function(el) {
+    document.querySelectorAll('#ptcg-vetdir-specs .ptcg-index__vetdir-spec-tab').forEach(function(b) { b.classList.remove('is-active'); });
+    el.classList.add('is-active');
+    applyVetFilters();
+  };
+
+  window.applyVetFilters = function() {
+    var cityEl    = document.querySelector('#ptcg-vetdir-cities .ptcg-index__city-tab.is-active');
+    var specEl    = document.querySelector('#ptcg-vetdir-specs .ptcg-index__vetdir-spec-tab.is-active');
+    var openNow   = document.getElementById('vd-open-now');
+    var solidaria = document.getElementById('vd-solidaria');
+    var city = cityEl ? cityEl.dataset.vdcity : 'all';
+    var spec = specEl ? specEl.dataset.vdspec : 'all';
+    var filtered = _vdData.filter(function(v) {
+      if (city !== 'all' && v.city !== city) return false;
+      if (spec !== 'all') {
+        var hasSvc = Array.isArray(v.services) && v.services.some(function(s) { return s.name === spec; });
+        if (!hasSvc) return false;
+      }
+      if (openNow && openNow.checked && !isVetOpenNow(v.schedule, v.is24h)) return false;
+      if (solidaria && solidaria.checked && v.level !== 'solidario') return false;
+      return true;
+    });
+    var grid  = document.getElementById('ptcg-vetdir-grid');
+    var empty = document.getElementById('ptcg-vetdir-empty');
+    if (!grid) return;
+    if (!filtered.length) { grid.hidden = true; empty.hidden = false; return; }
+    grid.hidden = false; empty.hidden = true;
+    grid.innerHTML = filtered.map(function(v) { return _vdRenderCard(v); }).join('');
+  };
+
+  window.isVetOpenNow = function(schedule, is24h) {
+    if (is24h) return true;
+    if (!schedule) return false;
+    var now = new Date();
+    var tz  = new Date(now.toLocaleString('en-US', { timeZone: 'America/La_Paz' }));
+    var day = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'][tz.getDay()];
+    var d   = schedule[day];
+    if (!d || d.closed) return false;
+    if (!d.open || !d.close) return true;
+    var cur = tz.getHours() * 60 + tz.getMinutes();
+    var op  = _vdTimeToMin(d.open);
+    var cl  = _vdTimeToMin(d.close);
+    return cur >= op && cur < cl;
+  };
+
+  function _vdTimeToMin(t) {
+    if (!t) return 0;
+    var p = t.split(':');
+    return parseInt(p[0], 10) * 60 + parseInt(p[1] || '0', 10);
+  }
+
+  function _vdRenderCard(v) {
+    var levelMap = { aliado: 'Aliado', premium: 'Premium', solidario: 'Solidario', emergencias24h: '24h Emergencias' };
+    var levelLabel = levelMap[v.level] || v.level || 'Aliado';
+    var openNow = isVetOpenNow(v.schedule, v.is24h);
+    var svcs = (Array.isArray(v.services) ? v.services : []).slice(0, 3);
+    var svcHtml = svcs.map(function(s) {
+      return '<span class="ptcg-index__vetdir-svc">' + _vdEsc(s.name) + '</span>';
+    }).join('');
+    var coverHtml = v.coverUrl
+      ? '<img src="' + _vdEsc(v.coverUrl) + '" alt="" loading="lazy">'
+      : '<span class="ptcg-index__vetdir-cover-fallback"><i class="ri-hospital-line"></i></span>';
+    var logoHtml = v.logoUrl
+      ? '<img src="' + _vdEsc(v.logoUrl) + '" alt="" loading="lazy">'
+      : '<span class="ptcg-index__vetdir-logo-fallback"><i class="ri-hospital-line"></i></span>';
+    var openBadge = openNow
+      ? '<span class="ptcg-index__vetdir-open ptcg-index__vetdir-open--yes"><i class="ri-record-circle-fill"></i> Abierto</span>'
+      : '<span class="ptcg-index__vetdir-open ptcg-index__vetdir-open--no"><i class="ri-time-line"></i> Cerrado</span>';
+    var waNum = (v.whatsapp || v.phone || '').replace(/\D/g, '');
+    var waHref = waNum ? 'https://wa.me/' + waNum + '?text=Hola%2C+los+encuentro+en+Petcingo' : '';
+    return '<div class="ptcg-index__vetdir-card">' +
+      '<div class="ptcg-index__vetdir-cover">' + coverHtml + openBadge +
+        '<div class="ptcg-index__vetdir-logo">' + logoHtml + '</div>' +
+      '</div>' +
+      '<div class="ptcg-index__vetdir-body">' +
+        '<span class="ptcg-index__vetdir-level ptcg-index__vetdir-level--' + (v.level || 'aliado') + '">' + _vdEsc(levelLabel) + '</span>' +
+        '<div class="ptcg-index__vetdir-name">' + _vdEsc(v.name) + '</div>' +
+        '<div class="ptcg-index__vetdir-city"><i class="ri-map-pin-line"></i>' + _vdEsc(v.city || '') + '</div>' +
+        (svcHtml ? '<div class="ptcg-index__vetdir-svcs">' + svcHtml + '</div>' : '') +
+        '<div class="ptcg-index__vetdir-actions">' +
+          (waHref ? '<a href="' + waHref + '" class="ptcg-index__vetdir-wa" target="_blank" rel="noopener"><i class="ri-whatsapp-line"></i> WhatsApp</a>' : '') +
+          '<a href="/veterinaria/?id=' + _vdEsc(v._id) + '" class="ptcg-index__vetdir-profile"><i class="ri-eye-line"></i> Ver perfil</a>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function _vdEsc(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  window.emergencyMode = function() {
+    var vets24h = _vdData.filter(function(v) { return v.is24h || v.level === 'emergencias24h'; });
+    if (vets24h.length) {
+      var v = vets24h[0];
+      var waNum = (v.whatsapp || v.phone || '').replace(/\D/g, '');
+      if (waNum) { window.open('https://wa.me/' + waNum + '?text=EMERGENCIA+VETERINARIA%3A+Necesito+atencion+urgente', '_blank'); return; }
+    }
+    window.open('https://wa.me/59170000000?text=EMERGENCIA+VETERINARIA%3A+Necesito+atencion+urgente', '_blank');
+  };
+
+  loadVetDirectory();
 
   (function () {
     var cityTabs = document.querySelectorAll('.ptcg-index__city-tab');
