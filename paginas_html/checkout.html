@@ -642,9 +642,12 @@
 
   <!-- TOPBAR -->
   <header class="ptcg-checkout__topbar">
-    <a class="ptcg-checkout__logo" href="https://prueb2.dashnexpages.net/home/">
-      <img src="https://prueb2.dashnexpages.net/assets/images/logo/PETCINGO_DARK.svg"
-           alt="Petcingo" height="48">
+    <a class="ptcg-checkout__logo" href="https://prueb2.dashnexpages.net/home/" style="display:flex !important;align-items:center !important;gap:7px !important;text-decoration:none !important;">
+      <span style="font-family:'Sora',sans-serif !important;font-size:1.1rem !important;font-weight:800 !important;color:#4552CC !important;">PETCINGO</span>
+      <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png" 
+           alt="" 
+           style="height:28px !important;display:none !important;" 
+           onload="this.style.display='inline';this.previousElementSibling.style.display='none';">
     </a>
     <button class="ptcg-checkout__back" onclick="ptcgPrevPhase()"
             id="ptcg-btn-back" hidden>
@@ -1037,6 +1040,77 @@
 <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1500.0.min.js"></script>
 <script src="https://prueb2.dashnexpages.net/assets/js/petcingo-checkout.js?v=20260518"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
-<script>lucide.createIcons();</script>
+<script>
+  lucide.createIcons();
+  
+  // Remixicon Fallback logic
+  (function () {
+    'use strict';
+    function checkRemixIcon() {
+      // Check if font loaded
+      var loaded = false;
+      try {
+        loaded = document.fonts.check('1em remixicon');
+      } catch (e) {}
+      
+      if (!loaded) {
+        console.warn('Remixicon failed to load. Injecting inline unicode fallbacks.');
+        var iconMap = {
+          'ri-arrow-left-line': '&#x2190;',
+          'ri-arrow-right-line': '&#x2192;',
+          'ri-check-fill': '&#x2713;',
+          'ri-check-line': '&#x2713;',
+          'ri-checkbox-circle-fill': '&#x2714;',
+          'ri-checkbox-circle-line': '&#x2714;',
+          'ri-shopping-bag-3-line': '&#x1F6D2;',
+          'ri-shopping-cart-line': '&#x1F6D2;',
+          'ri-subtract-line': '&#x2212;',
+          'ri-add-line': '&#x002B;',
+          'ri-coupon-line': '&#x1F39F;',
+          'ri-arrow-down-s-line': '&#x25BE;',
+          'ri-user-3-line': '&#x1F464;',
+          'ri-user-line': '&#x1F464;',
+          'ri-phone-line': '&#x1F4DE;',
+          'ri-mail-line': '&#x2709;',
+          'ri-map-pin-line': '&#x1F4CD;',
+          'ri-map-pin-off-line': '&#x1F4CD;',
+          'ri-store-2-line': '&#x1F3E0;',
+          'ri-motorbike-line': '&#x1F6F5;',
+          'ri-timer-line': '&#x23F1;',
+          'ri-information-line': '&#x2139;',
+          'ri-error-warning-line': '&#x26A0;',
+          'ri-close-line': '&#x2715;',
+          'ri-upload-cloud-2-line': '&#x1F50C;',
+          'ri-bank-card-line': '&#x1F4B3;',
+          'ri-bank-line': '&#x1F3E6;',
+          'ri-file-copy-line': '&#x1F4CB;',
+          'ri-qr-code-line': '&#x1F4F1;',
+          'ri-box-3-line': '&#x1F4E6;',
+          'ri-search-line': '&#x1F50D;'
+        };
+        
+        document.querySelectorAll('[class*="ri-"]').forEach(function (el) {
+          var classes = el.className.split(' ');
+          for (var i = 0; i < classes.length; i++) {
+            var c = classes[i];
+            if (iconMap[c]) {
+              el.innerHTML = iconMap[c];
+              el.style.fontFamily = 'sans-serif';
+              el.style.fontStyle = 'normal';
+              el.style.fontSize = '0.95em';
+              break;
+            }
+          }
+        });
+      }
+    }
+    
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(checkRemixIcon);
+    } else {
+      window.addEventListener('load', checkRemixIcon);
+    }
+  })();
+</script>
 </body>
 </html>

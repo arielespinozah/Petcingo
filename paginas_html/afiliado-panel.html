@@ -236,8 +236,12 @@
 <!-- ==================== LOGIN ==================== -->
 <div id="af-login">
   <div class="af-login-card">
-    <div class="af-login-logo" style="flex-direction:column;gap:12px;margin-bottom:20px;">
-      <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png" alt="Petcingo" loading="lazy" style="height:60px;object-fit:contain;" onerror="this.outerHTML='<span style=\'font-weight:800;font-family:Sora,sans-serif;color:#4552CC;font-size:1.45rem;\'>PETCINGO</span>'">
+    <div class="af-login-logo" style="display:flex !important;align-items:center !important;justify-content:center !important;gap:7px !important;text-decoration:none !important;margin-bottom:20px;">
+      <span style="font-family:'Sora',sans-serif !important;font-weight:800 !important;color:#4552CC !important;font-size:1.45rem !important;">PETCINGO</span>
+      <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png" 
+           alt="" 
+           style="height:60px !important;object-fit:contain !important;display:none !important;" 
+           onload="this.style.display='inline';this.previousElementSibling.style.display='none';">
     </div>
     <div class="af-login-title">Panel Afiliado</div>
     <div class="af-login-sub">Ingresa con las credenciales asignadas por el administrador.</div>
@@ -262,7 +266,13 @@
 
   <!-- TOPBAR -->
   <div id="af-topbar">
-    <a href="/" style="display:flex;align-items:center;text-decoration:none;"><img class="af-tb-logo" src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png" alt="Petcingo" loading="lazy" style="height:26px;object-fit:contain;" onerror="this.outerHTML='<span class=\'af-tb-logo\'>PETCINGO</span>'"></a>
+    <a href="/" style="display:flex !important;align-items:center !important;gap:7px !important;text-decoration:none !important;">
+      <span class="af-tb-logo" style="font-family:'Sora',sans-serif !important;font-weight:800 !important;color:#4552CC !important;font-size:1.1rem !important;letter-spacing:0.5px !important;border:none !important;padding:0 !important;background:none !important;margin:0 !important;">PETCINGO</span>
+      <img class="af-tb-logo" src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png" 
+           alt="" 
+           style="height:26px !important;object-fit:contain !important;display:none !important;" 
+           onload="this.style.display='inline';this.previousElementSibling.style.display='none';">
+    </a>
     <div class="af-tb-center">
       <span class="af-tb-name" id="af-affiliate-name">Afiliado</span>
       <span class="af-tb-badge">Afiliado</span>

@@ -157,10 +157,11 @@
 <!-- NAV -->
 <nav class="it-nav">
   <a class="it-nav-logo" href="https://prueb2.dashnexpages.net/home/">
-    <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png" alt="Petcingo"
-         onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
-    <span class="it-nav-logo-text" style="display:none">PETCINGO</span>
-    <span class="it-nav-logo-text" id="nav-logo-text" style="display:none">PETCINGO</span>
+    <span style="font-family:'Sora',sans-serif;font-size:1rem;font-weight:800;color:#4552CC;">PETCINGO</span>
+    <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png" 
+         alt="" 
+         style="height:28px;display:none;" 
+         onload="this.style.display='inline';this.previousElementSibling.style.display='none';">
   </a>
   <a class="it-nav-link" href="https://prueb2.dashnexpages.net/finalizar-compra/">Planes</a>
 </nav>
@@ -168,10 +169,12 @@
 <!-- HERO -->
 <div class="it-hero" id="plan-hero">
   <div class="it-hero-inner">
+    <span style="font-family:'Sora',sans-serif;font-size:1.45rem;font-weight:800;color:#FFFFFF;display:block;margin-bottom:20px;">PETCINGO</span>
     <img class="it-hero-logo"
          src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-white.png"
-         alt="Petcingo"
-         onerror="this.style.display='none'">
+         alt=""
+         style="display:none;height:40px;width:auto;margin:0 auto 20px;"
+         onload="this.style.display='block';this.previousElementSibling.style.display='none';">
     <div class="it-hero-icon" id="plan-icon">🏷️</div>
     <div class="it-hero-badge"><i class="ri-shield-check-line"></i> <span id="plan-badge-txt">Placa NFC + QR</span></div>
     <h1 class="it-hero-title" id="plan-name">Tag Pet ID</h1>
@@ -219,8 +222,11 @@
 
 <!-- FOOTER -->
 <footer class="it-footer">
-  <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png"
-       alt="Petcingo" onerror="this.style.display='none'"><br>
+  <span style="font-family:'Sora',sans-serif;font-size:0.80rem;font-weight:800;color:#4552CC;">PETCINGO</span>
+  <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png" 
+       alt="" 
+       style="height:20px;display:none;margin:0 auto 8px;" 
+       onload="this.style.display='block';this.previousElementSibling.style.display='none';"><br>
   &copy; 2026 Petcingo &mdash; Sistema de Identificación de Mascotas<br>
   <a href="https://prueb2.dashnexpages.net/home/">Inicio</a> |
   <a href="https://prueb2.dashnexpages.net/finalizar-compra/">Planes</a>
@@ -329,13 +335,7 @@
     if (ref) tab.href = '?plan=' + tabPlan + '&ref=' + encodeURIComponent(ref);
   });
 
-  var navLogoImg = document.querySelector('.it-nav-logo img');
-  if (navLogoImg) {
-    navLogoImg.onerror = function () {
-      this.style.display = 'none';
-      document.getElementById('nav-logo-text').style.display = 'inline';
-    };
-  }
+
 }());
 </script>
 </body>

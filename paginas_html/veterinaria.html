@@ -138,7 +138,13 @@ i[class^="ri-"],i[class*=" ri-"]{font-family:'remixicon'!important;font-style:no
 
 <!-- Topbar -->
 <div class="vp-topbar">
-  <a class="vp-topbar__logo" href="/" style="display:inline-flex;align-items:center;"><img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png" alt="Petcingo" loading="lazy" style="height:28px;object-fit:contain;" onerror="this.outerHTML='PETCINGO'"></a>
+  <a class="vp-topbar__logo" href="/" style="display:flex !important;align-items:center !important;gap:7px !important;text-decoration:none !important;">
+    <span style="font-family:'Sora',sans-serif !important;font-size:1.1rem !important;font-weight:800 !important;color:#4552CC !important;letter-spacing:0.5px !important;border:none !important;padding:0 !important;background:none !important;margin:0 !important;display:inline-block !important;">PETCINGO</span>
+    <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png" 
+         alt="" 
+         style="height:28px !important;object-fit:contain !important;display:none !important;" 
+         onload="this.style.display='inline';this.previousElementSibling.style.display='none';">
+  </a>
   <span class="vp-topbar__sep">|</span>
   <a class="vp-topbar__back" href="/#vetdir">
     <i class="ri-arrow-left-line"></i> Directorio

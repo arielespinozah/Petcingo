@@ -229,10 +229,12 @@
 
 <!-- TOPBAR -->
 <div class="lg-topbar">
-  <a class="lg-topbar-logo" href="https://prueb2.dashnexpages.net/home/">
-    <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png" alt="Petcingo"
-         onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
-    <span class="lg-topbar-logo-text" style="display:none">PETCINGO</span>
+  <a class="lg-topbar-logo" href="https://prueb2.dashnexpages.net/home/" style="display:flex !important;align-items:center !important;gap:7px !important;text-decoration:none !important;">
+    <span class="lg-topbar-logo-text" style="font-family:'Sora',sans-serif !important;font-size:1rem !important;font-weight:800 !important;color:#4552CC !important;letter-spacing:0.5px !important;border:none !important;padding:0 !important;background:none !important;margin:0 !important;display:inline-block !important;">PETCINGO</span>
+    <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png" 
+         alt="" 
+         style="height:28px !important;width:auto !important;display:none !important;" 
+         onload="this.style.display='inline';this.previousElementSibling.style.display='none';">
   </a>
   <a class="lg-back" href="https://prueb2.dashnexpages.net/home/">
     <i class="ri-arrow-left-line"></i> Volver
@@ -244,11 +246,12 @@
   <div class="lg-card">
 
     <div class="lg-card-header">
+      <div class="lg-card-logo-fallback" style="font-family:'Sora',sans-serif !important;font-size:1.5rem !important;font-weight:800 !important;color:#4552CC !important;margin-bottom:16px !important;display:block !important;text-align:center !important;">PETCINGO</div>
       <img class="lg-card-logo"
            src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png"
-           alt="Petcingo"
-           onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-      <div class="lg-card-logo-fallback">PETCINGO</div>
+           alt=""
+           style="height:60px !important;width:auto !important;margin:0 auto 16px !important;display:none !important;"
+           onload="this.style.display='block';this.previousElementSibling.style.display='none';">
       <h1 class="lg-card-title">Bienvenido</h1>
       <p class="lg-card-sub">Ingresa a tu cuenta o crea una nueva</p>
     </div>
