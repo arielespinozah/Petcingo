@@ -3,24 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pack Familiar — Plan Petcingo</title>
-  <meta name="description" content="Pack Familiar Petcingo: 3 placas NFC + QR para todas tus mascotas. El plan más completo.">
+  <title>Planes Petcingo - Protege a tu mascota</title>
+  <meta name="description" content="Placas inteligentes NFC + QR para mascotas. Elige el plan ideal para tu familia.">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://prueb2.dashnexpages.net/assets/fonts/remixicon/remixicon.css" rel="stylesheet">
+
   <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #F8F9FB;
-    color: #212121;
+    background: #F3F3F3 !important;
     min-height: 100vh;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    color: #212121 !important;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* NAV */
-  .pr-nav {
+  /* -- Nav -- */
+  .prd-nav {
     position: sticky; top: 0; z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 28px; height: 60px;
@@ -28,315 +30,361 @@
     backdrop-filter: blur(20px) saturate(200%); -webkit-backdrop-filter: blur(20px) saturate(200%);
     border-bottom: 1px solid rgba(0,0,0,0.06);
   }
-  .pr-nav-logo { display: flex; align-items: center; gap: 7px; text-decoration: none; }
-  .pr-nav-logo img { height: 28px; width: auto; }
-  .pr-nav-logo-text { font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 800; color: #4552CC; }
-  .pr-nav-link { font-size: 0.85rem; font-weight: 600; color: #4552CC; text-decoration: none; }
-  .pr-nav-link:hover { text-decoration: underline; }
+  .prd-nav-logo { display: flex; align-items: center; gap: 7px; text-decoration: none; }
+  .prd-nav-logo img { height: 32px; width: auto; }
+  .prd-nav-logo-text { font-family: 'Sora', sans-serif !important; font-size: 1.1rem; font-weight: 800; color: #4552CC !important; }
+  .prd-nav-link { font-size: 0.85rem; font-weight: 600; color: #4552CC !important; text-decoration: none; display: flex; align-items: center; gap: 5px; }
+  .prd-nav-link:hover { text-decoration: underline; }
 
-  /* HERO */
-  .pr-hero {
-    background: linear-gradient(135deg, #4552CC 0%, #3B82F6 50%, #51CBF5 100%);
-    padding: 60px 20px 52px;
-    text-align: center;
-    position: relative; overflow: hidden;
+  /* -- Hero -- */
+  .prd-hero {
+    background: linear-gradient(135deg, #EEF1FB 0%, #EEF5FF 55%, #E8F7FD 100%);
+    padding: 64px 20px 52px; text-align: center; position: relative; overflow: hidden;
   }
-  .pr-hero::before {
-    content: ''; position: absolute; top: -80px; right: -60px;
+  .prd-hero::before {
+    content: ''; position: absolute; top: -80px; right: -80px;
     width: 320px; height: 320px; border-radius: 50%;
-    background: rgba(255,255,255,0.07); pointer-events: none;
+    background: radial-gradient(circle, rgba(69,82,204,0.10) 0%, transparent 70%);
   }
-  .pr-hero::after {
-    content: ''; position: absolute; bottom: -70px; left: -50px;
-    width: 260px; height: 260px; border-radius: 50%;
-    background: rgba(255,255,255,0.05); pointer-events: none;
+  .prd-hero::after {
+    content: ''; position: absolute; bottom: -60px; left: -60px;
+    width: 240px; height: 240px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(81,203,245,0.12) 0%, transparent 70%);
   }
-  .pr-hero-inner { position: relative; z-index: 1; max-width: 560px; margin: 0 auto; }
-  .pr-hero-logo { height: 40px; width: auto; margin: 0 auto 20px; display: block; }
-  .pr-hero-icon { font-size: 3.5rem; margin-bottom: 14px; }
-  .pr-hero-badge {
-    display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px;
-    border-radius: 99px; background: rgba(255,255,255,0.18); color: #fff;
-    font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
-    margin-bottom: 14px;
+  .prd-hero-inner { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+  .prd-hero-badge {
+    display: inline-flex; align-items: center; gap: 6px; padding: 5px 13px;
+    border-radius: 99px; background: rgba(69,82,204,0.10); color: #4552CC !important;
+    font-size: 0.73rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
+    margin-bottom: 18px;
   }
-  .pr-hero-badge-pop {
-    display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px;
-    border-radius: 99px; background: rgba(255,220,0,0.25); color: #FFD700;
-    font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
-    margin-left: 8px;
+  .prd-hero-title {
+    font-family: 'Sora', sans-serif !important; font-size: 2.2rem; font-weight: 800;
+    color: #212121; line-height: 1.18; letter-spacing: -0.03em; margin-bottom: 14px;
   }
-  .pr-hero-title {
-    font-family: 'Sora', sans-serif; font-size: 2.4rem; font-weight: 800;
-    color: #fff; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 12px;
-  }
-  .pr-hero-sub { font-size: 1rem; color: rgba(255,255,255,0.88); line-height: 1.6; }
+  .prd-hero-title span { color: #4552CC; }
+  .prd-hero-sub { font-size: 1rem; color: #616161; line-height: 1.65; margin-bottom: 28px; }
+  .prd-hero-features { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; }
+  .prd-hero-feat { display: flex; align-items: center; gap: 6px; font-size: 0.84rem; color: #424242; font-weight: 600; }
+  .prd-hero-feat i { color: #4552CC; font-size: 1rem; }
 
-  /* PRECIO */
-  .pr-price-section {
-    max-width: 560px; margin: -28px auto 0;
-    position: relative; z-index: 10;
-    padding: 0 20px;
+  /* -- Section title -- */
+  .prd-section { max-width: 1080px; margin: 0 auto; padding: 52px 20px; }
+  .prd-section-title {
+    font-family: 'Sora', sans-serif !important; font-size: 1.55rem; font-weight: 800;
+    color: #212121; text-align: center; margin-bottom: 8px;
   }
-  .pr-price-card {
-    background: #fff; border-radius: 22px;
-    padding: 28px 32px;
-    box-shadow: 0 8px 40px rgba(69,82,204,0.16);
-    border: 2px solid #4552CC;
-    text-align: center;
+  .prd-section-sub { text-align: center; color: #757575; font-size: 0.92rem; margin-bottom: 38px; }
+
+  /* -- Plans grid -- */
+  .prd-plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(275px, 1fr)); gap: 20px; }
+
+  /* -- Plan card -- */
+  .prd-plan {
+    border-radius: 22px; overflow: hidden; background: #fff;
+    border: 1.5px solid rgba(0,0,0,0.06);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.05);
+    display: flex; flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
   }
-  .pr-price-popular {
-    background: #4552CC; color: #fff;
-    font-size: 0.70rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
-    padding: 5px 14px; border-radius: 99px;
-    display: inline-block; margin-bottom: 12px;
+  .prd-plan:hover { transform: translateY(-4px); box-shadow: 0 14px 40px rgba(69,82,204,0.12); }
+  .prd-plan.featured {
+    border-color: #4552CC;
+    box-shadow: 0 4px 24px rgba(69,82,204,0.15), 0 0 0 3px rgba(69,82,204,0.08);
   }
-  .pr-price-label { font-size: 0.8rem; color: #9E9E9E; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
-  .pr-price-main {
-    font-family: 'Sora', sans-serif; font-size: 3rem; font-weight: 800;
+  .prd-plan-badge {
+    background: #4552CC; color: #fff !important; font-size: 0.70rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em; text-align: center; padding: 6px 10px;
+    display: none;
+  }
+  .prd-plan.featured .prd-plan-badge { display: block; }
+  .prd-plan-body { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+  .prd-plan-icon { font-size: 2rem; color: #4552CC; margin-bottom: 10px; }
+  .prd-plan-name {
+    font-family: 'Sora', sans-serif !important; font-size: 1.15rem; font-weight: 800;
+    color: #212121; margin-bottom: 4px;
+  }
+  .prd-plan-desc { font-size: 0.84rem; color: #757575; margin-bottom: 18px; line-height: 1.55; }
+  .prd-plan-price { margin-bottom: 18px; }
+  .prd-plan-price-amt {
+    font-family: 'Sora', sans-serif !important; font-size: 2rem; font-weight: 800;
     color: #4552CC; line-height: 1;
   }
-  .pr-price-cur { font-size: 1.4rem; font-weight: 700; }
-  .pr-price-usd { font-size: 0.9rem; color: #757575; margin-top: 4px; }
-  .pr-price-period { font-size: 0.8rem; color: #9E9E9E; margin-top: 2px; }
+  .prd-plan-price-cur { font-size: 1rem; font-weight: 700; color: #4552CC; }
+  .prd-plan-price-per { font-size: 0.80rem; color: #9E9E9E; margin-top: 2px; }
+  .prd-plan-features { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 22px; flex: 1; }
+  .prd-plan-features li { display: flex; align-items: flex-start; gap: 8px; font-size: 0.84rem; color: #424242; }
+  .prd-plan-features li i { color: #27AE60; font-size: 0.95rem; flex-shrink: 0; margin-top: 1px; }
 
-  /* CUERPO */
-  .pr-body { max-width: 560px; margin: 0 auto; padding: 28px 20px 60px; }
+  /* -- Buttons -- */
+  .prd-btn {
+    display: flex !important; align-items: center !important; justify-content: center !important;
+    gap: 7px; padding: 13px 20px; border-radius: 13px; width: 100%;
+    font-family: 'Plus Jakarta Sans', sans-serif !important; font-size: 0.9rem; font-weight: 700;
+    cursor: pointer; text-decoration: none !important; border: none;
+    transition: all 0.18s; white-space: nowrap; line-height: 1;
+  }
+  .prd-btn--primary { background: #4552CC !important; color: #fff !important; }
+  .prd-btn--primary:hover { background: #2E3A9E !important; }
+  .prd-btn--outline { background: transparent !important; color: #4552CC !important; border: 2px solid #4552CC !important; }
+  .prd-btn--outline:hover { background: rgba(69,82,204,0.06) !important; }
+  .prd-btn-group { display: flex; flex-direction: column; gap: 8px; }
+  .prd-btn-label { font-size: 0.70rem; color: #9E9E9E; text-align: center; margin-top: 3px; }
 
-  /* FEATURES */
-  .pr-features {
-    background: #fff; border-radius: 18px; padding: 24px;
-    border: 1.5px solid rgba(0,0,0,0.06);
-    margin-bottom: 20px;
+  /* -- How it works -- */
+  .prd-how { background: #fff; border-radius: 22px; padding: 36px 28px; margin: 0 0 28px; }
+  .prd-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; }
+  .prd-step { text-align: center; }
+  .prd-step-num {
+    width: 44px; height: 44px; border-radius: 50%; background: rgba(69,82,204,0.10);
+    color: #4552CC !important; font-family: 'Sora', sans-serif; font-size: 1.1rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;
   }
-  .pr-features-title {
-    font-family: 'Sora', sans-serif; font-size: 0.95rem; font-weight: 700;
-    color: #212121; margin-bottom: 16px;
-  }
-  .pr-feat-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-  .pr-feat-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.9rem; color: #424242; }
-  .pr-feat-list li i { color: #27AE60; font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+  .prd-step h4 { font-family: 'Sora', sans-serif !important; font-size: 0.92rem; font-weight: 700; margin-bottom: 5px; }
+  .prd-step p { font-size: 0.82rem; color: #757575; line-height: 1.55; }
 
-  /* COMPARACIÓN */
-  .pr-compare {
-    background: linear-gradient(135deg, #EEF1FB 0%, #EEF5FF 100%);
-    border-radius: 18px; padding: 20px 24px;
-    border: 1.5px solid rgba(69,82,204,0.12);
-    margin-bottom: 20px;
+  /* -- Trust bar -- */
+  .prd-trust {
+    background: linear-gradient(135deg, #4552CC 0%, #51CBF5 100%);
+    padding: 36px 28px; text-align: center; margin-top: 0;
   }
-  .pr-compare-title {
-    font-family: 'Sora', sans-serif; font-size: 0.88rem; font-weight: 700;
-    color: #4552CC; margin-bottom: 12px;
-  }
-  .pr-compare-row { display: flex; justify-content: space-between; font-size: 0.85rem; color: #424242; padding: 5px 0; border-bottom: 1px solid rgba(69,82,204,0.07); }
-  .pr-compare-row:last-child { border-bottom: none; }
-  .pr-compare-save { color: #27AE60; font-weight: 700; }
+  .prd-trust h3 { font-family: 'Sora', sans-serif !important; font-size: 1.35rem; font-weight: 800; color: #fff; margin-bottom: 10px; }
+  .prd-trust p { color: rgba(255,255,255,0.88); font-size: 0.92rem; margin-bottom: 22px; }
+  .prd-trust-stats { display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; }
+  .prd-trust-stat { text-align: center; }
+  .prd-trust-stat-val { font-family: 'Sora', sans-serif; font-size: 1.8rem; font-weight: 800; color: #fff; }
+  .prd-trust-stat-lbl { font-size: 0.75rem; color: rgba(255,255,255,0.80); text-transform: uppercase; letter-spacing: 0.06em; }
 
-  /* BOTONES */
-  .pr-btn {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    padding: 15px 20px; border-radius: 14px; width: 100%;
-    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.95rem; font-weight: 700;
-    text-decoration: none; border: none; cursor: pointer;
-    transition: all 0.18s; line-height: 1;
-  }
-  .pr-btn--primary { background: #4552CC; color: #fff; box-shadow: 0 4px 18px rgba(69,82,204,0.28); }
-  .pr-btn--primary:hover { background: #2E3A9E; }
-  .pr-btn--outline { background: transparent; color: #4552CC; border: 2px solid #4552CC; margin-top: 10px; font-size: 0.88rem; padding: 12px 20px; }
-  .pr-btn--outline:hover { background: rgba(69,82,204,0.06); }
-  .pr-btn-note { font-size: 0.72rem; color: #9E9E9E; text-align: center; margin-top: 6px; }
-
-  /* TABS PLAN */
-  .pr-plan-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
-  .pr-plan-tab {
-    padding: 7px 16px; border-radius: 99px;
-    font-size: 0.8rem; font-weight: 600;
-    border: 1.5px solid rgba(69,82,204,0.25);
-    background: #fff; color: #616161; cursor: pointer;
-    text-decoration: none; transition: all 0.15s;
-  }
-  .pr-plan-tab:hover, .pr-plan-tab.active { background: #4552CC; color: #fff; border-color: #4552CC; }
-
-  /* FOOTER */
-  .pr-footer {
-    text-align: center; padding: 24px 20px;
-    font-size: 0.80rem; color: #9E9E9E;
+  /* -- Footer -- */
+  .prd-footer {
+    text-align: center; padding: 24px 20px; font-size: 0.80rem; color: #9E9E9E;
     border-top: 1px solid rgba(0,0,0,0.05); background: #fff;
   }
-  .pr-footer img { height: 20px; margin: 0 auto 8px; display: block; }
-  .pr-footer a { color: #4552CC; text-decoration: none; }
+  .prd-footer a { color: #4552CC !important; text-decoration: none; }
 
-  @media (max-width: 480px) {
-    .pr-hero-title { font-size: 1.8rem; }
-    .pr-price-card { padding: 22px 20px; }
-    .pr-price-main { font-size: 2.4rem; }
+  @media (max-width: 520px) {
+    .prd-hero-title { font-size: 1.65rem; }
+    .prd-nav { padding: 0 14px; }
+    .prd-section { padding: 36px 14px; }
+    .prd-how { padding: 24px 16px; }
   }
   </style>
 </head>
 <body>
 
 <!-- NAV -->
-<nav class="pr-nav">
-  <a class="pr-nav-logo" href="https://prueb2.dashnexpages.net/home/">
-    <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png" alt="Petcingo"
-         onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
-    <span class="pr-nav-logo-text" style="display:none">PETCINGO</span>
+<nav class="prd-nav">
+  <a class="prd-nav-logo" href="https://prueb2.dashnexpages.net/home/">
+    <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png" alt="Petcingo" loading="lazy" style="height:32px;width:auto;" onerror="this.style.display='none'">
+    <span class="prd-nav-logo-text">PETCINGO</span>
   </a>
-  <a class="pr-nav-link" href="https://prueb2.dashnexpages.net/finalizar-compra/">Planes</a>
+  <a class="prd-nav-link" href="https://prueb2.dashnexpages.net/home/"><i class="ri-arrow-left-line"></i> Inicio</a>
 </nav>
 
 <!-- HERO -->
-<div class="pr-hero">
-  <div class="pr-hero-inner">
-    <img class="pr-hero-logo"
-         src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-white.png"
-         alt="Petcingo"
-         onerror="this.style.display='none'">
-    <div class="pr-hero-icon" id="plan-icon">🏠</div>
-    <div>
-      <span class="pr-hero-badge"><i class="ri-home-heart-line"></i> <span id="plan-badge-txt">Pack Familiar</span></span>
-      <span class="pr-hero-badge-pop" id="plan-popular-badge"><i class="ri-star-fill"></i> Más popular</span>
+<div class="prd-hero">
+  <div class="prd-hero-inner">
+    <div class="prd-hero-badge"><i class="ri-shield-check-line"></i> Tecnologia NFC + QR</div>
+    <h1 class="prd-hero-title">Protege a tu mejor amigo con <span>tecnologia inteligente</span></h1>
+    <p class="prd-hero-sub">
+      Las placas Petcingo llevan el perfil de tu mascota: nombre, dueno, veterinario y contactos de emergencia.
+      Si se pierde, cualquier persona puede escanear y contactarte al instante.
+    </p>
+    <div class="prd-hero-features">
+      <span class="prd-hero-feat"><i class="ri-nfc-line"></i> NFC tap to scan</span>
+      <span class="prd-hero-feat"><i class="ri-qr-code-line"></i> QR sin app</span>
+      <span class="prd-hero-feat"><i class="ri-map-pin-line"></i> Perfil online</span>
+      <span class="prd-hero-feat"><i class="ri-shield-line"></i> Acero inoxidable</span>
     </div>
-    <h1 class="pr-hero-title" id="plan-name">Pack Familiar</h1>
-    <p class="pr-hero-sub" id="plan-desc">Hasta 3 placas para tus mascotas. Ideal para familias con varios animales. Ahorra comprando juntos.</p>
   </div>
 </div>
 
-<!-- PRECIO -->
-<div class="pr-price-section">
-  <div class="pr-price-card">
-    <div class="pr-price-popular" id="price-popular-label">Más popular</div>
-    <div class="pr-price-label">Precio</div>
-    <div class="pr-price-main"><span class="pr-price-cur" id="plan-currency">Bs</span> <span id="plan-price">199</span></div>
-    <div class="pr-price-usd" id="plan-usd">≈ USD 28</div>
-    <div class="pr-price-period" id="plan-period">Pago único · 3 placas incluidas</div>
+<!-- PLANES -->
+<div class="prd-section">
+  <h2 class="prd-section-title">Elige tu plan</h2>
+  <p class="prd-section-sub">Un solo pago, sin mensualidades. Tu mascota protegida para siempre.</p>
+
+  <div class="prd-plans" id="prd-plans-grid">
+    <!-- Los botones se generan con JS para incluir el parametro ref -->
   </div>
 </div>
 
-<!-- CUERPO -->
-<div class="pr-body">
-
-  <!-- Tabs de plan -->
-  <div class="pr-plan-tabs">
-    <a class="pr-plan-tab" href="?plan=petid">Tag Pet ID</a>
-    <a class="pr-plan-tab" href="?plan=familiar">Pack Familiar</a>
-    <a class="pr-plan-tab" href="?plan=preventa">Preventa</a>
+<!-- COMO FUNCIONA -->
+<div class="prd-section" style="padding-top:0;">
+  <div class="prd-how">
+    <h2 class="prd-section-title" style="margin-bottom:8px;">Como funciona</h2>
+    <p class="prd-section-sub">En 3 pasos tu mascota queda protegida</p>
+    <div class="prd-steps">
+      <div class="prd-step">
+        <div class="prd-step-num">1</div>
+        <h4>Compra tu placa</h4>
+        <p>Elige el plan ideal y completa tu pedido. Recibiras tu placa en casa.</p>
+      </div>
+      <div class="prd-step">
+        <div class="prd-step-num">2</div>
+        <h4>Activa con el codigo</h4>
+        <p>Usa el codigo de activacion incluido en la caja para crear el perfil de tu mascota.</p>
+      </div>
+      <div class="prd-step">
+        <div class="prd-step-num">3</div>
+        <h4>Listo, queda protegida</h4>
+        <p>Coloca la placa en el collar. Cualquiera puede escanearla y encontrarte al instante.</p>
+      </div>
+    </div>
   </div>
+</div>
 
-  <!-- Features -->
-  <div class="pr-features">
-    <div class="pr-features-title"><i class="ri-check-double-line" style="color:#4552CC"></i> Incluye</div>
-    <ul class="pr-feat-list" id="plan-features"></ul>
+<!-- TRUST BAR -->
+<div class="prd-trust">
+  <h3>Miles de mascotas ya estan protegidas</h3>
+  <p>Petcingo es el sistema de identificacion mas completo de Bolivia</p>
+  <div class="prd-trust-stats">
+    <div class="prd-trust-stat">
+      <div class="prd-trust-stat-val">500+</div>
+      <div class="prd-trust-stat-lbl">Mascotas registradas</div>
+    </div>
+    <div class="prd-trust-stat">
+      <div class="prd-trust-stat-val">50+</div>
+      <div class="prd-trust-stat-lbl">Veterinarias aliadas</div>
+    </div>
+    <div class="prd-trust-stat">
+      <div class="prd-trust-stat-val">10+</div>
+      <div class="prd-trust-stat-lbl">Ciudades</div>
+    </div>
   </div>
-
-  <!-- Comparación de ahorro (solo visible para familiar) -->
-  <div class="pr-compare" id="compare-section">
-    <div class="pr-compare-title"><i class="ri-calculator-line"></i> ¿Cuánto ahorras?</div>
-    <div class="pr-compare-row"><span>3 placas individuales (3 × Bs 79)</span><span>Bs 237</span></div>
-    <div class="pr-compare-row"><span>Pack Familiar</span><span>Bs 199</span></div>
-    <div class="pr-compare-row"><span>Tu ahorro</span><span class="pr-compare-save">Bs 38 (16%)</span></div>
-  </div>
-
-  <!-- Botones -->
-  <a class="pr-btn pr-btn--primary" id="btn-bo" href="#">
-    <i class="ri-shopping-cart-line"></i> Comprar ahora
-  </a>
-  <p class="pr-btn-note">Entrega a domicilio en Bolivia</p>
-  <a class="pr-btn pr-btn--outline" id="btn-intl" href="#">
-    <i class="ri-earth-line"></i> Compra internacional
-  </a>
-  <p class="pr-btn-note">Pago en USD · envío internacional</p>
-
 </div>
 
 <!-- FOOTER -->
-<footer class="pr-footer">
-  <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png"
-       alt="Petcingo" onerror="this.style.display='none'"><br>
-  &copy; 2026 Petcingo &mdash; Sistema de Identificación de Mascotas<br>
-  <a href="https://prueb2.dashnexpages.net/home/">Inicio</a> |
-  <a href="https://prueb2.dashnexpages.net/finalizar-compra/">Planes</a>
+<footer class="prd-footer">
+  <p>&copy; 2025 Petcingo &mdash; Sistema de Identificacion de Mascotas |
+    <a href="https://prueb2.dashnexpages.net/home/">Inicio</a> &nbsp;|&nbsp;
+    <a href="https://prueb2.dashnexpages.net/activate/">Activar placa</a>
+  </p>
 </footer>
 
 <script>
 (function () {
   'use strict';
 
-  var PLANS = {
-    petid: {
-      icon: '🏷️', badge: 'Placa NFC + QR', name: 'Tag Pet ID',
-      desc: 'Placa individual NFC + QR para una mascota. Perfil online completo con foto, contactos y veterinario.',
-      price: '79', currency: 'Bs', usd: '≈ USD 11', period: 'Pago único · Sin mensualidades',
-      popular: false,
-      features: ['Placa de acero inoxidable','NFC + código QR','Perfil online de tu mascota','Foto, nombre y contactos de emergencia','Actualizaciones ilimitadas del perfil','Entrega a domicilio']
+  /* -- Leer parametro ref de la URL -- */
+  var _ref = (new URLSearchParams(window.location.search)).get('ref') || '';
+
+  /* -- Planes definidos -- */
+  var PLANS = [
+    {
+      id:       'petid',
+      icon:     'ri-qr-code-line',
+      name:     'Tag Pet ID',
+      desc:     'Placa individual NFC + QR para una mascota. Perfil online completo con foto, contactos y veterinario.',
+      price:    '79',
+      currency: 'Bs',
+      period:   'pago unico',
+      features: [
+        'Placa de acero inoxidable',
+        'NFC + codigo QR',
+        'Perfil online de tu mascota',
+        'Foto, nombre y contactos de emergencia',
+        'Actualizaciones ilimitadas del perfil',
+        'Entrega a domicilio'
+      ],
+      featured: false,
+      checkoutBo:   'finalizar-compra',
+      checkoutIntl: 'checkout',
+      planParam:    'petid'
     },
-    familiar: {
-      icon: '🏠', badge: 'Pack 3 Placas', name: 'Pack Familiar',
-      desc: 'Hasta 3 placas para tus mascotas. Ideal para familias con varios animales. Ahorra comprando juntos.',
-      price: '199', currency: 'Bs', usd: '≈ USD 28', period: 'Pago único · 3 placas incluidas',
-      popular: true,
-      features: ['3 placas de acero inoxidable','NFC + código QR en cada placa','Perfil online por mascota','Ahorro vs. comprar individual','Actualizaciones ilimitadas','Entrega prioritaria a domicilio']
+    {
+      id:       'familiar',
+      icon:     'ri-home-heart-line',
+      name:     'Pack Familiar',
+      desc:     'Hasta 3 placas para tus mascotas. Ideal para familias con varios animales. Ahorra comprando juntos.',
+      price:    '199',
+      currency: 'Bs',
+      period:   'pago unico (3 placas)',
+      features: [
+        '3 placas de acero inoxidable',
+        'NFC + codigo QR en cada placa',
+        'Perfil online por mascota',
+        'Ahorra vs. comprar individual',
+        'Actualizaciones ilimitadas',
+        'Entrega prioritaria a domicilio'
+      ],
+      featured: true,
+      checkoutBo:   'finalizar-compra',
+      checkoutIntl: 'checkout',
+      planParam:    'familiar'
     },
-    preventa: {
-      icon: '🎯', badge: 'Precio de Lanzamiento', name: 'Preventa',
-      desc: 'Precio especial de lanzamiento. Disponible por tiempo limitado. Una placa al mejor precio.',
-      price: '59', currency: 'Bs', usd: '≈ USD 8', period: 'Precio de lanzamiento · Pago único',
-      popular: false,
-      features: ['Placa de acero inoxidable','NFC + código QR','Perfil online completo','Precio especial de preventa','Entrega cuando esté disponible','Garantía de precio']
+    {
+      id:       'preventa',
+      icon:     'ri-price-tag-3-line',
+      name:     'Preventa',
+      desc:     'Precio especial de lanzamiento. Disponible por tiempo limitado. Una placa al mejor precio.',
+      price:    '59',
+      currency: 'Bs',
+      period:   'precio de lanzamiento',
+      features: [
+        'Placa de acero inoxidable',
+        'NFC + codigo QR',
+        'Perfil online completo',
+        'Precio especial de preventa',
+        'Entrega cuando este disponible',
+        'Garantia de precio'
+      ],
+      featured: false,
+      checkoutBo:   'finalizar-compra',
+      checkoutIntl: 'checkout',
+      planParam:    'preventa'
     }
-  };
+  ];
 
-  var params = new URLSearchParams(window.location.search);
-  var planKey = params.get('plan') || 'familiar';
-  var ref = params.get('ref') || '';
-  if (!PLANS[planKey]) planKey = 'familiar';
-  var plan = PLANS[planKey];
-
-  function buildUrl(base, key) {
-    var url = 'https://prueb2.dashnexpages.net/' + base + '/?plan=' + encodeURIComponent(key);
-    if (ref) url += '&ref=' + encodeURIComponent(ref);
+  function buildUrl(base, planParam) {
+    var url = 'https://prueb2.dashnexpages.net/' + base + '/?plan=' + encodeURIComponent(planParam);
+    if (_ref) url += '&ref=' + encodeURIComponent(_ref);
     return url;
+  }
+
+  function renderPlans() {
+    var grid = document.getElementById('prd-plans-grid');
+    if (!grid) return;
+    var html = '';
+    PLANS.forEach(function (p) {
+      var feats = p.features.map(function (f) {
+        return '<li><i class="ri-check-line"></i><span>' + escH(f) + '</span></li>';
+      }).join('');
+
+      html += '<div class="prd-plan' + (p.featured ? ' featured' : '') + '">';
+      html += '<div class="prd-plan-badge">Mas popular</div>';
+      html += '<div class="prd-plan-body">';
+      html += '<div class="prd-plan-icon"><i class="' + p.icon + '"></i></div>';
+      html += '<div class="prd-plan-name">' + escH(p.name) + '</div>';
+      html += '<div class="prd-plan-desc">' + escH(p.desc) + '</div>';
+      html += '<div class="prd-plan-price">';
+      html += '<div class="prd-plan-price-amt"><span class="prd-plan-price-cur">' + p.currency + '</span> ' + p.price + '</div>';
+      html += '<div class="prd-plan-price-per">' + escH(p.period) + '</div>';
+      html += '</div>';
+      html += '<ul class="prd-plan-features">' + feats + '</ul>';
+      html += '<div class="prd-btn-group">';
+      html += '<a class="prd-btn prd-btn--' + (p.featured ? 'primary' : 'outline') + '" href="' + buildUrl(p.checkoutBo, p.planParam) + '">';
+      html += '<i class="ri-shopping-cart-line"></i> Comprar ahora (Bolivia)';
+      html += '</a>';
+      html += '<a class="prd-btn prd-btn--outline" style="font-size:0.82rem;padding:10px 16px;" href="' + buildUrl(p.checkoutIntl, p.planParam) + '">';
+      html += '<i class="ri-earth-line"></i> Compra internacional';
+      html += '</a>';
+      html += '</div>';
+      if (_ref) {
+        html += '<p class="prd-btn-label"><i class="ri-gift-line"></i> Compra a traves de un referido</p>';
+      }
+      html += '</div>';
+      html += '</div>';
+    });
+    grid.innerHTML = html;
   }
 
   function escH(s) {
     return String(s == null ? '' : s)
-      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  document.getElementById('plan-icon').textContent = plan.icon;
-  document.getElementById('plan-badge-txt').textContent = plan.badge;
-  document.getElementById('plan-name').textContent = plan.name;
-  document.getElementById('plan-desc').textContent = plan.desc;
-  document.getElementById('plan-price').textContent = plan.price;
-  document.getElementById('plan-currency').textContent = plan.currency;
-  document.getElementById('plan-usd').textContent = plan.usd;
-  document.getElementById('plan-period').textContent = plan.period;
-  document.title = plan.name + ' — Petcingo';
-
-  var popularBadge = document.getElementById('plan-popular-badge');
-  var popularLabel = document.getElementById('price-popular-label');
-  if (!plan.popular) {
-    if (popularBadge) popularBadge.style.display = 'none';
-    if (popularLabel) popularLabel.style.display = 'none';
-  }
-
-  var compareSection = document.getElementById('compare-section');
-  if (compareSection) compareSection.style.display = planKey === 'familiar' ? 'block' : 'none';
-
-  var featsHtml = plan.features.map(function (f) {
-    return '<li><i class="ri-check-line"></i><span>' + escH(f) + '</span></li>';
-  }).join('');
-  document.getElementById('plan-features').innerHTML = featsHtml;
-
-  document.getElementById('btn-bo').href = buildUrl('finalizar-compra', planKey);
-  document.getElementById('btn-intl').href = buildUrl('checkout', planKey);
-
-  var tabs = document.querySelectorAll('.pr-plan-tab');
-  tabs.forEach(function (tab) {
-    var tabPlan = (tab.getAttribute('href') || '').replace('?plan=', '');
-    if (tabPlan === planKey) tab.classList.add('active');
-    if (ref) tab.href = '?plan=' + tabPlan + '&ref=' + encodeURIComponent(ref);
-  });
+  renderPlans();
 }());
 </script>
 </body>

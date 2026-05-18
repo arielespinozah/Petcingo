@@ -1178,7 +1178,7 @@ function loadVets() {
             '<button style="'+ds+'" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="openVetDetail(\''+doc.id+'\')"><i class="ri-settings-3-line"></i> Placas</button>'+
             '<button style="'+ds+'" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="editVet(\''+doc.id+'\',\''+encodeData(d)+'\')"><i class="ri-edit-line"></i> Editar</button>'+
             '<a style="'+ds+'text-decoration:none;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" href="https://prueb2.dashnexpages.net/veterinaria/?id='+doc.id+'" target="_blank"><i class="ri-eye-line"></i> Ver perfil publico</a>'+
-            '<a style="'+ds+'text-decoration:none;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" href="https://prueb2.dashnexpages.net/veterinaria-panel/?auto='+doc.id+'" target="_blank"><i class="ri-external-link-line"></i> Ir a panel</a>'+
+            '<a style="'+ds+'text-decoration:none;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" href="https://prueb2.dashnexpages.net/vet-admin/?auto='+doc.id+'" target="_blank"><i class="ri-external-link-line"></i> Ir a panel</a>'+
             suspBtn+banBtn+
             '<button style="'+ds+'color:#f43f5e;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="deleteRecord(\'veterinarias\',\''+doc.id+'\',\'loadVets\')"><i class="ri-delete-bin-line"></i> Eliminar</button>'+
           '</div>'+
