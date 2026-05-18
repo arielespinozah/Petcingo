@@ -315,7 +315,10 @@ window.showSection = function(name, btn) {
   if (name === 'monitoring') { if (typeof runAllHealthChecks === 'function') runAllHealthChecks(); }
   if (name === 'tienda')     { loadProducts(); loadOrders(); }
   if (name === 'discounts')  loadDiscounts();
-  if (name === 'affiliates') loadAffiliates();
+  if (name === 'affiliates') {
+    if (typeof loadAffiliates === 'function') loadAffiliates();
+    if (typeof loadAffiliateLevels === 'function') loadAffiliateLevels();
+  }
   if (name === 'security')   loadSecurityAlerts();
   if (name === 'content')    loadIndexContent();
 };
@@ -1348,16 +1351,14 @@ window.saveShelter = function() {
   var name       =document.getElementById('sh-name').value.trim();
   var responsible=document.getElementById('sh-responsible').value.trim();
   var prefix     =document.getElementById('sh-prefix').value.trim().toUpperCase().replace(/\s/g,'');
-  if(!name)       {toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> El nombre es obligatorio.');return;}
-  if(!responsible){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> El encargado es obligatorio.');return;}
-  if(!prefix)     {toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> El Prefijo de Placa es OBLIGATORIO (ej: REF-LP).');return;}
+  if(!name)       {toast('<i class="ri-alert-line" style="color:#E74C3C;"></i>  El nombre es obligatorio.');return;}
+  if(!responsible){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i>  El encargado es obligatorio.');return;}
+  if(!prefix)     {toast('<i class="ri-alert-line" style="color:#E74C3C;"></i>  El Prefijo de Placa es OBLIGATORIO (ej: REF-LP).');return;}
 
-  var username = (document.getElementById('sh-username')||{}).value||'';
-  var password = (document.getElementById('sh-password')||{}).value||'';
+  var username = (document.getElementById('sh-username').value||'').trim().toLowerCase().replace(/\s/g,'');
+  var password = (document.getElementById('sh-password').value||'').trim();
   var limite   = parseInt((document.getElementById('sh-limite')||{}).value||'40',10)||40;
-
-  username = username.trim().toLowerCase().replace(/\s/g,'');
-  if (password && password.length < 6) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> La contrasena debe tener al menos 6 caracteres.'); return; }
+  if (password && password.length < 6) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i>  La contrasena debe tener al menos 6 caracteres.'); return; }
 
   var btn=document.getElementById('btn-save-shelter');
   if(btn){btn.disabled=true;btn.textContent='Guardando...';}
