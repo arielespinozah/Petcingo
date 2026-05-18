@@ -1368,6 +1368,9 @@ window.saveShelter = function() {
     address:document.getElementById('sh-address').value.trim(),
     logoUrl:(document.getElementById('sh-logo')||{value:''}).value.trim(),
     limite_mascotas:limite,
+    maxCampaigns: parseInt((document.getElementById('sh-maxCampaigns')||{value:'3'}).value||'3',10)||3,
+    campaignExpirationDays: parseInt((document.getElementById('sh-campaignExpirationDays')||{value:'15'}).value||'15',10)||15,
+    campaignGraceHours: parseInt((document.getElementById('sh-campaignGraceHours')||{value:'48'}).value||'48',10)||48,
     createdAt:firebase.firestore.FieldValue.serverTimestamp()
   };
   if (username) data.username = username;
@@ -1507,7 +1510,9 @@ window.editShelter = function(shId, dataJson) {
   try { d = JSON.parse(dataJson); } catch(e) { d = {}; }
   var fields = { 'es-name':d.name, 'es-responsible':d.responsible, 'es-city':d.city,
     'es-phone':d.phone, 'es-address':d.address, 'es-email':d.email,
-    'es-username':d.username, 'es-password':'', 'es-limite':d.limite_mascotas||40 };
+    'es-username':d.username, 'es-password':'', 'es-limite':d.limite_mascotas||40,
+    'es-maxCampaigns':d.maxCampaigns||3, 'es-campaignExpirationDays':d.campaignExpirationDays||15,
+    'es-campaignGraceHours':d.campaignGraceHours||48 };
   Object.keys(fields).forEach(function(id){ var el=document.getElementById(id); if(el) el.value=fields[id]||''; });
   document.getElementById('es-shelter-id').value = shId;
   var modal = document.getElementById('shelter-edit-modal');
@@ -1535,7 +1540,10 @@ window.updateShelter = function() {
     phone:       document.getElementById('es-phone').value.trim(),
     address:     document.getElementById('es-address').value.trim(),
     email:       document.getElementById('es-email') ? document.getElementById('es-email').value.trim() : '',
-    limite_mascotas: limite
+    limite_mascotas: limite,
+    maxCampaigns: parseInt((document.getElementById('es-maxCampaigns')||{value:'3'}).value||'3',10)||3,
+    campaignExpirationDays: parseInt((document.getElementById('es-campaignExpirationDays')||{value:'15'}).value||'15',10)||15,
+    campaignGraceHours: parseInt((document.getElementById('es-campaignGraceHours')||{value:'48'}).value||'48',10)||48
   };
   if (username) update.username = username;
   if (password) update.password = password;

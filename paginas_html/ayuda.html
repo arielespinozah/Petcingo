@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campana de ayuda - Petcingo</title>
+  <meta name="description" content="Apoya esta campana solidaria de Petcingo. Dona directamente al refugio de forma transparente.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://prueb2.dashnexpages.net/assets/fonts/remixicon/remixicon.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1472.0.min.js"></script>
+  <style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#F8F9FB;color:#212121;min-height:100vh}
+a{color:inherit;text-decoration:none}
+i[class^="ri-"],i[class*=" ri-"]{font-family:'remixicon'!important;font-style:normal!important}
+
+/* -- Topbar -- */
+.ay-topbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(0,0,0,.06);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;gap:16px}
+.ay-topbar__logo{font-family:'Sora',sans-serif;font-weight:800;font-size:1.1rem;color:#4552CC;letter-spacing:-.02em}
+.ay-topbar__link{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;color:#616161;transition:color .2s}
+.ay-topbar__link:hover{color:#4552CC}
+.ay-topbar__link i{font-size:.9rem}
+
+/* -- Container -- */
+.ay-wrap{max-width:720px;margin:0 auto;padding:0 16px 80px}
+
+/* -- Loading / Error -- */
+.ay-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;min-height:60vh;color:#9E9E9E;font-size:.88rem}
+.ay-spinner{width:36px;height:36px;border:3px solid #D9DEF5;border-top-color:#4552CC;border-radius:50%;animation:ay-spin .8s linear infinite}
+@keyframes ay-spin{to{transform:rotate(360deg)}}
+.ay-error{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:60vh;text-align:center;padding:24px}
+.ay-error i{font-size:3rem;color:#E0E0E0}
+.ay-error h2{font-family:'Sora',sans-serif;font-size:1.2rem;font-weight:700;color:#424242}
+.ay-error p{font-size:.85rem;color:#9E9E9E;max-width:300px;line-height:1.6}
+.ay-error a{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:10px 20px;border-radius:10px;background:#4552CC;color:#fff;font-size:.84rem;font-weight:700}
+
+/* -- Cover -- */
+.ay-cover{width:100%;height:200px;background:linear-gradient(135deg,#4552CC 0%,#51CBF5 100%);overflow:hidden;border-radius:0 0 28px 28px;position:relative}
+.ay-cover img{width:100%;height:100%;object-fit:cover}
+.ay-cover-fallback{display:flex;align-items:center;justify-content:center;width:100%;height:100%}
+.ay-cover-fallback i{font-size:5rem;color:rgba(255,255,255,.2)}
+
+/* -- Status badge on cover -- */
+.ay-cover-status{position:absolute;top:14px;right:16px;display:inline-flex;align-items:center;gap:5px;font-size:.70rem;font-weight:800;padding:5px 12px;border-radius:99px;text-transform:uppercase;letter-spacing:.06em;backdrop-filter:blur(8px)}
+.ay-status--activa{background:rgba(46,204,113,.85);color:#fff}
+.ay-status--expirada,.ay-status--cerrada{background:rgba(0,0,0,.55);color:#fff}
+
+/* -- Main card -- */
+.ay-card{background:#fff;border-radius:24px;border:1px solid rgba(0,0,0,.05);box-shadow:0 4px 24px rgba(69,82,204,.07),inset 0 1px 0 rgba(255,255,255,1);overflow:hidden;position:relative;isolation:isolate}
+.ay-card::before{content:'';position:absolute;inset:0;backdrop-filter:blur(40px) saturate(200%);-webkit-backdrop-filter:blur(40px) saturate(200%);background:rgba(255,255,255,.72);z-index:0}
+.ay-card>*{position:relative;z-index:1}
+.ay-card-body{padding:24px}
+
+/* -- Badges -- */
+.ay-badge{display:inline-flex;align-items:center;gap:4px;font-size:.65rem;font-weight:800;padding:3px 10px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ay-badge--economica{background:#D9DEF5;color:#4552CC}
+.ay-badge--objeto{background:#FDE8E8;color:#C0392B}
+.ay-badge--activa{background:#D5F5E3;color:#1a7a45}
+.ay-badge--expirada,.ay-badge--cerrada{background:#F5F5F5;color:#9E9E9E}
+
+/* -- Campaign title -- */
+.ay-title{font-family:'Sora',sans-serif;font-size:1.4rem;font-weight:800;color:#212121;line-height:1.25;margin:10px 0 6px}
+.ay-shelter-link{font-size:.82rem;color:#4552CC;font-weight:600;display:inline-flex;align-items:center;gap:4px;margin-bottom:14px}
+.ay-shelter-link:hover{text-decoration:underline}
+.ay-shelter-link i{font-size:.88rem}
+.ay-desc{font-size:.88rem;color:#616161;line-height:1.65;margin-bottom:18px}
+
+/* -- Progress -- */
+.ay-progress-wrap{margin-bottom:18px}
+.ay-progress-nums{display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:6px}
+.ay-progress-raised{font-weight:800;color:#4552CC;font-family:'Sora',sans-serif}
+.ay-progress-meta{color:#9E9E9E}
+.ay-progress-bar{height:10px;background:#E0E0E0;border-radius:99px;overflow:hidden}
+.ay-progress-fill{height:100%;background:linear-gradient(90deg,#4552CC,#51CBF5);border-radius:99px;transition:width .5s ease}
+.ay-progress-pct{font-size:.75rem;color:#9E9E9E;margin-top:5px}
+
+/* -- Days remaining -- */
+.ay-days{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;color:#757575;margin-bottom:16px}
+.ay-days i{font-size:.88rem}
+.ay-days--warn{color:#E67E22}
+
+/* -- QR info -- */
+.ay-qr-info{background:#EEF1FB;border-radius:12px;padding:12px 16px;font-size:.82rem;color:#4552CC;font-weight:600;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.ay-qr-info i{font-size:1rem;flex-shrink:0}
+
+/* -- Actions -- */
+.ay-actions{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}
+.ay-btn{display:inline-flex;align-items:center;gap:7px;padding:12px 20px;border-radius:12px;font-size:.86rem;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;border:none;cursor:pointer;text-decoration:none;transition:transform .15s,box-shadow .15s;white-space:nowrap}
+.ay-btn:hover{transform:translateY(-1px)}
+.ay-btn--primary{background:#4552CC;color:#fff;box-shadow:0 4px 14px rgba(69,82,204,.3)}
+.ay-btn--primary:hover{background:#2E3A9E;box-shadow:0 6px 20px rgba(69,82,204,.4)}
+.ay-btn--secondary{background:#F0F4FF;color:#4552CC;border:1.5px solid #D9DEF5}
+.ay-btn--secondary:hover{background:#D9DEF5}
+.ay-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.ay-btn i{font-size:.95rem}
+
+/* -- Divider -- */
+.ay-divider{height:1px;background:linear-gradient(90deg,transparent,#E0E0E0,transparent);margin:24px 0}
+
+/* -- Section title -- */
+.ay-sec-title{font-family:'Sora',sans-serif;font-size:.95rem;font-weight:800;color:#212121;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.ay-sec-title i{color:#4552CC}
+
+/* -- Donations table -- */
+.ay-table-wrap{overflow-x:auto;border-radius:12px;border:1px solid #F0F0F0}
+.ay-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.ay-table th{padding:10px 12px;border-bottom:1px solid #F0F0F0;color:#9E9E9E;font-weight:600;text-align:left;white-space:nowrap}
+.ay-table td{padding:10px 12px;border-bottom:1px solid #F0F0F0;color:#424242;vertical-align:middle}
+.ay-table tr:last-child td{border-bottom:none}
+.ay-table-empty{text-align:center;padding:28px;color:#9E9E9E}
+
+/* -- Disclaimer -- */
+.ay-disclaimer{font-size:.72rem;color:#BDBDBD;line-height:1.72;text-align:center;margin-top:32px;padding:16px;background:#fff;border-radius:16px;border:1px solid #F0F0F0}
+
+/* -- Modal -- */
+.ay-modal-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.45);align-items:center;justify-content:center;padding:16px}
+.ay-modal-overlay.is-open{display:flex}
+.ay-modal-box{background:#fff;border-radius:24px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.18);position:relative}
+.ay-modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 22px 14px;border-bottom:1px solid rgba(0,0,0,.06)}
+.ay-modal-title{font-family:'Sora',sans-serif;font-size:1rem;font-weight:800;color:#212121}
+.ay-modal-close{background:none;border:none;cursor:pointer;font-size:1.3rem;color:#757575;line-height:1;padding:4px;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:background .15s}
+.ay-modal-close:hover{background:#F5F5F5}
+.ay-modal-body{padding:20px 22px 24px}
+.ay-field{display:flex;flex-direction:column;gap:5px}
+.ay-label{font-size:.80rem;font-weight:700;color:#424242}
+.ay-input{width:100%;padding:10px 14px;border:1.5px solid #E0E0E0;border-radius:10px;font-size:.86rem;font-family:'Plus Jakarta Sans',sans-serif;color:#212121;transition:border-color .2s,box-shadow .2s;background:#fff}
+.ay-input:focus{outline:none;border-color:#4552CC;box-shadow:0 0 0 3px rgba(69,82,204,.1)}
+.ay-consent{display:flex;align-items:center;gap:8px;font-size:.80rem;color:#616161;cursor:pointer}
+.ay-consent input{accent-color:#4552CC;width:16px;height:16px;cursor:pointer;flex-shrink:0}
+.ay-donate-err{display:none;margin-top:10px;font-size:.80rem;color:#E74C3C;text-align:center;font-weight:600}
+
+/* -- Toast -- */
+.ay-toast-wrap{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.ay-toast{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:12px;background:#212121;color:#fff;font-size:.82rem;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;box-shadow:0 8px 28px rgba(0,0,0,.2);pointer-events:auto}
+.ay-toast--success{background:#1a7a45}
+.ay-toast--error{background:#C0392B}
+
+.hidden{display:none!important}
+
+@media(max-width:599px){
+  .ay-title{font-size:1.15rem}
+  .ay-actions{gap:8px}
+  .ay-btn{padding:10px 14px;font-size:.80rem}
+  .ay-cover{height:160px}
+}
+  </style>
+</head>
+<body>
+
+<!-- Topbar -->
+<div class="ay-topbar">
+  <span class="ay-topbar__logo">PETCINGO</span>
+  <a class="ay-topbar__link" href="/#vetdir"><i class="ri-arrow-left-line"></i> Directorio de ayudas</a>
+</div>
+
+<!-- Loading -->
+<div id="ay-loading" class="ay-loading">
+  <div class="ay-spinner"></div>
+  <span>Cargando campana...</span>
+</div>
+
+<!-- Error -->
+<div id="ay-error" class="ay-error hidden">
+  <i class="ri-error-warning-line"></i>
+  <h2>Campana no encontrada</h2>
+  <p>El enlace puede ser incorrecto o la campana ya fue removida.</p>
+  <a href="/"><i class="ri-arrow-left-line"></i> Volver al inicio</a>
+</div>
+
+<!-- Content -->
+<div id="ay-content" class="hidden">
+
+  <!-- Cover -->
+  <div class="ay-cover" id="ay-cover-el">
+    <span class="ay-cover-fallback"><i class="ri-hand-heart-line"></i></span>
+  </div>
+
+  <div class="ay-wrap" style="margin-top:24px;">
+
+    <div class="ay-card" style="margin-bottom:20px;">
+      <div class="ay-card-body">
+        <!-- Badges -->
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:2px;" id="ay-badges-el"></div>
+
+        <!-- Title -->
+        <div class="ay-title" id="ay-title-el"></div>
+
+        <!-- Shelter -->
+        <a class="ay-shelter-link" id="ay-shelter-link-el" target="_blank">
+          <i class="ri-home-heart-line"></i>
+          <span id="ay-shelter-name-el"></span>
+        </a>
+
+        <!-- Description -->
+        <div class="ay-desc" id="ay-desc-el"></div>
+
+        <!-- Days remaining -->
+        <div id="ay-days-el" class="ay-days hidden"><i class="ri-calendar-line"></i><span></span></div>
+
+        <!-- Progress bar (economica only) -->
+        <div id="ay-progress-el" class="ay-progress-wrap hidden">
+          <div class="ay-progress-nums">
+            <span class="ay-progress-raised" id="ay-raised-el">Bs 0</span>
+            <span class="ay-progress-meta" id="ay-meta-el">Meta: Bs 0</span>
+          </div>
+          <div class="ay-progress-bar">
+            <div class="ay-progress-fill" id="ay-progress-fill-el" style="width:0%"></div>
+          </div>
+          <div class="ay-progress-pct" id="ay-pct-el">0% alcanzado</div>
+        </div>
+
+        <!-- QR / account info -->
+        <div id="ay-qr-el" class="ay-qr-info hidden">
+          <i class="ri-qr-code-line"></i>
+          <span id="ay-qr-text-el"></span>
+        </div>
+
+        <!-- Actions -->
+        <div class="ay-actions">
+          <button class="ay-btn ay-btn--primary" id="ay-btn-donate" onclick="openDonateModal()">
+            <i class="ri-hand-coin-line"></i> Donar
+          </button>
+          <button class="ay-btn ay-btn--secondary" onclick="sharecamp()">
+            <i class="ri-share-line"></i> Compartir
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Donaciones publicas aprobadas -->
+    <div class="ay-card">
+      <div class="ay-card-body">
+        <div class="ay-sec-title"><i class="ri-hand-coin-line"></i> Donaciones registradas</div>
+        <div id="ay-donations-loading" style="text-align:center;padding:24px;color:#9E9E9E;font-size:.82rem;">Cargando...</div>
+        <div id="ay-donations-wrap" class="hidden">
+          <div class="ay-table-wrap">
+            <table class="ay-table">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Donante</th>
+                  <th>Monto</th>
+                  <th>Comprobante</th>
+                </tr>
+              </thead>
+              <tbody id="ay-donations-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="ay-donations-empty" class="ay-table-empty hidden">
+          Aun no hay donaciones aprobadas en esta campana.
+        </div>
+      </div>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="ay-disclaimer">
+      <strong>Aviso legal:</strong> Petcingo es un canal de difusion. No gestionamos ni retenemos fondos.
+      Las donaciones son directas entre el donante y el refugio. Petcingo no es responsable del uso de los
+      fondos recaudados. Verifica directamente con el refugio antes de donar.
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal: Donar -->
+<div class="ay-modal-overlay" id="ay-donate-modal">
+  <div class="ay-modal-box">
+    <div class="ay-modal-head">
+      <span class="ay-modal-title">Realizar donacion</span>
+      <button class="ay-modal-close" onclick="closeDonateModal()"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="ay-modal-body">
+      <div class="ay-field">
+        <label class="ay-label">Tu nombre</label>
+        <input class="ay-input" type="text" id="ay-donor-name" placeholder="Dejar vacio para donar como anonimo" maxlength="60">
+      </div>
+      <div class="ay-field" style="margin-top:12px;" id="ay-amount-field">
+        <label class="ay-label">Monto a donar (Bs) *</label>
+        <input class="ay-input" type="number" id="ay-donor-amount" placeholder="Ej: 100" min="1">
+      </div>
+      <div class="ay-field" style="margin-top:12px;">
+        <label class="ay-label">Comprobante de transferencia *</label>
+        <input type="file" id="ay-donor-proof" accept="image/*">
+        <small style="color:#757575;display:block;margin-top:4px;font-size:.75rem;">Sube una captura o foto de la transferencia.</small>
+        <span id="ay-proof-status" style="font-size:.75rem;color:#9E9E9E;display:block;margin-top:3px;"></span>
+      </div>
+      <div class="ay-consent" style="margin-top:14px;">
+        <input type="checkbox" id="ay-donor-public">
+        <label for="ay-donor-public">Mostrar mi nombre publicamente en la lista de donantes</label>
+      </div>
+      <button class="ay-btn ay-btn--primary" style="width:100%;margin-top:16px;justify-content:center;" id="ay-submit-btn" onclick="submitDonation()">
+        <i class="ri-hand-heart-line"></i> Enviar donacion
+      </button>
+      <div class="ay-donate-err" id="ay-donate-err"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast wrap -->
+<div class="ay-toast-wrap" id="ay-toast-wrap"></div>
+
+<script>
+(function() {
+  'use strict';
+
+  var FIREBASE_CONFIG = {
+    apiKey: 'AIzaSyAEE3yLFFsJTMORNFLYZWW2_DNHwzF0hE8',
+    authDomain: 'petcingo-43096.firebaseapp.com',
+    projectId: 'petcingo-43096',
+    storageBucket: 'petcingo-43096.firebasestorage.app',
+    messagingSenderId: '679546185536',
+    appId: '1:679546185536:web:ceccd210b7c73b296f7ca5'
+  };
+
+  var app, db;
+  try { app = firebase.initializeApp(FIREBASE_CONFIG, 'ptcg-ayuda'); }
+  catch (e) { app = firebase.app('ptcg-ayuda'); }
+  db = firebase.firestore(app);
+
+  var _campaign = null;
+  var _campaignId = null;
+
+  /* -- Helpers -- */
+  function getParam(name) {
+    return new URLSearchParams(window.location.search).get(name);
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function show(id) { var el = document.getElementById(id); if (el) el.classList.remove('hidden'); }
+  function hide(id) { var el = document.getElementById(id); if (el) el.classList.add('hidden'); }
+
+  function toast(msg, type) {
+    var wrap = document.getElementById('ay-toast-wrap'); if (!wrap) return;
+    var t = document.createElement('div');
+    t.className = 'ay-toast' + (type ? ' ay-toast--' + type : '');
+    t.textContent = msg;
+    wrap.appendChild(t);
+    setTimeout(function() { t.style.opacity = '0'; t.style.transition = 'opacity .3s'; setTimeout(function() { t.remove(); }, 320); }, 3500);
+  }
+
+  function fmtDate(ts) {
+    if (!ts) return '-';
+    var d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleDateString('es-BO', { day:'2-digit', month:'2-digit', year:'numeric' });
+  }
+
+  /* -- Compress image -- */
+  function compressImage(file, maxW, quality, maxBytes) {
+    return new Promise(function(resolve) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = new Image();
+        img.onload = function() {
+          var canvas = document.createElement('canvas');
+          var scale  = Math.min(1, maxW / img.width);
+          canvas.width  = Math.round(img.width  * scale);
+          canvas.height = Math.round(img.height * scale);
+          canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+          canvas.toBlob(function(blob) {
+            if (blob && blob.size <= maxBytes) { resolve(blob); return; }
+            canvas.toBlob(function(b2) { resolve(b2 || blob); }, 'image/jpeg', 0.55);
+          }, 'image/jpeg', quality);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  /* -- Upload proof to R2 -- */
+  function uploadProof(file, cb) {
+    var statusEl = document.getElementById('ay-proof-status');
+    function upd(msg) { if (statusEl) statusEl.textContent = msg; }
+    upd('Comprimiendo imagen...');
+    compressImage(file, 1200, 0.82, 200000).then(function(blob) {
+      upd('Subiendo comprobante...');
+      if (typeof AWS === 'undefined') { upd('AWS SDK no disponible.'); cb(''); return; }
+      AWS.config.update({
+        accessKeyId:     '6496db9c407984025f99bc0dc6a23264',
+        secretAccessKey: 'b270005e8ebf9eef779db72012a0ea6206a9f281eba9d07e0b15f78016c2d94d'
+      });
+      var s3  = new AWS.S3({ endpoint: 'https://c11712fefc3437b619d76c69ecc14901.r2.cloudflarestorage.com', signatureVersion: 'v4', s3ForcePathStyle: true });
+      var key = 'donations/' + _campaignId + '-' + Date.now() + '.jpg';
+      s3.upload({ Bucket: 'petcingo', Key: key, Body: blob, ContentType: 'image/jpeg' }, function(err) {
+        if (err) { upd('Error al subir: ' + err.message); cb(''); return; }
+        upd('Comprobante subido.');
+        cb('https://pub-cb882f9b206543b28ea81fcadac0f4b2.r2.dev/' + key);
+      });
+    }).catch(function(e) { upd('Error: ' + e.message); cb(''); });
+  }
+
+  /* -- Render campaign -- */
+  function renderCampaign(data) {
+    _campaign = data;
+
+    /* Cover */
+    var coverEl = document.getElementById('ay-cover-el');
+    if (coverEl && data.imageUrl) {
+      coverEl.innerHTML = '<img src="' + esc(data.imageUrl) + '" alt="" loading="lazy">' +
+        '<span class="ay-cover-status ay-status--' + esc(data.status) + '">' + esc(data.status) + '</span>';
+    } else if (coverEl) {
+      var fb = coverEl.querySelector('.ay-cover-fallback');
+      coverEl.innerHTML = (fb ? fb.outerHTML : '<span class="ay-cover-fallback"><i class="ri-hand-heart-line"></i></span>') +
+        '<span class="ay-cover-status ay-status--' + esc(data.status) + '">' + esc(data.status) + '</span>';
+    }
+
+    /* Title */
+    var titleEl = document.getElementById('ay-title-el');
+    if (titleEl) titleEl.textContent = data.title || 'Campana sin titulo';
+    document.title = esc(data.title || 'Campana de ayuda') + ' - Petcingo';
+
+    /* Shelter link */
+    var shelterLink = document.getElementById('ay-shelter-link-el');
+    var shelterName = document.getElementById('ay-shelter-name-el');
+    if (shelterName) shelterName.textContent = data.shelterName || 'Refugio';
+
+    /* Badges */
+    var badgesEl = document.getElementById('ay-badges-el');
+    if (badgesEl) {
+      var typeLabel = data.type === 'objeto' ? 'De objeto' : 'Economica';
+      badgesEl.innerHTML = '<span class="ay-badge ay-badge--' + esc(data.type || 'economica') + '">' + esc(typeLabel) + '</span>' +
+        ' <span class="ay-badge ay-badge--' + esc(data.status) + '">' + esc(data.status) + '</span>';
+    }
+
+    /* Description */
+    var descEl = document.getElementById('ay-desc-el');
+    if (descEl) descEl.textContent = data.description || '';
+
+    /* Days remaining */
+    var daysEl = document.getElementById('ay-days-el');
+    if (daysEl && data.expiresAt) {
+      var exp = data.expiresAt.toDate ? data.expiresAt.toDate() : new Date(data.expiresAt);
+      var daysLeft = Math.ceil((exp - new Date()) / (1000 * 60 * 60 * 24));
+      var daysSpan = daysEl.querySelector('span');
+      if (daysLeft > 0) {
+        if (daysSpan) daysSpan.textContent = daysLeft + ' dias restantes';
+        if (daysLeft <= 3) daysEl.classList.add('ay-days--warn');
+        show('ay-days-el');
+      }
+    }
+
+    /* Progress bar (economica only) */
+    if (data.type === 'economica' && data.meta > 0) {
+      var raised = data.raised || 0;
+      var pct    = Math.min(100, Math.round((raised / data.meta) * 100));
+      var raisedEl = document.getElementById('ay-raised-el');
+      var metaEl   = document.getElementById('ay-meta-el');
+      var fillEl   = document.getElementById('ay-progress-fill-el');
+      var pctEl    = document.getElementById('ay-pct-el');
+      if (raisedEl) raisedEl.textContent = 'Bs ' + raised;
+      if (metaEl)   metaEl.textContent   = 'Meta: Bs ' + data.meta;
+      if (fillEl)   fillEl.style.width   = pct + '%';
+      if (pctEl)    pctEl.textContent    = pct + '% alcanzado';
+      show('ay-progress-el');
+    }
+
+    /* QR / account info */
+    if (data.qrInfo) {
+      var qrEl = document.getElementById('ay-qr-text-el');
+      if (qrEl) qrEl.textContent = data.qrInfo;
+      show('ay-qr-el');
+    }
+
+    /* Disable donate if not activa */
+    var donateBtn = document.getElementById('ay-btn-donate');
+    if (donateBtn && data.status !== 'activa') {
+      donateBtn.disabled = true;
+      donateBtn.innerHTML = '<i class="ri-lock-line"></i> Campana ' + esc(data.status);
+    }
+
+    /* Type-specific modal field */
+    if (data.type === 'objeto') {
+      var amtField = document.getElementById('ay-amount-field');
+      if (amtField) amtField.style.display = 'none';
+    }
+
+    show('ay-content');
+    hide('ay-loading');
+    loadPublicDonations();
+  }
+
+  /* -- Load public donations -- */
+  function loadPublicDonations() {
+    var loadEl = document.getElementById('ay-donations-loading');
+    db.collection('donations')
+      .where('campaignId', '==', _campaignId)
+      .where('status', '==', 'aprobado')
+      .orderBy('createdAt', 'desc')
+      .limit(30)
+      .get()
+      .then(function(snap) {
+        if (loadEl) loadEl.style.display = 'none';
+        if (snap.empty) { show('ay-donations-empty'); return; }
+        var tbody = document.getElementById('ay-donations-tbody');
+        if (!tbody) return;
+        var html = '';
+        snap.forEach(function(doc) {
+          var d = doc.data();
+          var amtTxt = d.type === 'objeto' ? (d.itemDescription || 'Articulo') : 'Bs ' + esc(String(d.amount || 0));
+          html += '<tr>';
+          html += '<td>' + esc(fmtDate(d.createdAt)) + '</td>';
+          html += '<td>' + (d.anonymous ? '<em style="color:#9E9E9E;">Anonimo</em>' : esc(d.donorName || '-')) + '</td>';
+          html += '<td>' + amtTxt + '</td>';
+          html += '<td>' + (d.proofUrl ? '<a href="' + esc(d.proofUrl) + '" target="_blank" style="color:#4552CC;font-weight:600;font-size:.80rem;"><i class="ri-file-line"></i> Ver</a>' : '-') + '</td>';
+          html += '</tr>';
+        });
+        tbody.innerHTML = html;
+        show('ay-donations-wrap');
+      })
+      .catch(function() { if (loadEl) loadEl.style.display = 'none'; show('ay-donations-empty'); });
+  }
+
+  /* -- Open/close donate modal -- */
+  window.openDonateModal = function() {
+    var modal = document.getElementById('ay-donate-modal');
+    if (modal) modal.classList.add('is-open');
+    var inp = document.getElementById('ay-donor-name');
+    if (inp) setTimeout(function() { inp.focus(); }, 100);
+  };
+
+  window.closeDonateModal = function() {
+    var modal = document.getElementById('ay-donate-modal');
+    if (modal) modal.classList.remove('is-open');
+    var errEl = document.getElementById('ay-donate-err');
+    if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+    var statusEl = document.getElementById('ay-proof-status');
+    if (statusEl) statusEl.textContent = '';
+  };
+
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeDonateModal(); });
+
+  /* -- Submit donation -- */
+  window.submitDonation = function() {
+    if (!_campaign || !_campaignId) return;
+    var donorName  = (document.getElementById('ay-donor-name')||{value:''}).value.trim();
+    var amount     = parseFloat((document.getElementById('ay-donor-amount')||{value:'0'}).value) || 0;
+    var proofInput = document.getElementById('ay-donor-proof');
+    var isPublic   = (document.getElementById('ay-donor-public')||{checked:false}).checked;
+    var errEl      = document.getElementById('ay-donate-err');
+    var statusEl   = document.getElementById('ay-proof-status');
+    var submitBtn  = document.getElementById('ay-submit-btn');
+
+    function showErr(msg) {
+      if (errEl) { errEl.style.display = 'block'; errEl.textContent = msg; }
+    }
+
+    if (_campaign.type === 'economica' && amount <= 0) { showErr('Ingresa un monto valido.'); return; }
+    if (!proofInput || !proofInput.files || !proofInput.files[0]) { showErr('Sube el comprobante de transferencia.'); return; }
+
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = '<i class="ri-loader-4-line"></i> Enviando...'; }
+
+    uploadProof(proofInput.files[0], function(proofUrl) {
+      if (!proofUrl) {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = '<i class="ri-hand-heart-line"></i> Enviar donacion'; }
+        showErr('Error al subir el comprobante. Intenta de nuevo.');
+        return;
+      }
+      var donationData = {
+        campaignId:      _campaignId,
+        campaignTitle:   _campaign.title || '',
+        shelterId:       _campaign.shelterId || '',
+        type:            _campaign.type || 'economica',
+        donorName:       donorName || '',
+        anonymous:       !donorName || !isPublic,
+        amount:          _campaign.type === 'economica' ? amount : 0,
+        itemDescription: _campaign.type === 'objeto' ? 'Articulo donado' : '',
+        proofUrl:        proofUrl,
+        status:          'pendiente',
+        createdAt:       firebase.firestore.FieldValue.serverTimestamp()
+      };
+      db.collection('donations').add(donationData)
+        .then(function() {
+          toast('Donacion enviada. El refugio la verificara pronto.', 'success');
+          closeDonateModal();
+          var nameEl = document.getElementById('ay-donor-name');
+          var amtEl  = document.getElementById('ay-donor-amount');
+          if (nameEl) nameEl.value = '';
+          if (amtEl)  amtEl.value  = '';
+          if (proofInput) proofInput.value = '';
+          if (statusEl) statusEl.textContent = '';
+        })
+        .catch(function(e) { showErr('Error al guardar: ' + e.message); })
+        .finally(function() {
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = '<i class="ri-hand-heart-line"></i> Enviar donacion'; }
+        });
+    });
+  };
+
+  /* -- Share -- */
+  window.sharecamp = function() {
+    var url = window.location.href;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(function() { toast('Enlace copiado.'); }).catch(function() { toast('No se pudo copiar.', 'error'); });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = url; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+      toast('Enlace copiado.');
+    }
+  };
+
+  /* -- Init -- */
+  _campaignId = getParam('id');
+  if (!_campaignId) {
+    hide('ay-loading');
+    show('ay-error');
+  } else {
+    db.collection('campaigns').doc(_campaignId).get()
+      .then(function(doc) {
+        if (!doc.exists) { hide('ay-loading'); show('ay-error'); return; }
+        renderCampaign(doc.data());
+      })
+      .catch(function() { hide('ay-loading'); show('ay-error'); });
+  }
+
+})();
+</script>
+
+</body>
+</html>

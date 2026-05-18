@@ -821,6 +821,9 @@
             <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Usuario (login refugio)</label><input class="ptcg-activate__input" type="text" id="sh-username" placeholder="Ej: huellas-felices" maxlength="40" oninput="this.value=this.value.toLowerCase().replace(/\s/g,'')"/></div>
             <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Contraseña (login refugio)</label><input class="ptcg-activate__input" type="password" id="sh-password" placeholder="Mínimo 6 caracteres" maxlength="40"/></div>
             <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Límite mascotas en adopción</label><input class="ptcg-activate__input" type="number" id="sh-limite" placeholder="40" min="1" max="200" value="40"/></div>
+            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Max. campanas activas</label><input class="ptcg-activate__input" type="number" id="sh-maxCampaigns" placeholder="3" min="1" max="10" value="3"/></div>
+            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Dias para expirar campana</label><input class="ptcg-activate__input" type="number" id="sh-campaignExpirationDays" placeholder="15" min="5" max="60" value="15"/></div>
+            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Horas de aviso previo</label><input class="ptcg-activate__input" type="number" id="sh-campaignGraceHours" placeholder="48" min="12" max="168" value="48"/></div>
           </div>
           <button class="ptcg-index__btn ptcg-index__btn--primary" id="btn-save-shelter" onclick="saveShelter()" style="margin-top:8px;">Guardar Refugio</button>
         </div>
@@ -2379,6 +2382,14 @@
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
           <div><label class="ptcg-activate__label">Usuario (login)</label><input class="ptcg-activate__input" type="text" id="es-username" maxlength="40" oninput="this.value=this.value.toLowerCase().replace(/\s/g,'')" style="width:100%;box-sizing:border-box;"/></div>
           <div><label class="ptcg-activate__label">Contraseña <span style="font-weight:400;font-size:0.68rem;color:#9E9E9E;">(vacío = no cambiar)</span></label><input class="ptcg-activate__input" type="password" id="es-password" maxlength="40" style="width:100%;box-sizing:border-box;"/></div>
+        </div>
+      </div>
+      <div style="border-top:1px solid rgba(0,0,0,0.06);padding-top:16px;margin-top:4px;">
+        <div style="font-size:0.72rem;font-weight:700;color:#9E9E9E;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;font-family:'Plus Jakarta Sans',sans-serif;">Configuracion de Campanas de Ayuda</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+          <div><label class="ptcg-activate__label">Max. campanas activas</label><input class="ptcg-activate__input" type="number" id="es-maxCampaigns" min="1" max="10" value="3" style="width:100%;box-sizing:border-box;"/></div>
+          <div><label class="ptcg-activate__label">Dias para expirar</label><input class="ptcg-activate__input" type="number" id="es-campaignExpirationDays" min="5" max="60" value="15" style="width:100%;box-sizing:border-box;"/></div>
+          <div><label class="ptcg-activate__label">Horas de aviso previo</label><input class="ptcg-activate__input" type="number" id="es-campaignGraceHours" min="12" max="168" value="48" style="width:100%;box-sizing:border-box;"/></div>
         </div>
       </div>
     </div>

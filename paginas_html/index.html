@@ -482,6 +482,47 @@
 @media(min-width:768px) and (max-width:1023px){
   .ptcg-index__vetdir-grid{grid-template-columns:repeat(2,1fr)!important}
 }
+/* -- Campanas Solidarias -- */
+.ptcg-index__camp{padding:80px 0;background:#F8F9FB}
+.ptcg-index__camp-header{text-align:center;margin-bottom:40px}
+.ptcg-index__camp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:32px}
+.ptcg-index__camp-card{border-radius:20px;overflow:hidden;background:#fff!important;border:1px solid #EEE;box-shadow:0 4px 20px rgba(69,82,204,.07),inset 0 1px 0 rgba(255,255,255,1);transition:transform .25s,box-shadow .25s;display:flex;flex-direction:column}
+.ptcg-index__camp-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(69,82,204,.14)}
+.ptcg-index__camp-cover{height:120px;background:linear-gradient(135deg,#4552CC 0%,#51CBF5 100%);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.ptcg-index__camp-cover img{width:100%;height:100%;object-fit:cover}
+.ptcg-index__camp-cover-fallback i{font-family:'remixicon'!important;font-style:normal!important;color:rgba(255,255,255,.25)!important;font-size:3rem}
+.ptcg-index__camp-type{position:absolute;top:10px;left:10px;display:inline-flex;align-items:center;gap:4px;font-size:.62rem;font-weight:800;padding:3px 9px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ptcg-index__camp-type--economica{background:rgba(69,82,204,.85);color:#fff!important}
+.ptcg-index__camp-type--objeto{background:rgba(192,57,43,.85);color:#fff!important}
+.ptcg-index__camp-body{padding:16px;flex:1;display:flex;flex-direction:column;gap:0}
+.ptcg-index__camp-shelter{font-size:.72rem;font-weight:700;color:#9E9E9E!important;margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.ptcg-index__camp-shelter i{font-family:'remixicon'!important;font-style:normal!important;font-size:.8rem}
+.ptcg-index__camp-title{font-family:'Sora',sans-serif!important;font-size:.92rem;font-weight:800;color:#212121!important;margin-bottom:10px;line-height:1.3;flex:1}
+.ptcg-index__camp-prog{margin-bottom:10px}
+.ptcg-index__camp-prog-bar{height:6px;background:#E0E0E0;border-radius:99px;overflow:hidden;margin-bottom:4px}
+.ptcg-index__camp-prog-fill{height:100%;background:linear-gradient(90deg,#4552CC,#51CBF5);border-radius:99px}
+.ptcg-index__camp-prog-nums{display:flex;justify-content:space-between;font-size:.70rem;color:#9E9E9E!important}
+.ptcg-index__camp-prog-raised{font-weight:700;color:#4552CC!important}
+.ptcg-index__camp-days{display:flex;align-items:center;gap:4px;font-size:.72rem;color:#757575!important;margin-bottom:12px}
+.ptcg-index__camp-days i{font-family:'remixicon'!important;font-style:normal!important;font-size:.8rem}
+.ptcg-index__camp-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 0;border-radius:10px;background:#4552CC!important;color:#fff!important;font-size:.80rem;font-weight:700;text-decoration:none!important;transition:background .2s;width:100%;margin-top:auto}
+.ptcg-index__camp-btn:hover{background:#2E3A9E!important}
+.ptcg-index__camp-btn i{font-family:'remixicon'!important;font-style:normal!important}
+.ptcg-index__camp-loading{display:flex;align-items:center;justify-content:center;gap:12px;padding:60px 0;color:#9E9E9E!important;font-size:.88rem}
+.ptcg-index__camp-spinner{width:28px;height:28px;border:3px solid #D9DEF5;border-top-color:#4552CC;border-radius:50%;animation:ptcg-spin .8s linear infinite}
+.ptcg-index__camp-empty{text-align:center;padding:60px 0;color:#9E9E9E!important;font-size:.88rem}
+.ptcg-index__camp-empty i{font-size:2.8rem;font-family:'remixicon'!important;font-style:normal!important;color:#D9DEF5!important;display:block;margin-bottom:12px}
+.ptcg-index__camp-footer{text-align:center;margin-top:8px}
+.ptcg-index__camp-cta{display:inline-flex;align-items:center;gap:7px;padding:12px 24px;border-radius:12px;background:transparent!important;border:2px solid #4552CC!important;color:#4552CC!important;font-size:.85rem;font-weight:700;text-decoration:none!important;transition:background .2s,color .2s}
+.ptcg-index__camp-cta:hover{background:#4552CC!important;color:#fff!important}
+.ptcg-index__camp-cta i{font-family:'remixicon'!important;font-style:normal!important}
+@media(max-width:767px){
+  .ptcg-index__camp-grid{grid-template-columns:1fr!important;gap:16px}
+  .ptcg-index__camp{padding:60px 0}
+}
+@media(min-width:768px) and (max-width:1023px){
+  .ptcg-index__camp-grid{grid-template-columns:repeat(2,1fr)!important}
+}
   </style>
 </head>
 <body>
@@ -955,6 +996,35 @@
           <i class="ri-information-line"></i>
           LA ADOPCIÓN ES RESPONSABLE: SE EVALÚA ESPACIO, TIEMPO Y CAPACIDAD ECONÓMICA DEL ADOPTANTE.
         </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================
+       CAMPANAS SOLIDARIAS
+  ===================================== -->
+  <section class="ptcg-index__camp" id="ayudas" aria-labelledby="ptcg-camp-h">
+    <div class="ptcg-index__container">
+      <div class="ptcg-index__camp-header ptcg-index__fade-up">
+        <div class="ptcg-index__sec-tag"><i class="ri-hand-heart-line"></i> Petcingo Solidario</div>
+        <h2 class="ptcg-index__sec-title" id="ptcg-camp-h">Campanas que necesitan tu apoyo</h2>
+        <p class="ptcg-index__sec-sub ptcg-index__sec-sub--center">
+          Refugios aliados abren campanas de donacion para cuidar a sus animales. Cada aporte cuenta.
+        </p>
+      </div>
+      <div id="ptcg-camp-loading" class="ptcg-index__camp-loading">
+        <div class="ptcg-index__camp-spinner"></div>
+        <span>Cargando campanas...</span>
+      </div>
+      <div id="ptcg-camp-grid" class="ptcg-index__camp-grid" hidden></div>
+      <div id="ptcg-camp-empty" class="ptcg-index__camp-empty" hidden>
+        <i class="ri-hand-heart-line"></i>
+        Sin campanas activas en este momento. Vuelve pronto.
+      </div>
+      <div class="ptcg-index__camp-footer ptcg-index__fade-up">
+        <a href="/paginas_html/refugio-panel.html" class="ptcg-index__camp-cta">
+          <i class="ri-building-line"></i> Soy un refugio - crear campana
+        </a>
       </div>
     </div>
   </section>
@@ -2289,6 +2359,65 @@
   };
 
   loadVetDirectory();
+
+  /* -- Campanas Solidarias loader -- */
+  (function() {
+    var loadEl  = document.getElementById('ptcg-camp-loading');
+    var gridEl  = document.getElementById('ptcg-camp-grid');
+    var emptyEl = document.getElementById('ptcg-camp-empty');
+    if (!loadEl || !gridEl || !emptyEl) return;
+    db.collection('campaigns')
+      .where('status', '==', 'activa')
+      .orderBy('createdAt', 'desc')
+      .limit(6)
+      .get()
+      .then(function(snap) {
+        loadEl.style.display = 'none';
+        if (snap.empty) { emptyEl.hidden = false; return; }
+        var html = '';
+        snap.forEach(function(doc) {
+          var c   = doc.data();
+          var cid = doc.id;
+          var typeLabel = c.type === 'objeto' ? 'De objeto' : 'Economica';
+          var imgHtml = c.imageUrl
+            ? '<img src="' + _vdEsc(c.imageUrl) + '" alt="" loading="lazy">'
+            : '<span class="ptcg-index__camp-cover-fallback"><i class="ri-hand-heart-line"></i></span>';
+          var exp = c.expiresAt ? (c.expiresAt.toDate ? c.expiresAt.toDate() : new Date(c.expiresAt)) : null;
+          var daysLeft = exp ? Math.ceil((exp - new Date()) / 86400000) : null;
+          var daysHtml = (daysLeft !== null && daysLeft > 0)
+            ? '<div class="ptcg-index__camp-days"><i class="ri-calendar-line"></i> ' + daysLeft + ' dias restantes</div>'
+            : '';
+          var progHtml = '';
+          if (c.type === 'economica' && c.meta > 0) {
+            var raised = c.raised || 0;
+            var pct = Math.min(100, Math.round((raised / c.meta) * 100));
+            progHtml = '<div class="ptcg-index__camp-prog">' +
+              '<div class="ptcg-index__camp-prog-bar"><div class="ptcg-index__camp-prog-fill" style="width:' + pct + '%"></div></div>' +
+              '<div class="ptcg-index__camp-prog-nums"><span class="ptcg-index__camp-prog-raised">Bs ' + raised + '</span><span>Meta: Bs ' + _vdEsc(String(c.meta)) + '</span></div>' +
+              '</div>';
+          }
+          html +=
+            '<div class="ptcg-index__camp-card ptcg-index__fade-up">' +
+              '<div class="ptcg-index__camp-cover">' + imgHtml +
+                '<span class="ptcg-index__camp-type ptcg-index__camp-type--' + _vdEsc(c.type || 'economica') + '">' + _vdEsc(typeLabel) + '</span>' +
+              '</div>' +
+              '<div class="ptcg-index__camp-body">' +
+                '<div class="ptcg-index__camp-shelter"><i class="ri-home-heart-line"></i> ' + _vdEsc(c.shelterName || 'Refugio') + '</div>' +
+                '<div class="ptcg-index__camp-title">' + _vdEsc(c.title || 'Campana de ayuda') + '</div>' +
+                progHtml + daysHtml +
+                '<a href="/ayuda/?id=' + _vdEsc(cid) + '" class="ptcg-index__camp-btn"><i class="ri-hand-coin-line"></i> Ver campana</a>' +
+              '</div>' +
+            '</div>';
+        });
+        gridEl.innerHTML = html;
+        gridEl.hidden = false;
+      })
+      .catch(function(e) {
+        if (loadEl) loadEl.style.display = 'none';
+        if (emptyEl) emptyEl.hidden = false;
+        console.warn('Error cargando campanas:', e);
+      });
+  })();
 
   (function () {
     var cityTabs = document.querySelectorAll('.ptcg-index__city-tab');
