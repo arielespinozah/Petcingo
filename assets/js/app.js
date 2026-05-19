@@ -1383,7 +1383,7 @@ function renderPetProfile(d, petId) {
   if(d.medical){
     var accM=document.getElementById('pet-acc-medical');if(accM)accM.style.display='block';
     var medContent=document.getElementById('pet-acc-medical-content');
-    if(medContent)medContent.innerHTML=_petInfoRow('ri-capsule-line','Info médica',d.medical);
+    if(medContent)medContent.innerHTML=_petInfoRow('solar-health-linear.svg','Info médica',d.medical);
   }
 
   /* Show profile */
@@ -1432,11 +1432,11 @@ function _buildPetDataAccordion(d) {
     if(months<0||(months===0&&now.getDate()<bd.getDate())){years--;months=(months+12)%12;}
     ageDisplay=years>0?years+' año'+(years>1?'s':''):months+' mes'+(months!==1?'es':'');
   }
-  if(ageDisplay)   rows+=_petInfoRow('ri-cake-line','Edad',ageDisplay);
-  if(d.birthdate)  rows+=_petInfoRow('ri-calendar-event-line','Fecha de nacimiento',d.birthdate);
-  if(d.weight)     rows+=_petInfoRow('ri-scales-line','Peso',d.weight+' kg');
-  if(d.ownerName)  rows+=_petInfoRow('ri-user-3-line','Dueño/a',d.ownerName);
-  if(d.behavior)   rows+=_petInfoRow('ri-star-line','Comportamiento',d.behavior);
+  if(ageDisplay)   rows+=_petInfoRow('solar-calendar-linear.svg','Edad',ageDisplay);
+  if(d.birthdate)  rows+=_petInfoRow('solar-calendar-linear.svg','Fecha de nacimiento',d.birthdate);
+  if(d.weight)     rows+=_petInfoRow('solar-info-linear.svg','Peso',d.weight+' kg');
+  if(d.ownerName)  rows+=_petInfoRow('solar-user-bold.svg','Dueño/a',d.ownerName);
+  if(d.behavior)   rows+=_petInfoRow('solar-star-linear.svg','Comportamiento',d.behavior);
   content.innerHTML=rows||'<p style="color:#7a6e8a;font-size:.85rem;padding:4px 0">Sin datos adicionales.</p>';
 }
 

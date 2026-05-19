@@ -711,8 +711,8 @@ window.loadLostPets = function() {
           : '';
         var safeId = id.replace(/'/g, "\\'");
         var toggleLabel = d.featuredOnIndex ? 'Quitar del index' : 'Publicar en index';
-        var toggleIcon  = d.featuredOnIndex ? 'ri-eye-off-line' : 'ri-eye-line';
-        var toggleBtn = '<button class="btn btn-ghost btn-sm" title="'+esc(toggleLabel)+'" onclick="(typeof toggleFeaturedLost===\'function\')?toggleFeaturedLost(\''+safeId+'\','+!!d.featuredOnIndex+'):toast(\'toggleFeaturedLost no disponible\')"><i class="'+esc(toggleIcon)+'"></i></button>';
+        var toggleIcon  = d.featuredOnIndex ? 'solar-eye-closed-linear.svg' : 'solar-eye-linear.svg';
+        var toggleBtn = '<button class="btn btn-ghost btn-sm" title="'+esc(toggleLabel)+'" onclick="(typeof toggleFeaturedLost===\'function\')?toggleFeaturedLost(\''+safeId+'\','+!!d.featuredOnIndex+'):toast(\'toggleFeaturedLost no disponible\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/'+esc(toggleIcon)+'" width="18" height="18" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button>';
         html += '<tr style="vertical-align:middle">' +
           '<td style="padding:10px 8px"><div style="display:flex;align-items:center;gap:10px">'+avatar+'<div><div style="font-weight:700;font-size:.9rem">'+esc(d.name||'--')+'</div>'+(d.breed?'<div style="font-size:.72rem;color:var(--muted-dark)">'+esc(d.breed)+'</div>':'')+'</div></div></td>' +
           '<td style="padding:8px;font-size:.85rem">'+esc(d.ownerName||'--')+'</td>' +
@@ -2610,28 +2610,28 @@ function _buildPetOwnerAccordion(d) {
   var content=document.getElementById('pet-acc-owner-content');
   if(!acc||!content)return;
   var rows='';
-  if(d.ownerName) rows+=_petInfoRow('ri-user-3-line','Propietario/a',d.ownerName);
-  if(d.phone)  rows+=_petInfoRow('ri-phone-line','Telefono principal',d.phone);
-  if(d.phone2) rows+=_petInfoRow('ri-phone-line','Telefono alternativo',d.phone2);
+  if(d.ownerName) rows+=_petInfoRow('solar-user-bold.svg','Propietario/a',d.ownerName);
+  if(d.phone)  rows+=_petInfoRow('solar-phone-linear.svg','Telefono principal',d.phone);
+  if(d.phone2) rows+=_petInfoRow('solar-phone-linear.svg','Telefono alternativo',d.phone2);
   if(d.ownerLocation){
     var loc=d.ownerLocation;
     /* Pais */
-    if(loc.country) rows+=_petInfoRow('ri-global-line','Pais',loc.country);
+    if(loc.country) rows+=_petInfoRow('solar-global-linear.svg','Pais',loc.country);
     /* Bolivia: Departamento + Provincia */
     if(loc.dept){
       var deptStr=loc.dept+(loc.prov?' -- '+loc.prov:'');
-      rows+=_petInfoRow('ri-map-2-line','Departamento',deptStr);
+      rows+=_petInfoRow('solar-map-linear.svg','Departamento',deptStr);
     }
     /* Internacional: Ciudad + Provincia/Estado */
     if(loc.intlCity){
       var cityStr=loc.intlCity+(loc.intlProv?' -- '+loc.intlProv: loc.prov?' -- '+loc.prov:'');
-      rows+=_petInfoRow('ri-map-pin-2-line','Ciudad',cityStr);
+      rows+=_petInfoRow('solar-map-linear.svg','Ciudad',cityStr);
     } else if(!loc.dept&&loc.prov){
-      rows+=_petInfoRow('ri-map-2-line','Provincia / Estado',loc.prov);
+      rows+=_petInfoRow('solar-map-linear.svg','Provincia / Estado',loc.prov);
     }
     /* Direccion escrita (soporta campo legacy 'city' de activate.html antiguo) */
     var address=loc.text||loc.city||'';
-    if(address) rows+=_petInfoRow('ri-home-4-line','Direccion',address);
+    if(address) rows+=_petInfoRow('solar-home-bold.svg','Direccion',address);
     /* GPS (soporta 'mapsUrl' legacy) */
     var gpsLink=loc.gpsLink||loc.mapsUrl||'';
     if(gpsLink){
@@ -2694,12 +2694,12 @@ function _buildPetDataAccordion(d) {
     if(months<0||(months===0&&now2.getDate()<bd.getDate())){years--;months=(months+12)%12;}
     ageDisplay=years>0?years+' ano'+(years>1?'s':'')+(months>0?' y '+months+' mes'+(months!==1?'es':''):''):months+' mes'+(months!==1?'es':'');
   }
-  if(d.species)   rows+=_petInfoRow('ri-footprint-line','Especie',_speciesEmoji(d.species)+' '+d.species);
-  if(d.breed)     rows+=_petInfoRow('ri-award-line','Raza',d.breed);
-  if(ageDisplay)  rows+=_petInfoRow('ri-cake-line','Edad',ageDisplay);
-  if(d.birthdate) rows+=_petInfoRow('ri-calendar-event-line','Fecha de nacimiento',d.birthdate);
-  if(d.weight)    rows+=_petInfoRow('ri-scales-line','Peso',d.weight+' kg');
-  if(d.behavior)  rows+=_petInfoRow('ri-star-line','Comportamiento',d.behavior);
+  if(d.species)   rows+=_petInfoRow('solar-paw-bold.svg','Especie',_speciesEmoji(d.species)+' '+d.species);
+  if(d.breed)     rows+=_petInfoRow('solar-star-bold.svg','Raza',d.breed);
+  if(ageDisplay)  rows+=_petInfoRow('solar-calendar-linear.svg','Edad',ageDisplay);
+  if(d.birthdate) rows+=_petInfoRow('solar-calendar-linear.svg','Fecha de nacimiento',d.birthdate);
+  if(d.weight)    rows+=_petInfoRow('solar-info-linear.svg','Peso',d.weight+' kg');
+  if(d.behavior)  rows+=_petInfoRow('solar-star-linear.svg','Comportamiento',d.behavior);
   content.innerHTML=rows||'<p style="color:#7a6e8a;font-size:.85rem;padding:4px 0">Sin datos adicionales.</p>';
 
   /* -- Medical accordion (health data) -- */
@@ -2707,25 +2707,26 @@ function _buildPetDataAccordion(d) {
   var medContent=document.getElementById('pet-acc-medical-content');
   if(!medAcc||!medContent)return;
   var medRows='';
-  if(d.medical)              medRows+=_petInfoRow('ri-capsule-line','Info medica',d.medical);
+  if(d.medical)              medRows+=_petInfoRow('solar-health-linear.svg','Info medica',d.medical);
   if(d.vaccinationStatus==='yes') {
-    medRows+=_petInfoRow('ri-shield-check-line','Vacunado','Si');
-    if(d.vaccinationDetails) medRows+=_petInfoRow('ri-file-list-3-line','Detalle vacunas',d.vaccinationDetails);
+    medRows+=_petInfoRow('solar-shield-bold.svg','Vacunado','Si');
+    if(d.vaccinationDetails) medRows+=_petInfoRow('solar-document-linear.svg','Detalle vacunas',d.vaccinationDetails);
   } else if(d.vaccinationStatus==='no') {
-    medRows+=_petInfoRow('ri-shield-cross-line','Vacunado','No');
+    medRows+=_petInfoRow('solar-shield-bold.svg','Vacunado','No');
   }
-  if(d.rabiesVaccineCode)   medRows+=_petInfoRow('ri-syringe-line','Codigo vacuna rabia',d.rabiesVaccineCode);
-  if(d.rabiesVaccineExpiry) medRows+=_petInfoRow('ri-calendar-check-line','Venc. vacuna rabia',d.rabiesVaccineExpiry);
-  if(d.microchipped==='yes') medRows+=_petInfoRow('ri-cpu-line','Microchip','Si <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">');
-  else if(d.microchipped==='no') medRows+=_petInfoRow('ri-cpu-line','Microchip','No');
-  if(d.spayNeutered==='yes') medRows+=_petInfoRow('ri-heart-line','Castrado/a','Si <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">');
-  else if(d.spayNeutered==='no') medRows+=_petInfoRow('ri-heart-line','Castrado/a','No');
+  if(d.rabiesVaccineCode)   medRows+=_petInfoRow('solar-health-linear.svg','Codigo vacuna rabia',d.rabiesVaccineCode);
+  if(d.rabiesVaccineExpiry) medRows+=_petInfoRow('solar-calendar-linear.svg','Venc. vacuna rabia',d.rabiesVaccineExpiry);
+  if(d.microchipped==='yes') medRows+=_petInfoRow('solar-info-linear.svg','Microchip','Si <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">');
+  else if(d.microchipped==='no') medRows+=_petInfoRow('solar-info-linear.svg','Microchip','No');
+  if(d.spayNeutered==='yes') medRows+=_petInfoRow('solar-heart-linear.svg','Castrado/a','Si <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">');
+  else if(d.spayNeutered==='no') medRows+=_petInfoRow('solar-heart-linear.svg','Castrado/a','No');
   if(medRows){medAcc.style.display='block';medContent.innerHTML=medRows;}
 
 }
 
 function _petInfoRow(icon, label, value) {
-  return '<div class="pet-info-row"><i class="'+icon+' pet-info-icon"></i><div><div class="pet-info-label">'+esc(label)+'</div><div class="pet-info-value">'+esc(value)+'</div></div></div>';
+  var iconHtml = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/'+icon+'" width="16" height="16" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%);flex-shrink:0" alt="" class="pet-info-icon">';
+  return '<div class="pet-info-row">'+iconHtml+'<div><div class="pet-info-label">'+esc(label)+'</div><div class="pet-info-value">'+esc(value)+'</div></div></div>';
 }
 
 function _speciesEmoji(sp) {

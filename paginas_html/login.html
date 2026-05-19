@@ -430,9 +430,9 @@
 
   function togglePwd(inputId, btn) {
     var inp = document.getElementById(inputId);
-    var icon = btn.querySelector('i');
-    if (inp.type === 'password') { inp.type = 'text'; icon.className = 'ri-eye-line'; }
-    else { inp.type = 'password'; icon.className = 'ri-eye-off-line'; }
+    var icon = btn.querySelector('img');
+    if (inp.type === 'password') { inp.type = 'text'; if (icon) icon.src = 'https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-linear.svg'; }
+    else { inp.type = 'password'; if (icon) icon.src = 'https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-closed-linear.svg'; }
   }
   window.togglePwd = togglePwd;
 

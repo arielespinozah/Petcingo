@@ -568,7 +568,7 @@
     var status      = d.status || 'activo';
     var statusLabel = status === 'perdido' ? 'Perdido/a — reportado' : 'Activo';
     var statusClass = status === 'perdido' ? 'ptcg-cuenta__status-badge--perdido' : 'ptcg-cuenta__status-badge--activo';
-    var statusIcon  = status === 'perdido' ? 'ri-alert-line' : 'ri-shield-check-line';
+    var statusIcon  = status === 'perdido' ? 'solar-danger-linear.svg' : 'solar-shield-bold.svg';
 
     var photoHtml = d.photoUrl
       ? '<img class="ptcg-cuenta__pet-avatar" src="' + esc(d.photoUrl) + '" alt="Foto de ' + esc(d.name || 'la mascota') + '">'
@@ -611,7 +611,7 @@
             '<div class="ptcg-cuenta__pet-name">' + esc(d.name || 'Sin nombre') + '</div>',
             metaParts.length ? '<div class="ptcg-cuenta__pet-meta">' + esc(metaParts.join(' · ')) + '</div>' : '',
             '<div class="ptcg-cuenta__pet-plate"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-qr-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">' + esc(pid) + '</div>',
-            '<div class="ptcg-cuenta__status-badge ' + statusClass + '"><i class="' + statusIcon + '"></i>' + statusLabel + '</div>',
+            '<div class="ptcg-cuenta__status-badge ' + statusClass + '"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/'+statusIcon+'" width="14" height="14" style="filter:brightness(0) invert(1);vertical-align:middle" alt=""> ' + statusLabel + '</div>',
           '</div>',
         '</div>',
       '</div>',
@@ -1369,9 +1369,9 @@
 
   window.ptcgToggleEye = function (btn, inputId) {
     var input = document.getElementById(inputId);
-    var icon  = btn.querySelector('i');
-    if (input.type === 'password') { input.type = 'text'; icon.className = 'ri-eye-off-line'; }
-    else { input.type = 'password'; icon.className = 'ri-eye-line'; }
+    var icon  = btn.querySelector('img');
+    if (input.type === 'password') { input.type = 'text'; if (icon) icon.src = 'https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-linear.svg'; }
+    else { input.type = 'password'; if (icon) icon.src = 'https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-closed-linear.svg'; }
   };
 
   function ptcgShowErr(id, msg) {

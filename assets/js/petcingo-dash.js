@@ -429,7 +429,7 @@
         if (m) m.style.display = 'none';
         closeVerifyModal();
         if (typeof toast === 'function') toast((isPaid ? 'Pedido cancelado -- pendiente de reembolso.' : 'Pedido cancelado.'));
-        if (typeof showDashAlert === 'function' && isPaid) showDashAlert('Pedido ' + orderId.substring(0,8) + '... cancelado. Reembolso pendiente.', 'warning', 'ri-refund-2-line');
+        if (typeof showDashAlert === 'function' && isPaid) showDashAlert('Pedido ' + orderId.substring(0,8) + '... cancelado. Reembolso pendiente.', 'warning', 'solar-money-bold.svg');
         loadOrders();
       })
       .catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
@@ -551,7 +551,7 @@
     // Alerta de nuevos pedidos
     if (newO > 0) {
       if (typeof showDashAlert === 'function') {
-        showDashAlert('Tienes ' + newO + ' pedido(s) pendiente(s) de verificacion.', 'warning', 'ri-shopping-bag-line');
+        showDashAlert('Tienes ' + newO + ' pedido(s) pendiente(s) de verificacion.', 'warning', 'solar-cart-bold.svg');
       }
     }
   }
@@ -1196,7 +1196,8 @@
     if (!container) return;
     var el = document.createElement('div');
     el.className = 'dash-alert ' + (type || '');
-    el.innerHTML = '<i class="' + (icon || 'ri-notification-3-line') + '"></i><span>' + msg + '</span>';
+    var iconSrc = (icon && icon.indexOf('solar-') === 0) ? icon : 'solar-bell-bold.svg';
+    el.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/' + iconSrc + '" width="18" height="18" style="filter:brightness(0) invert(1);flex-shrink:0" alt=""><span>' + msg + '</span>';
     container.appendChild(el);
     var timer = setTimeout(function() { _dismissAlert(el); }, 6000);
     el.addEventListener('click', function() { clearTimeout(timer); _dismissAlert(el); });
@@ -1224,19 +1225,19 @@
     setTimeout(function() {
       var ordersBadge = document.getElementById('orders-nav-badge');
       if (ordersBadge && ordersBadge.textContent.trim()) {
-        showDashAlert(ordersBadge.textContent.trim() + ' pedido(s) pendiente(s) de atencin.', 'warning', 'ri-shopping-bag-line');
+        showDashAlert(ordersBadge.textContent.trim() + ' pedido(s) pendiente(s) de atencin.', 'warning', 'solar-cart-bold.svg');
       }
       var commBadge = document.getElementById('commissions-nav-badge');
       if (commBadge && commBadge.textContent.trim()) {
-        showDashAlert(commBadge.textContent.trim() + ' comisin(es) por pagar.', 'danger', 'ri-money-dollar-circle-line');
+        showDashAlert(commBadge.textContent.trim() + ' comisin(es) por pagar.', 'danger', 'solar-money-bold.svg');
       }
       var storeBadge = document.getElementById('store-nav-badge');
       if (storeBadge && storeBadge.textContent.trim()) {
-        showDashAlert('Stock bajo en ' + storeBadge.textContent.trim() + ' producto(s).', 'warning', 'ri-store-2-line');
+        showDashAlert('Stock bajo en ' + storeBadge.textContent.trim() + ' producto(s).', 'warning', 'solar-shop-bold.svg');
       }
       var lostBadge = document.getElementById('lost-nav-badge');
       if (lostBadge && lostBadge.textContent.trim()) {
-        showDashAlert(lostBadge.textContent.trim() + ' mascota(s) perdida(s) activa(s).', 'danger', 'ri-emotion-sad-line');
+        showDashAlert(lostBadge.textContent.trim() + ' mascota(s) perdida(s) activa(s).', 'danger', 'solar-heart-linear.svg');
       }
     }, 1800);
   }
@@ -1649,7 +1650,7 @@
     db2.collection('config').doc('shipping_rates').set(rates, { merge: true })
       .then(function() {
         if (typeof toast === 'function') toast('Tarifas de envio guardadas.');
-        if (typeof showDashAlert === 'function') showDashAlert('Tarifas de envio actualizadas correctamente.', 'success', 'ri-truck-line');
+        if (typeof showDashAlert === 'function') showDashAlert('Tarifas de envio actualizadas correctamente.', 'success', 'solar-delivery-bold.svg');
       })
       .catch(function(e) { if (typeof toast === 'function') toast('Error: ' + e.message); });
   };
@@ -1782,7 +1783,7 @@
     db2.collection('siteConfig').doc('internationalShipping').set(data)
       .then(function() {
         if (typeof toast === 'function') toast('Tarifas internacionales guardadas con éxito.');
-        if (typeof showDashAlert === 'function') showDashAlert('Tarifas internacionales de envío actualizadas.', 'success', 'ri-earth-line');
+        if (typeof showDashAlert === 'function') showDashAlert('Tarifas internacionales de envío actualizadas.', 'success', 'solar-global-linear.svg');
       })
       .catch(function(e) {
         if (typeof toast === 'function') toast('Error al guardar tarifas internacionales: ' + e.message);

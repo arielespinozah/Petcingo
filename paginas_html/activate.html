@@ -2147,15 +2147,15 @@ body{background:#F3F3F3!important}
 
   window.togglePwdVisibility = function (inputId, btn) {
     var inp  = document.getElementById(inputId);
-    var icon = btn.querySelector('i');
+    var icon = btn.querySelector('img');
     if (inp.type === 'password') {
       inp.type = 'text';
-      icon.className = 'ri-eye-line';
-      btn.setAttribute('aria-label', 'Ocultar contraseña');
+      if (icon) icon.src = 'https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-linear.svg';
+      btn.setAttribute('aria-label', 'Ocultar contrasena');
     } else {
       inp.type = 'password';
-      icon.className = 'ri-eye-off-line';
-      btn.setAttribute('aria-label', 'Mostrar contraseña');
+      if (icon) icon.src = 'https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-closed-linear.svg';
+      btn.setAttribute('aria-label', 'Mostrar contrasena');
     }
   };
 

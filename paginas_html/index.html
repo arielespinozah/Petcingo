@@ -2321,9 +2321,9 @@
 
   window.ptcgToggleEye = function (btn, inputId) {
     var input = document.getElementById(inputId);
-    var icon  = btn.querySelector('i');
-    if (input.type === 'password') { input.type = 'text'; icon.className = 'ri-eye-off-line'; }
-    else { input.type = 'password'; icon.className = 'ri-eye-line'; }
+    var icon  = btn.querySelector('img');
+    if (input.type === 'password') { input.type = 'text'; if (icon) icon.src = 'https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-linear.svg'; }
+    else { input.type = 'password'; if (icon) icon.src = 'https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-closed-linear.svg'; }
   };
 
   function ptcgShowErr(id, msg) {
@@ -2342,8 +2342,8 @@
     var wrap = document.getElementById('ptcg-toast-wrap'); if (!wrap) return;
     var t = document.createElement('div');
     t.className = 'ptcg-index__toast' + (type ? ' ptcg-index__toast--' + type : '');
-    var icon = type === 'success' ? 'ri-checkbox-circle-fill' : type === 'error' ? 'ri-close-circle-fill' : 'ri-information-fill';
-    t.innerHTML = '<i class="' + icon + '"></i><span>' + msg + '</span>';
+    var iconSrc = type === 'success' ? 'solar-check-circle-bold.svg' : type === 'error' ? 'solar-close-linear.svg' : 'solar-info-linear.svg';
+    t.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/'+iconSrc+'" width="18" height="18" style="filter:brightness(0) invert(1);flex-shrink:0" alt=""><span>' + msg + '</span>';
     wrap.appendChild(t);
     setTimeout(function () { t.style.opacity = '0'; t.style.transition = 'opacity 0.3s'; setTimeout(function () { t.remove(); }, 320); }, 3500);
   };

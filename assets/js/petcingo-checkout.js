@@ -232,19 +232,19 @@
 
     var methods = isIntl
       ? [
-          { key: 'paypal', name: 'PayPal',  desc: 'Pago internacional (proximamente)',    icon: 'ri-paypal-line',    soon: true },
-          { key: 'stripe', name: 'Stripe',  desc: 'Tarjeta internacional (proximamente)', icon: 'ri-bank-card-line', soon: true }
+          { key: 'paypal', name: 'PayPal',  desc: 'Pago internacional (proximamente)',    icon: 'solar-wallet-bold.svg',    soon: true },
+          { key: 'stripe', name: 'Stripe',  desc: 'Tarjeta internacional (proximamente)', icon: 'solar-bank-bold.svg', soon: true }
         ]
       : [
-          { key: 'qr',    name: 'QR Transferencia', desc: 'Escanea y paga por transferencia QR',   icon: 'ri-qr-code-line'    },
-          { key: 'banco', name: 'Deposito bancario', desc: 'Banco Union o BNB -- datos al seleccionar', icon: 'ri-building-2-line' }
+          { key: 'qr',    name: 'QR Transferencia', desc: 'Escanea y paga por transferencia QR',   icon: 'solar-qr-bold.svg'    },
+          { key: 'banco', name: 'Deposito bancario', desc: 'Banco Union o BNB -- datos al seleccionar', icon: 'solar-money-bold.svg' }
         ];
 
     container.innerHTML = methods.map(function (m) {
       return '<div class="ptcg-checkout__payment-method' + (m.soon ? ' is-soon' : '') +
         '" data-method="' + m.key + '" onclick="ptcgSelectMethod(this)">' +
         '<div class="ptcg-checkout__pm-radio"></div>' +
-        '<i class="' + m.icon + ' ptcg-checkout__pm-icon"></i>' +
+        '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/' + m.icon + '" width="22" height="22" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" class="ptcg-checkout__pm-icon">' +
         '<div class="ptcg-checkout__pm-info">' +
           '<div class="ptcg-checkout__pm-name">' + m.name + '</div>' +
           '<div class="ptcg-checkout__pm-desc">' + m.desc + '</div>' +
@@ -762,10 +762,11 @@
     var t  = byId('ptcg-toast');
     var tm = byId('ptcg-toast-msg');
     if (!t) return;
-    var ic = t.querySelector('i');
-    if (ic) ic.className = type === 'success' ? 'ri-checkbox-circle-fill'
-                         : type === 'error'   ? 'ri-error-warning-fill'
-                         :                      'ri-information-line';
+    var ic = t.querySelector('img.ptcg-toast-icon');
+    var iconSrc = type === 'success' ? 'solar-check-circle-bold.svg'
+                : type === 'error'   ? 'solar-danger-linear.svg'
+                :                      'solar-info-linear.svg';
+    if (ic) ic.src = 'https://prueb2.dashnexpages.net/assets/svg-icons/' + iconSrc;
     if (tm) tm.textContent = msg;
     t.removeAttribute('hidden');
     clearTimeout(_toastTimer);
@@ -830,7 +831,7 @@ window.ptcgUpdateDelivery = function() {
     window.ptcgSetDelivery(deliveryType);
 
     if (delLabel) delLabel.textContent = 'Delivery';
-    if (delIcon) delIcon.className = 'ri-motorbike-line';
+    if (delIcon) delIcon.src = 'https://prueb2.dashnexpages.net/assets/svg-icons/solar-scooter-bold.svg';
     if (shipInfo) shipInfo.style.display = 'none';
 
     if (deliveryType === 'pickup') {
@@ -851,7 +852,7 @@ window.ptcgUpdateDelivery = function() {
     deliveryFee = 30;
     if (delPrice) delPrice.textContent = '30 Bs';
     if (delLabel) delLabel.textContent = 'Envio a Domicilio';
-    if (delIcon) delIcon.className = 'ri-box-3-line';
+    if (delIcon) delIcon.src = 'https://prueb2.dashnexpages.net/assets/svg-icons/solar-delivery-bold.svg';
     if (addrField) addrField.style.display = '';
     if (zoneMsg) zoneMsg.style.display = 'none';
     if (shipInfo) shipInfo.style.display = 'none';
@@ -870,7 +871,7 @@ window.ptcgUpdateDelivery = function() {
     deliveryFee = 0;
     if (delPrice) delPrice.textContent = '0 Bs';
     if (delLabel) delLabel.textContent = 'Envio por Pagar';
-    if (delIcon) delIcon.className = 'ri-box-3-line';
+    if (delIcon) delIcon.src = 'https://prueb2.dashnexpages.net/assets/svg-icons/solar-delivery-bold.svg';
     if (addrField) addrField.style.display = 'none';
     if (zoneMsg) zoneMsg.style.display = 'none';
     if (shipInfo) shipInfo.style.display = 'none';
@@ -970,59 +971,46 @@ window.ptcgSimZone = function() {
   }
 
   function renderCartSummary() {
-    var orderSummary = document.getElementById('ptcg-order-summary');
-    if (!orderSummary) return;
+    var cartBox = document.getElementById('cart-mode-summary');
+    var itemsBox = document.getElementById('cart-mode-items');
+    var totalBox = document.getElementById('cart-mode-total-value');
+    if (!cartBox) return;
 
     /* Detectar si es internacional por timezone */
     var tz = '';
     try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (_) {}
-    var isIntl = tz.indexOf('America/La_Paz') === -1 && tz.indexOf('America/Santa_Cruz') === -1;
+    var isIntlTz = tz.indexOf('America/La_Paz') === -1 && tz.indexOf('America/Santa_Cruz') === -1;
 
     var subtotal = cartItems.reduce(function (s, i) {
-      return s + (isIntl && i.priceUsd ? i.priceUsd * i.qty : i.price * i.qty);
+      return s + (isIntlTz && i.priceUsd ? i.priceUsd * i.qty : i.price * i.qty);
     }, 0);
-    var currency = isIntl ? 'USD' : 'Bs';
+    var currency = isIntlTz ? 'USD' : 'Bs';
 
-    var itemsHtml = cartItems.map(function (item) {
-      var lineTotal = isIntl && item.priceUsd
-        ? 'USD ' + (item.priceUsd * item.qty).toFixed(2)
-        : 'Bs ' + (item.price * item.qty);
-      return '<div style="display:flex;justify-content:space-between;align-items:center;' +
-             'padding:8px 0;border-bottom:1px solid rgba(69,82,204,0.06);">' +
-             '<div>' +
-               '<div style="font-size:0.85rem;font-weight:700;color:#1E255E;">' + escH(item.name) + '</div>' +
-               '<div style="font-size:0.73rem;color:#6C7297;">x' + item.qty + '</div>' +
-             '</div>' +
-             '<span style="font-size:0.88rem;font-weight:700;color:#4552CC;">' + lineTotal + '</span>' +
-             '</div>';
-    }).join('');
-
-    var html = '<div style="font-family:\'Sora\',sans-serif;font-size:0.92rem;font-weight:700;' +
-               'color:#1E255E;display:flex;align-items:center;gap:8px;' +
-               'border-bottom:1px solid rgba(69,82,204,0.08);padding-bottom:12px;">' +
-               'Tu pedido (' + cartItems.length + ' producto' + (cartItems.length !== 1 ? 's' : '') + ')' +
-               '</div>' +
-               itemsHtml +
-               '<div style="display:flex;justify-content:space-between;font-size:0.85rem;color:#6C7297;' +
-               'padding-top:10px;">' +
-               '<span>Subtotal</span>' +
-               '<span style="font-weight:700;color:#1E255E;">' + currency + ' ' + subtotal.toFixed(2) + '</span>' +
-               '</div>';
-
-    orderSummary.innerHTML = html;
-
-    /* Ocultar los controles de cantidad y promo del modo plan */
-    var promoBox = orderSummary.nextElementSibling;
-    /* Parchamos el resumen de totales para usar el subtotal del carrito */
-    if (typeof window.updateTotalDisplay === 'function') {
-      /* Override temporal: inyectar subtotal en los campos de resumen */
-      var subtotalEl = document.getElementById('ptcg-summary-subtotal');
-      var totalEl    = document.getElementById('ptcg-summary-total');
-      var shipEl     = document.getElementById('ptcg-summary-shipping');
-      if (subtotalEl) subtotalEl.textContent = currency + ' ' + subtotal.toFixed(2);
-      if (totalEl)    totalEl.textContent    = currency + ' ' + subtotal.toFixed(2);
-      if (shipEl)     shipEl.textContent     = 'Por calcular';
+    if (itemsBox) {
+      itemsBox.innerHTML = cartItems.map(function (item) {
+        var lineTotal = isIntlTz && item.priceUsd
+          ? 'USD ' + (item.priceUsd * item.qty).toFixed(2)
+          : 'Bs ' + (item.price * item.qty);
+        return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(69,82,204,0.06);">' +
+               '<div><div style="font-size:0.85rem;font-weight:700;color:#1E255E;">' + escH(item.name) + '</div>' +
+               '<div style="font-size:0.73rem;color:#6C7297;">x' + item.qty + '</div></div>' +
+               '<span style="font-size:0.88rem;font-weight:700;color:#4552CC;">' + lineTotal + '</span></div>';
+      }).join('');
     }
+    if (totalBox) totalBox.textContent = currency + ' ' + subtotal.toFixed(2);
+
+    /* Show cart box, hide plan summary */
+    cartBox.style.display = 'block';
+    var planSummary = document.getElementById('ptcg-order-summary');
+    if (planSummary) planSummary.style.display = 'none';
+
+    /* Patch totals row */
+    var subtotalEl = document.getElementById('ptcg-summary-subtotal');
+    var totalEl    = document.getElementById('ptcg-summary-total');
+    var shipEl     = document.getElementById('ptcg-summary-shipping');
+    if (subtotalEl) subtotalEl.textContent = currency + ' ' + subtotal.toFixed(2);
+    if (totalEl)    totalEl.textContent    = currency + ' ' + subtotal.toFixed(2);
+    if (shipEl)     shipEl.textContent     = 'Por calcular';
 
     /* Guardar en sessionStorage para que ptcgUploadReceipt lo incluya */
     try {

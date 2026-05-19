@@ -601,7 +601,7 @@
 
   <!-- Toast -->
   <div class="ptcg-checkout__toast" id="ptcg-toast" hidden>
-    <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+    <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" class="ptcg-toast-icon">
     <span id="ptcg-toast-msg"></span>
   </div>
 
@@ -705,6 +705,17 @@
            FASE 1: DATOS DEL COMPRADOR + ENTREGA
            ============================================================ -->
       <div class="ptcg-checkout__phase active" id="ptcg-phase-1">
+
+        <!-- Resumen modo carrito (oculto hasta que JS lo active) -->
+        <div id="cart-mode-summary" style="display:none;background:rgba(255,255,255,0.72);border:1px solid rgba(69,82,204,0.12);border-radius:20px;padding:18px;margin-bottom:16px;">
+          <div style="font-family:'Sora',sans-serif;font-size:0.92rem;font-weight:700;color:#1E255E;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(69,82,204,0.08);padding-bottom:10px;margin-bottom:12px;">
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-cart-bold.svg" width="18" height="18" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Productos en tu carrito
+          </div>
+          <div id="cart-mode-items" style="display:flex;flex-direction:column;gap:10px;"></div>
+          <div id="cart-mode-total" style="border-top:1px dashed rgba(69,82,204,0.15);padding-top:12px;margin-top:12px;display:flex;justify-content:space-between;font-weight:800;font-size:1.05rem;color:#1E255E;">
+            <span>Total carrito</span><span id="cart-mode-total-value">--</span>
+          </div>
+        </div>
 
         <!-- Resumen de compra -->
         <div class="ptcg-checkout__card" id="ptcg-order-summary">
@@ -818,22 +829,37 @@
           </div>
 
           <div class="ptcg-checkout__field">
-            <label class="ptcg-checkout__label" for="ptcg-city">Ciudad</label>
-            <select class="ptcg-checkout__input" id="ptcg-city" onchange="ptcgUpdateDelivery()"
-              style="padding-left:14px;cursor:pointer;background-image:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%239E9E9E%22%3E%3Cpath d=%22M12 15l-6-6h12z%22/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 12px center;background-size:16px;padding-right:36px;">
-              <option>Santa Cruz de la Sierra</option>
-              <option>La Paz</option>
-              <option>El Alto</option>
-              <option>Cochabamba</option>
-              <option>Sacaba</option>
-              <option>Quillacollo</option>
-              <option>Tarija</option>
-              <option>Sucre</option>
-              <option>Oruro</option>
-              <option>Potosi</option>
-              <option>Trinidad</option>
-              <option>Cobija</option>
-            </select>
+            <label class="ptcg-checkout__label">Departamento</label>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;" id="co-dept-grid">
+              <button type="button" class="co-flag-btn" onclick="selectCheckoutDept('Santa Cruz','santa-cruz')" data-dept="santa-cruz" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 9px;border:2px solid rgba(69,82,204,0.15);border-radius:10px;background:rgba(255,255,255,0.8);cursor:pointer;font-size:0.68rem;font-weight:600;color:#374151;transition:border-color .15s,background .15s;min-width:62px">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flag-Departamentos/santacruz.svg" width="28" height="28" alt="SCZ"><span>Santa Cruz</span>
+              </button>
+              <button type="button" class="co-flag-btn" onclick="selectCheckoutDept('La Paz','la-paz')" data-dept="la-paz" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 9px;border:2px solid rgba(69,82,204,0.15);border-radius:10px;background:rgba(255,255,255,0.8);cursor:pointer;font-size:0.68rem;font-weight:600;color:#374151;transition:border-color .15s,background .15s;min-width:62px">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flag-Departamentos/lapaz.svg" width="28" height="28" alt="LP"><span>La Paz</span>
+              </button>
+              <button type="button" class="co-flag-btn" onclick="selectCheckoutDept('Cochabamba','cochabamba')" data-dept="cochabamba" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 9px;border:2px solid rgba(69,82,204,0.15);border-radius:10px;background:rgba(255,255,255,0.8);cursor:pointer;font-size:0.68rem;font-weight:600;color:#374151;transition:border-color .15s,background .15s;min-width:62px">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flag-Departamentos/cbba.svg" width="28" height="28" alt="CBBA"><span>Cbba</span>
+              </button>
+              <button type="button" class="co-flag-btn" onclick="selectCheckoutDept('Oruro','oruro')" data-dept="oruro" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 9px;border:2px solid rgba(69,82,204,0.15);border-radius:10px;background:rgba(255,255,255,0.8);cursor:pointer;font-size:0.68rem;font-weight:600;color:#374151;transition:border-color .15s,background .15s;min-width:62px">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flag-Departamentos/oruro.svg" width="28" height="28" alt="ORU"><span>Oruro</span>
+              </button>
+              <button type="button" class="co-flag-btn" onclick="selectCheckoutDept('Potosi','potosi')" data-dept="potosi" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 9px;border:2px solid rgba(69,82,204,0.15);border-radius:10px;background:rgba(255,255,255,0.8);cursor:pointer;font-size:0.68rem;font-weight:600;color:#374151;transition:border-color .15s,background .15s;min-width:62px">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flag-Departamentos/potosi.svg" width="28" height="28" alt="POT"><span>Potosi</span>
+              </button>
+              <button type="button" class="co-flag-btn" onclick="selectCheckoutDept('Sucre','chuquisaca')" data-dept="chuquisaca" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 9px;border:2px solid rgba(69,82,204,0.15);border-radius:10px;background:rgba(255,255,255,0.8);cursor:pointer;font-size:0.68rem;font-weight:600;color:#374151;transition:border-color .15s,background .15s;min-width:62px">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flag-Departamentos/chuquisaca.svg" width="28" height="28" alt="CHQ"><span>Sucre</span>
+              </button>
+              <button type="button" class="co-flag-btn" onclick="selectCheckoutDept('Tarija','tarija')" data-dept="tarija" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 9px;border:2px solid rgba(69,82,204,0.15);border-radius:10px;background:rgba(255,255,255,0.8);cursor:pointer;font-size:0.68rem;font-weight:600;color:#374151;transition:border-color .15s,background .15s;min-width:62px">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flag-Departamentos/tarija.svg" width="28" height="28" alt="TJA"><span>Tarija</span>
+              </button>
+              <button type="button" class="co-flag-btn" onclick="selectCheckoutDept('Trinidad','beni')" data-dept="beni" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 9px;border:2px solid rgba(69,82,204,0.15);border-radius:10px;background:rgba(255,255,255,0.8);cursor:pointer;font-size:0.68rem;font-weight:600;color:#374151;transition:border-color .15s,background .15s;min-width:62px">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flag-Departamentos/beni.svg" width="28" height="28" alt="BEN"><span>Beni</span>
+              </button>
+              <button type="button" class="co-flag-btn" onclick="selectCheckoutDept('Cobija','pando')" data-dept="pando" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 9px;border:2px solid rgba(69,82,204,0.15);border-radius:10px;background:rgba(255,255,255,0.8);cursor:pointer;font-size:0.68rem;font-weight:600;color:#374151;transition:border-color .15s,background .15s;min-width:62px">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flag-Departamentos/pando.svg" width="28" height="28" alt="PAN"><span>Pando</span>
+              </button>
+            </div>
+            <input type="hidden" id="ptcg-city" value="Santa Cruz">
           </div>
 
           <div class="ptcg-checkout__field-row">
@@ -1039,6 +1065,22 @@
 <script src="https://prueb2.dashnexpages.net/assets/js/petcingo-checkout.js?v=20260518"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <script>
+  window.selectCheckoutDept = function(cityName, dept) {
+    var hidden = document.getElementById('ptcg-city');
+    if (hidden) hidden.value = cityName;
+    document.querySelectorAll('#co-dept-grid .co-flag-btn').forEach(function(b) {
+      var sel = b.dataset.dept === dept;
+      b.style.borderColor = sel ? '#4552CC' : 'rgba(69,82,204,0.15)';
+      b.style.background  = sel ? 'rgba(69,82,204,0.10)' : 'rgba(255,255,255,0.8)';
+      b.style.color       = sel ? '#4552CC' : '#374151';
+    });
+    if (typeof ptcgUpdateDelivery === 'function') ptcgUpdateDelivery();
+  };
+  // Auto-select Santa Cruz on load
+  document.addEventListener('DOMContentLoaded', function() {
+    window.selectCheckoutDept('Santa Cruz', 'santa-cruz');
+  });
+
   lucide.createIcons();
   
   // Remixicon Fallback logic

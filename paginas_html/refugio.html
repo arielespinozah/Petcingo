@@ -458,8 +458,11 @@
   }
 
   function speciesIcon(sp) {
-    var map = { perro: 'ri-footprint-line', gato: 'ri-heart-line', ave: 'ri-leaf-line', conejo: 'ri-seedling-line', otro: 'ri-star-line' };
-    return map[sp] || 'ri-heart-line';
+    var map = { perro: 'solar-paw-bold.svg', gato: 'solar-paw-bold.svg', ave: 'solar-heart-linear.svg', conejo: 'solar-heart-linear.svg', otro: 'solar-star-linear.svg' };
+    return map[sp] || 'solar-paw-bold.svg';
+  }
+  function speciesIconHtml(sp) {
+    return '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/' + speciesIcon(sp) + '" width="28" height="28" style="filter:invert(60%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(85%) contrast(80%)" alt="">';
   }
 
   /* ====================================
@@ -539,7 +542,7 @@
       var d = p.data;
       var imgHtml = d.photoUrl
         ? '<img class="rpu-pet-card__img" src="' + esc(d.photoUrl) + '" alt="' + esc(d.name) + '" loading="lazy">'
-        : '<div class="rpu-pet-card__img-placeholder"><i class="' + speciesIcon(d.species) + '"></i></div>';
+        : '<div class="rpu-pet-card__img-placeholder">' + speciesIconHtml(d.species) + '</div>';
       var meta = [d.species, d.breed, d.age, d.gender].filter(Boolean).join(' / ');
       h += '<div class="rpu-pet-card" onclick="openDetailModal(\'' + esc(p.id) + '\')">';
       h += imgHtml;
@@ -574,7 +577,7 @@
 
     var imgHtml = d.photoUrl
       ? '<img class="rpu-pet-detail-img" src="' + esc(d.photoUrl) + '" alt="' + esc(d.name) + '">'
-      : '<div class="rpu-pet-detail-img-placeholder"><i class="' + speciesIcon(d.species) + '"></i></div>';
+      : '<div class="rpu-pet-detail-img-placeholder">' + speciesIconHtml(d.species) + '</div>';
 
     var chips = [d.species, d.breed, d.age, d.gender].filter(Boolean).map(function (c) {
       return '<span class="rpu-chip">' + esc(c) + '</span>';
@@ -621,7 +624,7 @@
     /* pet summary */
     var imgHtml = d.photoUrl
       ? '<img src="' + esc(d.photoUrl) + '" style="width:54px;height:54px;object-fit:cover;border-radius:10px;flex-shrink:0;">'
-      : '<div style="width:54px;height:54px;background:#EEF1FB;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#9E9E9E;font-size:1.3rem;flex-shrink:0;"><i class="' + speciesIcon(d.species) + '"></i></div>';
+      : '<div style="width:54px;height:54px;background:#EEF1FB;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' + speciesIconHtml(d.species) + '</div>';
     var meta = [d.species, d.breed].filter(Boolean).join(' / ');
     document.getElementById('adopt-pet-summary').innerHTML =
       imgHtml +
@@ -643,7 +646,7 @@
     var body  = document.getElementById('terms-body');
     var arrow = document.getElementById('terms-arrow');
     var open  = body.classList.toggle('open');
-    if (arrow) arrow.className = open ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line';
+    if (arrow) arrow.src = open ? 'https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-up-linear.svg' : 'https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-down-linear.svg';
   };
 
   /* ====================================

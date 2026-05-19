@@ -1025,7 +1025,9 @@
     var h = '';
     services.forEach(function (svc) {
       h += '<div class="vp-svc-card">';
-      h += '<div class="vp-svc-icon"><i class="' + esc(svc.icon || 'ri-stethoscope-line') + '"></i></div>';
+      var _riMap = {'ri-stethoscope-line':'solar-health-linear.svg','ri-surgical-mask-line':'solar-shield-bold.svg','ri-syringe-line':'solar-health-linear.svg','ri-scissors-line':'solar-edit-linear.svg','ri-microscope-line':'solar-search-linear.svg','ri-heart-pulse-line':'solar-heart-bold.svg','ri-hotel-line':'solar-home-bold.svg','ri-truck-line':'solar-delivery-bold.svg','ri-thermometer-line':'solar-clock-linear.svg','ri-bone-line':'solar-paw-bold.svg'};
+      var _svcIconSrc = _riMap[svc.icon] || (svc.icon && svc.icon.indexOf('solar-') === 0 ? svc.icon : 'solar-health-linear.svg');
+      h += '<div class="vp-svc-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/' + _svcIconSrc + '" width="24" height="24" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>';
       h += '<div class="vp-svc-name">' + esc(svc.name) + '</div>';
       h += '<div class="vp-svc-desc">' + esc(svc.description || '') + '</div>';
       if (svc.price) h += '<div class="vp-svc-price">Bs ' + esc(svc.price) + '</div>';
