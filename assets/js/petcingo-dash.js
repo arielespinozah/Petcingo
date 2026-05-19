@@ -66,9 +66,9 @@
     var COLS = ['pets','users','veterinarias','shelters','scan_logs','logs','staff'];
     var backup = { version:1, exportedAt: new Date().toISOString(), data:{} };
     var btn = document.getElementById('btn-full-backup');
-    if(btn){btn.disabled=true;btn.innerHTML='<i class="ri-loader-4-line"></i> Exportando';}
+    if(btn){btn.disabled=true;btn.innerHTML='<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Exportando';}
     var db2 = db();
-    if (!db2) { alert('Error: Firebase no esti listo.'); if(btn){btn.disabled=false;btn.innerHTML='<i class="ri-download-cloud-line"></i> Exportar Backup Completo';} return; }
+    if (!db2) { alert('Error: Firebase no esti listo.'); if(btn){btn.disabled=false;btn.innerHTML='<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Exportar Backup Completo';} return; }
     var promises = COLS.map(function(col) {
       return db2.collection(col).get().then(function(snap){
         backup.data[col]=[];
@@ -86,7 +86,7 @@
       var a=document.createElement('a');a.href=url;
       a.download='petcingo-backup-'+new Date().toISOString().slice(0,10)+'.json';
       document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
-      if(btn){btn.disabled=false;btn.innerHTML='<i class="ri-download-cloud-line"></i> Exportar Backup Completo';}
+      if(btn){btn.disabled=false;btn.innerHTML='<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Exportar Backup Completo';}
     });
   };
 
@@ -291,14 +291,14 @@
       
       var btnsHtml = '';
       if (d.status === 'pending') {
-        btnsHtml += '<button class="ptcg-index__btn ptcg-index__btn--success" style="flex:1;" onclick="verifyOrderApprove(\'' + orderId + '\')"><i class="ri-check-line"></i> Aceptar pago</button>';
-        btnsHtml += '<button class="ptcg-index__btn ptcg-index__btn--danger" style="flex:1;" onclick="verifyOrderReject(\'' + orderId + '\')"><i class="ri-close-line"></i> Rechazar</button>';
+        btnsHtml += '<button class="ptcg-index__btn ptcg-index__btn--success" style="flex:1;" onclick="verifyOrderApprove(\'' + orderId + '\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Aceptar pago</button>';
+        btnsHtml += '<button class="ptcg-index__btn ptcg-index__btn--danger" style="flex:1;" onclick="verifyOrderReject(\'' + orderId + '\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-close-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Rechazar</button>';
       } else if (d.status === 'confirmed') {
-        btnsHtml += '<button class="ptcg-index__btn ptcg-index__btn--primary" style="flex:1;" onclick="markAsProcessing(\'' + orderId + '\')"><i class="ri-box-3-line"></i> Marcar en preparacion</button>';
+        btnsHtml += '<button class="ptcg-index__btn ptcg-index__btn--primary" style="flex:1;" onclick="markAsProcessing(\'' + orderId + '\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Marcar en preparacion</button>';
       } else if (d.status === 'processing') {
-        btnsHtml += '<button class="ptcg-index__btn ptcg-index__btn--primary" style="flex:1;" onclick="openShippingForm(\'' + orderId + '\')"><i class="ri-truck-line"></i> Registrar envio</button>';
+        btnsHtml += '<button class="ptcg-index__btn ptcg-index__btn--primary" style="flex:1;" onclick="openShippingForm(\'' + orderId + '\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-delivery-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Registrar envio</button>';
       } else if (d.status === 'shipped') {
-        btnsHtml += '<button class="ptcg-index__btn ptcg-index__btn--success" style="flex:1;" onclick="markAsDelivered(\'' + orderId + '\')"><i class="ri-check-double-line"></i> Marcar entregado</button>';
+        btnsHtml += '<button class="ptcg-index__btn ptcg-index__btn--success" style="flex:1;" onclick="markAsDelivered(\'' + orderId + '\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Marcar entregado</button>';
       }
       actions.innerHTML = btnsHtml;
       
@@ -621,16 +621,16 @@
 
       var acciones = '';
       if (status === 'pending') {
-        acciones += '<button class="ptcg-index__btn ptcg-index__btn--success btn-sm" onclick="openVerifyModal(\'' + o.id + '\')"><i class="ri-shield-check-line"></i> Verificar pago</button> ';
+        acciones += '<button class="ptcg-index__btn ptcg-index__btn--success btn-sm" onclick="openVerifyModal(\'' + o.id + '\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Verificar pago</button> ';
       } else {
-        acciones += '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="openVerifyModal(\'' + o.id + '\')" title="Ver detalles"><i class="ri-eye-line"></i></button> ';
+        acciones += '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="openVerifyModal(\'' + o.id + '\')" title="Ver detalles"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button> ';
       }
       
       if (status !== 'pending' && status !== 'rejected') {
-        acciones += '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="printShippingGuide(\'' + o.id + '\')" title="Imprimir gua"><i class="ri-printer-line"></i></button> ';
+        acciones += '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="printShippingGuide(\'' + o.id + '\')" title="Imprimir gua"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-printer-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button> ';
       }
       
-      acciones += '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="color:' + (isUrgent ? '#f44336' : '#757575') + '" onclick="toggleUrgent(\'' + o.id + '\',' + isUrgent + ')" title="' + (isUrgent ? 'Quitar urgente' : 'Marcar urgente') + '"><i class="ri-flashlight-line"></i></button>';
+      acciones += '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="color:' + (isUrgent ? '#f44336' : '#757575') + '" onclick="toggleUrgent(\'' + o.id + '\',' + isUrgent + ')" title="' + (isUrgent ? 'Quitar urgente' : 'Marcar urgente') + '"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button>';
 
       var trk = d.trackingNumber ? '<br><small style="color:#4552CC;">Trk: ' + escFn(d.trackingNumber) + '</small>' : '';
       var actCode = d.activationCode ? '<br><small style="color:#2ECC71;font-family:monospace;">Cod: ' + escFn(d.activationCode) + '</small>' : '';
@@ -710,8 +710,8 @@
         '<td><span class="status-badge ' + status + '">' + status + '</span>' + (paidDate ? '<br><small style="color:#757575;font-size:.72rem;">' + paidDate + '</small>' : '') + '</td>' +
         '<td style="font-size:0.85rem;color:#757575;">' + due + '</td>' +
         '<td style="white-space:nowrap;">' +
-          (status === 'pendiente' ? '<button class="ptcg-index__btn ptcg-index__btn--success btn-sm" onclick="openPaymentModal(\'' + c.id + '\')" style="margin-right:4px;"><i class="ri-check-line"></i> Pagar</button>' : '') +
-          '<button class="ptcg-index__btn ptcg-index__btn--danger btn-sm" onclick="deleteCommission(\'' + c.id + '\')"><i class="ri-delete-bin-line"></i></button>' +
+          (status === 'pendiente' ? '<button class="ptcg-index__btn ptcg-index__btn--success btn-sm" onclick="openPaymentModal(\'' + c.id + '\')" style="margin-right:4px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Pagar</button>' : '') +
+          '<button class="ptcg-index__btn ptcg-index__btn--danger btn-sm" onclick="deleteCommission(\'' + c.id + '\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button>' +
         '</td>' +
       '</tr>';
     });
@@ -751,7 +751,7 @@
     if (!_currentPaymentId) return;
     var comprobante = ((document.getElementById('payment-comprobante') || {}).value || '').trim();
     var btn = document.getElementById('btn-confirm-payment');
-    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line"></i> Guardando'; }
+    if (btn) { btn.disabled = true; btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardando'; }
     var db2 = db(); if (!db2) return;
     db2.collection('commissions').doc(_currentPaymentId).update({
       status:      'pagado',
@@ -764,7 +764,7 @@
     }).catch(function(e) {
       if (typeof toast === 'function') toast('Error: ' + e.message);
     }).finally(function() {
-      if (btn) { btn.disabled = false; btn.innerHTML = '<i class="ri-check-line"></i> Confirmar pago'; }
+      if (btn) { btn.disabled = false; btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Confirmar pago'; }
     });
   };
 
@@ -889,8 +889,8 @@
         '<td><span class="stock-badge ' + sc + '">' + stock + '</span></td>' +
         '<td><span class="status-badge ' + (inactive ? 'entregado' : 'enviado') + '">' + (inactive ? 'Inactivo' : 'Activo') + '</span></td>' +
         '<td style="white-space:nowrap;">' +
-          '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="editProduct(\'' + p.id + '\')" style="margin-right:4px;" title="Editar"><i class="ri-edit-line"></i></button>' +
-          '<button class="ptcg-index__btn ptcg-index__btn--danger btn-sm" onclick="deleteProduct(\'' + p.id + '\')" title="Eliminar"><i class="ri-delete-bin-line"></i></button>' +
+          '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="editProduct(\'' + p.id + '\')" style="margin-right:4px;" title="Editar"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-edit-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button>' +
+          '<button class="ptcg-index__btn ptcg-index__btn--danger btn-sm" onclick="deleteProduct(\'' + p.id + '\')" title="Eliminar"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button>' +
         '</td>' +
       '</tr>';
     });
@@ -961,7 +961,7 @@
     if (price !== null && isNaN(price)) { if (typeof toast === 'function') toast('Precio invilido.'); return; }
 
     var btn = document.getElementById('btn-save-product');
-    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line"></i> Guardando'; }
+    if (btn) { btn.disabled = true; btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardando'; }
 
     var data = {
       name:        name,
@@ -986,7 +986,7 @@
     }).catch(function(e) {
       if (typeof toast === 'function') toast('Error: ' + e.message);
     }).finally(function() {
-      if (btn) { btn.disabled = false; btn.innerHTML = '<i class="ri-save-line"></i> Guardar producto'; }
+      if (btn) { btn.disabled = false; btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar producto'; }
     });
   };
 
@@ -1063,8 +1063,8 @@
         '<td style="font-size:0.85rem;color:#757575;">' + expires + '</td>' +
         '<td><span class="status-badge ' + status + '">' + status + '</span></td>' +
         '<td style="white-space:nowrap;">' +
-          '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="editPromotion(\'' + p.id + '\')" style="margin-right:4px;" title="Editar"><i class="ri-edit-line"></i></button>' +
-          '<button class="ptcg-index__btn ptcg-index__btn--danger btn-sm" onclick="deletePromotion(\'' + p.id + '\')" title="Eliminar"><i class="ri-delete-bin-line"></i></button>' +
+          '<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="editPromotion(\'' + p.id + '\')" style="margin-right:4px;" title="Editar"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-edit-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button>' +
+          '<button class="ptcg-index__btn ptcg-index__btn--danger btn-sm" onclick="deletePromotion(\'' + p.id + '\')" title="Eliminar"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button>' +
         '</td>' +
       '</tr>';
     });
@@ -1131,7 +1131,7 @@
     if (!(value > 0))  { if (typeof toast === 'function') toast('El valor debe ser mayor a 0.'); return; }
 
     var btn = document.getElementById('btn-save-promo');
-    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line"></i> Guardando'; }
+    if (btn) { btn.disabled = true; btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardando'; }
 
     var maxUsesRaw   = document.getElementById('promo-max-uses').value;
     var minAmountRaw = document.getElementById('promo-min-amount').value;
@@ -1163,7 +1163,7 @@
     }).catch(function(e) {
       if (typeof toast === 'function') toast('Error: ' + e.message);
     }).finally(function() {
-      if (btn) { btn.disabled = false; btn.innerHTML = '<i class="ri-save-line"></i> Guardar cdigo'; }
+      if (btn) { btn.disabled = false; btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar cdigo'; }
     });
   };
 
@@ -1352,7 +1352,7 @@
     var db2 = db(); if (!db2) return;
     var btn    = document.getElementById('btn-save-bank');
     var status = document.getElementById('cfg-bank-status');
-    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line"></i> Guardando'; }
+    if (btn) { btn.disabled = true; btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardando'; }
     if (status) { status.style.display = 'none'; }
 
     function v(id)  { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
@@ -1375,7 +1375,7 @@
         if (status) { status.textContent = 'Error'; status.style.color = '#E74C3C'; status.style.display = 'inline'; }
       })
       .finally(function() {
-        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="ri-save-line"></i> Guardar datos'; }
+        if (btn) { btn.disabled = false; btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar datos'; }
       });
   };
 
@@ -1383,7 +1383,7 @@
     var db2 = db(); if (!db2) return;
     var btn    = document.getElementById('btn-save-cfg');
     var status = document.getElementById('cfg-save-status');
-    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line"></i> Guardando'; }
+    if (btn) { btn.disabled = true; btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardando'; }
     if (status) { status.style.display = 'none'; }
 
     function v(id)  { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
@@ -1451,7 +1451,7 @@
         if (status) { status.textContent = 'Error al guardar'; status.style.color = '#E74C3C'; status.style.display = 'inline'; }
       })
       .finally(function() {
-        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="ri-save-line"></i> Guardar cambios'; }
+        if (btn) { btn.disabled = false; btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar cambios'; }
       });
   };
 
@@ -1494,7 +1494,7 @@
         ? '<img src="' + escFn(d.photoUrl) + '" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid #E0E0E0;flex-shrink:0;" onerror="this.style.display=\'none\'">'
         : '<div style="width:72px;height:72px;border-radius:50%;background:#EEF1FB;display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;">E</div>';
       html += '<div><div style="font-family:monospace;font-size:0.9rem;font-weight:700;color:#4552CC;word-break:break-all;">' + escFn(plateId) + '</div>';
-      html += '<button onclick="copyPetCode(\'' + safe + '\')" style="margin-top:4px;padding:4px 10px;border-radius:8px;border:1px solid #E0E0E0;background:#fff;cursor:pointer;font-size:0.75rem;font-family:\'Plus Jakarta Sans\',sans-serif;display:inline-flex;align-items:center;gap:4px;"><i class="ri-file-copy-line"></i> Copiar codigo</button></div></div>';
+      html += '<button onclick="copyPetCode(\'' + safe + '\')" style="margin-top:4px;padding:4px 10px;border-radius:8px;border:1px solid #E0E0E0;background:#fff;cursor:pointer;font-size:0.75rem;font-family:\'Plus Jakarta Sans\',sans-serif;display:inline-flex;align-items:center;gap:4px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Copiar codigo</button></div></div>';
 
       /* Datos basicos */
       html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">';
@@ -1528,7 +1528,7 @@
         phones.forEach(function(p) {
           html += '<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#FAFAFA;border-radius:10px;margin-bottom:6px;">';
           html += '<span style="font-size:0.88rem;">' + escFn(p.label) + ': <strong>' + escFn(p.num) + '</strong></span>';
-          html += '<a href="https://wa.me/' + p.num.replace(/\D/g,'') + '" target="_blank" rel="noopener" style="color:#25D366;text-decoration:none;font-weight:700;font-size:0.82rem;display:flex;align-items:center;gap:4px;"><i class="ri-whatsapp-line"></i> WhatsApp</a>';
+          html += '<a href="https://wa.me/' + p.num.replace(/\D/g,'') + '" target="_blank" rel="noopener" style="color:#25D366;text-decoration:none;font-weight:700;font-size:0.82rem;display:flex;align-items:center;gap:4px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-chat-round-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> WhatsApp</a>';
           html += '</div>';
         });
         html += '</div>';
@@ -1546,7 +1546,7 @@
 
       /* Accion: recuperar clave */
       html += '<button class="ptcg-index__btn ptcg-index__btn--primary" onclick="sendPasswordReset(\'' + safe + '\')" style="width:100%;margin-top:8px;padding:12px;font-size:0.9rem;font-weight:700;">';
-      html += '<i class="ri-key-2-line"></i> Enviar recuperacion de contrasena</button>';
+      html += '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Enviar recuperacion de contrasena</button>';
 
       content.innerHTML = html;
     }).catch(function(e) {
@@ -1688,7 +1688,7 @@
     html += '<td><input type="number" class="ptcg-activate__input range-min" value="' + minVal + '" step="0.1" style="width:100%;padding:6px 10px;"></td>';
     html += '<td><input type="number" class="ptcg-activate__input range-max" value="' + maxVal + '" step="0.1" style="width:100%;padding:6px 10px;"></td>';
     html += '<td><input type="number" class="ptcg-activate__input range-cost" value="' + costVal + '" step="0.1" style="width:100%;padding:6px 10px;"></td>';
-    html += '<td style="text-align:center;"><button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="this.parentNode.parentNode.remove()" style="color:#f43f5e;border-color:#FFCDD2;"><i class="ri-delete-bin-line"></i></button></td>';
+    html += '<td style="text-align:center;"><button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="this.parentNode.parentNode.remove()" style="color:#f43f5e;border-color:#FFCDD2;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button></td>';
     tr.innerHTML = html;
     tbody.appendChild(tr);
   };
@@ -1948,7 +1948,7 @@
           if (!lowercaseUrl.endsWith('.svg') && lowercaseUrl.indexOf('.svg?') === -1) {
             _svgValidationError = 'La URL debe terminar con extension .svg';
             if (typeof toast === 'function') {
-              toast('<i class="ri-error-warning-line" style="color:#f43f5e;"></i> Error: La URL debe terminar con extension .svg');
+              toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Error: La URL debe terminar con extension .svg');
             }
             window.updatePrintPreview();
             return;
@@ -1976,7 +1976,7 @@
             .catch(function(err) {
               _svgValidationError = err.message;
               if (typeof toast === 'function') {
-                toast('<i class="ri-error-warning-line" style="color:#f43f5e;"></i> Error de plantilla SVG: ' + err.message);
+                toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Error de plantilla SVG: ' + err.message);
               }
               window.updatePrintPreview();
             });
@@ -1995,7 +1995,7 @@
       if (_svgValidationError) {
         bgStyle = 'background:#FFEBEE;border:2px dashed #f43f5e;';
         errorOverlay = '<div style="position:absolute;inset:0;background:rgba(244,63,94,0.08);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;text-align:center;box-sizing:border-box;">' +
-          '<i class="ri-error-warning-fill" style="font-size:2rem;color:#f43f5e;margin-bottom:6px;"></i>' +
+          '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">' +
           '<span style="font-family:\'Plus Jakarta Sans\',sans-serif;font-size:0.75rem;font-weight:700;color:#f43f5e;line-height:1.2;">Error SVG:</span>' +
           '<span style="font-family:\'Plus Jakarta Sans\',sans-serif;font-size:0.70rem;color:#e11d48;margin-top:4px;word-break:break-word;line-height:1.2;">' + escFn(_svgValidationError) + '</span>' +
         '</div>';
@@ -2017,7 +2017,7 @@
         html += '<div style="position:absolute;top:' + Math.round(2*scale) + 'px;left:' + Math.round(2*scale) + 'px;font-family:\'Sora\',sans-serif;font-size:' + Math.round(1.8*scale) + 'px;font-weight:800;color:#4552CC;letter-spacing:0.05em;">PETCINGO</div>';
       }
       var qrS = Math.round(cfg.qrSize * scale);
-      html += '<div style="position:absolute;left:' + Math.round(cfg.qrX*scale) + 'px;top:' + Math.round(cfg.qrY*scale) + 'px;width:' + qrS + 'px;height:' + qrS + 'px;background:#F0F0F0;display:flex;align-items:center;justify-content:center;font-size:' + Math.round(qrS*0.55) + 'px;color:#9E9E9E;"><i class="ri-qr-code-line"></i></div>';
+      html += '<div style="position:absolute;left:' + Math.round(cfg.qrX*scale) + 'px;top:' + Math.round(cfg.qrY*scale) + 'px;width:' + qrS + 'px;height:' + qrS + 'px;background:#F0F0F0;display:flex;align-items:center;justify-content:center;font-size:' + Math.round(qrS*0.55) + 'px;color:#9E9E9E;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-qr-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>';
       html += '<div style="position:absolute;left:' + Math.round(cfg.idX*scale) + 'px;top:' + Math.round(cfg.idY*scale) + 'px;font-family:monospace;font-size:' + Math.round(2.2*scale) + 'px;font-weight:700;color:#212121;letter-spacing:0.08em;">AB1234</div>';
       if (cfg.showScanMe) {
         html += '<div style="position:absolute;bottom:' + Math.round(2*scale) + 'px;left:0;right:0;text-align:center;font-size:' + Math.round(1.6*scale) + 'px;color:#757575;font-family:\'Plus Jakarta Sans\',sans-serif;">Scan Me</div>';
@@ -2451,13 +2451,13 @@
 
         var dropdownStyle = "display:block;width:100%;text-align:left;padding:8px 14px;border:none;background:transparent;font-size:0.82rem;color:#424242;cursor:pointer;white-space:nowrap;";
         
-        var suspLabel = status === 'active' ? '<i class="ri-pause-circle-line"></i> Suspender' : (status === 'suspended' ? '<i class="ri-play-circle-line"></i> Activar' : '');
+        var suspLabel = status === 'active' ? '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Suspender' : (status === 'suspended' ? '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Activar' : '');
         var suspDropdownBtn = suspLabel ? '<button style="' + dropdownStyle + 'color:#E67E22;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="setAffiliateStatus(\'' + doc.id + '\',\'suspended\')">' + suspLabel + '</button>' : '';
         if (status === 'suspended') {
           suspDropdownBtn = '<button style="' + dropdownStyle + 'color:#2ECC71;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="setAffiliateStatus(\'' + doc.id + '\',\'active\')">' + suspLabel + '</button>';
         }
 
-        var banLabel = status !== 'banned' ? '<i class="ri-forbid-line"></i> Banear' : '<i class="ri-checkbox-circle-line"></i> Activar';
+        var banLabel = status !== 'banned' ? '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Banear' : '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Activar';
         var banColor = status !== 'banned' ? '#E74C3C' : '#2ECC71';
         var banTargetStatus = status !== 'banned' ? 'banned' : 'active';
         var banDropdownBtn = '<button style="' + dropdownStyle + 'color:' + banColor + ';" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="setAffiliateStatus(\'' + doc.id + '\',\'' + banTargetStatus + '\')">' + banLabel + '</button>';
@@ -2465,7 +2465,7 @@
         var actionDropdown = '<div class="ptcg-actions-menu" style="position:relative;display:inline-block;">' +
           '<button class="ptcg-actions-toggle" onclick="toggleActionsMenu(this, event)" style="background:none;border:1.5px solid #E0E0E0;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem;color:#757575;line-height:1;">...</button>' +
           '<div class="ptcg-actions-dropdown" style="display:none;position:absolute;right:0;top:100%;z-index:500;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);min-width:180px;padding:6px 0;margin-top:4px;">' +
-            '<a style="' + dropdownStyle + 'text-decoration:none;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" href="https://prueb2.dashnexpages.net/panel-afiliados/?auto='+doc.id+'" target="_blank"><i class="ri-external-link-line"></i> Ir a panel</a>' +
+            '<a style="' + dropdownStyle + 'text-decoration:none;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" href="https://prueb2.dashnexpages.net/panel-afiliados/?auto='+doc.id+'" target="_blank"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-link-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Ir a panel</a>' +
             suspDropdownBtn +
             banDropdownBtn +
           '</div>' +
@@ -2763,17 +2763,17 @@
       var alertsHtml = '';
       if (readPct > 80 || writePct > 80 || docPct > 80) {
         alertsHtml += '<div style="margin-bottom:12px;padding:12px 16px;background:#FFEBEE;border:1px solid #FFCDD2;border-radius:12px;color:#C62828;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:8px;">' +
-          '<i class="ri-error-warning-line"></i> Alerta: El uso de Firestore esta cerca del limite gratuito del Plan Spark (' + totalDocs + ' docs). Considere archivar logs antiguos para liberar espacio.' +
+          '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Alerta: El uso de Firestore esta cerca del limite gratuito del Plan Spark (' + totalDocs + ' docs). Considere archivar logs antiguos para liberar espacio.' +
           '</div>';
       }
       if (parseFloat(storageUsedMB) > 4000) {
         alertsHtml += '<div style="margin-bottom:12px;padding:12px 16px;background:#FFEBEE;border:1px solid #FFCDD2;border-radius:12px;color:#C62828;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:8px;">' +
-          '<i class="ri-error-warning-line"></i> Alerta: El uso de Firebase Storage esta cerca del limite de 5 GB (' + storageUsedMB + ' MB). Considere optimizar las imagenes.' +
+          '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Alerta: El uso de Firebase Storage esta cerca del limite de 5 GB (' + storageUsedMB + ' MB). Considere optimizar las imagenes.' +
           '</div>';
       }
       if (r2Count > 8000) {
         alertsHtml += '<div style="margin-bottom:12px;padding:12px 16px;background:#FFEBEE;border:1px solid #FFCDD2;border-radius:12px;color:#C62828;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:8px;">' +
-          '<i class="ri-error-warning-line"></i> Alerta: El uso de Cloudflare R2 esta cerca de su limite sugerido (' + r2Count + ' comprobantes).' +
+          '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Alerta: El uso de Cloudflare R2 esta cerca de su limite sugerido (' + r2Count + ' comprobantes).' +
           '</div>';
       }
       var quotaAlertsDiv = document.getElementById('quota-alerts');
@@ -3023,3 +3023,236 @@
   });
 
 })();
+
+/* =============================================================
+   MODULO POS -- NOTA DE VENTA (venta fisica)
+   ============================================================= */
+(function () {
+  'use strict';
+
+  var posProducts  = [];
+  var posNote      = [];
+  var posPayMethod = 'Efectivo';
+  var posLoaded    = false;
+
+  window.posInit = function () {
+    if (posLoaded) { posRenderGrid(posProducts); return; }
+    posLoadProducts();
+  };
+
+  function posLoadProducts() {
+    var grid = document.getElementById('pos-product-grid');
+    if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:24px;color:#9E9E9E;">Cargando...</div>';
+    try {
+      var dbInst = db();
+      dbInst.collection('products').where('status', '==', 'activo').get()
+        .then(function (snap) {
+          posProducts = [];
+          snap.forEach(function (doc) {
+            var d = doc.data();
+            posProducts.push({ id: doc.id, name: d.name || '', category: d.category || '',
+              price: Number(d.price) || 0, stock: Number(d.stock) || 0, imageUrl: d.imageUrl || '' });
+          });
+          posLoaded = true;
+          posRenderGrid(posProducts);
+        }).catch(function () { posRenderGrid([]); });
+    } catch (e) { posRenderGrid([]); }
+  }
+
+  window.posFilterProducts = function () {
+    var search = ((document.getElementById('pos-search') || {}).value || '').toLowerCase();
+    var cat    = ((document.getElementById('pos-cat-filter') || {}).value) || '';
+    posRenderGrid(posProducts.filter(function (p) {
+      if (cat && p.category !== cat) return false;
+      return !search || p.name.toLowerCase().indexOf(search) !== -1;
+    }));
+  };
+
+  function posRenderGrid(items) {
+    var grid = document.getElementById('pos-product-grid');
+    var emptyEl = document.getElementById('pos-product-empty');
+    if (!grid) return;
+    if (!items.length) {
+      grid.innerHTML = '';
+      if (emptyEl) emptyEl.style.display = 'block';
+      return;
+    }
+    if (emptyEl) emptyEl.style.display = 'none';
+    grid.innerHTML = items.map(function (p) {
+      var oos = p.stock <= 0 ? ' out-of-stock' : '';
+      var imgHtml = p.imageUrl
+        ? '<img src="' + posEsc(p.imageUrl) + '" alt="" loading="lazy">'
+        : '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-paw-bold.svg" style="width:40px;height:40px;opacity:0.2;" alt="">';
+      return '<div class="pos-product-card' + oos + '" onclick="posAddProduct(\'' + posEsc(p.id) + '\')">' +
+        '<div class="pos-card-img">' + imgHtml + '</div>' +
+        '<div class="pos-card-name">' + posEsc(p.name) + '</div>' +
+        '<div class="pos-card-price">Bs ' + p.price + '</div>' +
+        '<div class="pos-card-stock">Stock: ' + p.stock + '</div>' +
+        '<button class="pos-card-add-btn">+ Agregar</button></div>';
+    }).join('');
+  }
+
+  window.posAddProduct = function (productId) {
+    var product = posProducts.find(function (p) { return p.id === productId; });
+    if (!product || product.stock <= 0) return;
+    var existing = posNote.find(function (i) { return i.productId === productId; });
+    if (existing) {
+      if (existing.qty >= product.stock) { alert('Stock insuficiente: ' + product.stock); return; }
+      existing.qty++;
+    } else {
+      posNote.push({ productId: productId, name: product.name, price: product.price, qty: 1, stock: product.stock });
+    }
+    posRenderNote();
+    posRecalculate();
+  };
+
+  window.posChangeQty = function (productId, delta) {
+    var item = posNote.find(function (i) { return i.productId === productId; });
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) posNote = posNote.filter(function (i) { return i.productId !== productId; });
+    else if (item.qty > item.stock) item.qty = item.stock;
+    posRenderNote();
+    posRecalculate();
+  };
+
+  window.posRemoveItem = function (productId) {
+    posNote = posNote.filter(function (i) { return i.productId !== productId; });
+    posRenderNote();
+    posRecalculate();
+  };
+
+  function posRenderNote() {
+    var el = document.getElementById('pos-note-items');
+    if (!el) return;
+    if (!posNote.length) {
+      el.innerHTML = '<div style="text-align:center;padding:24px;color:#BDBDBD;font-size:0.82rem;">Agrega productos haciendo clic en el grid</div>';
+      return;
+    }
+    el.innerHTML = posNote.map(function (item) {
+      return '<div class="pos-note-item">' +
+        '<div class="pos-note-item-name">' + posEsc(item.name) + '</div>' +
+        '<button class="pos-note-qty-btn" onclick="posChangeQty(\'' + item.productId + '\',-1)">&#8722;</button>' +
+        '<span class="pos-note-qty-val">' + item.qty + '</span>' +
+        '<button class="pos-note-qty-btn" onclick="posChangeQty(\'' + item.productId + '\',1)">+</button>' +
+        '<span class="pos-note-price">Bs ' + (item.price * item.qty) + '</span>' +
+        '<button class="pos-note-del" onclick="posRemoveItem(\'' + item.productId + '\')">&#10005;</button>' +
+        '</div>';
+    }).join('');
+  }
+
+  window.posRecalculate = function () {
+    var subtotal = posNote.reduce(function (s, i) { return s + i.price * i.qty; }, 0);
+    var discVal  = parseFloat(((document.getElementById('pos-discount-val') || {}).value) || '0') || 0;
+    var discType = ((document.getElementById('pos-discount-type') || {}).value) || 'bs';
+    var disc = 0;
+    if (discVal > 0) { disc = discType === 'pct' ? subtotal * discVal / 100 : discVal; disc = Math.min(disc, subtotal); }
+    var total = subtotal - disc;
+    var ps = function (id, v) { var e = document.getElementById(id); if (e) e.textContent = v; };
+    ps('pos-subtotal', 'Bs ' + subtotal.toFixed(2));
+    ps('pos-total', 'Bs ' + total.toFixed(2));
+    ps('pos-total-words', 'Son: ' + posN2W(Math.floor(total)) + ' 00/100 BOLIVIANOS');
+    var dr = document.getElementById('pos-discount-row');
+    if (dr) { dr.style.display = disc > 0 ? 'flex' : 'none'; ps('pos-discount-display', '- Bs ' + disc.toFixed(2)); }
+  };
+
+  window.posSelectPayment = function (btn) {
+    document.querySelectorAll('.pos-pay-btn').forEach(function (b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    posPayMethod = btn.dataset.method || 'Efectivo';
+  };
+
+  window.posClearNote = function () {
+    posNote = [];
+    posRenderNote();
+    posRecalculate();
+    ['pos-client-name','pos-client-phone','pos-discount-val','pos-promo-code'].forEach(function (id) {
+      var e = document.getElementById(id); if (e) e.value = '';
+    });
+  };
+
+  window.posFinalizeSale = function () {
+    if (!posNote.length) { alert('Agrega al menos un producto.'); return; }
+    var cName  = ((document.getElementById('pos-client-name') || {}).value || '').trim();
+    var cPhone = ((document.getElementById('pos-client-phone') || {}).value || '').trim();
+    var discVal  = parseFloat(((document.getElementById('pos-discount-val') || {}).value) || '0') || 0;
+    var discType = ((document.getElementById('pos-discount-type') || {}).value) || 'bs';
+    var promoCode = ((document.getElementById('pos-promo-code') || {}).value || '').trim().toUpperCase();
+    var subtotal = posNote.reduce(function (s, i) { return s + i.price * i.qty; }, 0);
+    var disc = 0;
+    if (discVal > 0) { disc = discType === 'pct' ? subtotal * discVal / 100 : discVal; disc = Math.min(disc, subtotal); }
+    var total = subtotal - disc;
+    var now = new Date();
+    var saleId = 'NV-' + now.getFullYear() + '-' + String(Date.now()).slice(-4);
+    var saleData = {
+      saleId: saleId, source: 'fisica', paymentMethod: posPayMethod,
+      client: { name: cName, phone: cPhone },
+      items: posNote.map(function (i) { return { productId: i.productId, name: i.name, price: i.price, qty: i.qty, subtotal: i.price * i.qty }; }),
+      subtotal: subtotal, discount: disc, promoCode: promoCode || null, total: total, createdAt: now.toISOString()
+    };
+    try {
+      var dbInst = db();
+      var batch = dbInst.batch();
+      batch.set(dbInst.collection('sales').doc(), saleData);
+      posNote.forEach(function (item) {
+        batch.update(dbInst.collection('products').doc(item.productId), { stock: firebase.firestore.FieldValue.increment(-item.qty) });
+        var local = posProducts.find(function (p) { return p.id === item.productId; }); if (local) local.stock -= item.qty;
+      });
+      batch.commit().then(function () { posOpenPDF(saleId, cName, cPhone, subtotal, disc, total, now); posClearNote(); posRenderGrid(posProducts); })
+        .catch(function (err) { alert('Error: ' + (err.message || 'intenta de nuevo')); });
+    } catch (e) { posOpenPDF(saleId, cName, cPhone, subtotal, disc, total, now); posClearNote(); }
+  };
+
+  function posOpenPDF(saleId, cName, cPhone, subtotal, disc, total, date) {
+    var dateStr = date.toLocaleDateString('es-BO') + ' ' + date.toLocaleTimeString('es-BO', { hour: '2-digit', minute: '2-digit' });
+    var rows = posNote.map(function (i) {
+      return '<tr><td>' + posEsc(i.name) + '</td><td style="text-align:center">' + i.qty + '</td><td style="text-align:right">Bs ' + i.price + '</td><td style="text-align:right">Bs ' + (i.price * i.qty) + '</td></tr>';
+    }).join('');
+    var discHtml = disc > 0 ? '<tr><td colspan="3" style="text-align:right">Descuento</td><td style="text-align:right;color:#22C55E">-Bs ' + disc.toFixed(2) + '</td></tr>' : '';
+    var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Nota ' + saleId + '</title>' +
+      '<style>body{font-family:sans-serif;padding:28px;max-width:400px;margin:0 auto}h1{font-size:1.3rem;font-weight:800;text-align:center}' +
+      '.sub{text-align:center;font-size:0.78rem;color:#757575;margin-bottom:14px}.info{background:#F8F9FB;border-radius:8px;padding:10px;font-size:0.80rem;margin-bottom:14px}' +
+      'table{width:100%;border-collapse:collapse;font-size:0.80rem}th{border-bottom:2px solid #4552CC;padding:6px 8px;text-align:left;color:#4552CC}' +
+      'td{padding:6px 8px;border-bottom:1px solid #E0E0E0}.total-row{font-weight:800;border-top:2px solid #4552CC}' +
+      '.words{font-style:italic;font-size:0.74rem;color:#616161;margin-top:6px}.footer{margin-top:20px;border-top:1px dashed #9E9E9E;padding-top:14px;font-size:0.72rem;color:#9E9E9E;text-align:center}' +
+      '@media print{button{display:none}}</style></head><body>' +
+      '<h1>PETCINGO</h1><div class="sub">Sistema de Identificacion de Mascotas</div>' +
+      '<div class="info"><strong>NOTA DE VENTA</strong><br>N&#xBA; ' + saleId + '<br>Fecha: ' + dateStr +
+      (cName ? '<br>Cliente: ' + posEsc(cName) : '') + (cPhone ? '<br>Tel: ' + posEsc(cPhone) : '') + '</div>' +
+      '<table><thead><tr><th>Producto</th><th>Cant</th><th style="text-align:right">Precio</th><th style="text-align:right">Total</th></tr></thead>' +
+      '<tbody>' + rows + '</tbody><tfoot><tr><td colspan="3" style="text-align:right">Subtotal</td><td style="text-align:right">Bs ' + subtotal.toFixed(2) + '</td></tr>' +
+      discHtml + '<tr class="total-row"><td colspan="3" style="text-align:right">TOTAL</td><td style="text-align:right;color:#4552CC">Bs ' + total.toFixed(2) + '</td></tr></tfoot></table>' +
+      '<div class="words">Son: ' + posN2W(Math.floor(total)) + ' 00/100 BOLIVIANOS</div>' +
+      '<div class="info" style="margin-top:10px">Pago: <strong>' + posPayMethod + '</strong></div>' +
+      '<div class="footer"><div style="margin-bottom:28px">_________________________<br>Firma del cliente</div>&#169; ' + date.getFullYear() + ' Petcingo</div>' +
+      '<br><button onclick="window.print()" style="padding:10px 24px;background:#4552CC;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;width:100%">Imprimir</button>' +
+      '</body></html>';
+    var win = window.open('', '_blank');
+    if (win) { win.document.write(html); win.document.close(); }
+  }
+
+  function posN2W(n) {
+    if (n === 0) return 'CERO';
+    if (n < 0) return 'MENOS ' + posN2W(-n);
+    var O = ['','UNO','DOS','TRES','CUATRO','CINCO','SEIS','SIETE','OCHO','NUEVE','DIEZ','ONCE','DOCE','TRECE','CATORCE','QUINCE','DIECISEIS','DIECISIETE','DIECIOCHO','DIECINUEVE'];
+    var T = ['','','VEINTE','TREINTA','CUARENTA','CINCUENTA','SESENTA','SETENTA','OCHENTA','NOVENTA'];
+    var H = ['','CIEN','DOSCIENTOS','TRESCIENTOS','CUATROCIENTOS','QUINIENTOS','SEISCIENTOS','SETECIENTOS','OCHOCIENTOS','NOVECIENTOS'];
+    if (n < 20) return O[n];
+    if (n < 100) { var t2=T[Math.floor(n/10)]; var o2=n%10; if (n>=20&&n<30&&o2>0) return 'VEINTI'+O[o2]; return t2+(o2?' Y '+O[o2]:''); }
+    if (n===100) return 'CIEN';
+    if (n < 1000) return H[Math.floor(n/100)]+(n%100?' '+posN2W(n%100):'');
+    if (n < 2000) return 'MIL'+(n%1000?' '+posN2W(n%1000):'');
+    if (n < 1000000) { var k=Math.floor(n/1000); return posN2W(k)+' MIL'+(n%1000?' '+posN2W(n%1000):''); }
+    return String(n);
+  }
+  window.numberToWords = posN2W;
+
+  function posEsc(s) { return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  var _origShow = window.showSection;
+  window.showSection = function (section, btn) {
+    if (typeof _origShow === 'function') _origShow(section, btn);
+    if (section === 'pos') setTimeout(window.posInit, 80);
+  };
+
+}());

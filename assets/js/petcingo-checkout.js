@@ -905,3 +905,105 @@ window.ptcgSimZone = function() {
   updateTotalDisplay();
 };
 
+
+/* ===========================================================
+   MODO CARRITO -- Extension para checkout.html
+   Detecta ptcg_cart en localStorage y muestra resumen de items
+   =========================================================== */
+(function () {
+  'use strict';
+
+  var cartItems = [];
+  var cartMode  = false;
+
+  function initCartMode() {
+    /* Solo activa si NO hay parametro ?plan= en la URL */
+    var planParam = '';
+    try { planParam = new URLSearchParams(window.location.search).get('plan') || ''; } catch (_) {}
+    if (planParam) return;
+
+    try {
+      var saved = localStorage.getItem('ptcg_cart');
+      if (saved) cartItems = JSON.parse(saved) || [];
+    } catch (_) { cartItems = []; }
+
+    if (!cartItems.length) return;
+    cartMode = true;
+    renderCartSummary();
+  }
+
+  function renderCartSummary() {
+    var orderSummary = document.getElementById('ptcg-order-summary');
+    if (!orderSummary) return;
+
+    /* Detectar si es internacional por timezone */
+    var tz = '';
+    try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (_) {}
+    var isIntl = tz.indexOf('America/La_Paz') === -1 && tz.indexOf('America/Santa_Cruz') === -1;
+
+    var subtotal = cartItems.reduce(function (s, i) {
+      return s + (isIntl && i.priceUsd ? i.priceUsd * i.qty : i.price * i.qty);
+    }, 0);
+    var currency = isIntl ? 'USD' : 'Bs';
+
+    var itemsHtml = cartItems.map(function (item) {
+      var lineTotal = isIntl && item.priceUsd
+        ? 'USD ' + (item.priceUsd * item.qty).toFixed(2)
+        : 'Bs ' + (item.price * item.qty);
+      return '<div style="display:flex;justify-content:space-between;align-items:center;' +
+             'padding:8px 0;border-bottom:1px solid rgba(69,82,204,0.06);">' +
+             '<div>' +
+               '<div style="font-size:0.85rem;font-weight:700;color:#1E255E;">' + escH(item.name) + '</div>' +
+               '<div style="font-size:0.73rem;color:#6C7297;">x' + item.qty + '</div>' +
+             '</div>' +
+             '<span style="font-size:0.88rem;font-weight:700;color:#4552CC;">' + lineTotal + '</span>' +
+             '</div>';
+    }).join('');
+
+    var html = '<div style="font-family:\'Sora\',sans-serif;font-size:0.92rem;font-weight:700;' +
+               'color:#1E255E;display:flex;align-items:center;gap:8px;' +
+               'border-bottom:1px solid rgba(69,82,204,0.08);padding-bottom:12px;">' +
+               'Tu pedido (' + cartItems.length + ' producto' + (cartItems.length !== 1 ? 's' : '') + ')' +
+               '</div>' +
+               itemsHtml +
+               '<div style="display:flex;justify-content:space-between;font-size:0.85rem;color:#6C7297;' +
+               'padding-top:10px;">' +
+               '<span>Subtotal</span>' +
+               '<span style="font-weight:700;color:#1E255E;">' + currency + ' ' + subtotal.toFixed(2) + '</span>' +
+               '</div>';
+
+    orderSummary.innerHTML = html;
+
+    /* Ocultar los controles de cantidad y promo del modo plan */
+    var promoBox = orderSummary.nextElementSibling;
+    /* Parchamos el resumen de totales para usar el subtotal del carrito */
+    if (typeof window.updateTotalDisplay === 'function') {
+      /* Override temporal: inyectar subtotal en los campos de resumen */
+      var subtotalEl = document.getElementById('ptcg-summary-subtotal');
+      var totalEl    = document.getElementById('ptcg-summary-total');
+      var shipEl     = document.getElementById('ptcg-summary-shipping');
+      if (subtotalEl) subtotalEl.textContent = currency + ' ' + subtotal.toFixed(2);
+      if (totalEl)    totalEl.textContent    = currency + ' ' + subtotal.toFixed(2);
+      if (shipEl)     shipEl.textContent     = 'Por calcular';
+    }
+
+    /* Guardar en sessionStorage para que ptcgUploadReceipt lo incluya */
+    try {
+      sessionStorage.setItem('ptcg_cart_mode', '1');
+      sessionStorage.setItem('ptcg_cart_total', subtotal.toFixed(2));
+      sessionStorage.setItem('ptcg_cart_currency', currency);
+    } catch (_) {}
+  }
+
+  function escH(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  /* Inicializar cuando el DOM este listo */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCartMode);
+  } else {
+    initCartMode();
+  }
+}());

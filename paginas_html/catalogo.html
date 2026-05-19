@@ -181,23 +181,23 @@
          style="height:32px !important;width:auto !important;display:none !important;" 
          onload="this.style.display='inline';this.previousElementSibling.style.display='none';">
   </a>
-  <a class="prd-nav-link" href="https://prueb2.dashnexpages.net/home/"><i class="ri-arrow-left-line"></i> Inicio</a>
+  <a class="prd-nav-link" href="https://prueb2.dashnexpages.net/home/"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-left-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Inicio</a>
 </nav>
 
 <!-- HERO -->
 <div class="prd-hero">
   <div class="prd-hero-inner">
-    <div class="prd-hero-badge"><i class="ri-shield-check-line"></i> Tecnologia NFC + QR</div>
+    <div class="prd-hero-badge"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt=""> Tecnologia NFC + QR</div>
     <h1 class="prd-hero-title">Elige el plan de protección <span>inteligente</span></h1>
     <p class="prd-hero-sub">
       Las placas Petcingo llevan el perfil de tu mascota: nombre, dueno, veterinario y contactos de emergencia.
       Si se pierde, cualquier persona puede escanear y contactarte al instante.
     </p>
     <div class="prd-hero-features">
-      <span class="prd-hero-feat"><i class="ri-nfc-line"></i> NFC tap to scan</span>
-      <span class="prd-hero-feat"><i class="ri-qr-code-line"></i> QR sin app</span>
-      <span class="prd-hero-feat"><i class="ri-map-pin-line"></i> Perfil online</span>
-      <span class="prd-hero-feat"><i class="ri-shield-line"></i> Acero inoxidable</span>
+      <span class="prd-hero-feat"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt=""> NFC tap to scan</span>
+      <span class="prd-hero-feat"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-qr-bold.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt=""> QR sin app</span>
+      <span class="prd-hero-feat"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt=""> Perfil online</span>
+      <span class="prd-hero-feat"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-shield-bold.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt=""> Acero inoxidable</span>
     </div>
   </div>
 </div>
@@ -351,7 +351,7 @@
     var html = '';
     PLANS.forEach(function (p) {
       var feats = p.features.map(function (f) {
-        return '<li><i class="ri-check-line"></i><span>' + escH(f) + '</span></li>';
+        return '<li><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""><span>' + escH(f) + '</span></li>';
       }).join('');
 
       html += '<div class="prd-plan' + (p.featured ? ' featured' : '') + '">';
@@ -367,14 +367,14 @@
       html += '<ul class="prd-plan-features">' + feats + '</ul>';
       html += '<div class="prd-btn-group">';
       html += '<a class="prd-btn prd-btn--' + (p.featured ? 'primary' : 'outline') + '" href="' + buildUrl(p.checkoutBo, p.planParam) + '">';
-      html += '<i class="ri-shopping-cart-line"></i> Comprar ahora (Bolivia)';
+      html += '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-cart-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Comprar ahora (Bolivia)';
       html += '</a>';
       html += '<a class="prd-btn prd-btn--outline" style="font-size:0.82rem;padding:10px 16px;" href="' + buildUrl(p.checkoutIntl, p.planParam) + '">';
-      html += '<i class="ri-earth-line"></i> Compra internacional';
+      html += '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-globe-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Compra internacional';
       html += '</a>';
       html += '</div>';
       if (_ref) {
-        html += '<p class="prd-btn-label"><i class="ri-gift-line"></i> Compra a traves de un referido</p>';
+        html += '<p class="prd-btn-label"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Compra a traves de un referido</p>';
       }
       html += '</div>';
       html += '</div>';

@@ -4,93 +4,264 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Carrito — Petcingo</title>
-  <meta name="description" content="Petcingo no usa carrito. Elige tu plan y completa tu pedido en 2 pasos.">
+  <meta name="description" content="Tu carrito de compras Petcingo. Placas inteligentes y accesorios para mascotas.">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://prueb2.dashnexpages.net/assets/fonts/remixicon/remixicon.css" rel="stylesheet">
+
   <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: #F8F9FB; color: #212121; min-height: 100vh;
     display: flex; flex-direction: column;
     -webkit-font-smoothing: antialiased;
   }
+  a { text-decoration: none; }
+  img { display: block; max-width: 100%; }
+
+  /* SOLAR ICON HELPER */
+  .si { display: inline-block; vertical-align: middle; flex-shrink: 0; width: 20px; height: 20px; }
+  .si-sm { width: 16px; height: 16px; }
+  .si-lg { width: 24px; height: 24px; }
+  .si-xl { width: 56px; height: 56px; }
+  .si--primary { filter: invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%); }
+  .si--white   { filter: brightness(0) invert(1); }
+  .si--muted   { filter: invert(50%) sepia(0%) saturate(0%) brightness(50%) contrast(100%); }
+  .si--success { filter: invert(60%) sepia(90%) saturate(400%) hue-rotate(80deg) brightness(95%) contrast(85%); }
+  .si--danger  { filter: invert(30%) sepia(90%) saturate(2000%) hue-rotate(340deg) brightness(90%) contrast(95%); }
+  .si--warning { filter: invert(60%) sepia(90%) saturate(800%) hue-rotate(0deg) brightness(100%) contrast(95%); }
 
   /* NAV */
   .cart-nav {
     position: sticky; top: 0; z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0 28px; height: 60px;
-    background: rgba(255,255,255,0.92);
-    backdrop-filter: blur(20px) saturate(200%); -webkit-backdrop-filter: blur(20px) saturate(200%);
+    padding: 0 24px; height: 62px;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(20px) saturate(200%);
     border-bottom: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 1px 0 rgba(69,82,204,0.05);
   }
-  .cart-nav-logo { display: flex; align-items: center; gap: 7px; text-decoration: none; }
-  .cart-nav-logo img { height: 28px; width: auto; }
-  .cart-nav-logo-text { font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 800; color: #4552CC; }
-  .cart-nav-link { font-size: 0.85rem; font-weight: 600; color: #4552CC; text-decoration: none; }
-  .cart-nav-link:hover { text-decoration: underline; }
+  .cart-nav-logo { display: flex; align-items: center; gap: 8px; }
+  .cart-nav-logo-text { font-family: 'Sora', sans-serif; font-size: 1.1rem; font-weight: 800; color: #4552CC; }
+  .cart-nav-logo img { height: 30px; display: none; }
+  .cart-nav-back {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 14px; border-radius: 10px;
+    background: rgba(69,82,204,0.07); color: #4552CC;
+    font-size: 0.82rem; font-weight: 600;
+    border: 1px solid rgba(69,82,204,0.15); transition: background 0.18s;
+  }
+  .cart-nav-back:hover { background: rgba(69,82,204,0.14); }
 
-  /* CENTRO */
-  .cart-center {
-    flex: 1; display: flex; align-items: center; justify-content: center;
-    padding: 40px 20px;
-  }
-  .cart-card {
-    background: #fff; border-radius: 24px; padding: 40px 36px;
-    border: 1.5px solid rgba(0,0,0,0.06);
-    box-shadow: 0 8px 40px rgba(0,0,0,0.06);
-    max-width: 480px; width: 100%; text-align: center;
-  }
-  .cart-icon {
-    width: 72px; height: 72px; border-radius: 20px;
-    background: linear-gradient(135deg, rgba(69,82,204,0.12) 0%, rgba(81,203,245,0.12) 100%);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 2rem; margin: 0 auto 24px;
-    color: #4552CC;
-  }
-  .cart-title {
-    font-family: 'Sora', sans-serif; font-size: 1.5rem; font-weight: 800;
-    color: #212121; margin-bottom: 12px; letter-spacing: -0.025em;
-  }
-  .cart-sub {
-    font-size: 0.95rem; color: #616161; line-height: 1.65; margin-bottom: 28px;
-  }
-  .cart-steps {
-    display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; justify-content: center;
-  }
-  .cart-step {
-    display: flex; align-items: center; gap: 8px;
-    padding: 10px 16px; border-radius: 12px;
-    background: rgba(69,82,204,0.06); font-size: 0.85rem; font-weight: 600; color: #4552CC;
-  }
-  .cart-step i { font-size: 1rem; }
+  /* MAIN */
+  .cart-main { flex: 1; max-width: 1040px; margin: 0 auto; padding: 32px 20px; width: 100%; }
 
-  .cart-btn {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    padding: 15px 24px; border-radius: 14px; width: 100%;
+  /* PAGE TITLE */
+  .cart-page-title {
+    font-family: 'Sora', sans-serif; font-size: 1.6rem; font-weight: 800;
+    color: #212121; margin-bottom: 24px; display: flex; align-items: center; gap: 10px;
+  }
+  .cart-page-title .cart-count {
+    font-size: 0.80rem; padding: 3px 10px; border-radius: 99px;
+    background: rgba(69,82,204,0.10); color: #4552CC; font-weight: 700;
+  }
+
+  /* EMPTY STATE */
+  .cart-empty {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 16px; padding: 80px 20px;
+    text-align: center;
+  }
+  .cart-empty-icon { opacity: 0.18; }
+  .cart-empty h2 {
+    font-family: 'Sora', sans-serif; font-size: 1.4rem; font-weight: 800; color: #9E9E9E;
+  }
+  .cart-empty p { font-size: 0.92rem; color: #BDBDBD; max-width: 300px; }
+  .cart-empty-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 13px 28px; border-radius: 13px;
     background: #4552CC; color: #fff;
-    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.95rem; font-weight: 700;
-    text-decoration: none; transition: background 0.18s;
-    box-shadow: 0 4px 18px rgba(69,82,204,0.28);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.92rem; font-weight: 700; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(69,82,204,0.30);
+    transition: background 0.18s; border: none;
   }
-  .cart-btn:hover { background: #2E3A9E; }
-  .cart-btn-note { font-size: 0.78rem; color: #9E9E9E; margin-top: 10px; }
+  .cart-empty-btn:hover { background: #2E3A9E; }
+
+  /* CART LAYOUT */
+  .cart-layout { display: grid; grid-template-columns: 1fr 320px; gap: 24px; align-items: start; }
+
+  /* ITEMS SECTION */
+  .cart-items-section {
+    background: #fff; border-radius: 20px;
+    border: 1.5px solid rgba(0,0,0,0.06);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    overflow: hidden;
+  }
+  .cart-items-head {
+    padding: 18px 20px; border-bottom: 1px solid rgba(0,0,0,0.06);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .cart-items-head-title {
+    font-family: 'Sora', sans-serif; font-size: 0.95rem; font-weight: 800; color: #212121;
+  }
+  .cart-clear-btn {
+    font-size: 0.78rem; color: #E74C3C; font-weight: 600;
+    border: none; background: none; cursor: pointer; padding: 4px 8px;
+    border-radius: 6px; transition: background 0.18s;
+  }
+  .cart-clear-btn:hover { background: rgba(231,76,60,0.07); }
+
+  /* CART ITEM ROW */
+  .cart-item {
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 16px 20px; border-bottom: 1px solid rgba(0,0,0,0.04);
+    transition: background 0.18s;
+  }
+  .cart-item:last-child { border-bottom: none; }
+  .cart-item:hover { background: rgba(69,82,204,0.02); }
+  .cart-item-img {
+    width: 80px; height: 80px; flex-shrink: 0; border-radius: 12px; overflow: hidden;
+    background: linear-gradient(135deg, #EEF1FB 0%, #E8F7FD 100%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cart-item-img img { width: 100%; height: 100%; object-fit: cover; }
+  .cart-item-img-placeholder {
+    opacity: 0.25;
+  }
+  .cart-item-info { flex: 1; min-width: 0; }
+  .cart-item-cat {
+    font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; color: #9E9E9E; margin-bottom: 4px;
+  }
+  .cart-item-name {
+    font-family: 'Sora', sans-serif; font-size: 0.95rem; font-weight: 700;
+    color: #212121; margin-bottom: 8px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .cart-item-unit-price { font-size: 0.78rem; color: #9E9E9E; margin-bottom: 10px; }
+  .cart-item-qty {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .cart-qty-btn {
+    width: 30px; height: 30px; border-radius: 8px;
+    border: 1.5px solid rgba(69,82,204,0.20); background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.18s; color: #4552CC;
+    font-size: 1rem; font-weight: 700; font-family: monospace;
+  }
+  .cart-qty-btn:hover { background: rgba(69,82,204,0.08); border-color: #4552CC; }
+  .cart-qty-val { font-size: 1rem; font-weight: 700; min-width: 24px; text-align: center; color: #212121; }
+  .cart-item-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+  .cart-item-subtotal {
+    font-family: 'Sora', sans-serif; font-size: 1.1rem; font-weight: 800; color: #4552CC;
+  }
+  .cart-item-del {
+    width: 32px; height: 32px; border-radius: 8px; border: none;
+    background: rgba(231,76,60,0.07);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background 0.18s;
+  }
+  .cart-item-del:hover { background: rgba(231,76,60,0.15); }
+
+  /* SUMMARY SECTION */
+  .cart-summary {
+    background: #fff; border-radius: 20px;
+    border: 1.5px solid rgba(0,0,0,0.06);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    padding: 22px 20px; position: sticky; top: 80px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .cart-summary-title {
+    font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 800; color: #212121;
+    padding-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .cart-summary-rows { display: flex; flex-direction: column; gap: 8px; }
+  .cart-summary-row { display: flex; justify-content: space-between; font-size: 0.88rem; color: #757575; }
+  .cart-summary-row.total {
+    font-size: 1.1rem; font-weight: 800; color: #212121;
+    padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.06); margin-top: 4px;
+  }
+  .cart-summary-row .discount { color: #22C55E; font-weight: 700; }
+
+  /* PROMO CODE */
+  .cart-promo { display: flex; gap: 8px; }
+  .cart-promo-input {
+    flex: 1; padding: 10px 14px; border-radius: 10px;
+    border: 1.5px solid rgba(69,82,204,0.15); background: #fff;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.85rem; color: #212121; outline: none;
+    transition: border-color 0.2s;
+  }
+  .cart-promo-input:focus { border-color: #4552CC; box-shadow: 0 0 0 3px rgba(69,82,204,0.10); }
+  .cart-promo-btn {
+    padding: 10px 16px; border-radius: 10px;
+    background: rgba(69,82,204,0.10); color: #4552CC;
+    border: none; font-weight: 700; font-size: 0.82rem; cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif; transition: background 0.18s; white-space: nowrap;
+  }
+  .cart-promo-btn:hover { background: rgba(69,82,204,0.18); }
+  .cart-promo-msg { font-size: 0.75rem; font-weight: 600; min-height: 18px; }
+  .cart-promo-msg.ok { color: #22C55E; }
+  .cart-promo-msg.err { color: #E74C3C; }
+
+  /* CHECKOUT BTN */
+  .cart-checkout-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 15px; border-radius: 14px; border: none;
+    background: #4552CC; color: #fff;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 700;
+    box-shadow: 0 6px 24px rgba(69,82,204,0.32);
+    cursor: pointer; transition: background 0.18s, transform 0.18s;
+    text-decoration: none !important;
+  }
+  .cart-checkout-btn:hover { background: #2E3A9E; transform: translateY(-1px); }
+  .cart-continue-link {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    font-size: 0.82rem; color: #4552CC; font-weight: 600;
+    border: none; background: none; cursor: pointer; padding: 4px;
+  }
+
+  /* TRUST BADGES */
+  .cart-trust {
+    display: flex; gap: 8px; flex-direction: column;
+    padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.05);
+  }
+  .cart-trust-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.75rem; color: #757575;
+  }
 
   /* FOOTER */
   .cart-footer {
-    text-align: center; padding: 24px 20px;
-    font-size: 0.80rem; color: #9E9E9E;
-    border-top: 1px solid rgba(0,0,0,0.05); background: #fff;
+    background: #1A1A2E; color: rgba(255,255,255,0.7);
+    padding: 40px 20px 24px; font-size: 0.82rem; line-height: 1.8; margin-top: auto;
   }
-  .cart-footer img { height: 20px; margin: 0 auto 8px; display: block; }
-  .cart-footer a { color: #4552CC; text-decoration: none; }
+  .cart-footer-grid {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 28px;
+  }
+  .cart-footer a { color: rgba(255,255,255,0.60); display: block; }
+  .cart-footer h4 { color: #fff; font-size: 0.82rem; margin-bottom: 8px; }
+  .cart-footer-copy {
+    text-align: center; margin-top: 24px; padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.72rem; color: rgba(255,255,255,0.4);
+  }
 
+  /* RESPONSIVE */
+  @media (max-width: 760px) {
+    .cart-layout { grid-template-columns: 1fr; }
+    .cart-summary { position: static; }
+    .cart-item-img { width: 64px; height: 64px; }
+  }
   @media (max-width: 480px) {
-    .cart-card { padding: 28px 20px; }
-    .cart-title { font-size: 1.25rem; }
+    .cart-nav { padding: 0 14px; }
+    .cart-main { padding: 20px 14px; }
+    .cart-item-name { font-size: 0.88rem; }
   }
   </style>
 </head>
@@ -98,69 +269,338 @@
 
 <!-- NAV -->
 <nav class="cart-nav">
-  <a class="cart-nav-logo" href="https://prueb2.dashnexpages.net/home/">
-    <span style="font-family:'Sora',sans-serif;font-size:1rem;font-weight:800;color:#4552CC;">PETCINGO</span>
-    <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png" 
-         alt="" 
-         style="height:28px;display:none;" 
+  <div class="cart-nav-logo">
+    <span class="cart-nav-logo-text">PETCINGO</span>
+    <img src="https://prueb2.dashnexpages.net/assets/images/logo/petcingo-logo-dark.png"
+         alt=""
          onload="this.style.display='inline';this.previousElementSibling.style.display='none';">
+  </div>
+  <a class="cart-nav-back" href="https://prueb2.dashnexpages.net/tienda/">
+    <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-left-linear.svg" class="si-sm si--primary" alt="">
+    Seguir comprando
   </a>
-  <a class="cart-nav-link" href="/finalizar-compra/">Ver planes</a>
 </nav>
 
-<!-- CENTRO -->
-<div class="cart-center">
-  <div class="cart-card">
-    <div class="cart-icon"><i class="ri-flashlight-line"></i></div>
-    <h1 class="cart-title">Petcingo no usa carrito</h1>
-    <p class="cart-sub">
-      En Petcingo no necesitas carrito. Elige tu plan y completa tu pedido en 2 pasos.
-      Simple, rápido y sin complicaciones.
-    </p>
-    <div class="cart-steps">
-      <div class="cart-step"><i class="ri-gift-line"></i> Elige tu plan</div>
-      <div class="cart-step"><i class="ri-arrow-right-line"></i></div>
-      <div class="cart-step"><i class="ri-check-double-line"></i> Completa el pedido</div>
+<!-- MAIN -->
+<main class="cart-main">
+
+  <!-- EMPTY STATE -->
+  <div id="cart-empty-state" style="display:none;">
+    <div class="cart-empty">
+      <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-cart-bold.svg"
+           class="si-xl cart-empty-icon" alt="">
+      <h2>Tu carrito esta vacio</h2>
+      <p>Agrega productos desde la tienda y apareceran aqui.</p>
+      <a class="cart-empty-btn" href="https://prueb2.dashnexpages.net/tienda/">
+        <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-shop-bold.svg" class="si si--white" alt="">
+        Ir a la tienda
+      </a>
     </div>
-    <a class="cart-btn" href="/finalizar-compra/">
-      <i class="ri-shield-check-line"></i> Ver planes
-    </a>
-    <p class="cart-btn-note">Tag Pet ID · Pack Familiar · Preventa</p>
   </div>
-</div>
+
+  <!-- CART CON ITEMS -->
+  <div id="cart-full-state" style="display:none;">
+    <h1 class="cart-page-title">
+      <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-cart-bold.svg" class="si-lg si--primary" alt="">
+      Carrito
+      <span class="cart-count" id="cart-page-count">0 items</span>
+    </h1>
+
+    <div class="cart-layout">
+
+      <!-- ITEMS -->
+      <div class="cart-items-section">
+        <div class="cart-items-head">
+          <span class="cart-items-head-title">Productos</span>
+          <button class="cart-clear-btn" onclick="clearCart()">
+            Vaciar carrito
+          </button>
+        </div>
+        <div id="cart-items-list"></div>
+      </div>
+
+      <!-- SUMMARY -->
+      <div class="cart-summary">
+        <div class="cart-summary-title">Resumen del pedido</div>
+
+        <div class="cart-summary-rows" id="cart-summary-rows"></div>
+
+        <!-- Codigo promocional -->
+        <div>
+          <div class="cart-promo">
+            <input class="cart-promo-input" type="text" id="promo-input"
+                   placeholder="Codigo de descuento"
+                   maxlength="20"
+                   oninput="this.value=this.value.toUpperCase()">
+            <button class="cart-promo-btn" onclick="applyPromo()">Aplicar</button>
+          </div>
+          <div class="cart-promo-msg" id="promo-msg"></div>
+        </div>
+
+        <a class="cart-checkout-btn" href="https://prueb2.dashnexpages.net/finalizar-compra/" id="checkout-btn">
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-right-linear.svg" class="si si--white" alt="">
+          Finalizar compra
+        </a>
+
+        <button class="cart-continue-link" onclick="window.location.href='https://prueb2.dashnexpages.net/tienda/'">
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-left-linear.svg" class="si-sm si--primary" alt="">
+          Seguir comprando
+        </button>
+
+        <div class="cart-trust">
+          <div class="cart-trust-item">
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-shield-bold.svg" class="si-sm si--success" alt="">
+            Compra 100% segura
+          </div>
+          <div class="cart-trust-item">
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-delivery-bold.svg" class="si-sm si--primary" alt="">
+            Envio a todo Bolivia
+          </div>
+          <div class="cart-trust-item">
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-phone-bold.svg" class="si-sm si--primary" alt="">
+            Soporte por WhatsApp
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
 
 <!-- FOOTER -->
-<footer style="background:#1A1A2E;color:rgba(255,255,255,0.7);padding:40px 20px 24px;font-size:0.82rem;line-height:1.8;">
-  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:28px;">
+<footer class="cart-footer">
+  <div class="cart-footer-grid">
     <div>
       <span style="font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:800;color:#fff;">PETCINGO</span>
-      <p style="margin-top:6px;font-size:0.78rem;">Sistema de Identificacion Inteligente para Mascotas. Tecnologia NFC + QR. Hecho en Bolivia.</p>
+      <p style="margin-top:6px;font-size:0.78rem;">Sistema de Identificacion Inteligente para Mascotas.</p>
     </div>
     <div>
-      <h4 style="color:#fff;font-size:0.82rem;margin-bottom:8px;">Producto</h4>
-      <a href="https://prueb2.dashnexpages.net/planes/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Tag Pet ID</a>
-      <a href="https://prueb2.dashnexpages.net/planes/?plan=familiar" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Pack Familiar</a>
-      <a href="https://prueb2.dashnexpages.net/activacion/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Activar placa</a>
-      <a href="https://prueb2.dashnexpages.net/mi-cuenta/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Perfil de mascota</a>
+      <h4>Tienda</h4>
+      <a href="https://prueb2.dashnexpages.net/tienda/">Ver productos</a>
+      <a href="https://prueb2.dashnexpages.net/activacion/">Activar placa</a>
     </div>
     <div>
-      <h4 style="color:#fff;font-size:0.82rem;margin-bottom:8px;">Ecosistema</h4>
-      <a href="https://prueb2.dashnexpages.net/afiliados/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Programa de Afiliados</a>
-      <a href="https://prueb2.dashnexpages.net/veterinarias-aliadas/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Veterinarias Aliadas</a>
-      <a href="https://prueb2.dashnexpages.net/refugio/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Refugios</a>
-      <a href="https://prueb2.dashnexpages.net/ayuda/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Campanas Solidarias</a>
+      <h4>Ecosistema</h4>
+      <a href="https://prueb2.dashnexpages.net/afiliados/">Afiliados</a>
+      <a href="https://prueb2.dashnexpages.net/veterinarias-aliadas/">Veterinarias</a>
     </div>
     <div>
-      <h4 style="color:#fff;font-size:0.82rem;margin-bottom:8px;">Legal</h4>
-      <a href="https://prueb2.dashnexpages.net/terminos/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Terminos de Uso</a>
-      <a href="https://prueb2.dashnexpages.net/privacidad/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Politica de Privacidad</a>
-      <a href="https://prueb2.dashnexpages.net/contacto/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Contacto</a>
+      <h4>Legal</h4>
+      <a href="https://prueb2.dashnexpages.net/terminos/">Terminos</a>
+      <a href="https://prueb2.dashnexpages.net/privacidad/">Privacidad</a>
     </div>
   </div>
-  <div style="text-align:center;margin-top:24px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);font-size:0.72rem;color:rgba(255,255,255,0.4);">
-    &copy; 2026 Petcingo. Todos los derechos reservados.
-  </div>
+  <div class="cart-footer-copy">&copy; 2026 Petcingo. Todos los derechos reservados.</div>
 </footer>
 
+<script>
+(function () {
+  'use strict';
+
+  var SVG = 'https://prueb2.dashnexpages.net/assets/svg-icons/';
+  var cart = [];
+  var promoApplied = null;
+  var isIntl = false;
+
+  /* Detect currency by timezone */
+  function detectCurrency() {
+    var tz = (Intl.DateTimeFormat().resolvedOptions().timeZone) || '';
+    isIntl = tz.indexOf('America/La_Paz') === -1 && tz.indexOf('America/Santa_Cruz') === -1;
+  }
+
+  function loadCart() {
+    try {
+      var saved = localStorage.getItem('ptcg_cart');
+      if (saved) cart = JSON.parse(saved) || [];
+    } catch (e) { cart = []; }
+  }
+
+  function saveCart() {
+    try { localStorage.setItem('ptcg_cart', JSON.stringify(cart)); } catch (e) {}
+  }
+
+  function formatPrice(bs, usd) {
+    if (isIntl && usd) return 'USD ' + usd.toFixed(2);
+    return 'Bs ' + bs;
+  }
+
+  function render() {
+    var emptyEl = document.getElementById('cart-empty-state');
+    var fullEl = document.getElementById('cart-full-state');
+    if (!cart.length) {
+      if (emptyEl) emptyEl.style.display = '';
+      if (fullEl) fullEl.style.display = 'none';
+      return;
+    }
+    if (emptyEl) emptyEl.style.display = 'none';
+    if (fullEl) fullEl.style.display = '';
+
+    var countEl = document.getElementById('cart-page-count');
+    var total = cart.reduce(function (s, i) { return s + i.qty; }, 0);
+    if (countEl) countEl.textContent = total + ' item' + (total !== 1 ? 's' : '');
+
+    renderItems();
+    renderSummary();
+  }
+
+  function renderItems() {
+    var el = document.getElementById('cart-items-list');
+    if (!el) return;
+    el.innerHTML = cart.map(function (item) {
+      var unit = formatPrice(item.price, item.priceUsd);
+      var sub = formatPrice(item.price * item.qty,
+        item.priceUsd ? item.priceUsd * item.qty : 0);
+      return '<div class="cart-item" id="item-' + escH(item.productId) + '">' +
+        '<div class="cart-item-img">' +
+          (item.imageUrl
+            ? '<img src="' + escH(item.imageUrl) + '" alt="" loading="lazy">'
+            : '<img src="' + SVG + 'solar-paw-bold.svg" class="si-lg cart-item-img-placeholder si--primary" alt="">') +
+        '</div>' +
+        '<div class="cart-item-info">' +
+          '<div class="cart-item-cat">' + escH(item.category || '') + '</div>' +
+          '<div class="cart-item-name">' + escH(item.name) + '</div>' +
+          '<div class="cart-item-unit-price">Precio unitario: ' + unit + '</div>' +
+          '<div class="cart-item-qty">' +
+            '<button class="cart-qty-btn" onclick="changeQty(\'' + escH(item.productId) + '\',-1)">&#8722;</button>' +
+            '<span class="cart-qty-val">' + item.qty + '</span>' +
+            '<button class="cart-qty-btn" onclick="changeQty(\'' + escH(item.productId) + '\',1)">+</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="cart-item-right">' +
+          '<div class="cart-item-subtotal">' + sub + '</div>' +
+          '<button class="cart-item-del" onclick="removeItem(\'' + escH(item.productId) + '\')" title="Eliminar">' +
+            '<img src="' + SVG + 'solar-trash-linear.svg" class="si-sm si--danger" alt="">' +
+          '</button>' +
+        '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  function renderSummary() {
+    var el = document.getElementById('cart-summary-rows');
+    if (!el) return;
+
+    var subtotal = cart.reduce(function (s, i) {
+      return s + (isIntl && i.priceUsd ? i.priceUsd * i.qty : i.price * i.qty);
+    }, 0);
+    var shipping = 0;
+    var discount = 0;
+    var currency = isIntl ? 'USD' : 'Bs';
+
+    if (promoApplied) {
+      discount = promoApplied.type === 'pct'
+        ? subtotal * promoApplied.value / 100
+        : promoApplied.value;
+      discount = Math.min(discount, subtotal);
+    }
+
+    var total = subtotal - discount + shipping;
+
+    var html = '<div class="cart-summary-row">' +
+      '<span>Subtotal (' + cart.reduce(function (s, i) { return s + i.qty; }, 0) + ' items)</span>' +
+      '<span>' + currency + ' ' + subtotal.toFixed(2) + '</span></div>';
+
+    if (discount > 0) {
+      html += '<div class="cart-summary-row">' +
+        '<span>Descuento (' + escH(promoApplied.code) + ')</span>' +
+        '<span class="discount">- ' + currency + ' ' + discount.toFixed(2) + '</span></div>';
+    }
+
+    html += '<div class="cart-summary-row">' +
+      '<span>Envio estimado</span>' +
+      '<span style="color:#22C55E;font-weight:600;">Gratis</span></div>';
+
+    html += '<div class="cart-summary-row total">' +
+      '<span>Total</span>' +
+      '<span>' + currency + ' ' + total.toFixed(2) + '</span></div>';
+
+    el.innerHTML = html;
+
+    /* Update checkout URL with promo code if applied */
+    var checkoutBtn = document.getElementById('checkout-btn');
+    if (checkoutBtn) {
+      var url = 'https://prueb2.dashnexpages.net/finalizar-compra/?mode=cart';
+      if (promoApplied) url += '&promo=' + encodeURIComponent(promoApplied.code);
+      checkoutBtn.href = url;
+    }
+  }
+
+  /* ── ACCIONES ── */
+  window.changeQty = function (productId, delta) {
+    var item = cart.find(function (i) { return i.productId === productId; });
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) {
+      cart = cart.filter(function (i) { return i.productId !== productId; });
+    }
+    saveCart();
+    render();
+  };
+
+  window.removeItem = function (productId) {
+    cart = cart.filter(function (i) { return i.productId !== productId; });
+    saveCart();
+    render();
+  };
+
+  window.clearCart = function () {
+    if (!confirm('Vaciar el carrito. Continuar?')) return;
+    cart = [];
+    saveCart();
+    render();
+  };
+
+  /* ── PROMO CODE ── */
+  window.applyPromo = function () {
+    var code = (document.getElementById('promo-input').value || '').trim().toUpperCase();
+    var msg = document.getElementById('promo-msg');
+    if (!code) { showPromoMsg('Ingresa un codigo', 'err'); return; }
+
+    /* Lookup in Firestore if available */
+    if (window.firebase && firebase.apps && firebase.apps.length) {
+      var db2 = firebase.firestore();
+      db2.collection('promotions').doc(code).get()
+        .then(function (snap) {
+          if (!snap.exists) { showPromoMsg('Codigo no valido', 'err'); return; }
+          var d = snap.data();
+          if (!d.active) { showPromoMsg('Codigo inactivo', 'err'); return; }
+          var now = new Date();
+          if (d.expiresAt && d.expiresAt.toDate() < now) { showPromoMsg('Codigo expirado', 'err'); return; }
+          if (d.maxUses && d.usedCount >= d.maxUses) { showPromoMsg('Codigo agotado', 'err'); return; }
+          promoApplied = { code: code, type: d.type || 'pct', value: Number(d.value) || 0 };
+          showPromoMsg('Descuento aplicado!', 'ok');
+          renderSummary();
+        })
+        .catch(function () {
+          showPromoMsg('Error al verificar', 'err');
+        });
+    } else {
+      /* Fallback: simple local validation */
+      if (code === 'PETCINGO10') {
+        promoApplied = { code: code, type: 'pct', value: 10 };
+        showPromoMsg('10% de descuento aplicado!', 'ok');
+        renderSummary();
+      } else {
+        showPromoMsg('Codigo no valido', 'err');
+      }
+    }
+  };
+
+  function showPromoMsg(text, type) {
+    var el = document.getElementById('promo-msg');
+    if (el) { el.textContent = text; el.className = 'cart-promo-msg ' + type; }
+  }
+
+  function escH(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  /* ── START ── */
+  detectCurrency();
+  loadCart();
+  render();
+}());
+</script>
 </body>
 </html>

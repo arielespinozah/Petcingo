@@ -237,7 +237,7 @@
     </div>
     <div id="vp-login-err"></div>
     <button class="vp-btn vp-btn--primary" style="width:100%;margin-top:14px;" id="vp-login-btn" onclick="vpLogin()">
-      <i class="ri-login-box-line"></i> Ingresar
+      <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-login-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Ingresar
     </button>
   </div>
 </div>
@@ -259,18 +259,18 @@
       <span class="vp-tb-badge" id="vp-level-badge">Aliado</span>
     </div>
     <button class="vp-btn vp-btn--danger vp-btn--sm" onclick="vpLogout()">
-      <i class="ri-logout-box-line"></i> Cerrar sesion
+      <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-logout-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Cerrar sesion
     </button>
   </div>
 
   <!-- TABS -->
   <div id="vp-tabs">
     <div class="vp-tabs-inner">
-      <button class="vp-tab active" data-tab="resumen"   onclick="vpTab('resumen')"><i class="ri-dashboard-line"></i> Resumen</button>
-      <button class="vp-tab"       data-tab="perfil"     onclick="vpTab('perfil')"><i class="ri-settings-3-line"></i> Mi Perfil</button>
-      <button class="vp-tab"       data-tab="servicios"  onclick="vpTab('servicios')"><i class="ri-stethoscope-line"></i> Servicios</button>
-      <button class="vp-tab"       data-tab="ventas"     onclick="vpTab('ventas')"><i class="ri-shopping-bag-line"></i> Ventas</button>
-      <button class="vp-tab"       data-tab="finanzas"   onclick="vpTab('finanzas')"><i class="ri-money-dollar-circle-line"></i> Finanzas</button>
+      <button class="vp-tab active" data-tab="resumen"   onclick="vpTab('resumen')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Resumen</button>
+      <button class="vp-tab"       data-tab="perfil"     onclick="vpTab('perfil')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Mi Perfil</button>
+      <button class="vp-tab"       data-tab="servicios"  onclick="vpTab('servicios')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-health-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Servicios</button>
+      <button class="vp-tab"       data-tab="ventas"     onclick="vpTab('ventas')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-cart-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Ventas</button>
+      <button class="vp-tab"       data-tab="finanzas"   onclick="vpTab('finanzas')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-money-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Finanzas</button>
     </div>
   </div>
 
@@ -280,41 +280,41 @@
     <!-- RESUMEN -->
     <section class="vp-sec active" id="vp-sec-resumen">
       <div class="vp-page-header">
-        <h2><i class="ri-dashboard-line"></i> Resumen</h2>
+        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Resumen</h2>
         <p>Vista general de tu actividad en Petcingo.</p>
       </div>
       <div class="vp-stats">
         <div class="vp-stat">
-          <div class="vp-stat__icon"><i class="ri-shopping-bag-line"></i></div>
+          <div class="vp-stat__icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-cart-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
           <div class="vp-stat__value" id="vp-s-ventas-mes">-</div>
           <div class="vp-stat__label">Ventas este mes</div>
         </div>
         <div class="vp-stat">
-          <div class="vp-stat__icon"><i class="ri-money-dollar-circle-line"></i></div>
+          <div class="vp-stat__icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-money-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
           <div class="vp-stat__value" id="vp-s-monto-mes">-</div>
           <div class="vp-stat__label">Monto generado (Bs)</div>
         </div>
         <div class="vp-stat">
-          <div class="vp-stat__icon"><i class="ri-coin-line"></i></div>
+          <div class="vp-stat__icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
           <div class="vp-stat__value" id="vp-s-comisiones">-</div>
           <div class="vp-stat__label">Comisiones pendientes (Bs)</div>
         </div>
         <div class="vp-stat">
-          <div class="vp-stat__icon"><i class="ri-links-line"></i></div>
+          <div class="vp-stat__icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
           <div class="vp-stat__value" id="vp-s-ventas-total">-</div>
           <div class="vp-stat__label">Ventas totales</div>
         </div>
       </div>
       <div class="vp-card">
-        <div class="vp-sec-title"><i class="ri-link"></i> Enlace de referido</div>
+        <div class="vp-sec-title"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Enlace de referido</div>
         <p class="vp-muted" style="margin-bottom:11px;">Comparte este enlace para que tus clientes puedan comprar planes Petcingo y ganar comision.</p>
         <div class="vp-ref-box">
           <input class="vp-ref-input" type="text" id="vp-ref-resumen" readonly>
-          <button class="vp-btn vp-btn--secondary vp-btn--sm" onclick="vpCopyRef()"><i class="ri-file-copy-line"></i> Copiar</button>
+          <button class="vp-btn vp-btn--secondary vp-btn--sm" onclick="vpCopyRef()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Copiar</button>
         </div>
       </div>
       <div class="vp-card">
-        <div class="vp-sec-title"><i class="ri-history-line"></i> Ultimas ventas</div>
+        <div class="vp-sec-title"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Ultimas ventas</div>
         <div class="vp-table-wrap">
           <table class="vp-table">
             <thead><tr><th>Fecha</th><th>Codigo</th><th>Plan</th><th>Monto</th><th>Comision</th></tr></thead>
@@ -327,12 +327,12 @@
     <!-- MI PERFIL -->
     <section class="vp-sec" id="vp-sec-perfil">
       <div class="vp-page-header">
-        <h2><i class="ri-settings-3-line"></i> Mi Perfil</h2>
+        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Mi Perfil</h2>
         <p>Actualiza los datos publicos de tu veterinaria.</p>
       </div>
 
       <div class="vp-card">
-        <div class="vp-sec-title"><i class="ri-building-4-line"></i> Datos de la veterinaria</div>
+        <div class="vp-sec-title"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Datos de la veterinaria</div>
         <div class="vp-grid-2" style="margin-bottom:12px;">
           <div class="vp-field">
             <label class="vp-label">Nombre de la veterinaria</label>
@@ -372,7 +372,7 @@
       </div>
 
       <div class="vp-card">
-        <div class="vp-sec-title"><i class="ri-image-line"></i> Logo y portada</div>
+        <div class="vp-sec-title"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-image-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Logo y portada</div>
         <div class="vp-grid-2" style="margin-bottom:12px;">
           <div class="vp-field">
             <label class="vp-label">Logo (cuadrado, min 200x200)</label>
@@ -390,31 +390,31 @@
       </div>
 
       <div class="vp-card">
-        <div class="vp-sec-title"><i class="ri-time-line"></i> Horario de atencion</div>
+        <div class="vp-sec-title"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-clock-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Horario de atencion</div>
         <p class="vp-muted" style="margin-bottom:14px;">Configura tu horario semanal. Marca "Cerrado" si no atiendes ese dia.</p>
         <div id="vp-schedule-rows"></div>
       </div>
 
       <button class="vp-btn vp-btn--primary" onclick="vpSavePerfil()">
-        <i class="ri-save-line"></i> Guardar cambios
+        <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar cambios
       </button>
     </section>
 
     <!-- SERVICIOS -->
     <section class="vp-sec" id="vp-sec-servicios">
       <div class="vp-page-header">
-        <h2><i class="ri-stethoscope-line"></i> Servicios</h2>
+        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-health-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Servicios</h2>
         <p>Gestiona los servicios que ofreces en tu veterinaria.</p>
       </div>
 
       <div class="vp-row" style="margin-bottom:14px;">
         <button class="vp-btn vp-btn--primary" onclick="vpToggleSvcForm()">
-          <i class="ri-add-line"></i> Agregar servicio
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-add-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Agregar servicio
         </button>
       </div>
 
       <div class="vp-card" id="vp-svc-form" style="display:none;">
-        <div class="vp-sec-title"><i class="ri-add-circle-line"></i> <span id="vp-svc-form-title">Nuevo servicio</span></div>
+        <div class="vp-sec-title"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-add-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> <span id="vp-svc-form-title">Nuevo servicio</span></div>
         <input type="hidden" id="vp-svc-editing-id">
         <div class="vp-grid-2" style="margin-bottom:12px;">
           <div class="vp-field">
@@ -450,7 +450,7 @@
           <input class="vp-input" type="text" id="vp-svc-desc" placeholder="Ej: Revision completa del animal" maxlength="100">
         </div>
         <div class="vp-row">
-          <button class="vp-btn vp-btn--primary" onclick="vpSaveServicio()"><i class="ri-save-line"></i> Guardar servicio</button>
+          <button class="vp-btn vp-btn--primary" onclick="vpSaveServicio()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar servicio</button>
           <button class="vp-btn vp-btn--secondary" onclick="vpToggleSvcForm()">Cancelar</button>
         </div>
       </div>
@@ -463,15 +463,15 @@
     <!-- VENTAS -->
     <section class="vp-sec" id="vp-sec-ventas">
       <div class="vp-page-header">
-        <h2><i class="ri-shopping-bag-line"></i> Ventas</h2>
+        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-cart-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Ventas</h2>
         <p>Historial de placas vendidas a traves de tu enlace.</p>
       </div>
       <div class="vp-card">
-        <div class="vp-sec-title"><i class="ri-link"></i> Tu enlace de referido</div>
+        <div class="vp-sec-title"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Tu enlace de referido</div>
         <p class="vp-muted" style="margin-bottom:11px;">Por cada venta generada ganas comision automaticamente.</p>
         <div class="vp-ref-box">
           <input class="vp-ref-input" type="text" id="vp-ref-ventas" readonly>
-          <button class="vp-btn vp-btn--secondary vp-btn--sm" onclick="vpCopyRef()"><i class="ri-file-copy-line"></i> Copiar</button>
+          <button class="vp-btn vp-btn--secondary vp-btn--sm" onclick="vpCopyRef()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Copiar</button>
         </div>
       </div>
       <div class="vp-row" style="margin-bottom:13px;">
@@ -484,7 +484,7 @@
           <option value="pending">Pendiente</option>
           <option value="processing">Procesando</option>
         </select>
-        <button class="vp-btn vp-btn--secondary vp-btn--sm" onclick="vpLoadVentas()"><i class="ri-refresh-line"></i></button>
+        <button class="vp-btn vp-btn--secondary vp-btn--sm" onclick="vpLoadVentas()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button>
       </div>
       <div class="vp-card">
         <div class="vp-table-wrap">
@@ -499,28 +499,28 @@
     <!-- FINANZAS -->
     <section class="vp-sec" id="vp-sec-finanzas">
       <div class="vp-page-header">
-        <h2><i class="ri-money-dollar-circle-line"></i> Finanzas</h2>
+        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-money-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Finanzas</h2>
         <p>Comisiones y configuracion de pago.</p>
       </div>
       <div class="vp-stats" style="grid-template-columns:repeat(auto-fit,minmax(195px,1fr));">
         <div class="vp-stat">
-          <div class="vp-stat__icon"><i class="ri-time-line"></i></div>
+          <div class="vp-stat__icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-clock-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
           <div class="vp-stat__value" id="vp-fin-pendiente">-</div>
           <div class="vp-stat__label">Comisiones pendientes (Bs)</div>
         </div>
         <div class="vp-stat">
-          <div class="vp-stat__icon"><i class="ri-checkbox-circle-line"></i></div>
+          <div class="vp-stat__icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
           <div class="vp-stat__value" id="vp-fin-pagado">-</div>
           <div class="vp-stat__label">Total pagado (Bs)</div>
         </div>
         <div class="vp-stat">
-          <div class="vp-stat__icon"><i class="ri-calendar-check-line"></i></div>
+          <div class="vp-stat__icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
           <div class="vp-stat__value" id="vp-fin-ultimo">-</div>
           <div class="vp-stat__label">Ultimo pago recibido</div>
         </div>
       </div>
       <div class="vp-card">
-        <div class="vp-sec-title"><i class="ri-history-line"></i> Historial de comisiones</div>
+        <div class="vp-sec-title"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Historial de comisiones</div>
         <div class="vp-table-wrap">
           <table class="vp-table">
             <thead><tr><th>Fecha</th><th>Descripcion</th><th>Monto (Bs)</th><th>Estado</th></tr></thead>
@@ -529,7 +529,7 @@
         </div>
       </div>
       <div class="vp-card">
-        <div class="vp-sec-title"><i class="ri-bank-line"></i> Cuenta bancaria</div>
+        <div class="vp-sec-title"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-money-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Cuenta bancaria</div>
         <p class="vp-muted" style="margin-bottom:15px;">Ingresa tus datos para recibir pagos de comisiones.</p>
         <div class="vp-grid-2" style="margin-bottom:12px;">
           <div class="vp-field">
@@ -554,7 +554,7 @@
           </div>
         </div>
         <button class="vp-btn vp-btn--primary" onclick="vpSaveBankAccount()">
-          <i class="ri-save-line"></i> Guardar datos bancarios
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar datos bancarios
         </button>
       </div>
     </section>
@@ -717,7 +717,7 @@
     errEl.style.display = 'none';
     if (!username || !password) { errEl.style.display = 'block'; errEl.textContent = 'Completa todos los campos.'; return; }
     btn.disabled = true;
-    btn.innerHTML = '<i class="ri-loader-4-line"></i> Verificando...';
+    btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Verificando...';
 
     db().collection('veterinarias').where('username', '==', username).limit(5).get()
       .then(function (snap) {
@@ -742,7 +742,7 @@
       .catch(function (e) { showErr('Error de conexion: ' + e.message); resetBtn(); });
 
     function showErr(msg) { errEl.style.display = 'block'; errEl.textContent = msg; }
-    function resetBtn() { btn.disabled = false; btn.innerHTML = '<i class="ri-login-box-line"></i> Ingresar'; }
+    function resetBtn() { btn.disabled = false; btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-login-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Ingresar'; }
   };
 
   window.vpLogout = function () {
@@ -1031,8 +1031,8 @@
       if (svc.price) h += '<div class="vp-svc-price">Bs ' + esc(svc.price) + '</div>';
       if (svc.solidarityPrice) h += '<div class="vp-svc-price" style="color:#10B981;">Solidario: Bs ' + esc(svc.solidarityPrice) + '</div>';
       h += '<div class="vp-svc-actions">';
-      h += '<button class="vp-btn vp-btn--secondary vp-btn--sm" onclick="vpEditServicio(\'' + esc(svc.id) + '\')"><i class="ri-edit-line"></i></button>';
-      h += '<button class="vp-btn vp-btn--danger vp-btn--sm" onclick="vpDeleteServicio(\'' + esc(svc.id) + '\')"><i class="ri-delete-bin-line"></i></button>';
+      h += '<button class="vp-btn vp-btn--secondary vp-btn--sm" onclick="vpEditServicio(\'' + esc(svc.id) + '\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-edit-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button>';
+      h += '<button class="vp-btn vp-btn--danger vp-btn--sm" onclick="vpDeleteServicio(\'' + esc(svc.id) + '\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button>';
       h += '</div></div>';
     });
     grid.innerHTML = h;

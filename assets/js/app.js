@@ -398,15 +398,15 @@ function renderTable(pets) {
     }
     var btns = [];
     if (d.status === 'deleted') {
-      btns.push('<button class="btn btn-ghost btn-sm" onclick="restorePet(\'' + esc(id) + '\')"><i class="ri-arrow-go-back-line"></i> Restaurar</button>');
-      btns.push('<button class="btn-danger-outline" onclick="permanentDelete(\'' + esc(id) + '\')"><i class="ri-delete-bin-line"></i></button>');
+      btns.push('<button class="btn btn-ghost btn-sm" onclick="restorePet(\'' + esc(id) + '\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-left-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Restaurar</button>');
+      btns.push('<button class="btn-danger-outline" onclick="permanentDelete(\'' + esc(id) + '\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"></button>');
     } else if (d.status === 'reservada') {
-      btns.push('<a href="' + ACT + encodeURIComponent(id) + '" target="_blank" class="btn btn-ghost btn-sm"><i class="ri-qr-code-line"></i> Ver placa</a>');
-      btns.push('<button class="btn-danger-outline" onclick="archivePet(\'' + esc(id) + '\')"><i class="ri-delete-bin-line"></i></button>');
+      btns.push('<a href="' + ACT + encodeURIComponent(id) + '" target="_blank" class="btn btn-ghost btn-sm"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-qr-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Ver placa</a>');
+      btns.push('<button class="btn-danger-outline" onclick="archivePet(\'' + esc(id) + '\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"></button>');
     } else {
-      btns.push('<a href="' + PERF + encodeURIComponent(id) + '" target="_blank" class="btn btn-ghost btn-sm"><i class="ri-eye-line"></i> Ver perfil</a>');
-      if (d.editToken) btns.push('<a href="' + CLI + encodeURIComponent(id) + '" target="_blank" class="btn btn-ghost btn-sm"><i class="ri-user-line"></i></a>');
-      btns.push('<button class="btn-danger-outline" onclick="archivePet(\'' + esc(id) + '\')"><i class="ri-delete-bin-line"></i></button>');
+      btns.push('<a href="' + PERF + encodeURIComponent(id) + '" target="_blank" class="btn btn-ghost btn-sm"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Ver perfil</a>');
+      if (d.editToken) btns.push('<a href="' + CLI + encodeURIComponent(id) + '" target="_blank" class="btn btn-ghost btn-sm"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-user-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"></a>');
+      btns.push('<button class="btn-danger-outline" onclick="archivePet(\'' + esc(id) + '\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"></button>');
     }
     var fecha = d.createdAt && d.createdAt.toDate ? formatDate(d.createdAt.toDate()) : '';
     rows.push('<tr><td class="td-id">' + esc(id) + '</td><td class="td-name">' + esc(d.name || '') + '</td><td class="td-owner">' + esc(d.ownerName || d.phone || '') + '</td><td><span class="badge ' + bCls + '">' + bTxt + '</span></td><td class="td-date">' + fecha + '</td><td class="td-actions">' + btns.join('') + '</td></tr>');
@@ -420,11 +420,11 @@ window.toggleTrash = function() {
   _dash.showingTrash = !_dash.showingTrash;
   var btn = document.getElementById('btn-trash');
   if (btn) {
-    btn.innerHTML = _dash.showingTrash ? '<i class="ri-arrow-go-back-line"></i> Ver Activas' : '<i class="ri-delete-bin-line"></i> Papelera';
+    btn.innerHTML = _dash.showingTrash ? '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-left-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Ver Activas' : '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Papelera';
     btn.style.color = _dash.showingTrash ? 'var(--success)' : 'var(--error)';
   }
   var h2 = document.querySelector('#sec-pets .page-header h2');
-  if (h2) h2.innerHTML = _dash.showingTrash ? '<i class="ri-delete-bin-line"></i> Papelera' : '<i class="ri-footprint-line"></i> Mascotas Registradas';
+  if (h2) h2.innerHTML = _dash.showingTrash ? '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Papelera' : '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-paw-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Mascotas Registradas';
   filterTable();
 };
 
@@ -528,7 +528,7 @@ window.registerPlate = function() {
   if (!sellerData.prefix) { toast('⚠️ Este cliente no tiene prefijo configurado.'); return; }
 
   var btn = document.querySelector('#sec-register .btn-primary');
-  if (btn) { btn.disabled=true; btn.innerHTML='<i class="ri-loader-4-line"></i> Reservando…'; }
+  if (btn) { btn.disabled=true; btn.innerHTML='<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Reservando…'; }
 
   var isDirect = sellerData.collection === '__direct__';
 
@@ -555,7 +555,7 @@ window.registerPlate = function() {
     toast('✅ Placa '+res.newId+' reservada para '+sellerData.name);
     loadSellersCache();
   }).catch(function(err) { toast('❌ '+err.message); })
-    .finally(function() { if(btn){ btn.disabled=false; btn.innerHTML='<i class="ri-add-circle-line"></i> Crear y Reservar Placa'; } });
+    .finally(function() { if(btn){ btn.disabled=false; btn.innerHTML='<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-add-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Crear y Reservar Placa'; } });
 };
 
 function _generateRegQR(newId, profileUrl, next, sellerData) {
@@ -591,7 +591,7 @@ window.resetRegister = function() {
   var disp=document.getElementById('reg-qr-display');
   if(res) res.style.display='none';
   if(info) info.style.display='none';
-  if(disp) disp.innerHTML='<div style="text-align:center;color:var(--muted-dark);padding:48px 20px"><i class="ri-qr-scan-2-line" style="font-size:64px;opacity:.15;display:block;margin-bottom:12px"></i><p style="font-size:.85rem">El QR aparecerá aquí</p></div>';
+  if(disp) disp.innerHTML='<div style="text-align:center;color:var(--muted-dark);padding:48px 20px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-qr-bold.svg" width="64" height="64" style="opacity:.15;display:block;margin-bottom:12px;filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"><p style="font-size:.85rem">El QR aparecerá aquí</p></div>';
   _dash.regQr=null; loadRegisterSelect();
 };
 
@@ -657,8 +657,8 @@ function loadVets() {
         html+='<tr><td class="td-name">'+esc(d.name||'—')+'</td><td>'+prefBadge+'</td><td>'+esc(d.contact||'—')+'</td>'+
           '<td class="td-owner">'+esc(d.city||'—')+'</td><td class="td-owner">'+esc(d.phone||'—')+'</td>'+
           '<td class="td-date">'+fecha+'</td>'+
-          '<td class="td-actions"><button class="btn btn-ghost btn-sm" onclick="openVetDetail(\''+doc.id+'\')"><i class="ri-settings-3-line"></i> Gestionar</button>'+
-          '<button class="btn-danger-outline" onclick="deleteRecord(\'veterinarias\',\''+doc.id+'\',\'loadVets\')"><i class="ri-delete-bin-line"></i></button></td></tr>';
+          '<td class="td-actions"><button class="btn btn-ghost btn-sm" onclick="openVetDetail(\''+doc.id+'\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-settings-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Gestionar</button>'+
+          '<button class="btn-danger-outline" onclick="deleteRecord(\'veterinarias\',\''+doc.id+'\',\'loadVets\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"></button></td></tr>';
       });
       tbody.innerHTML=html;
     }).catch(function(e){tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><p>Error: '+esc(e.message)+'</p></div></td></tr>';});
@@ -677,7 +677,7 @@ window.openVetDetail = function(vetId) {
     if(prefEl)prefEl.textContent='Prefijo: '+(d.prefix||'sin prefijo');
     refreshVetCounter(); loadVetPets();
     var disp=document.getElementById('vet-qr-display');
-    if(disp)disp.innerHTML='<div style="text-align:center;color:var(--muted-dark);padding:48px 20px"><i class="ri-qr-code-line" style="font-size:64px;opacity:.2;display:block;margin-bottom:12px"></i><p style="font-size:.85rem">El QR aparecerá aquí</p></div>';
+    if(disp)disp.innerHTML='<div style="text-align:center;color:var(--muted-dark);padding:48px 20px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-qr-bold.svg" width="64" height="64" style="opacity:.2;display:block;margin-bottom:12px;filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"><p style="font-size:.85rem">El QR aparecerá aquí</p></div>';
     var res=document.getElementById('vet-qr-result');
     if(res)res.style.display='none';
     _dash.vetQr=null;
@@ -743,7 +743,7 @@ window.loadVetPets = function() {
         var fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'—';
         html+='<tr><td class="td-id">'+esc(id)+'</td><td class="td-name">'+esc(d.name||'—')+'</td><td class="td-owner">'+esc(d.ownerName||'—')+'</td>'+
           '<td><span class="badge '+bCls+'">'+bTxt+'</span></td><td class="td-date">'+fecha+'</td>'+
-          '<td class="td-actions"><a href="https://prueb2.dashnexpages.net/id/?id='+encodeURIComponent(id)+'" target="_blank" class="btn btn-ghost btn-sm"><i class="ri-eye-line"></i></a></td></tr>';
+          '<td class="td-actions"><a href="https://prueb2.dashnexpages.net/id/?id='+encodeURIComponent(id)+'" target="_blank" class="btn btn-ghost btn-sm"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"></a></td></tr>';
       });
       tbody.innerHTML=html;
     }).catch(function(){
@@ -810,10 +810,10 @@ function loadShelters() {
         html+='<tr><td class="td-name">'+esc(d.name||'—')+'</td><td>'+prefBadge+'</td><td>'+esc(d.responsible||'—')+'</td>'+
           '<td class="td-owner">'+esc(d.phone||'—')+'</td><td class="td-owner" style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(d.address||'—')+'</td>'+
           '<td class="td-date">'+fecha+'</td>'+
-          '<td class="td-actions"><button class="btn btn-ghost btn-sm" onclick="openShelterDetail(\''+doc.id+'\')"><i class="ri-settings-3-line"></i> Placas</button>'+
-          '<button class="btn btn-ghost btn-sm" onclick="editShelter(\''+doc.id+'\',\''+encodeData(d)+'\')"><i class="ri-edit-line"></i> Editar</button>'+
-          '<a class="btn btn-ghost btn-sm" href="https://prueb2.dashnexpages.net/refugio-panel-control/?auto='+doc.id+'" target="_blank" title="Panel del refugio"><i class="ri-external-link-line"></i> Panel</a>'+
-          '<button class="btn-danger-outline" onclick="deleteRecord(\'shelters\',\''+doc.id+'\',\'loadShelters\')"><i class="ri-delete-bin-line"></i></button></td></tr>';
+          '<td class="td-actions"><button class="btn btn-ghost btn-sm" onclick="openShelterDetail(\''+doc.id+'\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-settings-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Placas</button>'+
+          '<button class="btn btn-ghost btn-sm" onclick="editShelter(\''+doc.id+'\',\''+encodeData(d)+'\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-edit-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Editar</button>'+
+          '<a class="btn btn-ghost btn-sm" href="https://prueb2.dashnexpages.net/refugio-panel-control/?auto='+doc.id+'" target="_blank" title="Panel del refugio"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-link-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Panel</a>'+
+          '<button class="btn-danger-outline" onclick="deleteRecord(\'shelters\',\''+doc.id+'\',\'loadShelters\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"></button></td></tr>';
       });
       tbody.innerHTML=html;
     }).catch(function(e){tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><p>Error: '+esc(e.message)+'</p></div></td></tr>';});
@@ -859,7 +859,7 @@ window.updateShelter = function() {
   if (password) update.password = password;
 
   var btn = document.getElementById('btn-update-shelter');
-  if (btn) { btn.disabled=true; btn.innerHTML='<i class="ri-loader-4-line"></i> Guardando…'; }
+  if (btn) { btn.disabled=true; btn.innerHTML='<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Guardando…'; }
 
   db().collection('shelters').doc(shId).update(update)
     .then(function() {
@@ -869,7 +869,7 @@ window.updateShelter = function() {
       addLog('updated_shelter', name, _dash.currentUser&&_dash.currentUser.name);
     })
     .catch(function(e) { toast('❌ Error: '+e.message); })
-    .finally(function() { if(btn){ btn.disabled=false; btn.innerHTML='<i class="ri-save-line"></i> Guardar cambios'; } });
+    .finally(function() { if(btn){ btn.disabled=false; btn.innerHTML='<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Guardar cambios'; } });
 };
 
 /* Shelter Detail (mirror of Vet Detail) */
@@ -882,7 +882,7 @@ window.openShelterDetail = function(shId) {
     if(t)t.textContent='Gestionando: '+d.name;if(p)p.textContent='Prefijo: '+(d.prefix||'sin prefijo');
     refreshShelterCounter();loadShelterPets();
     var disp=document.getElementById('sh-qr-display');
-    if(disp)disp.innerHTML='<div style="text-align:center;color:var(--muted-dark);padding:48px 20px"><i class="ri-qr-code-line" style="font-size:64px;opacity:.2;display:block;margin-bottom:12px"></i><p style="font-size:.85rem">El QR aparecerá aquí</p></div>';
+    if(disp)disp.innerHTML='<div style="text-align:center;color:var(--muted-dark);padding:48px 20px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-qr-bold.svg" width="64" height="64" style="opacity:.2;display:block;margin-bottom:12px;filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"><p style="font-size:.85rem">El QR aparecerá aquí</p></div>';
     var res=document.getElementById('sh-qr-result');if(res)res.style.display='none';
     _dash.shelterQr=null;
     showSection('shelter-detail',null);
@@ -943,7 +943,7 @@ window.loadShelterPets = function() {
         var fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'—';
         html+='<tr><td class="td-id">'+esc(id)+'</td><td class="td-name">'+esc(d.name||'—')+'</td><td class="td-owner">'+esc(d.ownerName||'—')+'</td>'+
           '<td><span class="badge '+bCls+'">'+bTxt+'</span></td><td class="td-date">'+fecha+'</td>'+
-          '<td class="td-actions"><a href="https://prueb2.dashnexpages.net/id/?id='+encodeURIComponent(id)+'" target="_blank" class="btn btn-ghost btn-sm"><i class="ri-eye-line"></i></a></td></tr>';
+          '<td class="td-actions"><a href="https://prueb2.dashnexpages.net/id/?id='+encodeURIComponent(id)+'" target="_blank" class="btn btn-ghost btn-sm"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"></a></td></tr>';
       });
       tbody.innerHTML=html;
     }).catch(function(){
@@ -1020,8 +1020,8 @@ function loadUsers() {
         var permList=Object.keys(d.permissions||{}).filter(function(k){return d.permissions[k];}).join(', ');
         html+='<div class="user-row"><div class="user-avatar">'+esc((d.username||'U').charAt(0).toUpperCase())+'</div>'+
           '<div class="user-info"><div class="user-name">'+esc(d.username||'—')+'</div><div class="user-perms">'+esc(permList||'sin permisos')+'</div></div>'+
-          (isAdmin?'<button class="btn btn-ghost btn-sm" onclick="editUser(\''+doc.id+'\',\''+esc(d.username||'')+'\',\''+permsStr+'\',\''+esc(d.role||'')+'\')" style="margin-right:6px"><i class="ri-edit-line"></i></button>'+
-            '<button class="btn-danger-outline" onclick="deleteRecord(\'users\',\''+doc.id+'\',\'loadUsers\')"><i class="ri-delete-bin-line"></i></button>':'')+
+          (isAdmin?'<button class="btn btn-ghost btn-sm" onclick="editUser(\''+doc.id+'\',\''+esc(d.username||'')+'\',\''+permsStr+'\',\''+esc(d.role||'')+'\')" style="margin-right:6px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-edit-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"></button>'+
+            '<button class="btn-danger-outline" onclick="deleteRecord(\'users\',\''+doc.id+'\',\'loadUsers\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"></button>':'')+
           '</div>';
       });
       el.innerHTML=html;
@@ -1397,7 +1397,7 @@ function renderPetProfile(d, petId) {
   var manageEl = document.getElementById('pet-manage-btn');
   if (manageEl && token2 && d.editToken && d.editToken === token2) {
     var dashUrl = 'https://prueb2.dashnexpages.net/cliente/?id=' + encodeURIComponent(petId) + '&token=' + encodeURIComponent(token2);
-    manageEl.innerHTML = '<a href="' + dashUrl + '" style="display:inline-flex;align-items:center;gap:8px;padding:12px 20px;background:rgba(81,0,192,.10);border:1.5px solid rgba(81,0,192,.25);border-radius:14px;color:#5100c0;font-weight:700;font-size:.88rem;text-decoration:none;margin-top:4px"><i class="ri-settings-3-line"></i> Gestionar mi mascota</a>';
+    manageEl.innerHTML = '<a href="' + dashUrl + '" style="display:inline-flex;align-items:center;gap:8px;padding:12px 20px;background:rgba(81,0,192,.10);border:1.5px solid rgba(81,0,192,.25);border-radius:14px;color:#5100c0;font-weight:700;font-size:.88rem;text-decoration:none;margin-top:4px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-settings-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Gestionar mi mascota</a>';
     manageEl.style.display = 'block';
   }
 }
@@ -1413,9 +1413,9 @@ function _buildPetContactPanel(d, isLost) {
   var panel=document.getElementById('pet-contact-panel');
   if(!panel)return;
   var html='';
-  if(phone1)html+='<a class="btn btn-wa" href="'+waUrl1+'" target="_blank" rel="noopener"><i class="ri-whatsapp-line"></i> WhatsApp al dueño</a>';
-  if(phone2){var waUrl2='https://wa.me/'+phone2+'?text='+encodeURIComponent(waMsg);html+='<a class="btn btn-wa2" href="'+waUrl2+'" target="_blank" rel="noopener"><i class="ri-whatsapp-line"></i> WhatsApp alternativo</a>';}
-  if(d.phone)html+='<a class="btn btn-call-pet" href="tel:'+esc(d.phone)+'"><i class="ri-phone-line"></i> Llamar al dueño</a>';
+  if(phone1)html+='<a class="btn btn-wa" href="'+waUrl1+'" target="_blank" rel="noopener"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-chat-round-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="" aria-hidden="true"> WhatsApp al dueño</a>';
+  if(phone2){var waUrl2='https://wa.me/'+phone2+'?text='+encodeURIComponent(waMsg);html+='<a class="btn btn-wa2" href="'+waUrl2+'" target="_blank" rel="noopener"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-chat-round-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="" aria-hidden="true"> WhatsApp alternativo</a>';}
+  if(d.phone)html+='<a class="btn btn-call-pet" href="tel:'+esc(d.phone)+'"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-phone-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="" aria-hidden="true"> Llamar al dueño</a>';
   panel.innerHTML=html||'<p style="color:#7a6e8a;font-size:.85rem;text-align:center">Sin contacto registrado</p>';
 
   var fab=document.getElementById('fab-wa');
@@ -1705,7 +1705,7 @@ window.loadScanLogs = function(petId, firestoreDb) {
               '<iframe loading="lazy" src="https://maps.google.com/maps?q=' + lat + ',' + lng + '&z=15&output=embed" title="Ubicación del escaneo"></iframe>' +
             '</div>' +
             '<a href="' + mUrl + '" target="_blank" rel="noopener" class="scan-map-link" style="display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:.82rem">' +
-              '<i class="ri-external-link-line"></i> Abrir en Google Maps' +
+              '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-link-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Abrir en Google Maps' +
             '</a>';
         } else {
           mapEl.innerHTML = '<div class="empty-state"><div style="font-size:32px;margin-bottom:10px">📍</div><p style="font-size:.85rem">Sin escaneos con ubicación compartida aún.</p></div>';
@@ -1728,7 +1728,7 @@ window.loadScanLogs = function(petId, firestoreDb) {
             geoHtml =
               '<div class="scan-coords">📍 ' + s.latitude.toFixed(4) + ', ' + s.longitude.toFixed(4) +
               (s.accuracy ? ' · ±' + Math.round(s.accuracy) + 'm' : '') + '</div>' +
-              '<a class="scan-map-link" href="' + mUrl2 + '" target="_blank" rel="noopener"><i class="ri-external-link-line"></i> Ver en mapa</a>';
+              '<a class="scan-map-link" href="' + mUrl2 + '" target="_blank" rel="noopener"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-link-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Ver en mapa</a>';
           } else {
             geoHtml = '<div class="scan-coords" style="opacity:.5">Sin ubicación compartida</div>';
           }
@@ -1787,7 +1787,7 @@ window.updatePetData = function() {
   if (!Object.keys(updates).length) { toast('⚠️ No hay cambios para guardar.'); return; }
 
   var btn = document.getElementById('btn-update-pet');
-  if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line"></i> Guardando…'; }
+  if (btn) { btn.disabled = true; btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Guardando…'; }
 
   firestoreDb.collection('pets').doc(petId).update(updates)
     .then(function() {
@@ -1799,7 +1799,7 @@ window.updatePetData = function() {
     })
     .catch(function(e) { toast('❌ Error: ' + e.message); })
     .finally(function() {
-      if (btn) { btn.disabled = false; btn.innerHTML = '<i class="ri-save-line"></i> Guardar cambios'; }
+      if (btn) { btn.disabled = false; btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Guardar cambios'; }
     });
 };
 

@@ -173,7 +173,7 @@ function exportDatabase(collectionName) {
         arr.push(Object.assign({ _id: doc.id }, d));
       });
       downloadJson(JSON.stringify(arr, null, 2), collectionName + '_backup_' + new Date().toISOString().slice(0,10) + '.json');
-      toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  ' + arr.length + ' registros exportados.');
+      toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  ' + arr.length + ' registros exportados.');
     })
     .catch(function(e) { toast('âŒ Error: ' + e.message); });
 }
@@ -393,7 +393,7 @@ function loadRecent() {
         '</tr></thead><tbody>';
       docs.forEach(function(d) {
         var bCls=d.status==='perdido'?'badge-lost':d.status==='reservada'?'badge-reserved':'badge-active';
-        var bTxt=d.status==='perdido'?'<i class="ri-alert-line" style="color:#E74C3C;"></i> Perdido':d.status==='reservada'?'â³ Reservada':'<i class="ri-check-line" style="color:#2ECC71;"></i>  Activo';
+        var bTxt=d.status==='perdido'?'<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Perdido':d.status==='reservada'?'â³ Reservada':'<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Activo';
         var fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'--';
         html+='<tr style="border-bottom:1px solid rgba(255,255,255,.04)">'+
           '<td style="padding:9px 8px"><span style="font-weight:600">'+esc(d.name||'--')+'</span><br><span style="color:var(--muted-dark);font-size:.75rem">'+esc(d.ownerName||'')+'</span></td>'+
@@ -549,30 +549,30 @@ function renderTable(pets) {
     }
     
     if (d.status === 'deleted') {
-      addDropdownBtn('<i class="ri-arrow-go-back-line"></i> Restaurar', (function(pid){ return function(){ restorePet(pid); }; })(id));
-      addDropdownBtn('<i class="ri-delete-bin-line"></i> Eliminar Permanente', (function(pid){ return function(){ permanentDelete(pid); }; })(id), 'color:#f43f5e;');
+      addDropdownBtn('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-left-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Restaurar', (function(pid){ return function(){ restorePet(pid); }; })(id));
+      addDropdownBtn('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Eliminar Permanente', (function(pid){ return function(){ permanentDelete(pid); }; })(id), 'color:#f43f5e;');
     } else if (d.status === 'reservada') {
-      addDropdownLink('<i class="ri-qr-code-line"></i> Ver placa', ACT + encodeURIComponent(id), '_blank');
-      addDropdownBtn('<i class="ri-delete-bin-line"></i> Archivar', (function(pid){ return function(){ archivePet(pid); }; })(id), 'color:#f43f5e;');
+      addDropdownLink('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-qr-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Ver placa', ACT + encodeURIComponent(id), '_blank');
+      addDropdownBtn('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Archivar', (function(pid){ return function(){ archivePet(pid); }; })(id), 'color:#f43f5e;');
     } else {
-      addDropdownLink('<i class="ri-eye-line"></i> Ver perfil', PERF + encodeURIComponent(id), '_blank');
+      addDropdownLink('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Ver perfil', PERF + encodeURIComponent(id), '_blank');
       if (d.editToken) {
-        addDropdownLink('<i class="ri-user-line"></i> Cliente', CLI + encodeURIComponent(id), '_blank');
+        addDropdownLink('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-user-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Cliente', CLI + encodeURIComponent(id), '_blank');
       }
-      addDropdownBtn('<i class="ri-delete-bin-line"></i> Archivar', (function(pid){ return function(){ archivePet(pid); }; })(id), 'color:#f43f5e;');
+      addDropdownBtn('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Archivar', (function(pid){ return function(){ archivePet(pid); }; })(id), 'color:#f43f5e;');
       
       if (_dash.currentUser && _dash.currentUser.role === 'admin') {
-        addDropdownBtn('<i class="ri-file-copy-line"></i> Copiar codigo', (function(pid){ return function() {
-          navigator.clipboard.writeText(pid).then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i> Codigo copiado: ' + pid); });
+        addDropdownBtn('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-copy-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Copiar codigo', (function(pid){ return function() {
+          navigator.clipboard.writeText(pid).then(function() { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Codigo copiado: ' + pid); });
         }; })(id));
         
-        addDropdownBtn('<i class="ri-key-2-line"></i> Enviar contrasena', (function(petData){ return function() {
+        addDropdownBtn('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-lock-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Enviar contrasena', (function(petData){ return function() {
           var email = petData.ownerEmail || petData.owner_email || petData.email;
-          if (!email) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> No hay email registrado para este dueno.'); return; }
+          if (!email) { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> No hay email registrado para este dueno.'); return; }
           if (!confirm('Enviar enlace de restablecimiento a ' + email + '?')) return;
           firebase.auth().sendPasswordResetEmail(email)
-            .then(function() { toast('<i class="ri-mail-line"></i> Correo enviado a ' + email); })
-            .catch(function(err) { toast('<i class="ri-error-warning-line" style="color:#E74C3C;"></i> Error: ' + err.message); });
+            .then(function() { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-email-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Correo enviado a ' + email); })
+            .catch(function(err) { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Error: ' + err.message); });
         }; })(d));
       }
     }
@@ -608,7 +608,7 @@ function renderTable(pets) {
     var prevDisabled = _dash.petsCurrentPage === 1;
     var prevBtn = document.createElement('button');
     prevBtn.style.cssText = pBtnStyle + (prevDisabled ? 'opacity:0.5;cursor:not-allowed;' : '');
-    prevBtn.innerHTML = '<i class="ri-arrow-left-s-line"></i> Anterior';
+    prevBtn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-left-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Anterior';
     if (!prevDisabled) {
       prevBtn.onmouseenter = function() { prevBtn.style.background = '#4552CC'; prevBtn.style.color = '#ffffff'; prevBtn.style.borderColor = '#4552CC'; prevBtn.style.transform = 'translateY(-1px)'; prevBtn.style.boxShadow = '0 4px 12px rgba(69,82,204,0.2)'; };
       prevBtn.onmouseleave = function() { prevBtn.style.background = '#ffffff'; prevBtn.style.color = '#4552CC'; prevBtn.style.borderColor = '#E0E0E0'; prevBtn.style.transform = 'none'; prevBtn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)'; };
@@ -624,7 +624,7 @@ function renderTable(pets) {
     var nextDisabled = _dash.petsCurrentPage === totalPages;
     var nextBtn = document.createElement('button');
     nextBtn.style.cssText = pBtnStyle + (nextDisabled ? 'opacity:0.5;cursor:not-allowed;' : '');
-    nextBtn.innerHTML = 'Siguiente <i class="ri-arrow-right-s-line"></i>';
+    nextBtn.innerHTML = 'Siguiente <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-right-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">';
     if (!nextDisabled) {
       nextBtn.onmouseenter = function() { nextBtn.style.background = '#4552CC'; nextBtn.style.color = '#ffffff'; nextBtn.style.borderColor = '#4552CC'; nextBtn.style.transform = 'translateY(-1px)'; nextBtn.style.boxShadow = '0 4px 12px rgba(69,82,204,0.2)'; };
       nextBtn.onmouseleave = function() { nextBtn.style.background = '#ffffff'; nextBtn.style.color = '#4552CC'; nextBtn.style.borderColor = '#E0E0E0'; nextBtn.style.transform = 'none'; nextBtn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)'; };
@@ -644,31 +644,31 @@ window.toggleTrash = function() {
   _dash.showingTrash = !_dash.showingTrash;
   var btn = document.getElementById('btn-trash');
   if (btn) {
-    btn.innerHTML = _dash.showingTrash ? '<i class="ri-arrow-go-back-line"></i> Ver Activas' : '<i class="ri-delete-bin-line"></i> Papelera';
+    btn.innerHTML = _dash.showingTrash ? '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-left-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Ver Activas' : '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Papelera';
     btn.style.color = _dash.showingTrash ? 'var(--success)' : 'var(--error)';
   }
   var h2 = document.querySelector('#sec-pets .page-header h2');
-  if (h2) h2.innerHTML = _dash.showingTrash ? '<i class="ri-delete-bin-line"></i> Papelera' : '<i class="ri-footprint-line"></i> Mascotas Registradas';
+  if (h2) h2.innerHTML = _dash.showingTrash ? '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Papelera' : '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-paw-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Mascotas Registradas';
   filterTable();
 };
 
 window.archivePet = function(id) {
   if (!confirm('?Mover "'+id+'" a la papelera? Se puede restaurar despues.')) return;
   db().collection('pets').doc(id).update({ status:'deleted', deletedAt:firebase.firestore.FieldValue.serverTimestamp() })
-    .then(function() { toast('<i class="ri-delete-bin-line"></i> Placa movida a papelera.'); addLog('archived_pet',id,_dash.currentUser&&_dash.currentUser.name); loadPets(); })
+    .then(function() { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Placa movida a papelera.'); addLog('archived_pet',id,_dash.currentUser&&_dash.currentUser.name); loadPets(); })
     .catch(function(e) { toast('âŒ '+e.message); });
 };
 
 window.restorePet = function(id) {
   db().collection('pets').doc(id).update({ status:'reservada', deletedAt:null })
-    .then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Restaurada.'); addLog('restored_pet',id,_dash.currentUser&&_dash.currentUser.name); loadPets(); })
+    .then(function() { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Restaurada.'); addLog('restored_pet',id,_dash.currentUser&&_dash.currentUser.name); loadPets(); })
     .catch(function(e) { toast('âŒ '+e.message); });
 };
 
 window.permanentDelete = function(id) {
   if (!confirm(' Eliminar PERMANENTEMENTE "'+id+'"?\n\nEsta accion NO se puede deshacer.')) return;
   db().collection('pets').doc(id).delete()
-    .then(function() { toast('<i class="ri-delete-bin-line"></i> Eliminada permanentemente.'); addLog('permanent_delete',id,_dash.currentUser&&_dash.currentUser.name); loadPets(); })
+    .then(function() { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Eliminada permanentemente.'); addLog('permanent_delete',id,_dash.currentUser&&_dash.currentUser.name); loadPets(); })
     .catch(function(e) { toast('âŒ '+e.message); });
 };
 
@@ -693,7 +693,7 @@ window.loadLostPets = function() {
         var d = doc.data(); var id = doc.id;
         var avatar = d.photoUrl
           ? '<img src="'+esc(d.photoUrl)+'" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid rgba(244,63,94,.35);flex-shrink:0">'
-          : '<div style="width:40px;height:40px;border-radius:50%;background:rgba(244,63,94,.12);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0"><i class="ri-footprint-line"></i></div>';
+          : '<div style="width:40px;height:40px;border-radius:50%;background:rgba(244,63,94,.12);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-paw-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"></div>';
         var dateLost = d.lostAt && d.lostAt.toDate ? d.lostAt.toDate() : (d.updatedAt && d.updatedAt.toDate ? d.updatedAt.toDate() : (d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : new Date()));
         var diffDays = Math.floor(Math.abs(now - dateLost) / 86400000);
         var timeLostStr = diffDays === 0
@@ -702,12 +702,12 @@ window.loadLostPets = function() {
             ? '<span style="color:#f97316;font-weight:700">Hace 1 dia</span>'
             : '<span style="color:'+(diffDays > 7 ? '#f43f5e':'#f97316')+';font-weight:700">Hace '+diffDays+' dias</span>');
         var inIndex = d.featuredOnIndex
-          ? '<span style="color:#2ECC71;font-weight:700"><i class="ri-checkbox-circle-fill"></i> Si</span>'
-          : '<span style="color:#BDBDBD"><i class="ri-close-circle-line"></i> No</span>';
+          ? '<span style="color:#2ECC71;font-weight:700"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Si</span>'
+          : '<span style="color:#BDBDBD"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-close-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> No</span>';
         var phone1 = normalizeWA(d.phone||'');
         var waMsg = encodeURIComponent('!Hola! Te escribo desde Petcingo -- vi que tu mascota '+(d.name||'')+' (ID: '+id+') esta reportada como perdida. ?Podemos coordinarnos?');
         var waBtn = phone1
-          ? '<a class="btn btn-ghost btn-sm" style="color:#25D366;border-color:rgba(37,211,102,.35)" href="https://wa.me/'+phone1+'?text='+waMsg+'" target="_blank" title="Contactar por WhatsApp"><i class="ri-whatsapp-line"></i> WA</a>'
+          ? '<a class="btn btn-ghost btn-sm" style="color:#25D366;border-color:rgba(37,211,102,.35)" href="https://wa.me/'+phone1+'?text='+waMsg+'" target="_blank" title="Contactar por WhatsApp"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-chat-round-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="" aria-hidden="true"> WA</a>'
           : '';
         var safeId = id.replace(/'/g, "\\'");
         var toggleLabel = d.featuredOnIndex ? 'Quitar del index' : 'Publicar en index';
@@ -762,7 +762,7 @@ window.loadNotifications = function() {
     var html = '';
 
     /* Lost pets */
-    html += '<div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A8B4F5;margin-bottom:10px;margin-top:4px"><i class="ri-alert-line" style="color:#E74C3C;"></i> Mascotas Perdidas (' + lostSnap.size + ')</div>';
+    html += '<div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A8B4F5;margin-bottom:10px;margin-top:4px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Mascotas Perdidas (' + lostSnap.size + ')</div>';
     if (lostSnap.empty) {
       html += '<div style="font-size:.82rem;color:#8B98D8;margin-bottom:16px">Ninguna mascota perdida.</div>';
     } else {
@@ -776,13 +776,13 @@ window.loadNotifications = function() {
           + '<div style="min-width:0"><div style="font-weight:700;font-size:.85rem;color:#f0ecff">'+esc(d.name||'--')+'</div>'
           + '<div style="font-size:.72rem;color:#f43f5e">'+(diffDays===0?'Reportada hoy':'Hace '+diffDays+' dia'+(diffDays!==1?'s':''))+'</div>'
           + '<div style="font-size:.7rem;color:#8B98D8">'+esc(d.ownerName||'--')+'</div></div>'
-          + '<a href="https://prueb2.dashnexpages.net/id/?id='+encodeURIComponent(doc.id)+'" target="_blank" style="margin-left:auto;font-size:.7rem;color:#51CBF5;white-space:nowrap"><i class="ri-eye-line"></i> Ver</a>'
+          + '<a href="https://prueb2.dashnexpages.net/id/?id='+encodeURIComponent(doc.id)+'" target="_blank" style="margin-left:auto;font-size:.7rem;color:#51CBF5;white-space:nowrap"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Ver</a>'
           + '</div>';
       });
     }
 
     /* Recent activations */
-    html += '<div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A8B4F5;margin:16px 0 10px"><i class="ri-check-line" style="color:#2ECC71;"></i>  Activaciones Recientes (' + newActSnap.size + ')</div>';
+    html += '<div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A8B4F5;margin:16px 0 10px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Activaciones Recientes (' + newActSnap.size + ')</div>';
     if (newActSnap.empty) {
       html += '<div style="font-size:.82rem;color:#8B98D8;margin-bottom:16px">Sin nuevas activaciones en 3 dias.</div>';
     } else {
@@ -799,7 +799,7 @@ window.loadNotifications = function() {
     }
 
     /* Open reports */
-    html += '<div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A8B4F5;margin:16px 0 10px"><i class="ri-mail-line"></i> Reportes Abiertos (' + openRepSnap.size + ')</div>';
+    html += '<div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A8B4F5;margin:16px 0 10px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-email-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Reportes Abiertos (' + openRepSnap.size + ')</div>';
     if (openRepSnap.empty) {
       html += '<div style="font-size:.82rem;color:#8B98D8;margin-bottom:16px">Sin reportes abiertos.</div>';
     } else {
@@ -807,7 +807,7 @@ window.loadNotifications = function() {
         var d = doc.data();
         var fecha = d.createdAt && d.createdAt.toDate ? formatDate(d.createdAt.toDate()) : '--';
         html += '<div style="display:flex;align-items:center;gap:10px;padding:9px 10px;background:rgba(69,82,204,.08);border:1px solid rgba(69,82,204,.2);border-radius:10px;margin-bottom:8px">'
-          + '<span style="font-size:1.1rem;flex-shrink:0"><i class="ri-mail-line"></i></span>'
+          + '<span style="font-size:1.1rem;flex-shrink:0"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-email-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"></span>'
           + '<div style="min-width:0"><div style="font-weight:700;font-size:.82rem;color:#f0ecff">'+esc((d.message||'').substring(0,40))+'...</div>'
           + '<div style="font-size:.7rem;color:#8B98D8">'+esc(d.fromName||d.plateId||'--')+' · '+fecha+'</div></div>'
           + '</div>';
@@ -892,7 +892,7 @@ window.loadStorageStats = function() {
     var html = '';
 
     /* Firebase Firestore */
-    html += panel('<i class="ri-database-2-line" style="color:#F59E0B"></i>', 'Firebase Firestore (plan gratuito Spark)',
+    html += panel('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">', 'Firebase Firestore (plan gratuito Spark)',
       row('Almacenamiento estimado', estMB+' MB', estPctFB, FB_STORAGE_GB+' GB')
       + '<div style="margin-top:18px"><div class="storage-label" style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Documentos por coleccion</div>'
       + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
@@ -907,7 +907,7 @@ window.loadStorageStats = function() {
     );
 
     /* Cloudflare R2 */
-    html += panel('<i class="ri-cloud-line" style="color:#51CBF5"></i>', 'Cloudflare R2 (plan gratuito)',
+    html += panel('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-upload-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">', 'Cloudflare R2 (plan gratuito)',
       row('Almacenamiento estimado', r2EstMB.toFixed(1)+' MB', r2EstPct, R2_STORAGE_GB*1024+' MB (10 GB)')
       + '<div style="margin-top:18px"><div class="storage-label" style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Archivos en R2</div>'
       + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
@@ -915,13 +915,13 @@ window.loadStorageStats = function() {
       + '<div class="storage-cell" style="border-radius:8px;padding:8px 10px;font-size:.8rem"><span class="storage-label">Logos (vets/refugios)</span><br><strong class="storage-val">'+r2LogoCount+'</strong><br><span class="storage-label" style="font-size:.7rem">~'+(r2LogoCount*80/1024).toFixed(1)+' MB</span></div>'
       + '</div></div>',
       '<div class="storage-tip-box" style="margin-top:14px;padding:10px 12px;border-radius:8px;font-size:.78rem">'
-      + '’! <strong>R2 es muy generoso:</strong> 10 GB gratis, sin cargos por egress. Las fotos de mascotas se comprimen a JPEG â‰¤10 KB; logos a PNG â‰¤80 KB. <br><i class="ri-alert-line" style="color:#E74C3C;"></i> Elimina fotos de mascotas borradas para liberar espacio.</div>'
+      + '’! <strong>R2 es muy generoso:</strong> 10 GB gratis, sin cargos por egress. Las fotos de mascotas se comprimen a JPEG â‰¤10 KB; logos a PNG â‰¤80 KB. <br><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Elimina fotos de mascotas borradas para liberar espacio.</div>'
     );
 
     /* Summary */
     var totalEstMB = parseFloat(estMB) + r2EstMB;
     html += '<div class="panel" style="background:rgba(69,82,204,.08);border-color:rgba(69,82,204,.2)">'
-      + '<div class="panel-title"><i class="ri-pie-chart-line" style="color:#7C8EE8"></i> Resumen General</div>'
+      + '<div class="panel-title"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-chart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Resumen General</div>'
       + '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px">'
       + '<div style="text-align:center"><div class="storage-val" style="font-size:1.4rem;font-weight:800">'+(petsSnap.size+vetsSnap.size+shSnap.size+repSnap.size+scanSnap.size+usrSnap.size)+'</div><div class="storage-label" style="font-size:.72rem">Documentos totales</div></div>'
       + '<div style="text-align:center"><div class="storage-val" style="font-size:1.4rem;font-weight:800">'+totalEstMB.toFixed(1)+' MB</div><div class="storage-label" style="font-size:.72rem">Almacenamiento total est.</div></div>'
@@ -1010,13 +1010,13 @@ function loadRegisterSelect() {
 
 window.registerPlate = function() {
   var sel = document.getElementById('reg-seller-select');
-  if (!sel||!sel.value) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Selecciona un cliente primero.'); return; }
+  if (!sel||!sel.value) { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Selecciona un cliente primero.'); return; }
   var sellerData;
   try { sellerData=JSON.parse(sel.value); } catch(e) { toast('Error al leer el cliente.'); return; }
-  if (!sellerData.prefix) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Este cliente no tiene prefijo configurado.'); return; }
+  if (!sellerData.prefix) { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Este cliente no tiene prefijo configurado.'); return; }
 
   var btn = document.querySelector('#sec-register .btn-primary');
-  if (btn) { btn.disabled=true; btn.innerHTML='<i class="ri-loader-4-line"></i> Reservando...'; }
+  if (btn) { btn.disabled=true; btn.innerHTML='<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Reservando...'; }
 
   var isDirect = sellerData.collection === '__direct__';
 
@@ -1040,10 +1040,10 @@ window.registerPlate = function() {
   }).then(function(res) {
     _generateRegQR(res.newId, res.profileUrl, res.next, sellerData);
     addLog('reserved_plate', res.newId, _dash.currentUser&&_dash.currentUser.name);
-    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Placa '+res.newId+' reservada para '+sellerData.name);
+    toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Placa '+res.newId+' reservada para '+sellerData.name);
     loadSellersCache();
   }).catch(function(err) { toast('âŒ '+err.message); })
-    .finally(function() { if(btn){ btn.disabled=false; btn.innerHTML='<i class="ri-add-circle-line"></i> Crear y Reservar Placa'; } });
+    .finally(function() { if(btn){ btn.disabled=false; btn.innerHTML='<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-add-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Crear y Reservar Placa'; } });
 };
 
 function _generateRegQR(newId, profileUrl, next, sellerData) {
@@ -1067,7 +1067,7 @@ function _generateRegQR(newId, profileUrl, next, sellerData) {
 
 window.registerNextFast = function() {
   var sel = document.getElementById('reg-seller-select');
-  if (!sel||!sel.value) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> No hay cliente seleccionado.'); return; }
+  if (!sel||!sel.value) { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> No hay cliente seleccionado.'); return; }
   var res = document.getElementById('reg-result');
   if (res) res.style.display='none';
   window.registerPlate();
@@ -1079,7 +1079,7 @@ window.resetRegister = function() {
   var disp=document.getElementById('reg-qr-display');
   if(res) res.style.display='none';
   if(info) info.style.display='none';
-  if(disp) disp.innerHTML='<div style="text-align:center;color:var(--muted-dark);padding:48px 20px"><i class="ri-qr-scan-2-line" style="font-size:64px;opacity:.15;display:block;margin-bottom:12px"></i><p style="font-size:.85rem">El QR aparecera aqui</p></div>';
+  if(disp) disp.innerHTML='<div style="text-align:center;color:var(--muted-dark);padding:48px 20px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-qr-bold.svg" width="64" height="64" style="opacity:.15;display:block;margin-bottom:12px;filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"><p style="font-size:.85rem">El QR aparecera aqui</p></div>';
   _dash.regQr=null; loadRegisterSelect();
 };
 
@@ -1093,7 +1093,7 @@ window.copyRegLink = function() {
   var res=document.getElementById('reg-result');
   var url=res?res.getAttribute('data-url'):'';
   if (!url) { toast('No hay enlace.'); return; }
-  navigator.clipboard.writeText(url).then(function() { toast('<i class="ri-file-copy-line"></i> Enlace copiado'); });
+  navigator.clipboard.writeText(url).then(function() { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-copy-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Enlace copiado'); });
 };
 
 window.toggleCustomQR = function() {
@@ -1107,9 +1107,9 @@ window.saveVet = function() {
   var name   =document.getElementById('vet-name').value.trim();
   var contact=document.getElementById('vet-contact').value.trim();
   var prefix =document.getElementById('vet-prefix').value.trim().toUpperCase().replace(/\s/g,'');
-  if (!name)    { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> El nombre es obligatorio.'); return; }
-  if (!contact) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> El contacto es obligatorio.'); return; }
-  if (!prefix)  { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> El Prefijo de Placa es OBLIGATORIO (ej: VET-LP).'); return; }
+  if (!name)    { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> El nombre es obligatorio.'); return; }
+  if (!contact) { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> El contacto es obligatorio.'); return; }
+  if (!prefix)  { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> El Prefijo de Placa es OBLIGATORIO (ej: VET-LP).'); return; }
 
   var btn=document.getElementById('btn-save-vet');
   if(btn){btn.disabled=true;btn.textContent='Guardando...';}
@@ -1130,7 +1130,7 @@ window.saveVet = function() {
     services:[],
     createdAt:firebase.firestore.FieldValue.serverTimestamp()
   }).then(function() {
-    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Veterinaria registrada.');
+    toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Veterinaria registrada.');
     ['vet-name','vet-contact','vet-prefix','vet-phone','vet-city','vet-email','vet-whatsapp','vet-gps-link','vet-username','vet-password'].forEach(function(id){ var el=document.getElementById(id); if(el)el.value=''; });
     var i24El=document.getElementById('vet-is24h'); if(i24El)i24El.checked=false;
     var fw=document.getElementById('vet-form-wrap'); if(fw)fw.classList.remove('open');
@@ -1165,22 +1165,22 @@ function loadVets() {
         var rateCell='<input type="number" min="0" max="100" value="'+rate+'" id="rate-vt-'+doc.id+'" style="width:48px;padding:2px 5px;border:1px solid #E0E0E0;border-radius:6px;font-size:.78rem;text-align:center;">'+
           '<button onclick="saveVetRate(\''+doc.id+'\')" style="padding:2px 8px;background:#4552CC;color:#fff;border:none;border-radius:6px;font-size:.70rem;cursor:pointer;margin-left:3px;">OK</button>';
         var ds='display:block;width:100%;text-align:left;padding:8px 14px;border:none;background:transparent;font-size:0.82rem;color:#424242;cursor:pointer;white-space:nowrap;';
-        var suspLabel=status==='active'?'<i class="ri-pause-circle-line"></i> Suspender':(status==='suspended'?'<i class="ri-play-circle-line"></i> Activar':'');
+        var suspLabel=status==='active'?'<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Suspender':(status==='suspended'?'<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Activar':'');
         var suspBtn=suspLabel?'<button style="'+ds+'color:#E67E22;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="setVetStatus(\''+doc.id+'\',\''+esc(d.name||'')+'\',\'suspended\')">'+suspLabel+'</button>':'';
         if(status==='suspended'){suspBtn='<button style="'+ds+'color:#2ECC71;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="setVetStatus(\''+doc.id+'\',\''+esc(d.name||'')+'\',\'active\')">'+suspLabel+'</button>';}
-        var banLabel=status!=='banned'?'<i class="ri-forbid-line"></i> Banear':'<i class="ri-checkbox-circle-line"></i> Activar';
+        var banLabel=status!=='banned'?'<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-close-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Banear':'<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Activar';
         var banColor=status!=='banned'?'#E74C3C':'#2ECC71';
         var banTarget=status!=='banned'?'banned':'active';
         var banBtn='<button style="'+ds+'color:'+banColor+';" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="setVetStatus(\''+doc.id+'\',\''+esc(d.name||'')+'\',\''+banTarget+'\')">'+banLabel+'</button>';
         var actionDropdown='<div class="ptcg-actions-menu" style="position:relative;display:inline-block;">'+
           '<button class="ptcg-actions-toggle" onclick="toggleActionsMenu(this,event)" style="background:none;border:1.5px solid #E0E0E0;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem;color:#757575;line-height:1;">...</button>'+
           '<div class="ptcg-actions-dropdown" style="display:none;position:absolute;right:0;top:100%;z-index:500;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);min-width:200px;padding:6px 0;margin-top:4px;">'+
-            '<button style="'+ds+'" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="openVetDetail(\''+doc.id+'\')"><i class="ri-settings-3-line"></i> Placas</button>'+
-            '<button style="'+ds+'" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="editVet(\''+doc.id+'\',\''+encodeData(d)+'\')"><i class="ri-edit-line"></i> Editar</button>'+
-            '<a style="'+ds+'text-decoration:none;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" href="https://prueb2.dashnexpages.net/veterinarias/?id='+doc.id+'" target="_blank"><i class="ri-eye-line"></i> Ver perfil publico</a>'+
-            '<a style="'+ds+'text-decoration:none;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" href="https://prueb2.dashnexpages.net/vet-admin/?auto='+doc.id+'" target="_blank"><i class="ri-external-link-line"></i> Ir a panel</a>'+
+            '<button style="'+ds+'" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="openVetDetail(\''+doc.id+'\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-settings-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Placas</button>'+
+            '<button style="'+ds+'" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="editVet(\''+doc.id+'\',\''+encodeData(d)+'\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-edit-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Editar</button>'+
+            '<a style="'+ds+'text-decoration:none;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" href="https://prueb2.dashnexpages.net/veterinarias/?id='+doc.id+'" target="_blank"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Ver perfil publico</a>'+
+            '<a style="'+ds+'text-decoration:none;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" href="https://prueb2.dashnexpages.net/vet-admin/?auto='+doc.id+'" target="_blank"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-link-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Ir a panel</a>'+
             suspBtn+banBtn+
-            '<button style="'+ds+'color:#f43f5e;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="deleteRecord(\'veterinarias\',\''+doc.id+'\',\'loadVets\')"><i class="ri-delete-bin-line"></i> Eliminar</button>'+
+            '<button style="'+ds+'color:#f43f5e;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="deleteRecord(\'veterinarias\',\''+doc.id+'\',\'loadVets\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Eliminar</button>'+
           '</div>'+
         '</div>';
         html+='<tr>';
@@ -1222,7 +1222,7 @@ window.closeVetModal = function() {
 window.updateVet = function() {
   var vetId = document.getElementById('ev-vet-id').value;
   var name  = document.getElementById('ev-name').value.trim();
-  if (!name) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> El nombre es obligatorio.'); return; }
+  if (!name) { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> El nombre es obligatorio.'); return; }
   var update = {
     name:    name,
     contact: document.getElementById('ev-contact').value.trim(),
@@ -1241,15 +1241,15 @@ window.updateVet = function() {
   };
   var pwEl=document.getElementById('ev-password'); if(pwEl&&pwEl.value)update.password=pwEl.value;
   var btn = document.getElementById('btn-update-vet');
-  if (btn) { btn.disabled=true; btn.innerHTML='<i class="ri-loader-4-line"></i> Guardando...'; }
+  if (btn) { btn.disabled=true; btn.innerHTML='<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Guardando...'; }
   db().collection('veterinarias').doc(vetId).update(update)
     .then(function() {
-      toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Veterinaria actualizada: '+name);
+      toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Veterinaria actualizada: '+name);
       closeVetModal();
       loadVets();
     })
     .catch(function(e) { toast('âŒ Error: '+e.message); })
-    .finally(function() { if(btn){ btn.disabled=false; btn.innerHTML='<i class="ri-save-line"></i> Guardar cambios'; } });
+    .finally(function() { if(btn){ btn.disabled=false; btn.innerHTML='<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Guardar cambios'; } });
 };
 
 
@@ -1265,7 +1265,7 @@ window.openVetDetail = function(vetId) {
     if(prefEl)prefEl.textContent='Prefijo: '+(d.prefix||'sin prefijo');
     refreshVetCounter(); loadVetPets();
     var disp=document.getElementById('vet-qr-display');
-    if(disp)disp.innerHTML='<div style="text-align:center;color:var(--muted-dark);padding:48px 20px"><i class="ri-qr-code-line" style="font-size:64px;opacity:.2;display:block;margin-bottom:12px"></i><p style="font-size:.85rem">El QR aparecera aqui</p></div>';
+    if(disp)disp.innerHTML='<div style="text-align:center;color:var(--muted-dark);padding:48px 20px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-qr-bold.svg" width="64" height="64" style="opacity:.2;display:block;margin-bottom:12px;filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"><p style="font-size:.85rem">El QR aparecera aqui</p></div>';
     var res=document.getElementById('vet-qr-result');
     if(res)res.style.display='none';
     _dash.vetQr=null;
@@ -1306,9 +1306,9 @@ window.generateVetQR = function() {
   /* Also reserve in pets */
   db().collection('pets').doc(newId).set({id:newId,status:'reservada',sellerId:_dash.currentVet.id,sellerName:_dash.currentVet.name,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
   var links=document.getElementById('vet-qr-links');
-  if(links){var safeUrl=profileUrl.replace(/'/g,"\\'");links.innerHTML='<div class="qr-link-row"><div class="qr-link-label">Perfil Publico</div><div class="qr-link-url">'+esc(profileUrl)+'</div><button class="qr-link-copy" onclick="copyText(\''+safeUrl+'\',\'URL copiada\')"><i class="ri-file-copy-line"></i> Copiar</button></div>';}
+  if(links){var safeUrl=profileUrl.replace(/'/g,"\\'");links.innerHTML='<div class="qr-link-row"><div class="qr-link-label">Perfil Publico</div><div class="qr-link-url">'+esc(profileUrl)+'</div><button class="qr-link-copy" onclick="copyText(\''+safeUrl+'\',\'URL copiada\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-copy-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Copiar</button></div>';}
   var res=document.getElementById('vet-qr-result');if(res)res.style.display='block';
-  toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Placa creada: '+newId);
+  toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Placa creada: '+newId);
 };
 
 window.downloadVetQR = function() {
@@ -1334,7 +1334,7 @@ window.loadVetPets = function() {
         var fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'--';
         html+='<tr><td class="td-id">'+esc(id)+'</td><td class="td-name">'+esc(d.name||'--')+'</td><td class="td-owner">'+esc(d.ownerName||'--')+'</td>'+
           '<td><span class="badge '+bCls+'">'+bTxt+'</span></td><td class="td-date">'+fecha+'</td>'+
-          '<td class="td-actions"><a href="https://prueb2.dashnexpages.net/id/?id='+encodeURIComponent(id)+'" target="_blank" class="btn btn-ghost btn-sm"><i class="ri-eye-line"></i></a></td></tr>';
+          '<td class="td-actions"><a href="https://prueb2.dashnexpages.net/id/?id='+encodeURIComponent(id)+'" target="_blank" class="btn btn-ghost btn-sm"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"></a></td></tr>';
       });
       tbody.innerHTML=html;
     }).catch(function(){
@@ -1351,14 +1351,14 @@ window.saveShelter = function() {
   var name       =document.getElementById('sh-name').value.trim();
   var responsible=document.getElementById('sh-responsible').value.trim();
   var prefix     =document.getElementById('sh-prefix').value.trim().toUpperCase().replace(/\s/g,'');
-  if(!name)       {toast('<i class="ri-alert-line" style="color:#E74C3C;"></i>  El nombre es obligatorio.');return;}
-  if(!responsible){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i>  El encargado es obligatorio.');return;}
-  if(!prefix)     {toast('<i class="ri-alert-line" style="color:#E74C3C;"></i>  El Prefijo de Placa es OBLIGATORIO (ej: REF-LP).');return;}
+  if(!name)       {toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  El nombre es obligatorio.');return;}
+  if(!responsible){toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  El encargado es obligatorio.');return;}
+  if(!prefix)     {toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  El Prefijo de Placa es OBLIGATORIO (ej: REF-LP).');return;}
 
   var username = (document.getElementById('sh-username').value||'').trim().toLowerCase().replace(/\s/g,'');
   var password = (document.getElementById('sh-password').value||'').trim();
   var limite   = parseInt((document.getElementById('sh-limite')||{}).value||'40',10)||40;
-  if (password && password.length < 6) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i>  La contrasena debe tener al menos 6 caracteres.'); return; }
+  if (password && password.length < 6) { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  La contrasena debe tener al menos 6 caracteres.'); return; }
 
   var btn=document.getElementById('btn-save-shelter');
   if(btn){btn.disabled=true;btn.textContent='Guardando...';}
@@ -1379,7 +1379,7 @@ window.saveShelter = function() {
 
   db().collection('shelters').add(data)
     .then(function(){
-      toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Refugio registrado.');
+      toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Refugio registrado.');
       ['sh-name','sh-responsible','sh-prefix','sh-phone','sh-address','sh-username','sh-password','sh-logo'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
       var lim=document.getElementById('sh-limite');if(lim)lim.value='40';
       var cp=document.getElementById('shelter-create-panel'); if(cp)cp.style.display='none';
@@ -1412,13 +1412,13 @@ function loadShelters() {
         
         var dropdownStyle = "display:block;width:100%;text-align:left;padding:8px 14px;border:none;background:transparent;font-size:0.82rem;color:#424242;cursor:pointer;white-space:nowrap;";
         
-        var suspLabel=status==='active'?'<i class="ri-pause-circle-line"></i> Suspender':(status==='suspended'?'<i class="ri-play-circle-line"></i> Activar':'');
+        var suspLabel=status==='active'?'<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Suspender':(status==='suspended'?'<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Activar':'');
         var suspDropdownBtn=suspLabel?'<button style="' + dropdownStyle + 'color:#E67E22;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="setShelterStatus(\''+doc.id+'\',\''+esc(d.name||'')+'\',\'suspended\')">'+suspLabel+'</button>':'';
         if (status === 'suspended') {
           suspDropdownBtn='<button style="' + dropdownStyle + 'color:#2ECC71;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="setShelterStatus(\''+doc.id+'\',\''+esc(d.name||'')+'\',\'active\')">'+suspLabel+'</button>';
         }
 
-        var banLabel=status!=='banned'?'<i class="ri-forbid-line"></i> Banear':'<i class="ri-checkbox-circle-line"></i> Activar';
+        var banLabel=status!=='banned'?'<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-close-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Banear':'<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Activar';
         var banColor=status!=='banned'?'#E74C3C':'#2ECC71';
         var banTargetStatus=status!=='banned'?'banned':'active';
         var banDropdownBtn='<button style="' + dropdownStyle + 'color:'+banColor+';" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="setShelterStatus(\''+doc.id+'\',\''+esc(d.name||'')+'\',\''+banTargetStatus+'\')">'+banLabel+'</button>';
@@ -1426,13 +1426,13 @@ function loadShelters() {
         var actionDropdown = '<div class="ptcg-actions-menu" style="position:relative;display:inline-block;">' +
           '<button class="ptcg-actions-toggle" onclick="toggleActionsMenu(this, event)" style="background:none;border:1.5px solid #E0E0E0;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem;color:#757575;line-height:1;">...</button>' +
           '<div class="ptcg-actions-dropdown" style="display:none;position:absolute;right:0;top:100%;z-index:500;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);min-width:180px;padding:6px 0;margin-top:4px;">' +
-            '<button style="' + dropdownStyle + '" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="openShelterDetail(\''+doc.id+'\')"><i class="ri-settings-3-line"></i> Placas</button>' +
-            '<button style="' + dropdownStyle + '" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="editShelter(\''+doc.id+'\',\''+encodeData(d)+'\')"><i class="ri-edit-line"></i> Editar</button>' +
-            '<a style="' + dropdownStyle + 'text-decoration:none;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" href="https://prueb2.dashnexpages.net/refugio/?id='+doc.id+'" target="_blank"><i class="ri-eye-line"></i> Ver perfil publico</a>' +
-            '<a style="' + dropdownStyle + 'text-decoration:none;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" href="https://prueb2.dashnexpages.net/refugio-panel-control/?auto='+doc.id+'" target="_blank"><i class="ri-external-link-line"></i> Ir a panel</a>' +
+            '<button style="' + dropdownStyle + '" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="openShelterDetail(\''+doc.id+'\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-settings-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Placas</button>' +
+            '<button style="' + dropdownStyle + '" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="editShelter(\''+doc.id+'\',\''+encodeData(d)+'\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-edit-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Editar</button>' +
+            '<a style="' + dropdownStyle + 'text-decoration:none;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" href="https://prueb2.dashnexpages.net/refugio/?id='+doc.id+'" target="_blank"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Ver perfil publico</a>' +
+            '<a style="' + dropdownStyle + 'text-decoration:none;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" href="https://prueb2.dashnexpages.net/refugio-panel-control/?auto='+doc.id+'" target="_blank"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-link-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Ir a panel</a>' +
             suspDropdownBtn +
             banDropdownBtn +
-            '<button style="' + dropdownStyle + 'color:#f43f5e;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="deleteRecord(\'shelters\',\''+doc.id+'\',\'loadShelters\')"><i class="ri-delete-bin-line"></i> Eliminar</button>' +
+            '<button style="' + dropdownStyle + 'color:#f43f5e;" onmouseenter="this.style.background=\'#F5F5F5\'" onmouseleave="this.style.background=\'transparent\'" onclick="deleteRecord(\'shelters\',\''+doc.id+'\',\'loadShelters\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Eliminar</button>' +
           '</div>' +
         '</div>';
 
@@ -1458,7 +1458,7 @@ window.saveShelterRate=function(id){
   var rate=parseFloat(inp.value);
   if(isNaN(rate)||rate<0||rate>100){toast('Porcentaje invalido (0-100)');return;}
   db().collection('shelters').doc(id).update({commissionRate:rate})
-    .then(function(){toast('<i class="ri-check-line" style="color:#2ECC71;"></i> Comision actualizada: '+rate+'%');})
+    .then(function(){toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Comision actualizada: '+rate+'%');})
     .catch(function(e){toast('Error: '+e.message);});
 };
 
@@ -1474,7 +1474,7 @@ window.setShelterStatus=function(id,name,newStatus){
   db().collection('shelters').doc(id).update(update)
     .then(function(){
       var lbl={active:'Reactivado',suspended:'Suspendido',banned:'Baneado'};
-      toast('<i class="ri-check-line" style="color:#2ECC71;"></i> '+(lbl[newStatus]||newStatus)+': '+name);
+      toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> '+(lbl[newStatus]||newStatus)+': '+name);
       loadShelters();
     }).catch(function(e){toast('Error: '+e.message);});
 };
@@ -1485,7 +1485,7 @@ window.saveVetRate=function(id){
   var rate=parseFloat(inp.value);
   if(isNaN(rate)||rate<0||rate>100){toast('Porcentaje invalido (0-100)');return;}
   db().collection('veterinarias').doc(id).update({commissionRate:rate})
-    .then(function(){toast('<i class="ri-check-line" style="color:#2ECC71;"></i> Comision actualizada: '+rate+'%');})
+    .then(function(){toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Comision actualizada: '+rate+'%');})
     .catch(function(e){toast('Error: '+e.message);});
 };
 
@@ -1501,7 +1501,7 @@ window.setVetStatus=function(id,name,newStatus){
   db().collection('veterinarias').doc(id).update(update)
     .then(function(){
       var lbl={active:'Reactivado',suspended:'Suspendido',banned:'Baneado'};
-      toast('<i class="ri-check-line" style="color:#2ECC71;"></i> '+(lbl[newStatus]||newStatus)+': '+name);
+      toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> '+(lbl[newStatus]||newStatus)+': '+name);
       loadVets();
     }).catch(function(e){toast('Error: '+e.message);});
 };
@@ -1532,8 +1532,8 @@ window.updateShelter = function() {
   var username = (document.getElementById('es-username').value||'').trim().toLowerCase().replace(/\s/g,'');
   var password = (document.getElementById('es-password').value||'').trim();
   var limite   = parseInt(document.getElementById('es-limite').value||'40',10)||40;
-  if (!name) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> El nombre es obligatorio.'); return; }
-  if (password && password.length < 6) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> La contrasena debe tener al menos 6 caracteres.'); return; }
+  if (!name) { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> El nombre es obligatorio.'); return; }
+  if (password && password.length < 6) { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> La contrasena debe tener al menos 6 caracteres.'); return; }
 
   var update = {
     name:        name,
@@ -1551,17 +1551,17 @@ window.updateShelter = function() {
   if (password) update.password = password;
 
   var btn = document.getElementById('btn-update-shelter');
-  if (btn) { btn.disabled=true; btn.innerHTML='<i class="ri-loader-4-line"></i> Guardando...'; }
+  if (btn) { btn.disabled=true; btn.innerHTML='<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Guardando...'; }
 
   db().collection('shelters').doc(shId).update(update)
     .then(function() {
-      toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Refugio actualizado: '+name);
+      toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Refugio actualizado: '+name);
       closeShelterModal();
       loadShelters();
       addLog('updated_shelter', name, _dash.currentUser&&_dash.currentUser.name);
     })
     .catch(function(e) { toast('âŒ Error: '+e.message); })
-    .finally(function() { if(btn){ btn.disabled=false; btn.innerHTML='<i class="ri-save-line"></i> Guardar cambios'; } });
+    .finally(function() { if(btn){ btn.disabled=false; btn.innerHTML='<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Guardar cambios'; } });
 };
 
 /* Shelter Detail (mirror of Vet Detail) */
@@ -1574,7 +1574,7 @@ window.openShelterDetail = function(shId) {
     if(t)t.textContent='Gestionando: '+d.name;if(p)p.textContent='Prefijo: '+(d.prefix||'sin prefijo');
     refreshShelterCounter();loadShelterPets();
     var disp=document.getElementById('sh-qr-display');
-    if(disp)disp.innerHTML='<div style="text-align:center;color:var(--muted-dark);padding:48px 20px"><i class="ri-qr-code-line" style="font-size:64px;opacity:.2;display:block;margin-bottom:12px"></i><p style="font-size:.85rem">El QR aparecera aqui</p></div>';
+    if(disp)disp.innerHTML='<div style="text-align:center;color:var(--muted-dark);padding:48px 20px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-qr-bold.svg" width="64" height="64" style="opacity:.2;display:block;margin-bottom:12px;filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"><p style="font-size:.85rem">El QR aparecera aqui</p></div>';
     var res=document.getElementById('sh-qr-result');if(res)res.style.display='none';
     _dash.shelterQr=null;
     showSection('shelter-detail',null);
@@ -1611,9 +1611,9 @@ window.generateShelterQR = function() {
     .then(function(){_dash.currentShelter.lastCount=next;var el=document.getElementById('sh-next-id');if(el)el.textContent=_dash.currentShelter.prefix+'-'+Math.random().toString(36).slice(2,6).toUpperCase()+Math.random().toString(36).slice(2,4).toUpperCase();});
   db().collection('pets').doc(newId).set({id:newId,status:'reservada',sellerId:_dash.currentShelter.id,sellerName:_dash.currentShelter.name,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
   var links=document.getElementById('sh-qr-links');
-  if(links){var safeUrl=profileUrl.replace(/'/g,"\\'");links.innerHTML='<div class="qr-link-row"><div class="qr-link-label">Perfil Publico</div><div class="qr-link-url">'+esc(profileUrl)+'</div><button class="qr-link-copy" onclick="copyText(\''+safeUrl+'\',\'URL copiada\')"><i class="ri-file-copy-line"></i> Copiar</button></div>';}
+  if(links){var safeUrl=profileUrl.replace(/'/g,"\\'");links.innerHTML='<div class="qr-link-row"><div class="qr-link-label">Perfil Publico</div><div class="qr-link-url">'+esc(profileUrl)+'</div><button class="qr-link-copy" onclick="copyText(\''+safeUrl+'\',\'URL copiada\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-copy-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Copiar</button></div>';}
   var res=document.getElementById('sh-qr-result');if(res)res.style.display='block';
-  toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Placa creada: '+newId);
+  toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Placa creada: '+newId);
 };
 
 window.downloadShelterQR = function() {
@@ -1638,7 +1638,7 @@ window.loadShelterPets = function() {
         var fecha=d.createdAt&&d.createdAt.toDate?formatDate(d.createdAt.toDate()):'--';
         html+='<tr><td class="td-id">'+esc(id)+'</td><td class="td-name">'+esc(d.name||'--')+'</td><td class="td-owner">'+esc(d.ownerName||'--')+'</td>'+
           '<td><span class="badge '+bCls+'">'+bTxt+'</span></td><td class="td-date">'+fecha+'</td>'+
-          '<td class="td-actions"><a href="https://prueb2.dashnexpages.net/id/?id='+encodeURIComponent(id)+'" target="_blank" class="btn btn-ghost btn-sm"><i class="ri-eye-line"></i></a></td></tr>';
+          '<td class="td-actions"><a href="https://prueb2.dashnexpages.net/id/?id='+encodeURIComponent(id)+'" target="_blank" class="btn btn-ghost btn-sm"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"></a></td></tr>';
       });
       tbody.innerHTML=html;
     }).catch(function(){
@@ -1666,11 +1666,11 @@ window.resetUserForm=resetUserForm;
 window.saveUser = function() {
   var name=document.getElementById('usr-name').value.trim();
   var pass=document.getElementById('usr-pass').value.trim();
-  if(!name){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Nombre obligatorio.');return;}
-  if(pass.length<6){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Contrasena minimo 6 caracteres.');return;}
-  if(pass===MASTER_PASSWORD){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> No puedes usar la contrasena maestra.');return;}
+  if(!name){toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Nombre obligatorio.');return;}
+  if(pass.length<6){toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Contrasena minimo 6 caracteres.');return;}
+  if(pass===MASTER_PASSWORD){toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> No puedes usar la contrasena maestra.');return;}
   db().collection('users').add({ username:name, password:pass, role:'staff', permissions:readPerms(), createdAt:firebase.firestore.FieldValue.serverTimestamp() })
-    .then(function(){toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Usuario creado: '+name);resetUserForm();loadUsers();addLog('created_user',name,_dash.currentUser&&_dash.currentUser.name);})
+    .then(function(){toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Usuario creado: '+name);resetUserForm();loadUsers();addLog('created_user',name,_dash.currentUser&&_dash.currentUser.name);})
     .catch(function(e){toast('âŒ '+e.message);});
 };
 
@@ -1691,11 +1691,11 @@ window.updateUser = function() {
   if(!_dash.editingUserId){window.saveUser();return;}
   var name=document.getElementById('usr-name').value.trim();
   var pass=document.getElementById('usr-pass').value.trim();
-  if(!name){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Nombre obligatorio.');return;}
+  if(!name){toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Nombre obligatorio.');return;}
   var update={username:name,permissions:readPerms()};
-  if(pass){if(pass.length<6){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Contrasena minimo 6 caracteres.');return;}if(pass===MASTER_PASSWORD){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> No puedes usar la contrasena maestra.');return;}update.password=pass;}
+  if(pass){if(pass.length<6){toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Contrasena minimo 6 caracteres.');return;}if(pass===MASTER_PASSWORD){toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> No puedes usar la contrasena maestra.');return;}update.password=pass;}
   db().collection('users').doc(_dash.editingUserId).update(update)
-    .then(function(){toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Usuario actualizado: '+name);resetUserForm();loadUsers();addLog('updated_user',name,_dash.currentUser&&_dash.currentUser.name);})
+    .then(function(){toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Usuario actualizado: '+name);resetUserForm();loadUsers();addLog('updated_user',name,_dash.currentUser&&_dash.currentUser.name);})
     .catch(function(e){toast('âŒ '+e.message);});
 };
 
@@ -1715,8 +1715,8 @@ function loadUsers() {
         var permList=Object.keys(d.permissions||{}).filter(function(k){return d.permissions[k];}).join(', ');
         html+='<div class="user-row"><div class="user-avatar">'+esc((d.username||'U').charAt(0).toUpperCase())+'</div>'+
           '<div class="user-info"><div class="user-name">'+esc(d.username||'--')+'</div><div class="user-perms">'+esc(permList||'sin permisos')+'</div></div>'+
-          (isAdmin?'<button class="btn btn-ghost btn-sm" onclick="editUser(\''+doc.id+'\',\''+esc(d.username||'')+'\',\''+permsStr+'\',\''+esc(d.role||'')+'\')" style="margin-right:6px"><i class="ri-edit-line"></i></button>'+
-            '<button class="btn-danger-outline" onclick="deleteRecord(\'users\',\''+doc.id+'\',\'loadUsers\')"><i class="ri-delete-bin-line"></i></button>':'')+
+          (isAdmin?'<button class="btn btn-ghost btn-sm" onclick="editUser(\''+doc.id+'\',\''+esc(d.username||'')+'\',\''+permsStr+'\',\''+esc(d.role||'')+'\')" style="margin-right:6px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-edit-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"></button>'+
+            '<button class="btn-danger-outline" onclick="deleteRecord(\'users\',\''+doc.id+'\',\'loadUsers\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"></button>':'')+
           '</div>';
       });
       el.innerHTML=html;
@@ -1800,12 +1800,12 @@ window.toggleAllLogs=function(checked){
 };
 window.deleteSelectedLogs=function(){
   var checkboxes=document.querySelectorAll('#log-tbody .log-check:checked');
-  if(!checkboxes.length){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Selecciona al menos un log.');return;}
+  if(!checkboxes.length){toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Selecciona al menos un log.');return;}
   if(!confirm('Eliminar '+checkboxes.length+' log(s) seleccionado(s)? Esta accion no se puede deshacer.'))return;
   var b=db().batch();
   checkboxes.forEach(function(cb){b.delete(db().collection('logs').doc(cb.dataset.logId));});
   b.commit().then(function(){
-    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  '+checkboxes.length+' log(s) eliminado(s).');
+    toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  '+checkboxes.length+' log(s) eliminado(s).');
     loadLogs(true);
   }).catch(function(e){toast('âŒ '+e.message);});
 };
@@ -1858,7 +1858,7 @@ window.clearOldLogs = function() {
       if(snap.empty){toast('No hay logs tan antiguos.');return;}
       var batch=db().batch();
       snap.forEach(function(doc){batch.delete(doc.ref);});
-      return batch.commit().then(function(){toast('<i class="ri-delete-bin-line"></i> '+snap.size+' logs eliminados.');loadLogs();});
+      return batch.commit().then(function(){toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> '+snap.size+' logs eliminados.');loadLogs();});
     }).catch(function(e){toast('âŒ '+e.message);});
 };
 
@@ -1866,7 +1866,7 @@ window.clearOldLogs = function() {
 window.deleteRecord = function(collection, docId, reloadFn) {
   if(!confirm('Eliminar este registro permanentemente?'))return;
   db().collection(collection).doc(docId).delete()
-    .then(function(){toast('<i class="ri-delete-bin-line"></i> Eliminado.');addLog('deleted_'+collection,docId,_dash.currentUser&&_dash.currentUser.name);if(window[reloadFn])window[reloadFn]();})
+    .then(function(){toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Eliminado.');addLog('deleted_'+collection,docId,_dash.currentUser&&_dash.currentUser.name);if(window[reloadFn])window[reloadFn]();})
     .catch(function(e){toast('âŒ '+e.message);});
 };
 
@@ -1906,7 +1906,7 @@ window.handleLogoUpload=function(input,type){
       if(urlInput)urlInput.value=dataUrl;
       var prev=document.getElementById(prefix+'-preview');
       if(prev){prev.src=dataUrl;prev.style.display='block';}
-      if(statusEl)statusEl.innerHTML='<i class="ri-check-line" style="color:#2ECC71;"></i>  Listo -- presiona Guardar para confirmar';
+      if(statusEl)statusEl.innerHTML='<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Listo -- presiona Guardar para confirmar';
     };
     reader.readAsDataURL(blob);
   };
@@ -1943,7 +1943,7 @@ window.handleOrgLogoUpload = function(input, urlInputId, statusId) {
       var publicUrl = 'https://pub-cb882f9b206543b28ea81fcadac0f4b2.r2.dev/' + key;
       var urlEl = document.getElementById(urlInputId);
       if (urlEl) urlEl.value = publicUrl;
-      if (statusEl) statusEl.innerHTML = '<i class="ri-check-line" style="color:#2ECC71;"></i>  Logo subido -- presiona Guardar para confirmar.';
+      if (statusEl) statusEl.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Logo subido -- presiona Guardar para confirmar.';
     });
   }
 
@@ -1986,7 +1986,7 @@ window.saveLogo = function(type) {
   db().collection('config').doc('admin_settings').set(data,{merge:true})
     .then(function(){
       _applyLogo(url,type||'dark');
-      toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Logo guardado.');
+      toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Logo guardado.');
     }).catch(function(e){toast('âŒ '+e.message);});
 };
 
@@ -2007,7 +2007,7 @@ window.saveQrLogo = function() {
   var url = (document.getElementById('cfg-qr-logo-url')||{}).value;
   if (url !== undefined) url = url.trim(); else url = '';
   db().collection('config').doc('admin_settings').set({qrLogoUrl: url}, {merge: true})
-    .then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Logo QR guardado.'); })
+    .then(function() { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Logo QR guardado.'); })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 
@@ -2108,16 +2108,16 @@ window.applyTheme = function(name) {
 /* -- Staff legacy ---------------------------------------- */
 window.saveStaff = function() {
   var name=document.getElementById('staff-name');var pass=document.getElementById('staff-pass');
-  if(!name||!pass||!name.value.trim()||pass.value.trim().length<6){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Nombre y contrasena (6+ chars).');return;}
+  if(!name||!pass||!name.value.trim()||pass.value.trim().length<6){toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Nombre y contrasena (6+ chars).');return;}
   db().collection('staff').add({name:name.value.trim(),password:pass.value.trim(),role:'empleado',createdAt:firebase.firestore.FieldValue.serverTimestamp()})
-    .then(function(){toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Empleado creado.');name.value='';pass.value='';})
+    .then(function(){toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Empleado creado.');name.value='';pass.value='';})
     .catch(function(e){toast('âŒ '+e.message);});
 };
 
 /* -- Global QR generator (custom ID) --------------------- */
 window.generateQR = function() {
   var inp=document.getElementById('qr-id-input');
-  if(!inp||!inp.value.trim()){toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Ingresa un ID.');return;}
+  if(!inp||!inp.value.trim()){toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Ingresa un ID.');return;}
   var rawId=inp.value.trim();
   var profileUrl='https://prueb2.dashnexpages.net/activacion/?id='+encodeURIComponent(rawId);
   var display=document.getElementById('qr-display');if(!display)return;
@@ -2132,9 +2132,9 @@ window.generateQR = function() {
   }
   catch(e){toast('Error QR: '+e.message);return;}
   var links=document.getElementById('qr-links'),res=document.getElementById('qr-result');
-  if(links){var safeUrl=profileUrl.replace(/'/g,"\\'");links.innerHTML='<div class="qr-link-row"><div class="qr-link-label">Perfil Publico</div><div class="qr-link-url">'+esc(profileUrl)+'</div><button class="qr-link-copy" onclick="copyText(\''+safeUrl+'\',\'URL copiada\')"><i class="ri-file-copy-line"></i> Copiar</button></div>';}
+  if(links){var safeUrl=profileUrl.replace(/'/g,"\\'");links.innerHTML='<div class="qr-link-row"><div class="qr-link-label">Perfil Publico</div><div class="qr-link-url">'+esc(profileUrl)+'</div><button class="qr-link-copy" onclick="copyText(\''+safeUrl+'\',\'URL copiada\')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-copy-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Copiar</button></div>';}
   if(res)res.style.display='block';
-  toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  QR generado: '+rawId);
+  toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  QR generado: '+rawId);
 };
 
 window.downloadQR = function() {
@@ -2202,7 +2202,7 @@ function _downloadQREl(el, filename) {
 }
 
 window.copyText = function(text, msg) {
-  navigator.clipboard.writeText(text).then(function(){toast('<i class="ri-file-copy-line"></i> '+(msg||'Copiado'));}).catch(function(){toast('No se pudo copiar.');});
+  navigator.clipboard.writeText(text).then(function(){toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-copy-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> '+(msg||'Copiado'));}).catch(function(){toast('No se pudo copiar.');});
 };
 
 /* -- Scan Log Retention -- */
@@ -2226,7 +2226,7 @@ window.purgeScanLogs = function() {
           return batch.commit();
         });
       });
-      return seq.then(function() { toast('<i class="ri-delete-bin-line"></i> ' + total + ' escaneos eliminados.'); });
+      return seq.then(function() { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> ' + total + ' escaneos eliminados.'); });
     })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
@@ -2236,7 +2236,7 @@ window.exportFullBackup = function() {
   var COLLECTIONS = ['pets', 'users', 'veterinarias', 'shelters', 'scan_logs', 'logs', 'staff'];
   var backup = { version: 1, exportedAt: new Date().toISOString(), data: {} };
   var btn = document.getElementById('btn-full-backup');
-  if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Exportando...'; }
+  if (btn) { btn.disabled = true; btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Exportando...'; }
   toast('Exportando backup completo...');
 
   var promises = COLLECTIONS.map(function(col) {
@@ -2264,8 +2264,8 @@ window.exportFullBackup = function() {
     a.download = 'petcingo-backup-' + new Date().toISOString().slice(0, 10) + '.json';
     document.body.appendChild(a); a.click();
     document.body.removeChild(a); URL.revokeObjectURL(url);
-    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Backup completo descargado.');
-    if (btn) { btn.disabled = false; btn.innerHTML = '<i class="ri-download-cloud-line"></i> Exportar Backup Completo'; }
+    toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Backup completo descargado.');
+    if (btn) { btn.disabled = false; btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-upload-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Exportar Backup Completo'; }
   });
 };
 
@@ -2322,7 +2322,7 @@ window.importFullBackup = function() {
         });
       }, Promise.resolve())
         .then(function() {
-          toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Backup restaurado: ' + restored + ' documentos en ' + cols.length + ' colecciones' + (errors ? ' · ' + errors + ' omitidos' : '') + '.');
+          toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Backup restaurado: ' + restored + ' documentos en ' + cols.length + ' colecciones' + (errors ? ' · ' + errors + ' omitidos' : '') + '.');
         })
         .catch(function(err) { toast('âŒ Error al restaurar: ' + err.message); });
     };
@@ -2378,7 +2378,7 @@ window.importDatabase = function(collectionName) {
         return p.then(function() { return commitChunk(chunk); });
       }, Promise.resolve())
         .then(function() {
-          toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  ' + count + ' registros restaurados en "' + collectionName + '"' + (errors ? ' · ' + errors + ' omitidos (sin ID)' : '') + '.');
+          toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  ' + count + ' registros restaurados en "' + collectionName + '"' + (errors ? ' · ' + errors + ' omitidos (sin ID)' : '') + '.');
         })
         .catch(function(err) { toast('âŒ Error al importar: ' + err.message); });
     };
@@ -2548,9 +2548,9 @@ function renderPetProfile(d, petId) {
       if(isLost){
         msgAcc.classList.add('open','acc-lost-msg');
         var msgIcon=msgAcc.querySelector('.pet-acc-icon');
-        if(msgIcon){msgIcon.innerHTML='<i class="ri-alarm-warning-line" style="color:#f43f5e"></i>';}
+        if(msgIcon){msgIcon.innerHTML='<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">';}
         var msgLabel=msgAcc.querySelector('.pet-acc-label');
-        if(msgLabel)msgLabel.innerHTML='<i class="ri-alert-line" style="color:#E74C3C;"></i> Mensaje al rescatista';
+        if(msgLabel)msgLabel.innerHTML='<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Mensaje al rescatista';
       }
     }
     var val=document.getElementById('pet-acc-message-val');
@@ -2574,7 +2574,7 @@ function renderPetProfile(d, petId) {
   var manageEl = document.getElementById('pet-manage-btn');
   if (manageEl && token2 && d.editToken && d.editToken === token2) {
     var dashUrl = 'https://prueb2.dashnexpages.net/mi-cuenta/?id=' + encodeURIComponent(petId) + '&token=' + encodeURIComponent(token2);
-    manageEl.innerHTML = '<a href="' + dashUrl + '" style="display:inline-flex;align-items:center;gap:8px;padding:12px 20px;background:rgba(69,82,204,.10);border:1.5px solid rgba(69,82,204,.25);border-radius:14px;color:#4552CC;font-weight:700;font-size:.88rem;text-decoration:none;margin-top:4px"><i class="ri-settings-3-line"></i> Gestionar mi mascota</a>';
+    manageEl.innerHTML = '<a href="' + dashUrl + '" style="display:inline-flex;align-items:center;gap:8px;padding:12px 20px;background:rgba(69,82,204,.10);border:1.5px solid rgba(69,82,204,.25);border-radius:14px;color:#4552CC;font-weight:700;font-size:.88rem;text-decoration:none;margin-top:4px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-settings-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Gestionar mi mascota</a>';
     manageEl.style.display = 'block';
   }
 
@@ -2635,10 +2635,10 @@ function _buildPetOwnerAccordion(d) {
     /* GPS (soporta 'mapsUrl' legacy) */
     var gpsLink=loc.gpsLink||loc.mapsUrl||'';
     if(gpsLink){
-      rows+='<div class="pet-info-row"><i class="ri-navigation-line pet-info-icon"></i><div><div class="pet-info-label">Ubicacion GPS</div><a href="'+esc(gpsLink)+'" target="_blank" rel="noopener" class="pet-location-link"><i class="ri-external-link-line"></i> Ver en Google Maps</a></div></div>';
+      rows+='<div class="pet-info-row"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true" class="pet-info-icon"><div><div class="pet-info-label">Ubicacion GPS</div><a href="'+esc(gpsLink)+'" target="_blank" rel="noopener" class="pet-location-link"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-link-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Ver en Google Maps</a></div></div>';
     } else if(loc.lat&&loc.lng){
       var mapsUrl='https://maps.google.com/maps?q='+loc.lat.toFixed(6)+','+loc.lng.toFixed(6);
-      rows+='<div class="pet-info-row"><i class="ri-navigation-line pet-info-icon"></i><div><div class="pet-info-label">Ubicacion GPS</div><a href="'+mapsUrl+'" target="_blank" rel="noopener" class="pet-location-link"><i class="ri-external-link-line"></i> Ver en Google Maps</a></div></div>';
+      rows+='<div class="pet-info-row"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true" class="pet-info-icon"><div><div class="pet-info-label">Ubicacion GPS</div><a href="'+mapsUrl+'" target="_blank" rel="noopener" class="pet-location-link"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-link-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Ver en Google Maps</a></div></div>';
     }
   }
   if(rows){
@@ -2660,9 +2660,9 @@ function _buildPetContactPanel(d, isLost) {
   if(!panel)return;
   var html='<div class="pet-contact-title">Contacto del propietario</div>';
   var hasContact=false;
-  if(phone1){html+='<a class="btn btn-wa" href="'+waUrl1+'" target="_blank" rel="noopener"><i class="ri-whatsapp-line"></i> WhatsApp</a>';hasContact=true;}
-  if(phone2){var waUrl2='https://wa.me/'+phone2+'?text='+encodeURIComponent(waMsg);html+='<a class="btn btn-wa2" href="'+waUrl2+'" target="_blank" rel="noopener"><i class="ri-whatsapp-line"></i> WhatsApp alternativo</a>';hasContact=true;}
-  if(d.phone){html+='<a class="btn btn-call-pet" href="tel:'+esc(d.phone)+'"><i class="ri-phone-line"></i> Llamada directa</a>';hasContact=true;}
+  if(phone1){html+='<a class="btn btn-wa" href="'+waUrl1+'" target="_blank" rel="noopener"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-chat-round-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="" aria-hidden="true"> WhatsApp</a>';hasContact=true;}
+  if(phone2){var waUrl2='https://wa.me/'+phone2+'?text='+encodeURIComponent(waMsg);html+='<a class="btn btn-wa2" href="'+waUrl2+'" target="_blank" rel="noopener"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-chat-round-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="" aria-hidden="true"> WhatsApp alternativo</a>';hasContact=true;}
+  if(d.phone){html+='<a class="btn btn-call-pet" href="tel:'+esc(d.phone)+'"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-phone-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="" aria-hidden="true"> Llamada directa</a>';hasContact=true;}
   if(!hasContact)html='<p style="color:#7a6e8a;font-size:.85rem;text-align:center">Sin contacto registrado</p>';
   panel.innerHTML=html;
 
@@ -2716,9 +2716,9 @@ function _buildPetDataAccordion(d) {
   }
   if(d.rabiesVaccineCode)   medRows+=_petInfoRow('ri-syringe-line','Codigo vacuna rabia',d.rabiesVaccineCode);
   if(d.rabiesVaccineExpiry) medRows+=_petInfoRow('ri-calendar-check-line','Venc. vacuna rabia',d.rabiesVaccineExpiry);
-  if(d.microchipped==='yes') medRows+=_petInfoRow('ri-cpu-line','Microchip','Si <i class="ri-check-line" style="color:#2ECC71;"></i>');
+  if(d.microchipped==='yes') medRows+=_petInfoRow('ri-cpu-line','Microchip','Si <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">');
   else if(d.microchipped==='no') medRows+=_petInfoRow('ri-cpu-line','Microchip','No');
-  if(d.spayNeutered==='yes') medRows+=_petInfoRow('ri-heart-line','Castrado/a','Si <i class="ri-check-line" style="color:#2ECC71;"></i>');
+  if(d.spayNeutered==='yes') medRows+=_petInfoRow('ri-heart-line','Castrado/a','Si <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">');
   else if(d.spayNeutered==='no') medRows+=_petInfoRow('ri-heart-line','Castrado/a','No');
   if(medRows){medAcc.style.display='block';medContent.innerHTML=medRows;}
 
@@ -2929,17 +2929,17 @@ function renderClientPlanInfo(d) {
 
   el.innerHTML =
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">' +
-      '<div class="info-cell"><div class="info-label-sm"><i class="ri-shield-star-line"></i> Plan activo</div>' +
+      '<div class="info-cell"><div class="info-label-sm"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-shield-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Plan activo</div>' +
         '<div class="info-value-sm" style="font-size:1.05rem;font-weight:700">' + icon + ' ' + label + '</div></div>' +
-      '<div class="info-cell"><div class="info-label-sm"><i class="ri-time-line"></i> Tiempo restante</div>' +
+      '<div class="info-cell"><div class="info-label-sm"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-clock-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Tiempo restante</div>' +
         '<div class="info-value-sm" style="font-weight:700;color:' + daysColor + '">' + daysLeft + '</div></div>' +
-      '<div class="info-cell"><div class="info-label-sm"><i class="ri-calendar-check-line"></i> Activado</div>' +
+      '<div class="info-cell"><div class="info-label-sm"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-calendar-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Activado</div>' +
         '<div class="info-value-sm">' + (activatedAt ? formatDate(activatedAt) : '--') + '</div></div>' +
-      '<div class="info-cell"><div class="info-label-sm"><i class="ri-calendar-close-line"></i> Vence</div>' +
+      '<div class="info-cell"><div class="info-label-sm"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-calendar-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Vence</div>' +
         '<div class="info-value-sm">' + (isLifetime ? 'inf Nunca' : (planExpiresAt ? formatDate(planExpiresAt) : '--')) + '</div></div>' +
     '</div>' +
     ((!isLifetime && daysLeft !== '--' && parseInt(daysLeft) < 60) ?
-      '<a href="https://wa.me/59171040074?text=Quiero%20renovar%20mi%20plan%20Petcingo" target="_blank" class="btn-solid-primary" style="display:inline-flex;text-decoration:none;margin-top:4px"><i class="ri-refresh-line"></i> Renovar plan</a>' : '');
+      '<a href="https://wa.me/59171040074?text=Quiero%20renovar%20mi%20plan%20Petcingo" target="_blank" class="btn-solid-primary" style="display:inline-flex;text-decoration:none;margin-top:4px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="" aria-hidden="true"> Renovar plan</a>' : '');
 }
 
 /* Account info renderer */
@@ -2955,13 +2955,13 @@ function renderClientAccountInfo(d, user) {
     '<div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;flex-wrap:wrap">' +
       (photoUrl ? '<img src="' + photoUrl + '" style="width:56px;height:56px;border-radius:50%;border:3px solid rgba(69,82,204,0.2)">' : '<div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#4552CC,#51CBF5);display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:#fff">' + displayName.charAt(0).toUpperCase() + '</div>') +
       '<div><div style="font-weight:700;font-size:1rem;color:#1E255E">' + esc(displayName) + '</div>' +
-        '<div style="font-size:.83rem;color:#6C7297;margin-top:2px"><i class="ri-mail-line"></i> ' + esc(email) + '</div>' +
-        '<div style="font-size:.75rem;color:#6C7297;margin-top:4px"><i class="ri-' + (provider==='google.com'?'google':'user') + '-fill" style="color:#4552CC"></i> ' + (provider==='google.com'?'Cuenta Google':'Email y contrasena') + '</div></div>' +
+        '<div style="font-size:.83rem;color:#6C7297;margin-top:2px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-email-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> ' + esc(email) + '</div>' +
+        '<div style="font-size:.75rem;color:#6C7297;margin-top:4px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-user-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> ' + (provider==='google.com'?'Cuenta Google':'Email y contrasena') + '</div></div>' +
     '</div>';
 
   /* Multi-pet switcher */
   if (window._clientAllPets && window._clientAllPets.length > 1) {
-    var sw = '<div style="margin-top:12px"><div class="info-label-sm" style="margin-bottom:8px"><i class="ri-exchange-line"></i> Mis mascotas</div>';
+    var sw = '<div style="margin-top:12px"><div class="info-label-sm" style="margin-bottom:8px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Mis mascotas</div>';
     window._clientAllPets.forEach(function(p) {
       var active = p.id === window._clientPetId;
       sw += '<button onclick="window.location.href=\'client-dashboard.html?id=' + p.id + '\'" style="display:flex;align-items:center;gap:10px;width:100%;padding:10px 14px;margin-bottom:6px;border-radius:10px;border:2px solid ' + (active?'#4552CC':'rgba(69,82,204,0.15)') + ';background:' + (active?'rgba(69,82,204,0.07)':'#fff') + ';cursor:pointer;font-weight:' + (active?'700':'500') + ';color:#1E255E;font-size:.88rem">' +
@@ -3018,7 +3018,7 @@ function initClientApp(d, petId, editToken, firestoreDb) {
   /* -- Notificaciones de Soporte -- */
   checkSupportNotifications(petId, firestoreDb);
 
-  var sTxt = { activo:'<i class="ri-check-line" style="color:#2ECC71;"></i>  Activo', perdido:'<i class="ri-alert-line" style="color:#E74C3C;"></i> Perdido', reservada:'â³ Pendiente' };
+  var sTxt = { activo:'<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Activo', perdido:'<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Perdido', reservada:'â³ Pendiente' };
   var sCls = { activo:'badge-active', perdido:'badge-lost', reservada:'badge-reserved' };
   var cs   = document.getElementById('card-status');
   if (cs) cs.innerHTML = '<span class="badge ' + (sCls[d.status] || 'badge-reserved') + '">' + (sTxt[d.status] || d.status || '--') + '</span>';
@@ -3038,12 +3038,12 @@ function initClientApp(d, petId, editToken, firestoreDb) {
 
     if (btn) {
       if (isLost) {
-        btn.innerHTML = '<i class="ri-check-line" style="color:#2ECC71;"></i>  Mascota Encontrada -- Desactivar alerta';
+        btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Mascota Encontrada -- Desactivar alerta';
         btn.style.background = '#d1fae5';
         btn.style.color = '#065f46';
         btn.style.border = '1.5px solid #6ee7b7';
       } else {
-        btn.innerHTML = '<i class="ri-alert-line" style="color:#E74C3C;"></i> Marcar como Perdida';
+        btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Marcar como Perdida';
         btn.style.background = '#fce7f3';
         btn.style.color = '#9d174d';
         btn.style.border = '1.5px solid #fbcfe8';
@@ -3052,7 +3052,7 @@ function initClientApp(d, petId, editToken, firestoreDb) {
     if (heroCard) { heroCard.classList.toggle('is-lost', isLost); }
     if (lostCard) { lostCard.classList.toggle('is-lost', isLost); }
     if (lostDesc && isLost) {
-      lostDesc.innerHTML = '<i class="ri-alert-line" style="color:#E74C3C;"></i> Modo perdido activo. El perfil de tu mascota aparece en alerta roja. Presiona el boton cuando la encuentres.';
+      lostDesc.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Modo perdido activo. El perfil de tu mascota aparece en alerta roja. Presiona el boton cuando la encuentres.';
     } else if (lostDesc) {
       lostDesc.textContent = 'Si tu mascota se ha extraviado, activa el modo perdido. Esto cambiara su perfil a alerta roja y notificara visualmente a quien la encuentre.';
     }
@@ -3068,7 +3068,7 @@ function initClientApp(d, petId, editToken, firestoreDb) {
       .then(function() {
         d.status = newStatus;
         var isLost = newStatus === 'perdido';
-        toast(isLost ? '<i class="ri-alert-line" style="color:#E74C3C;"></i> Modo perdido activado.' : '<i class="ri-check-line" style="color:#2ECC71;"></i>  Alerta cancelada. Mascota activa.');
+        toast(isLost ? '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Modo perdido activado.' : '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Alerta cancelada. Mascota activa.');
         _updateLostUI(isLost);
       })
       .catch(function(e) { toast('âŒ Error: ' + e.message); });
@@ -3275,7 +3275,7 @@ function initClientApp(d, petId, editToken, firestoreDb) {
       return;
     }
     auth.sendPasswordResetEmail(user.email).then(function() {
-      if (msgEl) { msgEl.style.display = 'block'; msgEl.style.color = '#22C55E'; msgEl.innerHTML = '<i class="ri-check-line" style="color:#2ECC71;"></i>  Enlace enviado a ' + user.email + '. Revisa tu correo.'; }
+      if (msgEl) { msgEl.style.display = 'block'; msgEl.style.color = '#22C55E'; msgEl.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Enlace enviado a ' + user.email + '. Revisa tu correo.'; }
     }).catch(function(err) {
       if (msgEl) { msgEl.style.display = 'block'; msgEl.style.color = '#F24E4E'; msgEl.textContent = 'Error: ' + err.message; }
     });
@@ -3302,7 +3302,7 @@ window.loadOwnerMessages = function() {
   firestoreDb.collection('reports').where('plateId','==',petId).where('fromType','==','owner')
     .get().then(function(snap) {
       if (snap.empty) {
-        listEl.innerHTML = '<div style="text-align:center;padding:24px;color:#6C7297;font-size:.85rem"><i class="ri-chat-off-line"></i><br>No hay mensajes aun.</div>';
+        listEl.innerHTML = '<div style="text-align:center;padding:24px;color:#6C7297;font-size:.85rem"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-chat-round-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"><br>No hay mensajes aun.</div>';
         return;
       }
       var docs = [];
@@ -3351,7 +3351,7 @@ window.loadOwnerMessages = function() {
 
 window.sendOwnerMessage = function() {
   var inputEl = document.getElementById('owner-msg-input');
-  if (!inputEl || !inputEl.value.trim()) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Escribe un mensaje.'); return; }
+  if (!inputEl || !inputEl.value.trim()) { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Escribe un mensaje.'); return; }
   var petId = (new URLSearchParams(window.location.search).get('id') || '').trim();
   if (!petId) return;
   var nameEl = document.getElementById('card-name');
@@ -3366,7 +3366,7 @@ window.sendOwnerMessage = function() {
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   }).then(function() {
     inputEl.value = '';
-    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Mensaje enviado.');
+    toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Mensaje enviado.');
     window.loadOwnerMessages();
   }).catch(function(e) { toast('âŒ '+e.message); });
 };
@@ -3429,9 +3429,9 @@ function renderClientPetGrid(d) {
     if (mm<0||(mm===0&&nw.getDate()<bbd.getDate())){yy--;mm=(mm+12)%12;}
     ageVal = yy>0 ? yy+' ano'+(yy>1?'s':'') : mm+' mes'+(mm!==1?'es':'');
   }
-  var vaccLabel = d.vaccinationStatus==='yes'?'Si <i class="ri-check-line" style="color:#2ECC71;"></i>':d.vaccinationStatus==='no'?'No':null;
-  var chipLabel = d.microchipped==='yes'?'Si <i class="ri-check-line" style="color:#2ECC71;"></i>':d.microchipped==='no'?'No':null;
-  var spayLabel = d.spayNeutered==='yes'?'Si <i class="ri-check-line" style="color:#2ECC71;"></i>':d.spayNeutered==='no'?'No':null;
+  var vaccLabel = d.vaccinationStatus==='yes'?'Si <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">':d.vaccinationStatus==='no'?'No':null;
+  var chipLabel = d.microchipped==='yes'?'Si <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">':d.microchipped==='no'?'No':null;
+  var spayLabel = d.spayNeutered==='yes'?'Si <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">':d.spayNeutered==='no'?'No':null;
   var locLabel  = d.ownerLocation ? (d.ownerLocation.text || null) : null;
   
   var cells = [
@@ -3481,7 +3481,7 @@ window.loadScanLogs = function(petId, firestoreDb, petStatus) {
 
       var totalSize = snap.size;
       var sScans   = document.getElementById('stat-scans');    if (sScans)   sScans.textContent   = totalSize;
-      var sGeo     = document.getElementById('stat-with-geo'); if (sGeo)     sGeo.innerHTML     = withGeo > 0 ? '<i class="ri-check-line" style="color:#2ECC71;"></i>  ' + withGeo + ' con ubicacion' : 'Sin ubicacion';
+      var sGeo     = document.getElementById('stat-with-geo'); if (sGeo)     sGeo.innerHTML     = withGeo > 0 ? '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  ' + withGeo + ' con ubicacion' : 'Sin ubicacion';
       var sLast    = document.getElementById('stat-last-scan');
 
       if (docsArray.length > 0 && docsArray[0].scannedAt && docsArray[0].scannedAt.toDate) {
@@ -3500,9 +3500,9 @@ window.loadScanLogs = function(petId, firestoreDb, petStatus) {
               '<iframe loading="lazy" src="https://maps.google.com/maps?q=' + lat + ',' + lng + '&z=15&output=embed" title="Ubicacion del escaneo"></iframe>' +
             '</div>' +
             '<div class="scan-actions">' +
-              '<a href="' + mUrl + '" target="_blank" rel="noopener" class="scan-action-btn map"><i class="ri-map-pin-line"></i> Abrir en Google Maps</a>' +
-              '<button class="scan-action-btn" onclick="navigator.clipboard.writeText(\''+mUrl+'\').then(()=>toast(\'<i class="ri-file-copy-line"></i> Enlace copiado\'))"><i class="ri-links-line"></i> Copiar link</button>' +
-              '<a href="https://api.whatsapp.com/send?text=' + encodeURIComponent('“ Ubicacion del ultimo escaneo de la mascota: ' + mUrl) + '" target="_blank" rel="noopener" class="scan-action-btn wa"><i class="ri-whatsapp-line"></i> Compartir</a>' +
+              '<a href="' + mUrl + '" target="_blank" rel="noopener" class="scan-action-btn map"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Abrir en Google Maps</a>' +
+              '<button class="scan-action-btn" onclick="navigator.clipboard.writeText(\''+mUrl+'\').then(()=>toast(\'<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-copy-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Enlace copiado\'))"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-copy-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Copiar link</button>' +
+              '<a href="https://api.whatsapp.com/send?text=' + encodeURIComponent('“ Ubicacion del ultimo escaneo de la mascota: ' + mUrl) + '" target="_blank" rel="noopener" class="scan-action-btn wa"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-chat-round-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="" aria-hidden="true"> Compartir</a>' +
             '</div>';
         } else {
           mapEl.innerHTML = '<div class="empty-state"><div style="font-size:32px;margin-bottom:10px">“</div><p style="font-size:.85rem">Sin escaneos con ubicacion compartida aun.</p></div>';
@@ -3518,20 +3518,20 @@ window.loadScanLogs = function(petId, firestoreDb, petStatus) {
         var html = '';
         
         /* Mensaje de Retencion */
-        html += '<div class="retention-alert"><i class="ri-error-warning-fill" style="font-size:1.2rem;margin-top:2px;"></i><div><strong>Aviso de retencion:</strong> El historial de escaneos solo se almacenara por 3 meses desde su registro, a menos que sea reportado/a como perdido/a cuyo caso se mantiene todo el historial de su plan contratado.</div></div>';
+        html += '<div class="retention-alert"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="margin-top:2px;filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"><div><strong>Aviso de retencion:</strong> El historial de escaneos solo se almacenara por 3 meses desde su registro, a menos que sea reportado/a como perdido/a cuyo caso se mantiene todo el historial de su plan contratado.</div></div>';
 
         /* Rastreo de Ruta (Modo Perdido) */
         if (petStatus === 'perdido') {
           var geoScans = docsArray.filter(function(s) { return s.latitude && s.longitude; });
           if (geoScans.length > 0) {
             html += '<div style="margin-bottom:24px;border-left:3px solid #f43f5e;padding-left:16px;">';
-            html += '<div style="color:#f43f5e;font-weight:700;margin-bottom:10px;"><i class="ri-route-line"></i> Ruta de Rastreo (Modo Perdido)</div>';
+            html += '<div style="color:#f43f5e;font-weight:700;margin-bottom:10px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Ruta de Rastreo (Modo Perdido)</div>';
             geoScans.forEach(function(s, index) {
               var f = s.scannedAt && s.scannedAt.toDate ? formatDateTime(s.scannedAt.toDate()) : '--';
               var u = 'https://maps.google.com/maps?q=' + s.latitude.toFixed(6) + ',' + s.longitude.toFixed(6);
               html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">';
               html += '<div style="background:#f43f5e;color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;">'+(geoScans.length - index)+'</div>';
-              html += '<div><div class="scan-date-text" style="font-size:0.85rem;">' + f + '</div><a href="'+u+'" target="_blank" style="font-size:0.8rem;color:#4552CC;text-decoration:none;"><i class="ri-map-pin-line"></i> Ver punto '+ (geoScans.length - index) +'</a></div>';
+              html += '<div><div class="scan-date-text" style="font-size:0.85rem;">' + f + '</div><a href="'+u+'" target="_blank" style="font-size:0.8rem;color:#4552CC;text-decoration:none;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Ver punto '+ (geoScans.length - index) +'</a></div>';
               html += '</div>';
             });
             html += '</div>';
@@ -3550,9 +3550,9 @@ window.loadScanLogs = function(petId, firestoreDb, petStatus) {
             var mu2 = 'https://maps.google.com/maps?q=' + s.latitude.toFixed(6) + ',' + s.longitude.toFixed(6);
             var waUrl = 'https://api.whatsapp.com/send?text=' + encodeURIComponent('“ Ubicacion: ' + mu2);
             actionsCell = '<div class="scan-actions">' +
-              '<a href="' + mu2 + '" target="_blank" class="scan-action-btn map"><i class="ri-map-pin-line"></i> Mapa</a>' +
-              '<button class="scan-action-btn copy" onclick="navigator.clipboard.writeText(\'' + mu2 + '\').then(function(){toast(\'<i class="ri-file-copy-line"></i> Copiado\')})"><i class="ri-links-line"></i> Copiar</button>' +
-              '<a href="' + waUrl + '" target="_blank" class="scan-action-btn wa"><i class="ri-whatsapp-line"></i> WhatsApp</a>' +
+              '<a href="' + mu2 + '" target="_blank" class="scan-action-btn map"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Mapa</a>' +
+              '<button class="scan-action-btn copy" onclick="navigator.clipboard.writeText(\'' + mu2 + '\').then(function(){toast(\'<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-copy-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Copiado\')})"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-copy-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Copiar</button>' +
+              '<a href="' + waUrl + '" target="_blank" class="scan-action-btn wa"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-chat-round-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="" aria-hidden="true"> WhatsApp</a>' +
             '</div>';
           }
           tableRows += '<tr>' +
@@ -3590,15 +3590,15 @@ window.showClientTab = function(tabId, btn) {
 window.copyEditUrl = function() {
   var el = document.getElementById('edit-url-display');
   if (!el) return;
-  navigator.clipboard.writeText(el.innerHTML).then(function() { toast('<i class="ri-file-copy-line"></i> Enlace copiado'); });
+  navigator.clipboard.writeText(el.innerHTML).then(function() { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-copy-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Enlace copiado'); });
 };
 
 /* -- Update pet profile from client dashboard -- */
 window.updatePetData = function() {
   var clientPetId = window._clientPetId || (_dash.currentUser && _dash.currentUser.petId);
-  if (!clientPetId) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> ID de mascota no encontrado.'); return; }
+  if (!clientPetId) { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> ID de mascota no encontrado.'); return; }
   var petId = clientPetId;
-  if (!petId) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> ID de mascota no encontrado.'); return; }
+  if (!petId) { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> ID de mascota no encontrado.'); return; }
   var firestoreDb = (typeof _db !== 'undefined' && _db) ? _db : _getPcApp().firestore();
 
   var fields = [
@@ -3653,10 +3653,10 @@ window.updatePetData = function() {
     var checked = document.querySelector('input[name="'+r[0]+'"]:checked');
     if (checked) updates[r[1]] = checked.value;
   });
-  if (!Object.keys(updates).length) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> No hay cambios para guardar.'); return; }
+  if (!Object.keys(updates).length) { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> No hay cambios para guardar.'); return; }
 
   var btn = document.getElementById('btn-update-pet');
-  if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ri-loader-4-line"></i> Guardando...'; }
+  if (btn) { btn.disabled = true; btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Guardando...'; }
 
   var doUploadIfNew = function() {
     if (!window._clientNewBlob) return Promise.resolve(null);
@@ -3679,7 +3679,7 @@ window.updatePetData = function() {
     if (newPhotoUrl) updates['photoUrl'] = newPhotoUrl;
     return firestoreDb.collection('pets').doc(petId).update(updates);
   }).then(function() {
-    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Perfil actualizado correctamente.');
+    toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Perfil actualizado correctamente.');
     
     // Actualizar datos locales y re-renderizar
     if (window._currentPetData) {
@@ -3699,7 +3699,7 @@ window.updatePetData = function() {
     }
   }).catch(function(e) { toast('âŒ Error: ' + e.message); })
   .finally(function() {
-    if (btn) { btn.disabled = false; btn.innerHTML = '<i class="ri-save-line"></i> Guardar cambios'; }
+    if (btn) { btn.disabled = false; btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Guardar cambios'; }
   });
 };
 
@@ -3712,12 +3712,12 @@ window.sendPetReport = function() {
   var msgEl  = document.getElementById('pet-report-msg');
   var sentEl = document.getElementById('pet-report-sent');
   var btnEl  = document.getElementById('pet-report-send-btn');
-  if (!msgEl || !msgEl.value.trim()) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Escribe un mensaje antes de enviar.'); return; }
+  if (!msgEl || !msgEl.value.trim()) { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Escribe un mensaje antes de enviar.'); return; }
   var plateId  = new URLSearchParams(window.location.search).get('id') || '';
   var nameEl   = document.getElementById('pet-name');
   var petName  = nameEl ? nameEl.textContent.trim() : '';
   var db2      = (typeof _db !== 'undefined' && _db) ? _db : _getPcApp().firestore();
-  if (btnEl) { btnEl.disabled = true; btnEl.innerHTML = '<i class="ri-loader-4-line"></i> Enviando...'; }
+  if (btnEl) { btnEl.disabled = true; btnEl.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Enviando...'; }
   db2.collection('reports').add({
     fromType:  'pet_profile',
     plateId:   plateId,
@@ -3729,9 +3729,9 @@ window.sendPetReport = function() {
     if (msgEl)  msgEl.style.display = 'none';
     if (btnEl)  btnEl.style.display = 'none';
     if (sentEl) sentEl.style.display = 'block';
-    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Reporte enviado correctamente.');
+    toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Reporte enviado correctamente.');
   }).catch(function(e) {
-    if (btnEl) { btnEl.disabled = false; btnEl.innerHTML = '<i class="ri-send-plane-line"></i> Enviar reporte'; }
+    if (btnEl) { btnEl.disabled = false; btnEl.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-right-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Enviar reporte'; }
     toast('âŒ Error al enviar: ' + e.message);
   });
 };
@@ -3792,16 +3792,16 @@ window.loadReports = function(filterStatus) {
         ? '<div id="reply-form-'+r.id+'" style="display:none;margin-top:12px;">'
           + '<textarea id="reply-msg-'+r.id+'" placeholder="Escribe tu respuesta al reporte..." maxlength="500" style="width:100%;padding:10px 12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;color:#f0ecff;font-size:.85rem;font-family:\'DM Sans\',sans-serif;resize:none;height:80px;box-sizing:border-box;outline:none;line-height:1.5;"></textarea>'
           + '<div style="display:flex;gap:8px;margin-top:8px;">'
-          + '<button onclick="replyToReport(\''+r.id+'\')" style="background:#4552CC;color:#fff;border:none;padding:9px 18px;border-radius:9px;font-weight:700;font-size:.82rem;cursor:pointer;flex:1;transition:background .2s;" onmouseover="this.style.background=\'#3A45B0\'" onmouseout="this.style.background=\'#4552CC\'"><i class="ri-send-plane-line"></i> Enviar respuesta</button>'
-          + '<button onclick="closeReportById(\''+r.id+'\')" style="background:rgba(108,117,125,.15);color:#a0a0b0;border:none;padding:9px 14px;border-radius:9px;font-weight:700;font-size:.82rem;cursor:pointer;transition:background .2s;" title="Cerrar reporte"><i class="ri-check-line" style="color:#2ECC71;"></i></button>'
+          + '<button onclick="replyToReport(\''+r.id+'\')" style="background:#4552CC;color:#fff;border:none;padding:9px 18px;border-radius:9px;font-weight:700;font-size:.82rem;cursor:pointer;flex:1;transition:background .2s;" onmouseover="this.style.background=\'#3A45B0\'" onmouseout="this.style.background=\'#4552CC\'"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-right-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="" aria-hidden="true"> Enviar respuesta</button>'
+          + '<button onclick="closeReportById(\''+r.id+'\')" style="background:rgba(108,117,125,.15);color:#a0a0b0;border:none;padding:9px 14px;border-radius:9px;font-weight:700;font-size:.82rem;cursor:pointer;transition:background .2s;" title="Cerrar reporte"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"></button>'
           + '</div></div>'
         : '';
       var actionRow = canReply
         ? '<div style="margin-top:12px;display:flex;gap:8px;">'
-          + '<button onclick="toggleReplyForm(\''+r.id+'\')" style="background:rgba(69,82,204,.15);color:#A8B4F5;border:1px solid rgba(69,82,204,.3);padding:7px 14px;border-radius:9px;font-size:.8rem;font-weight:600;cursor:pointer;"><i class="ri-reply-line"></i> '+(d.adminReply?'Editar respuesta':'Responder')+'</button>'
-          + '<button onclick="closeReportById(\''+r.id+'\')" style="background:rgba(108,117,125,.12);color:#6c757d;border:1px solid rgba(108,117,125,.2);padding:7px 12px;border-radius:9px;font-size:.8rem;cursor:pointer;" title="Cerrar reporte"><i class="ri-check-line" style="color:#2ECC71;"></i> Cerrar</button>'
+          + '<button onclick="toggleReplyForm(\''+r.id+'\')" style="background:rgba(69,82,204,.15);color:#A8B4F5;border:1px solid rgba(69,82,204,.3);padding:7px 14px;border-radius:9px;font-size:.8rem;font-weight:600;cursor:pointer;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-left-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">'+(d.adminReply?'Editar respuesta':'Responder')+'</button>'
+          + '<button onclick="closeReportById(\''+r.id+'\')" style="background:rgba(108,117,125,.12);color:#6c757d;border:1px solid rgba(108,117,125,.2);padding:7px 12px;border-radius:9px;font-size:.8rem;cursor:pointer;" title="Cerrar reporte"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Cerrar</button>'
           + '</div>'
-        : '<div style="margin-top:12px;"><span style="font-size:.75rem;color:#6c757d;font-style:italic"><i class="ri-lock-line"></i> Reporte anonimo -- sin respuesta disponible</span></div>';
+        : '<div style="margin-top:12px;"><span style="font-size:.75rem;color:#6c757d;font-style:italic"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-lock-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Reporte anonimo -- sin respuesta disponible</span></div>';
       return '<div id="report-card-'+r.id+'" class="rep-card" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px 18px;margin-bottom:12px;">'
         + '<div style="display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:10px;">'
         + '<span style="background:'+tp.bg+';color:'+tp.color+';padding:3px 9px;border-radius:12px;font-size:.7rem;font-weight:700;">'+tp.label+'</span>'
@@ -3809,7 +3809,7 @@ window.loadReports = function(filterStatus) {
         + '<span class="rep-meta" style="font-size:.75rem;margin-left:auto;">'+fecha+'</span>'
         + '</div>'
         + (d.plateId ? '<div class="rep-plate" style="font-size:.78rem;margin-bottom:6px;font-family:monospace;">· '+esc(d.plateId)+(d.petName?' · '+esc(d.petName):'')+'</div>' : '')
-        + (d.fromName ? '<div class="rep-meta" style="font-size:.78rem;margin-bottom:6px;"><i class="ri-user-line"></i> '+esc(d.fromName)+'</div>' : '')
+        + (d.fromName ? '<div class="rep-meta" style="font-size:.78rem;margin-bottom:6px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-user-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> '+esc(d.fromName)+'</div>' : '')
         + '<div class="rep-msg" style="font-size:.9rem;line-height:1.6;white-space:pre-wrap;">'+esc(d.message)+'</div>'
         + replySection
         + replyForm
@@ -3828,14 +3828,14 @@ window.toggleReplyForm = function(id) {
 
 window.replyToReport = function(id) {
   var msgEl = document.getElementById('reply-msg-'+id);
-  if (!msgEl || !msgEl.value.trim()) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Escribe una respuesta antes de enviar.'); return; }
+  if (!msgEl || !msgEl.value.trim()) { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Escribe una respuesta antes de enviar.'); return; }
   var db2 = (typeof _db !== 'undefined' && _db) ? _db : _getPcApp().firestore();
   db2.collection('reports').doc(id).update({
     adminReply: msgEl.value.trim(),
     status:     'replied',
     replyAt:    firebase.firestore.FieldValue.serverTimestamp()
   }).then(function() {
-    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Respuesta enviada.');
+    toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Respuesta enviada.');
     loadReports(_rCurrentFilter || 'all');
   }).catch(function(e) { toast('âŒ Error: ' + e.message); });
 };
@@ -3843,7 +3843,7 @@ window.replyToReport = function(id) {
 window.closeReportById = function(id) {
   var db2 = (typeof _db !== 'undefined' && _db) ? _db : _getPcApp().firestore();
   db2.collection('reports').doc(id).update({ status: 'closed' }).then(function() {
-    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Reporte cerrado.');
+    toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Reporte cerrado.');
     loadReports(_rCurrentFilter || 'all');
   }).catch(function(e) { toast('âŒ Error: ' + e.message); });
 };
@@ -3899,7 +3899,7 @@ window.closeSupportPanel = function() {
 };
 window.sendOwnerMessage = function() {
   var inp = document.getElementById('owner-msg-input');
-  if (!inp || !inp.value.trim()) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Escribe un mensaje.'); return; }
+  if (!inp || !inp.value.trim()) { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Escribe un mensaje.'); return; }
   var petId = window._clientPetId;
   var d = window._currentPetData || {};
   var db2 = window._clientFirestore || ((typeof _db !== 'undefined' && _db) ? _db : _getPcApp().firestore());
@@ -3913,7 +3913,7 @@ window.sendOwnerMessage = function() {
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   }).then(function() {
     inp.value = '';
-    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Mensaje enviado.');
+    toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Mensaje enviado.');
     loadOwnerMessages();
   }).catch(function(e) { toast('âŒ Error: ' + e.message); });
 };
@@ -4040,7 +4040,7 @@ window.openProductModal = function(productId) {
     + '<div style="background:#fff;border-radius:20px;padding:24px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto">'
     + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">'
     + '<h3 style="margin:0;color:#1E255E;font-family:Syne,sans-serif">' + name + '</h3>'
-    + '<button onclick="document.getElementById(\'product-modal-overlay\').remove()" style="background:transparent;border:none;font-size:1.4rem;cursor:pointer;color:#6C7297"><i class="ri-delete-bin-line"></i></button>'
+    + '<button onclick="document.getElementById(\'product-modal-overlay\').remove()" style="background:transparent;border:none;font-size:1.4rem;cursor:pointer;color:#6C7297"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"></button>'
     + '</div>'
     + _productFormHtml(productId)
     + '</div></div>';
@@ -4082,13 +4082,13 @@ window.saveProduct = function() {
     featured: document.getElementById('pf-featured').checked,
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
   };
-  if (!data.name) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> El nombre es obligatorio'); return; }
+  if (!data.name) { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> El nombre es obligatorio'); return; }
   var ref = window._editingProductId
     ? db().collection('products').doc(window._editingProductId)
     : db().collection('products').doc();
   if (!window._editingProductId) data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
   ref.set(data, { merge: true }).then(function() {
-    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Producto guardado');
+    toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Producto guardado');
     var overlay = document.getElementById('product-modal-overlay');
     if (overlay) overlay.remove();
     window._editingProductId = null;
@@ -4110,7 +4110,7 @@ window._fillProductForm = function(id) {
 
 window.toggleProductActive = function(id, current) {
   db().collection('products').doc(id).update({ active: !current })
-    .then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Estado actualizado'); loadProducts(); })
+    .then(function() { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Estado actualizado'); loadProducts(); })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 
@@ -4118,7 +4118,7 @@ window.updateOrderStatus = function(id) {
   var newStatus = prompt('Nuevo estado:\npending_verification | paid | shipped | delivered');
   if (!newStatus) return;
   db().collection('orders').doc(id).update({ status: newStatus })
-    .then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Estado de orden actualizado'); loadOrders(); })
+    .then(function() { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Estado de orden actualizado'); loadOrders(); })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 
@@ -4165,7 +4165,7 @@ window.openDiscountModal = function() {
     + '<div style="background:#fff;border-radius:20px;padding:24px;width:100%;max-width:420px">'
     + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">'
     + '<h3 style="margin:0;color:#1E255E;font-family:Syne,sans-serif">Nuevo codigo</h3>'
-    + '<button onclick="document.getElementById(\'discount-modal-overlay\').remove()" style="background:transparent;border:none;font-size:1.4rem;cursor:pointer;color:#6C7297"><i class="ri-delete-bin-line"></i></button>'
+    + '<button onclick="document.getElementById(\'discount-modal-overlay\').remove()" style="background:transparent;border:none;font-size:1.4rem;cursor:pointer;color:#6C7297"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"></button>'
     + '</div>'
     + '<div style="display:grid;gap:14px">'
     + '<div><label style="font-size:.75rem;font-weight:700;color:#6C7297;text-transform:uppercase;display:block;margin-bottom:5px">Codigo</label><input id="dc-code" type="text" placeholder="NAVIDAD25 (dejar vacio para auto)" style="width:100%;padding:10px 12px;border:1.5px solid rgba(69,82,204,.25);border-radius:10px;font-size:.88rem;color:#1E255E;background:#fff;box-sizing:border-box;text-transform:uppercase"></div>'
@@ -4185,12 +4185,12 @@ window.saveDiscount = function() {
   var value = parseFloat(document.getElementById('dc-value').value) || 0;
   var maxUses = parseInt(document.getElementById('dc-max').value) || null;
   var expiry = document.getElementById('dc-expiry').value;
-  if (!value) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> El valor es obligatorio'); return; }
+  if (!value) { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> El valor es obligatorio'); return; }
   var data = { type: type, value: value, active: true, usageCount: 0,
     maxUses: maxUses, expiresAt: expiry ? new Date(expiry) : null,
     createdAt: firebase.firestore.FieldValue.serverTimestamp() };
   db().collection('discountCodes').doc(code).set(data).then(function() {
-    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Codigo ' + code + ' creado');
+    toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Codigo ' + code + ' creado');
     var o = document.getElementById('discount-modal-overlay'); if (o) o.remove();
     loadDiscounts();
   }).catch(function(e) { toast('âŒ ' + e.message); });
@@ -4198,19 +4198,19 @@ window.saveDiscount = function() {
 
 window.quickDiscount = function(code, type, value) {
   db().collection('discountCodes').doc(code).set({ type: type, value: value, active: true, usageCount: 0, maxUses: null, expiresAt: null, createdAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true })
-    .then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Codigo ' + code + ' listo'); loadDiscounts(); })
+    .then(function() { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Codigo ' + code + ' listo'); loadDiscounts(); })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 
 window.toggleDiscount = function(id, current) {
   db().collection('discountCodes').doc(id).update({ active: !current })
-    .then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Estado actualizado'); loadDiscounts(); });
+    .then(function() { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Estado actualizado'); loadDiscounts(); });
 };
 
 window.deleteDiscount = function(id) {
   if (!confirm('Eliminar codigo ' + id + '?')) return;
   db().collection('discountCodes').doc(id).delete()
-    .then(function() { toast('<i class="ri-delete-bin-line"></i> Codigo eliminado'); loadDiscounts(); });
+    .then(function() { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Codigo eliminado'); loadDiscounts(); });
 };
 
 function _randomCode(len) {
@@ -4246,7 +4246,7 @@ window.loadAffiliates = function() {
 
     /* Pending */
     if (pendWrap) {
-      if (!pending.length) { pendWrap.innerHTML = '<p style="color:#22C55E;font-size:.85rem;padding:12px"><i class="ri-check-line" style="color:#2ECC71;"></i>  Sin solicitudes pendientes.</p>'; }
+      if (!pending.length) { pendWrap.innerHTML = '<p style="color:#22C55E;font-size:.85rem;padding:12px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Sin solicitudes pendientes.</p>'; }
       else {
         pendWrap.innerHTML = pending.map(function(a) {
           return '<div style="padding:14px;background:#f8f9ff;border-radius:12px;margin-bottom:10px;border:1px solid rgba(69,82,204,.1)">'
@@ -4282,7 +4282,7 @@ window.loadAffiliates = function() {
               + '<td style="padding:10px 8px;text-align:right;color:#1E255E">$' + (a.totalSales || 0).toFixed(2) + '</td>'
               + '<td style="padding:10px 8px;text-align:right;color:#22C55E;font-weight:700">$' + (a.totalEarned || 0).toFixed(2) + '</td>'
               + '<td style="padding:10px 8px;text-align:right;color:#FFC837;font-weight:700">$' + (a.pendingPayout || 0).toFixed(2) + '</td>'
-              + '<td style="padding:10px 8px;text-align:center;display:flex;gap:6px;justify-content:center"><a href="https://prueb2.dashnexpages.net/panel-afiliados/?auto=' + a.id + '" target="_blank" style="padding:5px 10px;background:rgba(69,82,204,.1);color:#4552CC;border-radius:7px;font-size:.75rem;cursor:pointer;font-weight:600;text-decoration:none"><i class="ri-external-link-line"></i> Panel</a><button onclick="markAffPaid(\'' + a.id + '\',' + (a.pendingPayout||0) + ')" style="padding:5px 10px;background:rgba(34,197,94,.1);color:#22C55E;border:none;border-radius:7px;font-size:.75rem;cursor:pointer;font-weight:600">Marcar pagado</button></td>'
+              + '<td style="padding:10px 8px;text-align:center;display:flex;gap:6px;justify-content:center"><a href="https://prueb2.dashnexpages.net/panel-afiliados/?auto=' + a.id + '" target="_blank" style="padding:5px 10px;background:rgba(69,82,204,.1);color:#4552CC;border-radius:7px;font-size:.75rem;cursor:pointer;font-weight:600;text-decoration:none"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-link-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Panel</a><button onclick="markAffPaid(\'' + a.id + '\',' + (a.pendingPayout||0) + ')" style="padding:5px 10px;background:rgba(34,197,94,.1);color:#22C55E;border:none;border-radius:7px;font-size:.75rem;cursor:pointer;font-weight:600">Marcar pagado</button></td>'
               + '</tr>';
           }).join('') + '</tbody></table></div>';
       }
@@ -4309,7 +4309,7 @@ window.approveAffiliate = function(id) {
     status: 'approved', promoCode: code, commissionPct: comm,
     approvedAt: firebase.firestore.FieldValue.serverTimestamp()
   }).then(function() {
-    toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Afiliado aprobado -- codigo: ' + code);
+    toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Afiliado aprobado -- codigo: ' + code);
     loadAffiliates();
   }).catch(function(e) { toast('âŒ ' + e.message); });
 };
@@ -4328,7 +4328,7 @@ window.markAffPaid = function(id, amount) {
     affiliateId: id, amount: amount,
     paidAt: firebase.firestore.FieldValue.serverTimestamp()
   });
-  batch.commit().then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Pago registrado'); loadAffiliates(); })
+  batch.commit().then(function() { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Pago registrado'); loadAffiliates(); })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 
@@ -4355,7 +4355,7 @@ window.loadSecurityAlerts = function() {
     if (cntVel) cntVel.textContent = velCount;
 
     if (!wrap) return;
-    if (snap.empty) { wrap.innerHTML = '<p style="color:#22C55E;font-size:.85rem;padding:12px"><i class="ri-check-line" style="color:#2ECC71;"></i>  Sin alertas activas.</p>'; return; }
+    if (snap.empty) { wrap.innerHTML = '<p style="color:#22C55E;font-size:.85rem;padding:12px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Sin alertas activas.</p>'; return; }
     var typeColors = { velocity:'#FFC837', geo_anomaly:'#f43f5e', unauthorized:'#7c3aed' };
     var typeLabels = { velocity:'Alta velocidad', geo_anomaly:'Anomalia geografica', unauthorized:'No autorizado' };
     var html = '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.82rem">'
@@ -4403,7 +4403,7 @@ window.loadSecurityAlerts = function() {
 window.blockPlate = function() {
   var input = document.getElementById('block-plate-input');
   var pid = input ? input.value.trim() : '';
-  if (!pid) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Ingresa un ID de placa'); return; }
+  if (!pid) { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Ingresa un ID de placa'); return; }
   db().collection('config').doc('admin_settings').update({
     blockedPlates: firebase.firestore.FieldValue.arrayUnion(pid)
   }).then(function() {
@@ -4423,7 +4423,7 @@ window.blockPlateFromAlert = function(pid) {
 window.unblockPlate = function(pid) {
   db().collection('config').doc('admin_settings').update({
     blockedPlates: firebase.firestore.FieldValue.arrayRemove(pid)
-  }).then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Placa desbloqueada'); loadSecurityAlerts(); });
+  }).then(function() { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Placa desbloqueada'); loadSecurityAlerts(); });
 };
 
 window.dismissAlert = function(docId) {
@@ -4480,7 +4480,7 @@ window.saveIndexContent = function() {
     headline: headline.trim(), subheadline: subheadline.trim(),
     bannerActive: bannerActive, bannerMessage: bannerMessage.trim(), bannerColor: bannerColor,
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-  }, { merge: true }).then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Contenido guardado'); })
+  }, { merge: true }).then(function() { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Contenido guardado'); })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 
@@ -4488,9 +4488,9 @@ window.saveFeaturedProducts = function() {
   var boxes = document.querySelectorAll('input[name="featured-product"]:checked');
   var ids = [];
   boxes.forEach(function(b) { ids.push(b.value); });
-  if (ids.length > 4) { toast('<i class="ri-alert-line" style="color:#E74C3C;"></i> Maximo 4 productos destacados'); return; }
+  if (ids.length > 4) { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Maximo 4 productos destacados'); return; }
   db().collection('config').doc('index_content').set({ featuredProducts: ids }, { merge: true })
-    .then(function() { toast('<i class="ri-check-line" style="color:#2ECC71;"></i>  Destacados guardados (' + ids.length + ')'); })
+    .then(function() { toast('<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">  Destacados guardados (' + ids.length + ')'); })
     .catch(function(e) { toast('âŒ ' + e.message); });
 };
 

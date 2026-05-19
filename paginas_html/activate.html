@@ -84,6 +84,11 @@
 .ptcg-activate__card>*{position:relative;z-index:2}
 .ptcg-activate__section-title{font-family:'Sora',sans-serif!important;font-size:0.90rem;font-weight:700;color:var(--ptcg-gray-900)!important;display:flex;align-items:center;gap:7px;border-bottom:1px solid rgba(0,0,0,0.06);padding-bottom:12px}
 .ptcg-activate__section-title i{color:var(--ptcg-purple)!important}
+.flag-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.flag-btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 10px;border:2px solid rgba(69,82,204,0.15);border-radius:12px;background:rgba(255,255,255,0.7);cursor:pointer;font-size:0.72rem;font-weight:600;color:var(--ptcg-gray-700);transition:border-color 0.18s,background 0.18s;min-width:68px}
+.flag-btn:hover{border-color:var(--ptcg-purple);background:rgba(69,82,204,0.06)}
+.flag-btn.selected{border-color:var(--ptcg-purple);background:rgba(69,82,204,0.1);color:var(--ptcg-purple)}
+.flag-btn .flag-emoji{font-size:1.8rem;line-height:1}
 .ptcg-activate__section-sub{font-size:0.82rem;color:var(--ptcg-gray-500)!important;line-height:1.55;margin-top:-8px}
 .ptcg-activate__optional{font-size:0.65rem;font-weight:500;color:var(--ptcg-gray-500)!important;background:var(--ptcg-gray-100);padding:2px 8px;border-radius:99px;margin-left:4px}
 .ptcg-activate__field{display:flex;flex-direction:column;gap:6px}
@@ -319,7 +324,7 @@ body{background:#F3F3F3!important}
 
       <!-- Badge de placa (siempre visible cuando hay un id) -->
       <div class="ptcg-activate__plate-badge" id="act-plate-badge" hidden aria-label="ID de placa">
-        <i class="ri-qr-code-line" aria-hidden="true"></i>
+        <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-qr-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
         <span id="act-plate-id-display">—</span>
       </div>
     </div>
@@ -387,13 +392,13 @@ body{background:#F3F3F3!important}
         </p>
         <div class="ptcg-activate__error-card" role="note">
           <p class="ptcg-activate__error-hint">
-            <i class="ri-information-line" aria-hidden="true"></i>
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
             Si compraste tu kit recientemente, el ID puede tardar hasta 24h en activarse en el sistema.
             Contacta a <strong>soporte@petcingo.com</strong> indicando el ID: <code id="act-error-plate-id"></code>
           </p>
         </div>
         <a href="https://prueb2.dashnexpages.net/home/" class="ptcg-activate__btn ptcg-activate__btn--secondary">
-          <i class="ri-home-line" aria-hidden="true"></i> Volver al inicio
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-home-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Volver al inicio
         </a>
       </div>
     </section>
@@ -416,10 +421,10 @@ body{background:#F3F3F3!important}
         </p>
         <div class="ptcg-activate__already-actions">
           <a href="#" class="ptcg-activate__btn ptcg-activate__btn--primary" id="act-already-public-link">
-            <i class="ri-eye-line" aria-hidden="true"></i> Ver perfil público
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Ver perfil público
           </a>
           <a href="https://prueb2.dashnexpages.net/login/" class="ptcg-activate__btn ptcg-activate__btn--secondary">
-            <i class="ri-user-line" aria-hidden="true"></i> Ingresar a mi cuenta
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-user-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Ingresar a mi cuenta
           </a>
         </div>
         <p class="ptcg-activate__already-note">
@@ -471,7 +476,7 @@ body{background:#F3F3F3!important}
               Código de la caja <span class="ptcg-activate__required" aria-label="Requerido">*</span>
             </label>
             <div class="ptcg-activate__input-wrap ptcg-activate__input-wrap--code">
-              <i class="ri-key-2-line ptcg-activate__input-icon" aria-hidden="true"></i>
+              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
               <input
                 type="text"
                 class="ptcg-activate__input ptcg-activate__input--code"
@@ -489,7 +494,7 @@ body{background:#F3F3F3!important}
               style="display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;
               background:#4552CC;color:#fff !important;border:none;border-radius:12px;font-weight:600;
               cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.85rem;margin:6px auto 0;width:100%;max-width:220px;">
-              <i class="ri-qr-scan-line" style="color:#fff !important;"></i> Escanear QR
+              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Escanear QR
             </button>
             <div id="qr-reader" style="width:100%;max-width:400px;margin:12px auto;display:none;"></div>
             <button id="qr-reader-close" onclick="stopQRScan()"
@@ -498,7 +503,7 @@ body{background:#F3F3F3!important}
               Cancelar escaneo
             </button>
             <p class="ptcg-activate__field-hint" id="code-field-hint">
-              <i class="ri-information-line" aria-hidden="true"></i>
+              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
               El código tiene el formato XXX-XXX (6 letras y números, con guion).
             </p>
             <p class="ptcg-activate__field-error" id="code-field-error" hidden role="alert"></p>
@@ -506,7 +511,7 @@ body{background:#F3F3F3!important}
 
           <!-- Intentos restantes (se muestra tras fallo) -->
           <div class="ptcg-activate__code-attempts" id="act-code-attempts" hidden aria-live="polite">
-            <i class="ri-alert-line" aria-hidden="true"></i>
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
             <span id="act-code-attempts-text"></span>
           </div>
 
@@ -517,12 +522,12 @@ body{background:#F3F3F3!important}
             type="button"
             onclick="handleValidateCode()"
           >
-            <i class="ri-shield-check-line" aria-hidden="true"></i>
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
             Validar código
           </button>
 
           <p class="ptcg-activate__form-note">
-            <i class="ri-lock-line" aria-hidden="true"></i>
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-lock-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
             Este código es de un solo uso y vincula la placa permanentemente a tu cuenta.
           </p>
         </div>
@@ -530,7 +535,7 @@ body{background:#F3F3F3!important}
         <!-- Ayuda -->
         <details class="ptcg-activate__help">
           <summary class="ptcg-activate__help-toggle">
-            <i class="ri-question-line" aria-hidden="true"></i> ¿No encuentras el código?
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-question-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> ¿No encuentras el código?
           </summary>
           <div class="ptcg-activate__help-body">
             <p>El código de activación está impreso en:</p>
@@ -574,7 +579,7 @@ body{background:#F3F3F3!important}
 
           <!-- Mensaje de error de auth -->
           <div class="ptcg-activate__auth-error" id="act-auth-error" hidden role="alert">
-            <i class="ri-error-warning-line" aria-hidden="true"></i>
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
             <span id="act-auth-error-msg"></span>
           </div>
 
@@ -635,7 +640,7 @@ body{background:#F3F3F3!important}
             <div class="ptcg-activate__field">
               <label class="ptcg-activate__label" for="auth-login-email">Correo electrónico</label>
               <div class="ptcg-activate__input-wrap">
-                <i class="ri-mail-line ptcg-activate__input-icon" aria-hidden="true"></i>
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-email-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
                 <input
                   type="email"
                   class="ptcg-activate__input"
@@ -648,7 +653,7 @@ body{background:#F3F3F3!important}
             <div class="ptcg-activate__field">
               <label class="ptcg-activate__label" for="auth-login-password">Contraseña</label>
               <div class="ptcg-activate__input-wrap">
-                <i class="ri-lock-line ptcg-activate__input-icon" aria-hidden="true"></i>
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-lock-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
                 <input
                   type="password"
                   class="ptcg-activate__input"
@@ -662,7 +667,7 @@ body{background:#F3F3F3!important}
                   aria-label="Mostrar u ocultar contraseña"
                   onclick="togglePwdVisibility('auth-login-password', this)"
                 >
-                  <i class="ri-eye-off-line" aria-hidden="true"></i>
+                  <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-off-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
                 </button>
               </div>
               <a class="ptcg-activate__forgot-link" href="#" onclick="handleForgotPassword(event)">
@@ -675,7 +680,7 @@ body{background:#F3F3F3!important}
               type="button"
               onclick="handleAuthEmailLogin()"
             >
-              <i class="ri-login-box-line" aria-hidden="true"></i> Ingresar
+              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-login-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Ingresar
             </button>
           </div>
 
@@ -690,7 +695,7 @@ body{background:#F3F3F3!important}
             <div class="ptcg-activate__field">
               <label class="ptcg-activate__label" for="auth-reg-name">Nombre completo</label>
               <div class="ptcg-activate__input-wrap">
-                <i class="ri-user-line ptcg-activate__input-icon" aria-hidden="true"></i>
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-user-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
                 <input
                   type="text"
                   class="ptcg-activate__input"
@@ -703,7 +708,7 @@ body{background:#F3F3F3!important}
             <div class="ptcg-activate__field">
               <label class="ptcg-activate__label" for="auth-reg-email">Correo electrónico</label>
               <div class="ptcg-activate__input-wrap">
-                <i class="ri-mail-line ptcg-activate__input-icon" aria-hidden="true"></i>
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-email-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
                 <input
                   type="email"
                   class="ptcg-activate__input"
@@ -718,7 +723,7 @@ body{background:#F3F3F3!important}
                 Contraseña <span class="ptcg-activate__field-hint-inline">(mínimo 8 caracteres)</span>
               </label>
               <div class="ptcg-activate__input-wrap">
-                <i class="ri-lock-line ptcg-activate__input-icon" aria-hidden="true"></i>
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-lock-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
                 <input
                   type="password"
                   class="ptcg-activate__input"
@@ -732,7 +737,7 @@ body{background:#F3F3F3!important}
                   aria-label="Mostrar u ocultar contraseña"
                   onclick="togglePwdVisibility('auth-reg-password', this)"
                 >
-                  <i class="ri-eye-off-line" aria-hidden="true"></i>
+                  <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-off-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
                 </button>
               </div>
             </div>
@@ -742,12 +747,12 @@ body{background:#F3F3F3!important}
               type="button"
               onclick="handleAuthEmailRegister()"
             >
-              <i class="ri-user-add-line" aria-hidden="true"></i> Crear cuenta y continuar
+              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Crear cuenta y continuar
             </button>
           </div>
 
           <p class="ptcg-activate__form-note">
-            <i class="ri-shield-check-line" aria-hidden="true"></i>
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
             Tu cuenta vincula la placa a ti. Solo tú podrás editar el perfil de tu mascota.
           </p>
         </div>
@@ -758,7 +763,7 @@ body{background:#F3F3F3!important}
           type="button"
           onclick="goToScreen('screen-code')"
         >
-          <i class="ri-arrow-left-line" aria-hidden="true"></i> Volver a ingresar el código
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-left-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Volver a ingresar el código
         </button>
 
       </div>
@@ -790,14 +795,14 @@ body{background:#F3F3F3!important}
 
         <!-- Bienvenida personalizada con nombre de la cuenta -->
         <div class="ptcg-activate__user-greeting" id="act-user-greeting" hidden aria-live="polite">
-          <i class="ri-user-smile-line" aria-hidden="true"></i>
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
           <span>Hola, <strong id="act-user-name-display"></strong> — tu cuenta está vinculada a esta placa.</span>
         </div>
 
         <!-- SECCIÓN: Foto de la mascota -->
         <div class="ptcg-activate__card">
           <h2 class="ptcg-activate__section-title">
-            <i class="ri-camera-line" aria-hidden="true"></i>
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-camera-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
             Foto de la mascota
             <span class="ptcg-activate__optional">opcional</span>
           </h2>
@@ -820,7 +825,7 @@ body{background:#F3F3F3!important}
 
             <!-- Estado: placeholder -->
             <div class="ptcg-activate__photo-placeholder" id="act-photo-placeholder">
-              <i class="ri-image-add-line ptcg-activate__photo-placeholder-icon" aria-hidden="true"></i>
+              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
               <p class="ptcg-activate__photo-placeholder-label">
                 <strong>Seleccionar foto</strong>
               </p>
@@ -828,7 +833,7 @@ body{background:#F3F3F3!important}
                 O arrastra aquí · JPG, PNG · hasta 5 MB
               </p>
               <span class="ptcg-activate__photo-placeholder-badge">
-                <i class="ri-magic-line" aria-hidden="true"></i>
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
                 Se comprime y recorta automáticamente a 1:1
               </span>
             </div>
@@ -848,7 +853,7 @@ body{background:#F3F3F3!important}
               >
               <div class="ptcg-activate__photo-preview-info">
                 <p class="ptcg-activate__photo-preview-ok">
-                  <i class="ri-checkbox-circle-line" aria-hidden="true"></i>
+                  <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
                   Imagen lista
                 </p>
                 <p class="ptcg-activate__photo-preview-size" id="act-photo-preview-size"></p>
@@ -857,7 +862,7 @@ body{background:#F3F3F3!important}
                   type="button"
                   onclick="resetPhoto()"
                 >
-                  <i class="ri-refresh-line" aria-hidden="true"></i> Cambiar foto
+                  <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Cambiar foto
                 </button>
               </div>
             </div>
@@ -867,7 +872,7 @@ body{background:#F3F3F3!important}
         <!-- SECCIÓN: Datos básicos de la mascota -->
         <div class="ptcg-activate__card">
           <h2 class="ptcg-activate__section-title">
-            <i class="ri-profile-line" aria-hidden="true"></i>
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
             Datos básicos
           </h2>
 
@@ -876,7 +881,7 @@ body{background:#F3F3F3!important}
               Nombre de la mascota <span class="ptcg-activate__required" aria-label="Requerido">*</span>
             </label>
             <div class="ptcg-activate__input-wrap">
-              <i class="ri-heart-line ptcg-activate__input-icon" aria-hidden="true"></i>
+              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
               <input
                 type="text"
                 class="ptcg-activate__input"
@@ -960,7 +965,7 @@ body{background:#F3F3F3!important}
         <!-- SECCIÓN: Datos de contacto (WhatsApp) -->
         <div class="ptcg-activate__card">
           <h2 class="ptcg-activate__section-title">
-            <i class="ri-phone-line" aria-hidden="true"></i>
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-phone-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
             Contacto de emergencia
           </h2>
           <p class="ptcg-activate__section-sub">
@@ -982,7 +987,7 @@ body{background:#F3F3F3!important}
                 >
                   <span id="flag-1">🇧🇴</span>
                   <span id="code-1">+591</span>
-                  <i class="ri-arrow-down-s-line" aria-hidden="true"></i>
+                  <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-down-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
                 </button>
                 <select
                   class="ptcg-activate__country-select"
@@ -1032,7 +1037,7 @@ body{background:#F3F3F3!important}
                 >
                   <span id="flag-2">🇧🇴</span>
                   <span id="code-2">+591</span>
-                  <i class="ri-arrow-down-s-line" aria-hidden="true"></i>
+                  <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-down-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
                 </button>
                 <select
                   class="ptcg-activate__country-select"
@@ -1064,10 +1069,89 @@ body{background:#F3F3F3!important}
           </div>
         </div>
 
+        <!-- SECCIÓN: Ubicación / Departamento -->
+        <div class="ptcg-activate__card" id="card-location">
+          <h2 class="ptcg-activate__section-title">
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" aria-hidden="true">
+            Ubicacion
+            <span class="ptcg-activate__optional">donde vive tu mascota</span>
+          </h2>
+
+          <!-- Bolivia visible by default; switches to country grid if non-BO phone selected -->
+          <div id="location-bo" class="ptcg-activate__field">
+            <label class="ptcg-activate__label">Departamento</label>
+            <div class="flag-grid" id="dept-grid">
+              <button type="button" class="flag-btn" onclick="selectDept('santa-cruz')" data-dept="santa-cruz">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flag-Departamentos/santacruz.svg" width="32" height="32" alt="Santa Cruz">
+                <span>Santa Cruz</span>
+              </button>
+              <button type="button" class="flag-btn" onclick="selectDept('la-paz')" data-dept="la-paz">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flag-Departamentos/lapaz.svg" width="32" height="32" alt="La Paz">
+                <span>La Paz</span>
+              </button>
+              <button type="button" class="flag-btn" onclick="selectDept('cochabamba')" data-dept="cochabamba">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flag-Departamentos/cbba.svg" width="32" height="32" alt="Cochabamba">
+                <span>Cochabamba</span>
+              </button>
+              <button type="button" class="flag-btn" onclick="selectDept('oruro')" data-dept="oruro">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flag-Departamentos/oruro.svg" width="32" height="32" alt="Oruro">
+                <span>Oruro</span>
+              </button>
+              <button type="button" class="flag-btn" onclick="selectDept('potosi')" data-dept="potosi">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flag-Departamentos/potosi.svg" width="32" height="32" alt="Potosi">
+                <span>Potosi</span>
+              </button>
+              <button type="button" class="flag-btn" onclick="selectDept('chuquisaca')" data-dept="chuquisaca">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flag-Departamentos/chuquisaca.svg" width="32" height="32" alt="Chuquisaca">
+                <span>Chuquisaca</span>
+              </button>
+              <button type="button" class="flag-btn" onclick="selectDept('tarija')" data-dept="tarija">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flag-Departamentos/tarija.svg" width="32" height="32" alt="Tarija">
+                <span>Tarija</span>
+              </button>
+              <button type="button" class="flag-btn" onclick="selectDept('beni')" data-dept="beni">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flag-Departamentos/beni.svg" width="32" height="32" alt="Beni">
+                <span>Beni</span>
+              </button>
+              <button type="button" class="flag-btn" onclick="selectDept('pando')" data-dept="pando">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flag-Departamentos/pando.svg" width="32" height="32" alt="Pando">
+                <span>Pando</span>
+              </button>
+            </div>
+            <input type="hidden" id="pet-dept" name="dept">
+          </div>
+
+          <!-- International country selector (shown when non-BO phone) -->
+          <div id="location-intl" class="ptcg-activate__field" style="display:none">
+            <label class="ptcg-activate__label">Pais</label>
+            <div class="flag-grid" id="country-grid">
+              <button type="button" class="flag-btn" onclick="selectCountry('AR','Argentina')" data-country="AR"><span class="flag-emoji">🇦🇷</span><span>Argentina</span></button>
+              <button type="button" class="flag-btn" onclick="selectCountry('BR','Brasil')" data-country="BR"><span class="flag-emoji">🇧🇷</span><span>Brasil</span></button>
+              <button type="button" class="flag-btn" onclick="selectCountry('CL','Chile')" data-country="CL"><span class="flag-emoji">🇨🇱</span><span>Chile</span></button>
+              <button type="button" class="flag-btn" onclick="selectCountry('CO','Colombia')" data-country="CO"><span class="flag-emoji">🇨🇴</span><span>Colombia</span></button>
+              <button type="button" class="flag-btn" onclick="selectCountry('EC','Ecuador')" data-country="EC"><span class="flag-emoji">🇪🇨</span><span>Ecuador</span></button>
+              <button type="button" class="flag-btn" onclick="selectCountry('MX','Mexico')" data-country="MX"><span class="flag-emoji">🇲🇽</span><span>Mexico</span></button>
+              <button type="button" class="flag-btn" onclick="selectCountry('PE','Peru')" data-country="PE"><span class="flag-emoji">🇵🇪</span><span>Peru</span></button>
+              <button type="button" class="flag-btn" onclick="selectCountry('PY','Paraguay')" data-country="PY"><span class="flag-emoji">🇵🇾</span><span>Paraguay</span></button>
+              <button type="button" class="flag-btn" onclick="selectCountry('UY','Uruguay')" data-country="UY"><span class="flag-emoji">🇺🇾</span><span>Uruguay</span></button>
+              <button type="button" class="flag-btn" onclick="selectCountry('VE','Venezuela')" data-country="VE"><span class="flag-emoji">🇻🇪</span><span>Venezuela</span></button>
+              <button type="button" class="flag-btn" onclick="selectCountry('ES','Espana')" data-country="ES"><span class="flag-emoji">🇪🇸</span><span>Espana</span></button>
+              <button type="button" class="flag-btn" onclick="selectCountry('US','EEUU')" data-country="US"><span class="flag-emoji">🇺🇸</span><span>EEUU</span></button>
+            </div>
+            <input type="hidden" id="pet-country" name="country">
+          </div>
+
+          <!-- City -->
+          <div class="ptcg-activate__field" style="max-width:320px;margin-top:12px">
+            <label class="ptcg-activate__label" for="pet-city">Ciudad <span class="ptcg-activate__optional">opcional</span></label>
+            <input type="text" class="ptcg-activate__input" id="pet-city" placeholder="Ej: Santa Cruz de la Sierra" maxlength="80">
+          </div>
+        </div>
+
         <!-- SECCIÓN: Mensaje y comportamiento -->
         <div class="ptcg-activate__card">
           <h2 class="ptcg-activate__section-title">
-            <i class="ri-chat-1-line" aria-hidden="true"></i>
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-chat-round-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" aria-hidden="true">
             Mensaje para quien la encuentre
             <span class="ptcg-activate__optional">opcional</span>
           </h2>
@@ -1101,7 +1185,7 @@ body{background:#F3F3F3!important}
         <!-- SECCIÓN: Salud -->
         <div class="ptcg-activate__card">
           <h2 class="ptcg-activate__section-title">
-            <i class="ri-heart-pulse-line" aria-hidden="true"></i>
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
             Información de salud
             <span class="ptcg-activate__optional">opcional</span>
           </h2>
@@ -1180,7 +1264,7 @@ body{background:#F3F3F3!important}
 
         <!-- Error de perfil -->
         <div class="ptcg-activate__profile-error" id="act-profile-error" hidden role="alert">
-          <i class="ri-error-warning-line" aria-hidden="true"></i>
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
           <span id="act-profile-error-msg"></span>
         </div>
 
@@ -1192,7 +1276,7 @@ body{background:#F3F3F3!important}
             type="button"
             onclick="handleActivate()"
           >
-            <i class="ri-shield-check-line" aria-hidden="true"></i>
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
             Activar placa
           </button>
           <button
@@ -1200,7 +1284,7 @@ body{background:#F3F3F3!important}
             type="button"
             onclick="goToScreen('screen-auth')"
           >
-            <i class="ri-arrow-left-line" aria-hidden="true"></i> Volver
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-left-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Volver
           </button>
         </div>
 
@@ -1227,7 +1311,7 @@ body{background:#F3F3F3!important}
 
         <!-- Alerta vital -->
         <div class="ptcg-activate__vital-alert" role="note">
-          <i class="ri-alert-line" aria-hidden="true"></i>
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
           <div>
             <strong>Recomendación vital:</strong>
             <p>Coloca la placa en el collar de tu mascota ahora mismo y evita sacársela. Esta placa es su boleto de vuelta a casa si se pierde.</p>
@@ -1238,7 +1322,7 @@ body{background:#F3F3F3!important}
         <div class="ptcg-activate__link-cards">
           <div class="ptcg-activate__link-card" id="act-public-link-card">
             <div class="ptcg-activate__link-card-header">
-              <i class="ri-global-line" aria-hidden="true"></i>
+              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-globe-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
               <span>Perfil público</span>
             </div>
             <p class="ptcg-activate__link-card-desc">
@@ -1250,7 +1334,7 @@ body{background:#F3F3F3!important}
               type="button"
               onclick="copyLink('public')"
             >
-              <i class="ri-file-copy-line" aria-hidden="true"></i> Copiar enlace
+              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> Copiar enlace
             </button>
           </div>
         </div>
@@ -1262,7 +1346,7 @@ body{background:#F3F3F3!important}
             class="ptcg-activate__btn ptcg-activate__btn--primary"
             id="act-btn-go-dashboard"
           >
-            <i class="ri-dashboard-line" aria-hidden="true"></i>
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
             Ir a mi panel
           </a>
           <button
@@ -1270,7 +1354,7 @@ body{background:#F3F3F3!important}
             type="button"
             onclick="shareProfile()"
           >
-            <i class="ri-share-line" aria-hidden="true"></i>
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
             Compartir perfil
           </button>
         </div>
@@ -2028,6 +2112,28 @@ body{background:#F3F3F3!important}
     var c   = COUNTRIES[iso] || COUNTRIES['BO'];
     document.getElementById('flag-' + n).textContent = c.flag;
     document.getElementById('code-' + n).textContent = c.code;
+    // Show Bolivia dept grid vs international grid
+    if (n === 1) {
+      var isBO = (iso === 'BO');
+      var bo = document.getElementById('location-bo');
+      var intl = document.getElementById('location-intl');
+      if (bo) bo.style.display = isBO ? '' : 'none';
+      if (intl) intl.style.display = isBO ? 'none' : '';
+    }
+  };
+
+  window.selectDept = function (dept) {
+    document.getElementById('pet-dept').value = dept;
+    document.querySelectorAll('#dept-grid .flag-btn').forEach(function (b) {
+      b.classList.toggle('selected', b.dataset.dept === dept);
+    });
+  };
+
+  window.selectCountry = function (iso, name) {
+    document.getElementById('pet-country').value = iso;
+    document.querySelectorAll('#country-grid .flag-btn').forEach(function (b) {
+      b.classList.toggle('selected', b.dataset.country === iso);
+    });
   };
 
   function buildFullPhone(fieldId, selectorId) {
@@ -2104,7 +2210,7 @@ body{background:#F3F3F3!important}
     var btn = document.getElementById(btnId);
     if (!btn) return;
     btn.disabled = loading;
-    var icon = loading ? '<i class="ri-loader-4-line" aria-hidden="true"></i> ' : '';
+    var icon = loading ? '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true"> ' : '';
     /* Solo cambiar el texto, no destruir el innerHTML con íconos complejos */
     var span = btn.querySelector('span.btn-label');
     if (!span) {

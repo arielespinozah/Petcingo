@@ -176,7 +176,7 @@
          style="display:none;height:40px;width:auto;margin:0 auto 20px;"
          onload="this.style.display='block';this.previousElementSibling.style.display='none';">
     <div class="it-hero-icon" id="plan-icon">🏷️</div>
-    <div class="it-hero-badge"><i class="ri-shield-check-line"></i> <span id="plan-badge-txt">Placa NFC + QR</span></div>
+    <div class="it-hero-badge"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt=""> <span id="plan-badge-txt">Placa NFC + QR</span></div>
     <h1 class="it-hero-title" id="plan-name">Tag Pet ID</h1>
     <p class="it-hero-sub" id="plan-desc">Placa individual NFC + QR para una mascota. Perfil online completo con foto, contactos y veterinario.</p>
   </div>
@@ -204,17 +204,17 @@
 
   <!-- Features -->
   <div class="it-features">
-    <div class="it-features-title"><i class="ri-check-double-line" style="color:#4552CC"></i> Incluye</div>
+    <div class="it-features-title"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Incluye</div>
     <ul class="it-feat-list" id="plan-features"></ul>
   </div>
 
   <!-- Botones -->
   <a class="it-btn it-btn--primary" id="btn-bo" href="#">
-    <i class="ri-shopping-cart-line"></i> Comprar ahora
+    <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-cart-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Comprar ahora
   </a>
   <p class="it-btn-note">Entrega a domicilio en Bolivia</p>
   <a class="it-btn it-btn--outline" id="btn-intl" href="#">
-    <i class="ri-earth-line"></i> Compra internacional
+    <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-globe-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Compra internacional
   </a>
   <p class="it-btn-note">Pago en USD · envío internacional</p>
 
@@ -342,7 +342,7 @@
   document.title = plan.name + ' — Petcingo';
 
   var featsHtml = plan.features.map(function (f) {
-    return '<li><i class="ri-check-line"></i><span>' + escH(f) + '</span></li>';
+    return '<li><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""><span>' + escH(f) + '</span></li>';
   }).join('');
   document.getElementById('plan-features').innerHTML = featsHtml;
 
