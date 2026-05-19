@@ -254,7 +254,7 @@
   <div class="rpu-hero-inner">
     <div id="rpu-loading-hero" style="color:#9E9E9E;font-size:0.875rem;">Cargando refugio...</div>
     <div id="rpu-hero-content" style="display:none;">
-      <div class="rpu-shelter-badge"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt=""> Refugio Aliado Petcingo</div>
+      <div class="rpu-shelter-badge"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt=""> Refugio Aliado Petcingo</div>
       <div class="rpu-hero-name" id="rpu-name">-</div>
       <div class="rpu-hero-meta">
         <span id="rpu-meta-city" style="display:none;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt=""> <span id="rpu-city-text"></span></span>
@@ -272,7 +272,7 @@
 <!-- FILTERS -->
 <div id="rpu-filters">
   <button class="rpu-filter-btn active" data-species="" onclick="setFilter(this)">Todos</button>
-  <button class="rpu-filter-btn" data-species="perro"   onclick="setFilter(this)"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Perros</button>
+  <button class="rpu-filter-btn" data-species="perro"   onclick="setFilter(this)"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-paw-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Perros</button>
   <button class="rpu-filter-btn" data-species="gato"    onclick="setFilter(this)">Gatos</button>
   <button class="rpu-filter-btn" data-species="ave"     onclick="setFilter(this)">Aves</button>
   <button class="rpu-filter-btn" data-species="conejo"  onclick="setFilter(this)">Conejos</button>
@@ -282,7 +282,7 @@
 <!-- GRID -->
 <div id="rpu-main">
   <div id="rpu-grid">
-    <div class="rpu-empty"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""><p>Cargando animales...</p></div>
+    <div class="rpu-empty"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""><p>Cargando animales...</p></div>
   </div>
 </div>
 
@@ -383,7 +383,7 @@
         </div>
 
         <button class="rpu-btn rpu-btn--primary" style="width:100%;" id="adp-submit-btn" onclick="submitAdoption()">
-          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Enviar solicitud
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-send-plane-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Enviar solicitud
         </button>
         <div id="adp-err" style="display:none;margin-top:10px;font-size:0.80rem;color:#E74C3C;text-align:center;font-weight:600;padding:8px 12px;background:rgba(231,76,60,0.06);border-radius:8px;"></div>
       </div>
@@ -391,7 +391,7 @@
       <!-- Success -->
       <div id="adopt-success" style="display:none;">
         <div class="rpu-success-box">
-          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
           <h3>Solicitud enviada!</h3>
           <p>El refugio revisara tu solicitud y se pondra en contacto contigo a la brevedad.</p>
         </div>
@@ -490,7 +490,7 @@
     $hide('rpu-loading-hero');
     $hide('rpu-hero-content');
     $show('rpu-not-found');
-    document.getElementById('rpu-grid').innerHTML = '<div class="rpu-empty"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt=""><p>No se puede cargar este refugio.</p></div>';
+    document.getElementById('rpu-grid').innerHTML = '<div class="rpu-empty"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-close-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt=""><p>No se puede cargar este refugio.</p></div>';
   }
 
   function renderHero() {
@@ -526,7 +526,7 @@
         renderGrid();
       })
       .catch(function (e) {
-        document.getElementById('rpu-grid').innerHTML = '<div class="rpu-empty"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""><p>Error: ' + esc(e.message) + '</p></div>';
+        document.getElementById('rpu-grid').innerHTML = '<div class="rpu-empty"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-close-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""><p>Error: ' + esc(e.message) + '</p></div>';
       });
   }
 
@@ -619,7 +619,7 @@
     $hide('adopt-success');
     $show('adopt-form-wrap');
     var btn = document.getElementById('adp-submit-btn');
-    if (btn) { btn.disabled = false; btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Enviar solicitud'; }
+    if (btn) { btn.disabled = false; btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-send-plane-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Enviar solicitud'; }
 
     /* pet summary */
     var imgHtml = d.photoUrl
@@ -679,7 +679,7 @@
 
     $hide('adp-err');
     btn.disabled = true;
-    btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Enviando...';
+    btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-send-plane-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Enviando...';
 
     var d = _currentPet.data;
     var request = {
@@ -711,7 +711,7 @@
       .catch(function (e) {
         showErr('Error al enviar: ' + e.message);
         btn.disabled = false;
-        btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Enviar solicitud';
+        btn.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-send-plane-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Enviar solicitud';
       });
   };
 

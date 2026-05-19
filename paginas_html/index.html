@@ -549,8 +549,10 @@
 
   <!-- ══ TOPBAR ══ -->
   <header class="ptcg-index__topbar" id="ptcg-topbar" role="banner">
-    <a href="#hero" class="ptcg-index__logo" aria-label="Petcingo inicio">
-      <img src="https://prueb2.dashnexpages.net/assets/images/logo/PETCINGO_DARK.svg" alt="Petcingo" style="height:48px;max-width:100%;object-fit:contain;">
+    <a href="#hero" class="ptcg-index__logo" aria-label="Petcingo inicio" style="display:flex;align-items:center;gap:7px;text-decoration:none;">
+      <span style="font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:800;color:#4552CC;">PETCINGO</span>
+      <img src="https://prueb2.dashnexpages.net/assets/images/logo/PETCINGO_DARK.svg" alt="" style="height:48px;max-width:100%;object-fit:contain;display:none;"
+           onload="this.style.display='inline';this.previousElementSibling.style.display='none';">
     </a>
     <nav aria-label="Navegación principal">
       <ul class="ptcg-index__nav">
@@ -569,7 +571,7 @@
         <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-user-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Mi cuenta
       </button>
       <a href="#plans" class="ptcg-index__btn-buy">
-        <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Proteger mi mascota
+        <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-shield-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Proteger mi mascota
       </a>
     </div>
     <button class="ptcg-index__ham" id="ptcg-ham"
@@ -582,9 +584,9 @@
   <nav class="ptcg-index__drawer" id="ptcg-drawer" aria-label="Menú móvil" aria-hidden="true">
     <a href="#how"       onclick="ptcgCloseDrawer()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-question-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> ¿Cómo funciona?</a>
     <a href="#impact"    onclick="ptcgCloseDrawer()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Refugios</a>
-    <a href="#adopciones"onclick="ptcgCloseDrawer()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Adopciones</a>
-    <a href="#plans"     onclick="ptcgCloseDrawer()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Planes y precios</a>
-    <a href="#afiliados" onclick="ptcgCloseDrawer()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Afiliados</a>
+    <a href="#adopciones"onclick="ptcgCloseDrawer()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-paw-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Adopciones</a>
+    <a href="#plans"     onclick="ptcgCloseDrawer()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-cart-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Planes y precios</a>
+    <a href="#afiliados" onclick="ptcgCloseDrawer()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-medal-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Afiliados</a>
     <a href="#dir"       onclick="ptcgCloseDrawer()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Directorio</a>
     <a href="#faq"       onclick="ptcgCloseDrawer()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-chat-round-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> FAQ</a>
     <div class="ptcg-index__drawer-actions">
@@ -595,7 +597,7 @@
       <a href="#plans" class="ptcg-index__btn-buy"
          style="width:100%;justify-content:center !important;text-align:center"
          onclick="ptcgCloseDrawer()">
-        <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Proteger mi mascota
+        <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-shield-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Proteger mi mascota
       </a>
     </div>
   </nav>
@@ -621,7 +623,7 @@
           </p>
           <div class="ptcg-index__hero-ctas ptcg-index__fade-up">
             <a href="#plans" class="ptcg-index__btn-hero-a">
-              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt=""> Proteger a mi mascota
+              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-shield-bold.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt=""> Proteger a mi mascota
             </a>
             <button class="ptcg-index__btn-hero-b" onclick="ptcgOpenModal('login')">
               <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-user-bold.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt=""> Ya tengo placa
@@ -650,7 +652,7 @@
         <div class="ptcg-index__hero-visual ptcg-index__fade-up" aria-hidden="true">
           <div class="ptcg-index__fc ptcg-index__fc--1">
             <div class="ptcg-index__fc-icon ptcg-index__fc-icon--scan">
-              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="">
+              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="">
             </div>
             <div>
               <div class="ptcg-index__fc-title">Ubicación detectada</div>
@@ -659,7 +661,7 @@
           </div>
           <div class="ptcg-index__fc ptcg-index__fc--2">
             <div class="ptcg-index__fc-icon ptcg-index__fc-icon--ok">
-              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
             </div>
             <div>
               <div class="ptcg-index__fc-title">¡Mascota encontrada!</div>
@@ -673,7 +675,7 @@
             <div class="ptcg-index__hero-card-body">
               <div class="ptcg-index__hero-card-name">Rocky <span style="font-size:0.72rem;font-weight:500;color:#9E9E9E;">· Golden Retriever</span></div>
               <div class="ptcg-index__hero-card-status">
-                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt=""> Placa activa · Santa Cruz
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-shield-bold.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt=""> Placa activa · Santa Cruz
               </div>
               <div class="ptcg-index__hero-card-row">
                 <button class="ptcg-index__hero-card-btn ptcg-index__hero-card-btn--wa">
@@ -707,7 +709,7 @@
 
         <div class="ptcg-index__feat-card ptcg-index__fade-up">
           <div class="ptcg-index__feat-icon" style="background:linear-gradient(135deg,#EEF1FB,#D9DEF5)">
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
           </div>
           <div class="ptcg-index__feat-title">Sin app requerida</div>
           <div class="ptcg-index__feat-desc">Cualquier teléfono Android o iPhone escanea la placa. El rescatista no necesita instalar nada.</div>
@@ -723,7 +725,7 @@
 
         <div class="ptcg-index__feat-card ptcg-index__fade-up">
           <div class="ptcg-index__feat-icon" style="background:linear-gradient(135deg,#D5F5E3,#A9DFBF)">
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-bell-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
           </div>
           <div class="ptcg-index__feat-title">Alerta con geolocalización</div>
           <div class="ptcg-index__feat-desc">Cuando alguien escanea la placa, tú recibes una notificación con la ubicación exacta en tiempo real.</div>
@@ -731,7 +733,7 @@
 
         <div class="ptcg-index__feat-card ptcg-index__fade-up">
           <div class="ptcg-index__feat-icon" style="background:linear-gradient(135deg,#EEF1FB,#D9DEF5)">
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-user-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
           </div>
           <div class="ptcg-index__feat-title">Hasta 3 contactos</div>
           <div class="ptcg-index__feat-desc">Agrega a tu pareja, familiar o vecino como contacto de emergencia. Con botón directo a WhatsApp.</div>
@@ -739,7 +741,7 @@
 
         <div class="ptcg-index__feat-card ptcg-index__fade-up">
           <div class="ptcg-index__feat-icon" style="background:linear-gradient(135deg,#FDEBD0,#FAD7A0)">
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-health-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
           </div>
           <div class="ptcg-index__feat-title">Historial médico</div>
           <div class="ptcg-index__feat-desc">Vacunas, rabia, alergias, medicación. El rescatista ve toda la info médica relevante al instante.</div>
@@ -747,7 +749,7 @@
 
         <div class="ptcg-index__feat-card ptcg-index__fade-up">
           <div class="ptcg-index__feat-icon" style="background:linear-gradient(135deg,#FADBD8,#F5B7B1)">
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-eye-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
           </div>
           <div class="ptcg-index__feat-title">Perfil 100% privado</div>
           <div class="ptcg-index__feat-desc">Tú controlas qué información es visible. El número puede aparecer como botón sin revelar los dígitos.</div>
@@ -781,7 +783,7 @@
         <div class="ptcg-index__step ptcg-index__fade-up">
           <div class="ptcg-index__step-ico">
             <div class="ptcg-index__step-num">2</div>
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-qr-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
           </div>
           <div class="ptcg-index__step-title">Actívala aquí</div>
           <p class="ptcg-index__step-desc">Ingresa a tu panel, crea el perfil de tu mascota: foto, nombre, raza, contactos y vacunas. Listo en 3 minutos.</p>
@@ -789,7 +791,7 @@
         <div class="ptcg-index__step ptcg-index__fade-up">
           <div class="ptcg-index__step-ico">
             <div class="ptcg-index__step-num">3</div>
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-shield-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
           </div>
           <div class="ptcg-index__step-title">Mascota protegida</div>
           <p class="ptcg-index__step-desc">Pon la placa en el collar. Si se pierde, quien la encuentre escanea el QR o NFC y te contacta al instante.</p>
@@ -891,7 +893,7 @@
 
         <div class="ptcg-index__fade-up">
           <div class="ptcg-index__sec-tag">
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Impacto social
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Impacto social
           </div>
           <h2 class="ptcg-index__sec-title" id="ptcg-impact-h">
             Cada placa ayuda<br>a un refugio
@@ -902,21 +904,21 @@
           </p>
           <div class="ptcg-index__impact-features">
             <div class="ptcg-index__impact-feat">
-              <div class="ptcg-index__impact-feat-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
+              <div class="ptcg-index__impact-feat-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
               <div>
                 <div class="ptcg-index__impact-feat-title">Refugios con panel gratuito</div>
                 <div class="ptcg-index__impact-feat-desc">Cada refugio aliado recibe plataforma gratuita para gestionar adopciones, donaciones y voluntariado.</div>
               </div>
             </div>
             <div class="ptcg-index__impact-feat">
-              <div class="ptcg-index__impact-feat-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
+              <div class="ptcg-index__impact-feat-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-paw-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
               <div>
                 <div class="ptcg-index__impact-feat-title">Animales rescatados identificados</div>
                 <div class="ptcg-index__impact-feat-desc">Todo animal rescatado recibe una placa Petcingo gratis. Si se pierde de nuevo, tiene protección.</div>
               </div>
             </div>
             <div class="ptcg-index__impact-feat">
-              <div class="ptcg-index__impact-feat-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
+              <div class="ptcg-index__impact-feat-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-chart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
               <div>
                 <div class="ptcg-index__impact-feat-title">Regalías mensuales para refugios</div>
                 <div class="ptcg-index__impact-feat-desc">Cada refugio recibe el 20% de las ventas generadas con su enlace. Ingresos propios, sin depender solo de donaciones.</div>
@@ -925,7 +927,7 @@
           </div>
           <div class="ptcg-index__impact-ctas">
             <a href="#plans" class="ptcg-index__btn ptcg-index__btn--primary">
-              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Comprar y apoyar
+              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-cart-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Comprar y apoyar
             </a>
             <a href="#dir" class="ptcg-index__btn ptcg-index__btn--outline">
               Ver refugios
@@ -937,7 +939,7 @@
           <div class="ptcg-index__refugio-card">
             <div class="ptcg-index__refugio-top">
               <div class="ptcg-index__refugio-av" style="background:var(--ptcg-purple-pastel)">
-                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
               </div>
               <div>
                 <div class="ptcg-index__refugio-name">Huellas Felices</div>
@@ -960,7 +962,7 @@
           <div class="ptcg-index__refugio-card">
             <div class="ptcg-index__refugio-top">
               <div class="ptcg-index__refugio-av" style="background:var(--ptcg-cyan-pastel)">
-                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
               </div>
               <div>
                 <div class="ptcg-index__refugio-name">Patitas sin Hogar</div>
@@ -991,7 +993,7 @@
   <section class="ptcg-index__adopt" id="adopciones" aria-labelledby="ptcg-adopt-h">
     <div class="ptcg-index__container">
       <div class="ptcg-index__adopt-header ptcg-index__fade-up">
-        <div class="ptcg-index__sec-tag"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Adopciones</div>
+        <div class="ptcg-index__sec-tag"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-paw-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Adopciones</div>
         <h2 class="ptcg-index__sec-title" id="ptcg-adopt-h">Animales esperando un hogar</h2>
         <p class="ptcg-index__sec-sub ptcg-index__sec-sub--center">
           Estos peludos est&aacute;n en refugios aliados de Bolivia. &iquest;Puedes darles una familia?
@@ -1118,10 +1120,10 @@
       </div>
       <div class="ptcg-index__adopt-footer ptcg-index__fade-up">
         <a href="https://prueb2.dashnexpages.net/refugio/" class="ptcg-index__btn ptcg-index__btn--primary">
-          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Ver todos los animales en adopci&oacute;n
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-paw-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Ver todos los animales en adopci&oacute;n
         </a>
         <p class="ptcg-index__adopt-note">
-          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-shield-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
           La adopci&oacute;n es responsable: se eval&uacute;a espacio, tiempo y capacidad econ&oacute;mica del adoptante.
         </p>
       </div>
@@ -1143,7 +1145,7 @@
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-bottom:32px;">
         <div style="background:#F8F9FB;border-radius:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.05);box-shadow:0 4px 18px rgba(0,0,0,0.04);">
-          <div style="height:160px;background:linear-gradient(135deg,#EEF1FB,#E8F7FD);display:flex;align-items:center;justify-content:center;font-size:3rem;color:#9E9E9E;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
+          <div style="height:160px;background:linear-gradient(135deg,#EEF1FB,#E8F7FD);display:flex;align-items:center;justify-content:center;font-size:3rem;color:#9E9E9E;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-paw-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
           <div style="padding:18px 16px;">
             <div style="font-family:'Sora',sans-serif;font-size:1rem;font-weight:800;color:#212121;margin-bottom:4px;">Max</div>
             <div style="font-size:0.75rem;color:#4552CC;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Perro &middot; 2 anos &middot; Santa Cruz</div>
@@ -1159,7 +1161,7 @@
           </div>
         </div>
         <div style="background:#F8F9FB;border-radius:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.05);box-shadow:0 4px 18px rgba(0,0,0,0.04);">
-          <div style="height:160px;background:linear-gradient(135deg,#EEF1FB,#E8F7FD);display:flex;align-items:center;justify-content:center;font-size:3rem;color:#9E9E9E;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
+          <div style="height:160px;background:linear-gradient(135deg,#EEF1FB,#E8F7FD);display:flex;align-items:center;justify-content:center;font-size:3rem;color:#9E9E9E;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-paw-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
           <div style="padding:18px 16px;">
             <div style="font-family:'Sora',sans-serif;font-size:1rem;font-weight:800;color:#212121;margin-bottom:4px;">Coco</div>
             <div style="font-size:0.75km;color:#4552CC;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Conejo &middot; 8 meses &middot; La Paz</div>
@@ -1169,7 +1171,7 @@
       </div>
       <div style="text-align:center;">
         <a href="#plans" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:13px;background:#4552CC;color:#fff;font-family:'Sora',sans-serif;font-size:0.95rem;font-weight:800;text-decoration:none;transition:background 0.18s;" onmouseover="this.style.background='#2E3A9E'" onmouseout="this.style.background='#4552CC'">
-          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Quiero proteger a mi mascota
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-shield-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Quiero proteger a mi mascota
         </a>
       </div>
     </div>
@@ -1204,7 +1206,7 @@
       </div>
       <div style="text-align:center;">
         <a href="#dir" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:13px;background:#fff;color:#4552CC;font-family:'Sora',sans-serif;font-size:0.95rem;font-weight:800;text-decoration:none;box-shadow:0 8px 28px rgba(0,0,0,0.18);transition:transform 0.18s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Ver refugios aliados
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Ver refugios aliados
         </a>
       </div>
     </div>
@@ -1216,7 +1218,7 @@
   <section class="ptcg-index__camp" id="ayudas" aria-labelledby="ptcg-camp-h">
     <div class="ptcg-index__container">
       <div class="ptcg-index__camp-header ptcg-index__fade-up">
-        <div class="ptcg-index__sec-tag"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Petcingo Solidario</div>
+        <div class="ptcg-index__sec-tag"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Petcingo Solidario</div>
         <h2 class="ptcg-index__sec-title" id="ptcg-camp-h">Campanas que necesitan tu apoyo</h2>
         <p class="ptcg-index__sec-sub ptcg-index__sec-sub--center">
           Refugios aliados abren campanas de donacion para cuidar a sus animales. Cada aporte cuenta.
@@ -1228,12 +1230,12 @@
       </div>
       <div id="ptcg-camp-grid" class="ptcg-index__camp-grid" hidden></div>
       <div id="ptcg-camp-empty" class="ptcg-index__camp-empty" hidden>
-        <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+        <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
         Sin campanas activas en este momento. Vuelve pronto.
       </div>
       <div class="ptcg-index__camp-footer ptcg-index__fade-up">
         <a href="https://prueb2.dashnexpages.net/refugio-panel-control/" class="ptcg-index__camp-cta">
-          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Soy un refugio - crear campana
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Soy un refugio - crear campana
         </a>
       </div>
     </div>
@@ -1245,7 +1247,7 @@
   <section class="ptcg-index__plans" id="plans" aria-labelledby="ptcg-plans-h">
     <div class="ptcg-index__container">
       <div class="ptcg-index__plans-header ptcg-index__fade-up">
-        <div class="ptcg-index__sec-tag"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Protección Inmediata</div>
+        <div class="ptcg-index__sec-tag"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-shield-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Protección Inmediata</div>
         <h2 class="ptcg-index__sec-title" id="ptcg-plans-h">Planes pensados para su seguridad total</h2>
         <p class="ptcg-index__sec-sub ptcg-index__sec-sub--center">
           Inversión de pago único. Sin mensualidades. Tu mascota recibe protección inteligente y de por vida, tú recibes paz mental.
@@ -1280,8 +1282,8 @@
 
         <!-- Pet ID — FEATURED -->
         <div class="ptcg-index__plan ptcg-index__plan--featured ptcg-index__fade-up" id="ptcg-plan-petid">
-          <div class="ptcg-index__plan-pill"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> MÁS POPULAR</div>
-          <div class="ptcg-index__plan-ico"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
+          <div class="ptcg-index__plan-pill"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-star-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> MÁS POPULAR</div>
+          <div class="ptcg-index__plan-ico"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-shield-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
           <div class="ptcg-index__plan-name">Pet ID</div>
           <div class="ptcg-index__plan-sub">1 mascota · 1 año de perfil activo</div>
           <div class="ptcg-index__plan-price">Bs.<span id="ptcg-plan-petid-price">97</span></div>
@@ -1297,13 +1299,13 @@
           <a href="https://prueb2.dashnexpages.net/checkout/?plan=petid"
              class="ptcg-index__plan-btn ptcg-index__plan-btn--primary"
              onclick="ptcgBuyPlan('petid');return false;">
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Comprar Pet ID
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-cart-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Comprar Pet ID
           </a>
         </div>
 
         <!-- Pack Familia -->
         <div class="ptcg-index__plan ptcg-index__fade-up" id="ptcg-plan-familia">
-          <div class="ptcg-index__plan-ico"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
+          <div class="ptcg-index__plan-ico"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-user-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
           <div class="ptcg-index__plan-name">Pack Familia</div>
           <div class="ptcg-index__plan-sub">3 mascotas · Pago único</div>
           <div class="ptcg-index__plan-price">Bs.<span id="ptcg-plan-familia-price">250</span></div>
@@ -1319,13 +1321,13 @@
           <a href="https://prueb2.dashnexpages.net/checkout/?plan=pack"
              class="ptcg-index__plan-btn ptcg-index__plan-btn--secondary"
              onclick="ptcgBuyPlan('pack');return false;">
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Pack Familia
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-cart-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Pack Familia
           </a>
         </div>
 
       </div>
       <p class="ptcg-index__plans-intl ptcg-index__fade-up" id="ptcg-plans-intl">
-        <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+        <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
         ¿Fuera de Bolivia? Precio internacional: <strong id="ptcg-intl-usd">USD 14.99</strong> · Envío a Argentina, Chile, Perú y más.
         <a href="https://wa.me/59170000000?text=Quiero+una+placa+Petcingo+fuera+de+Bolivia"
            id="ptcg-intl-wa-link" target="_blank" rel="noopener">Consultar envío <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-right-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></a>
@@ -1340,7 +1342,7 @@
     <div class="ptcg-index__container">
       <div class="ptcg-index__aff-inner">
         <div class="ptcg-index__fade-up">
-          <div class="ptcg-index__sec-tag"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Afiliados</div>
+          <div class="ptcg-index__sec-tag"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-medal-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Afiliados</div>
           <h2 class="ptcg-index__sec-title" id="ptcg-aff-h">Gana dinero recomendando Petcingo</h2>
           <p class="ptcg-index__sec-sub">
             Comparte tu enlace único. Por cada placa que se venda a través de tu recomendación, ganas comisión directa a tu cuenta. Cuanto más vendes, más ganas.
@@ -1353,7 +1355,7 @@
           </ul>
           <a href="/afiliados/"
              class="ptcg-index__btn ptcg-index__btn--primary ptcg-index__btn--aff ptcg-index__btn--aff-desk">
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Quiero ser afiliado
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-medal-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Quiero ser afiliado
           </a>
         </div>
 
@@ -1403,7 +1405,7 @@
         
         <a href="/afiliados/"
            class="ptcg-index__btn ptcg-index__btn--primary ptcg-index__btn--aff ptcg-index__btn--aff-mob">
-          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Quiero ser afiliado
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-medal-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Quiero ser afiliado
         </a>
       </div>
     </div>
@@ -1490,21 +1492,21 @@
           </p>
           <div class="ptcg-index__vet-benefits">
             <div class="ptcg-index__vet-benefit">
-              <div class="ptcg-index__vet-benefit-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
+              <div class="ptcg-index__vet-benefit-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
               <div>
                 <div class="ptcg-index__vet-benefit-title">Consignación sin riesgo</div>
                 <div class="ptcg-index__vet-benefit-desc">50 placas iniciales sin costo. Solo pagas las que vendas a fin de mes. Devolución permitida.</div>
               </div>
             </div>
             <div class="ptcg-index__vet-benefit">
-              <div class="ptcg-index__vet-benefit-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
+              <div class="ptcg-index__vet-benefit-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-shield-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
               <div>
                 <div class="ptcg-index__vet-benefit-title">Tu logo en cada perfil</div>
                 <div class="ptcg-index__vet-benefit-desc">A partir de 60 placas vendidas, el perfil de cada mascota muestra el logo de tu clínica.</div>
               </div>
             </div>
             <div class="ptcg-index__vet-benefit">
-              <div class="ptcg-index__vet-benefit-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
+              <div class="ptcg-index__vet-benefit-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
               <div>
                 <div class="ptcg-index__vet-benefit-title">Visibilidad en nuestra red</div>
                 <div class="ptcg-index__vet-benefit-desc">Apareces como punto de venta oficial en petcingo.com.bo y en nuestras redes sociales.</div>
@@ -1513,7 +1515,7 @@
           </div>
           <a href="/veterinarias-aliadas/"
              class="ptcg-index__btn ptcg-index__btn--primary">
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Registrar mi veterinaria
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-hospital-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Registrar mi veterinaria
           </a>
         </div>
         <div class="ptcg-index__vet-grid ptcg-index__fade-up">
@@ -1553,7 +1555,7 @@
       <div class="ptcg-index__vetdir-filters ptcg-index__fade-up">
         <div class="ptcg-index__vetdir-filter-row" id="ptcg-vetdir-cities">
           <button class="ptcg-index__city-tab is-active" data-vdcity="all" onclick="vdSetCityFilter(this)">
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Todas
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Todas
           </button>
         </div>
         <div class="ptcg-index__vetdir-filter-row ptcg-index__vetdir-filter-row--flex">
@@ -1603,7 +1605,7 @@
       </div>
       <div class="ptcg-index__city-tabs" role="tablist" aria-label="Filtrar por ciudad">
         <button class="ptcg-index__city-tab is-active" data-city="all" role="tab" aria-selected="true">
-          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Todas
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Todas
         </button>
         <button class="ptcg-index__city-tab" data-city="scz" role="tab" aria-selected="false">
           <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Santa Cruz
@@ -1638,7 +1640,7 @@
 
         <div class="ptcg-index__dir-card ptcg-index__fade-up" data-city="scz">
           <div class="ptcg-index__dir-img" style="background:linear-gradient(135deg,var(--ptcg-success-pastel),#A9DFBF)">
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
             <span class="ptcg-index__dir-badge" style="background:#2ECC71!important">Refugio</span>
           </div>
           <div class="ptcg-index__dir-body">
@@ -1658,7 +1660,7 @@
 
         <div class="ptcg-index__dir-card ptcg-index__fade-up" data-city="cbba">
           <div class="ptcg-index__dir-img" style="background:linear-gradient(135deg,var(--ptcg-success-pastel),#A9DFBF)">
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
             <span class="ptcg-index__dir-badge" style="background:#2ECC71!important">Refugio</span>
           </div>
           <div class="ptcg-index__dir-body">
@@ -1722,7 +1724,7 @@
             <br>
             <a href="/veterinarias-aliadas/"
                class="ptcg-index__dir-btn ptcg-index__dir-btn--purple">
-              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Registrarme gratis
+              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-add-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Registrarme gratis
             </a>
           </div>
         </div>
@@ -1745,7 +1747,7 @@
 
         <details class="ptcg-index__faq-item ptcg-index__fade-up">
           <summary class="ptcg-index__faq-toggle">
-            <span class="ptcg-index__faq-q"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> ¿Qué es exactamente la placa Petcingo?</span>
+            <span class="ptcg-index__faq-q"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-question-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> ¿Qué es exactamente la placa Petcingo?</span>
             <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-down-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
           </summary>
           <div class="ptcg-index__faq-body">
@@ -1756,7 +1758,7 @@
 
         <details class="ptcg-index__faq-item ptcg-index__fade-up">
           <summary class="ptcg-index__faq-toggle">
-            <span class="ptcg-index__faq-q"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> ¿Necesitan instalar alguna app para escanearla?</span>
+            <span class="ptcg-index__faq-q"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-question-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> ¿Necesitan instalar alguna app para escanearla?</span>
             <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-down-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
           </summary>
           <div class="ptcg-index__faq-body">
@@ -1767,7 +1769,7 @@
 
         <details class="ptcg-index__faq-item ptcg-index__fade-up">
           <summary class="ptcg-index__faq-toggle">
-            <span class="ptcg-index__faq-q"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> ¿Cómo funciona la alerta con ubicación?</span>
+            <span class="ptcg-index__faq-q"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-question-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> ¿Cómo funciona la alerta con ubicación?</span>
             <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-down-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
           </summary>
           <div class="ptcg-index__faq-body">
@@ -1789,7 +1791,7 @@
 
         <details class="ptcg-index__faq-item ptcg-index__fade-up">
           <summary class="ptcg-index__faq-toggle">
-            <span class="ptcg-index__faq-q"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> ¿La placa resiste agua y mordidas?</span>
+            <span class="ptcg-index__faq-q"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-question-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> ¿La placa resiste agua y mordidas?</span>
             <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-down-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="" aria-hidden="true">
           </summary>
           <div class="ptcg-index__faq-body">
@@ -1852,7 +1854,7 @@
         </p>
         <div class="ptcg-index__cta-actions">
           <a href="#plans" class="ptcg-index__btn-hero-a">
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt=""> Proteger a mi mascota
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-shield-bold.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt=""> Proteger a mi mascota
           </a>
           <button class="ptcg-index__btn-hero-b" onclick="ptcgOpenModal('login')">
             <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-user-bold.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt=""> Ya tengo placa
@@ -1897,10 +1899,10 @@
               <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-chat-round-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
             </a>
             <a href="https://facebook.com/petcingo" target="_blank" rel="noopener" aria-label="Facebook">
-              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
             </a>
             <a href="https://tiktok.com/@petcingo" target="_blank" rel="noopener" aria-label="TikTok">
-              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
             </a>
           </div>
         </div>
@@ -1969,7 +1971,7 @@
           </button>
           <div class="ptcg-index__modal-divider">o con tu correo</div>
           <div class="ptcg-index__modal-error" id="ptcg-login-err" hidden>
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""><span id="ptcg-login-err-msg"></span>
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-close-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""><span id="ptcg-login-err-msg"></span>
           </div>
           <div class="ptcg-index__modal-field">
             <label class="ptcg-index__modal-label" for="ptcg-login-email">Correo electrónico</label>
@@ -2013,7 +2015,7 @@
           </button>
           <div class="ptcg-index__modal-divider">o con correo y contraseña</div>
           <div class="ptcg-index__modal-error" id="ptcg-reg-err" hidden>
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""><span id="ptcg-reg-err-msg"></span>
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-close-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""><span id="ptcg-reg-err-msg"></span>
           </div>
           <div class="ptcg-index__modal-field">
             <label class="ptcg-index__modal-label" for="ptcg-reg-name">Nombre completo</label>
@@ -2041,7 +2043,7 @@
           </div>
           <button class="ptcg-index__modal-submit" id="ptcg-reg-submit" onclick="ptcgEmailRegister()">
             <span class="ptcg-index__modal-spinner" aria-hidden="true"></span>
-            <span class="ptcg-index__modal-btn-text"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Crear cuenta</span>
+            <span class="ptcg-index__modal-btn-text"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-user-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Crear cuenta</span>
           </button>
           <div class="ptcg-index__modal-switch">¿Ya tienes cuenta? <a onclick="ptcgShowView('login')">Ingresar</a></div>
         </div>
@@ -2051,7 +2053,7 @@
           <h2 class="ptcg-index__modal-title">Recuperar contraseña</h2>
           <p class="ptcg-index__modal-sub">Te enviamos un enlace para restablecer tu contraseña.</p>
           <div class="ptcg-index__modal-error" id="ptcg-rec-err" hidden>
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""><span id="ptcg-rec-err-msg"></span>
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-close-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""><span id="ptcg-rec-err-msg"></span>
           </div>
           <div class="ptcg-index__modal-success" id="ptcg-rec-ok" hidden>
             <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""><span>¡Enviado! Revisa tu correo.</span>
@@ -2065,7 +2067,7 @@
           </div>
           <button class="ptcg-index__modal-submit" id="ptcg-rec-submit" onclick="ptcgSendRecovery()">
             <span class="ptcg-index__modal-spinner" aria-hidden="true"></span>
-            <span class="ptcg-index__modal-btn-text"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Enviar enlace</span>
+            <span class="ptcg-index__modal-btn-text"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-send-plane-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Enviar enlace</span>
           </button>
           <div class="ptcg-index__modal-switch">
             <a onclick="ptcgShowView('login')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-left-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Volver al inicio de sesión</a>
@@ -2083,7 +2085,7 @@
 
 <!-- ══ EMERGENCY FLOAT ══ -->
 <button class="ptcg-index__emergency-btn" id="ptcg-emergency-btn" onclick="emergencyMode()" aria-label="Emergencia veterinaria">
-  <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+  <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-shield-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
   <span>Necesito ayuda ahora</span>
 </button>
 
@@ -2434,7 +2436,7 @@
     var cityRow = document.getElementById('ptcg-vetdir-cities');
     if (cityRow) {
       var ch = '<button class="ptcg-index__city-tab is-active" data-vdcity="all" onclick="vdSetCityFilter(this)">' +
-               '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Todas</button>';
+               '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Todas</button>';
       Object.keys(citySet).sort().forEach(function(c) {
         ch += '<button class="ptcg-index__city-tab" data-vdcity="' + _vdEsc(c) + '" onclick="vdSetCityFilter(this)">' +
               '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> ' + _vdEsc(c) + '</button>';
@@ -2530,7 +2532,7 @@
       ? '<img src="' + _vdEsc(v.logoUrl) + '" alt="" loading="lazy">'
       : '<span class="ptcg-index__vetdir-logo-fallback"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-hospital-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span>';
     var openBadge = openNow
-      ? '<span class="ptcg-index__vetdir-open ptcg-index__vetdir-open--yes"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Abierto</span>'
+      ? '<span class="ptcg-index__vetdir-open ptcg-index__vetdir-open--yes"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Abierto</span>'
       : '<span class="ptcg-index__vetdir-open ptcg-index__vetdir-open--no"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-clock-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Cerrado</span>';
     var waNum = (v.whatsapp || v.phone || '').replace(/\D/g, '');
     var waHref = waNum ? 'https://wa.me/' + waNum + '?text=Hola%2C+los+encuentro+en+Petcingo' : '';
@@ -2588,7 +2590,7 @@
           var typeLabel = c.type === 'objeto' ? 'De objeto' : 'Economica';
           var imgHtml = c.imageUrl
             ? '<img src="' + _vdEsc(c.imageUrl) + '" alt="" loading="lazy">'
-            : '<span class="ptcg-index__camp-cover-fallback"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span>';
+            : '<span class="ptcg-index__camp-cover-fallback"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span>';
           var exp = c.expiresAt ? (c.expiresAt.toDate ? c.expiresAt.toDate() : new Date(c.expiresAt)) : null;
           var daysLeft = exp ? Math.ceil((exp - new Date()) / 86400000) : null;
           var daysHtml = (daysLeft !== null && daysLeft > 0)
@@ -2609,10 +2611,10 @@
                 '<span class="ptcg-index__camp-type ptcg-index__camp-type--' + _vdEsc(c.type || 'economica') + '">' + _vdEsc(typeLabel) + '</span>' +
               '</div>' +
               '<div class="ptcg-index__camp-body">' +
-                '<div class="ptcg-index__camp-shelter"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> ' + _vdEsc(c.shelterName || 'Refugio') + '</div>' +
+                '<div class="ptcg-index__camp-shelter"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> ' + _vdEsc(c.shelterName || 'Refugio') + '</div>' +
                 '<div class="ptcg-index__camp-title">' + _vdEsc(c.title || 'Campana de ayuda') + '</div>' +
                 progHtml + daysHtml +
-                '<a href="/ayuda/?id=' + _vdEsc(cid) + '" class="ptcg-index__camp-btn"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Ver campana</a>' +
+                '<a href="/ayuda/?id=' + _vdEsc(cid) + '" class="ptcg-index__camp-btn"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Ver campana</a>' +
               '</div>' +
             '</div>';
         });
