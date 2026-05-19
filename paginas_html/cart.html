@@ -519,7 +519,8 @@
     /* Update checkout URL with promo code if applied */
     var checkoutBtn = document.getElementById('checkout-btn');
     if (checkoutBtn) {
-      var url = 'https://prueb2.dashnexpages.net/finalizar-compra/?mode=cart';
+      var baseUrl = isIntl ? 'https://prueb2.dashnexpages.net/finalizar-compra-internacional/' : 'https://prueb2.dashnexpages.net/finalizar-compra/';
+      var url = baseUrl + '?mode=cart';
       if (promoApplied) url += '&promo=' + encodeURIComponent(promoApplied.code);
       checkoutBtn.href = url;
     }

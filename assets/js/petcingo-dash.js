@@ -1659,6 +1659,136 @@
     // Logica para guardar credenciales API en Firebase
   };
 
+  /* -- Tarifas de Envío Internacional por País (ISO 2-letter mapping) ------- */
+
+  function getFlagEmoji(countryCode) {
+    if (!countryCode || countryCode.length !== 2) return '🌐';
+    try {
+      var codePoints = countryCode
+        .toUpperCase()
+        .split('')
+        .map(function(char) { return 127397 + char.charCodeAt(0); });
+      return String.fromCodePoint.apply(String, codePoints);
+    } catch (e) {
+      return '🌐';
+    }
+  }
+
+  window.addIntlShippingRowToTable = function(countryCode, cost) {
+    var tbody = document.getElementById('intl-shipping-tbody');
+    if (!tbody) return;
+
+    // Clear empty state if it's there
+    var emptyStateRow = tbody.querySelector('.empty-state');
+    if (emptyStateRow && emptyStateRow.parentNode && emptyStateRow.parentNode.parentNode) {
+      tbody.innerHTML = '';
+    }
+
+    var codeUpper = countryCode.toUpperCase();
+    var flag = getFlagEmoji(codeUpper);
+
+    var tr = document.createElement('tr');
+    tr.dataset.country = codeUpper;
+    
+    var html = '';
+    html += '<td style="font-weight:600;font-family:\'Plus Jakarta Sans\',sans-serif;display:flex;align-items:center;gap:8px;border:none;padding:12px 14px;">' + flag + ' ' + codeUpper + '</td>';
+    html += '<td><input type="number" class="ptcg-activate__input intl-cost" value="' + (parseFloat(cost) || 0).toFixed(2) + '" step="0.01" min="0" style="width:100px;padding:6px 10px;"></td>';
+    html += '<td style="text-align:center;"><button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="this.parentNode.parentNode.remove(); checkIntlShippingTableEmpty();" style="color:#f43f5e;border-color:#FFCDD2;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button></td>';
+    tr.innerHTML = html;
+    tbody.appendChild(tr);
+  };
+
+  window.checkIntlShippingTableEmpty = function() {
+    var tbody = document.getElementById('intl-shipping-tbody');
+    if (!tbody) return;
+    if (tbody.children.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="3"><div class="empty-state">No hay tarifas internacionales configuradas.</div></td></tr>';
+    }
+  };
+
+  window.addIntlShippingRateRow = function() {
+    var countryEl = document.getElementById('new-intl-country');
+    var costEl = document.getElementById('new-intl-cost');
+    if (!countryEl || !costEl) return;
+
+    var country = countryEl.value.trim().toUpperCase();
+    var cost = parseFloat(costEl.value);
+
+    if (!country || country.length !== 2 || !/^[A-Z]{2}$/.test(country)) {
+      if (typeof toast === 'function') toast('El código de país debe ser exactamente de 2 letras.');
+      return;
+    }
+
+    if (isNaN(cost) || cost < 0) {
+      if (typeof toast === 'function') toast('El costo debe ser un número válido mayor o igual a 0.');
+      return;
+    }
+
+    // Check if country already exists in table
+    var tbody = document.getElementById('intl-shipping-tbody');
+    if (tbody && tbody.querySelector('tr[data-country="' + country + '"]')) {
+      if (typeof toast === 'function') toast('Ya existe una tarifa para ' + country + '. Puedes editarla directamente.');
+      return;
+    }
+
+    window.addIntlShippingRowToTable(country, cost);
+    countryEl.value = '';
+    costEl.value = '';
+  };
+
+  window.loadIntlShippingRates = function() {
+    var db2 = db(); if (!db2) return;
+    var tbody = document.getElementById('intl-shipping-tbody');
+    if (tbody) tbody.innerHTML = '<tr><td colspan="3"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></td></tr>';
+
+    db2.collection('siteConfig').doc('internationalShipping').get()
+      .then(function(doc) {
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        if (doc.exists) {
+          var d = doc.data() || {};
+          var keys = Object.keys(d).sort();
+          keys.forEach(function(key) {
+            // Skip updatedAt or any other metadata field if it's there
+            if (key === 'updatedAt') return;
+            window.addIntlShippingRowToTable(key, d[key]);
+          });
+        }
+        window.checkIntlShippingTableEmpty();
+      })
+      .catch(function(e) {
+        console.error('Error al cargar tarifas internacionales: ', e);
+        if (tbody) tbody.innerHTML = '<tr><td colspan="3"><div class="empty-state">Error al cargar tarifas.</div></td></tr>';
+      });
+  };
+
+  window.saveIntlShippingRates = function() {
+    var db2 = db(); if (!db2) return;
+    var tbody = document.getElementById('intl-shipping-tbody');
+    if (!tbody) return;
+
+    var data = {};
+    var rows = tbody.querySelectorAll('tr[data-country]');
+    for (var i = 0; i < rows.length; i++) {
+      var country = rows[i].dataset.country;
+      var costIn = rows[i].querySelector('.intl-cost');
+      if (country && costIn) {
+        data[country] = parseFloat(costIn.value) || 0;
+      }
+    }
+
+    data.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+
+    db2.collection('siteConfig').doc('internationalShipping').set(data)
+      .then(function() {
+        if (typeof toast === 'function') toast('Tarifas internacionales guardadas con éxito.');
+        if (typeof showDashAlert === 'function') showDashAlert('Tarifas internacionales de envío actualizadas.', 'success', 'ri-earth-line');
+      })
+      .catch(function(e) {
+        if (typeof toast === 'function') toast('Error al guardar tarifas internacionales: ' + e.message);
+      });
+  };
+
   /* -- Envios avanzados: nacionales e internacionales ----------------------- */
 
   window.toggleShippingTypeView = function() {
@@ -2302,6 +2432,7 @@
         setTimeout(function() { if (typeof loadPromotions  === 'function') loadPromotions();  }, 900);
         setTimeout(function() { if (typeof loadSiteConfig  === 'function') loadSiteConfig();  }, 1000);
         setTimeout(function() { if (typeof loadShippingRates === 'function') loadShippingRates(); }, 1100);
+        setTimeout(function() { if (typeof loadIntlShippingRates === 'function') loadIntlShippingRates(); }, 1150);
         setTimeout(function() { if (typeof loadShippingSettings === 'function') loadShippingSettings(); }, 1200);
         setTimeout(function() { if (typeof showInitialAlerts === 'function') showInitialAlerts(); }, 2200);
       }
@@ -2328,6 +2459,7 @@
         if (typeof loadPromotions  === 'function') loadPromotions();
         if (typeof loadSiteConfig  === 'function') loadSiteConfig();
         if (typeof loadShippingRates === 'function') loadShippingRates();
+        if (typeof loadIntlShippingRates === 'function') loadIntlShippingRates();
         if (typeof loadShippingSettings === 'function') loadShippingSettings();
         if (typeof showInitialAlerts === 'function') showInitialAlerts();
         if (typeof loadArchiveToggle === 'function') loadArchiveToggle();

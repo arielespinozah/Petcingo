@@ -39,6 +39,9 @@
   var qrTimer      = null;
   var quantity     = 1;
   var appliedPromo = null;
+  var intlShippingRates = {
+    ar: 10, bo: 10, br: 10, cl: 10, co: 10, ec: 10, mx: 10, pe: 10, py: 10, uy: 10, ve: 10, es: 10, us: 10
+  };
 
   /* ------------------------------------------------------------------ */
   /* INIT                                                                  */
@@ -52,6 +55,7 @@
 
     readUrlParams();
     loadPrices();
+    loadIntlShippingRates();
     renderPaymentMethods();
     initUploadInput();
   });
@@ -71,7 +75,8 @@
 
       var planKey = getParam('plan');
       if (planKey && DEFAULT_BS[planKey]) {
-        selectedPlan = { key: planKey, name: PLAN_NAMES[planKey], price: prices[planKey] };
+        var initialPrice = isIntl ? DEFAULT_USD[planKey] : prices[planKey];
+        selectedPlan = { key: planKey, name: PLAN_NAMES[planKey], price: initialPrice };
         renderPlanBanner();
       }
     } catch (_) {}
@@ -115,6 +120,18 @@
         if (p.preventa) prices.preventa = p.preventa;
         if (p.petid)    prices.petid    = p.petid;
         if (p.pack)     prices.pack     = p.pack;
+
+        var pUsd = (snap.data().pricesUsd) || {};
+        if (pUsd.preventa) DEFAULT_USD.preventa = pUsd.preventa;
+        if (pUsd.petid)    DEFAULT_USD.petid    = pUsd.petid;
+        if (pUsd.pack)     DEFAULT_USD.pack     = pUsd.pack;
+
+        if (isIntl) {
+          prices.preventa = DEFAULT_USD.preventa;
+          prices.petid    = DEFAULT_USD.petid;
+          prices.pack     = DEFAULT_USD.pack;
+        }
+
         if (selectedPlan) {
           selectedPlan.price = prices[selectedPlan.key];
           renderPlanBanner();
@@ -122,6 +139,26 @@
       }
     }).catch(function () {});
   }
+
+  function loadIntlShippingRates() {
+    if (!isIntl) return;
+    db.collection('siteConfig').doc('internationalShipping').get().then(function(snap) {
+      if (snap.exists) {
+        var data = snap.data();
+        for (var code in data) {
+          if (data.hasOwnProperty(code) && typeof data[code] === 'number') {
+            intlShippingRates[code] = data[code];
+          }
+        }
+      }
+    }).catch(function() {});
+  }
+
+  window.ptcgUpdateIntlShipping = function(flagCode) {
+    var rate = intlShippingRates[flagCode] != null ? intlShippingRates[flagCode] : 10;
+    deliveryFee = rate;
+    updateTotalDisplay();
+  };
 
   /* ------------------------------------------------------------------ */
   /* NAVEGACION DE FASES                                                   */

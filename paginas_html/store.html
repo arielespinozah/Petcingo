@@ -565,7 +565,7 @@
       <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-cart-bold.svg" class="si si--white" alt="">
       Ver carrito
     </a>
-    <a class="cart-oc-btn cart-oc-btn--secondary" href="https://prueb2.dashnexpages.net/finalizar-compra/">
+    <a class="cart-oc-btn cart-oc-btn--secondary" id="cart-oc-checkout-btn" href="https://prueb2.dashnexpages.net/finalizar-compra/">
       Finalizar compra
       <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-right-linear.svg" class="si si--primary" alt="">
     </a>
@@ -850,6 +850,10 @@
       '<img src="' + escH(p.imageUrl) + '" alt="' + escH(p.name) + '" loading="lazy">' :
       '<img src="" alt="" style="display:none;" loading="lazy">';
 
+    var isPlan = p.id === 'petid' || p.id === 'pack' || p.id === 'familiar' || p.id === 'preventa';
+    var btnText = isPlan ? 'Comprar' : 'Agregar';
+    var btnIcon = isPlan ? 'solar-check-circle-bold.svg' : 'solar-cart-plus-bold.svg';
+
     var h = '<div class="prd-card">';
     h += '<div class="prd-card-img">';
     h += imgHtml;
@@ -871,7 +875,7 @@
     h += '<div class="prd-card-stock ' + stockClass + '">' + stockText + '</div>';
     h += '<button class="prd-card-btn" onclick="addToCart(\'' + p.id + '\')" ' +
          (p.stock <= 0 ? 'disabled' : '') + '>';
-    h += '<img src="' + STORE_CDN + 'solar-cart-plus-bold.svg" class="si-sm si--white" alt=""> Agregar';
+    h += '<img src="' + STORE_CDN + btnIcon + '" class="si-sm si--white" alt=""> ' + btnText;
     h += '</button>';
     h += '</div></div>';
     return h;
@@ -926,6 +930,12 @@
 
   /* ── CART ── */
   window.addToCart = function (productId) {
+    if (productId === 'petid' || productId === 'pack' || productId === 'familiar' || productId === 'preventa') {
+      var planKey = productId === 'familiar' ? 'pack' : productId;
+      var checkoutUrl = isIntl ? 'https://prueb2.dashnexpages.net/finalizar-compra-internacional/' : 'https://prueb2.dashnexpages.net/finalizar-compra/';
+      window.location.href = checkoutUrl + '?plan=' + planKey;
+      return;
+    }
     var product = products.find(function (p) { return p.id === productId; });
     if (!product) return;
     var existing = cart.find(function (item) { return item.productId === productId; });
@@ -1031,6 +1041,11 @@
       var totalEl = document.getElementById('cart-oc-total');
       if (subtotalEl) subtotalEl.textContent = currency;
       if (totalEl) totalEl.textContent = currency;
+
+      var checkoutBtn = document.getElementById('cart-oc-checkout-btn');
+      if (checkoutBtn) {
+        checkoutBtn.href = isIntl ? 'https://prueb2.dashnexpages.net/finalizar-compra-internacional/' : 'https://prueb2.dashnexpages.net/finalizar-compra/';
+      }
     }
   }
 

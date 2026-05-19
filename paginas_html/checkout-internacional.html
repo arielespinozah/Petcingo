@@ -578,6 +578,56 @@
 #ptcg-receipt-input { display: none !important; }
 
 /* =====================================================================
+   FLAG GRID & BUTTONS
+   ===================================================================== */
+.flag-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)) !important;
+  gap: 8px !important;
+  margin-top: 8px !important;
+  width: 100% !important;
+}
+.flag-btn {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  padding: 10px 8px !important;
+  border: 1.5px solid rgba(69,82,204,0.12) !important;
+  border-radius: 14px !important;
+  background: rgba(255,255,255,0.7) !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  outline: none !important;
+}
+.flag-btn:hover {
+  border-color: #4552CC !important;
+  background: rgba(69,82,204,0.04) !important;
+}
+.flag-btn.selected {
+  border-color: #4552CC !important;
+  background: rgba(69,82,204,0.08) !important;
+  box-shadow: 0 0 0 3px rgba(69,82,204,0.12) !important;
+}
+.flag-img {
+  width: 32px !important;
+  height: 24px !important;
+  border-radius: 4px !important;
+  object-fit: cover !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08) !important;
+  pointer-events: none !important;
+}
+.flag-name {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  color: #1E255E !important;
+  text-align: center !important;
+  pointer-events: none !important;
+}
+
+/* =====================================================================
    RESPONSIVE
    ===================================================================== */
 @media (max-width: 540px) {
@@ -593,6 +643,7 @@
   </style>
 </head>
 <body>
+
 
 <div class="ptcg-checkout">
 
@@ -815,25 +866,61 @@
           </div>
 
           <div class="ptcg-checkout__field">
-            <label class="ptcg-checkout__label" for="ptcg-intl-country">País y Ciudad <span class="ptcg-checkout__required">*</span></label>
-            <div class="ptcg-checkout__input-wrap">
-              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-globe-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
-              <select class="ptcg-checkout__input" id="ptcg-intl-country" style="padding-left:14px;cursor:pointer;">
-  <option value="">Selecciona tu país...</option>
-  <option value="Argentina">🇦🇷 Argentina</option>
-  <option value="Bolivia">🇧🇴 Bolivia</option>
-  <option value="Brasil">🇧🇷 Brasil</option>
-  <option value="Chile">🇨🇱 Chile</option>
-  <option value="Colombia">🇨🇴 Colombia</option>
-  <option value="Ecuador">🇪🇨 Ecuador</option>
-  <option value="México">🇲🇽 México</option>
-  <option value="Perú">🇵🇪 Perú</option>
-  <option value="Paraguay">🇵🇾 Paraguay</option>
-  <option value="Uruguay">🇺🇾 Uruguay</option>
-  <option value="Venezuela">🇻🇪 Venezuela</option>
-  <option value="España">🇪🇸 España</option>
-  <option value="Estados Unidos">🇺🇸 Estados Unidos</option>
-</select>
+            <label class="ptcg-checkout__label">País de Envío <span class="ptcg-checkout__required">*</span></label>
+            <input type="hidden" id="ptcg-intl-country" value="">
+            <div class="flag-grid">
+              <button type="button" class="flag-btn" onclick="selectCheckoutCountry('Argentina', 'ar', this)">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flags/ar.svg" class="flag-img" alt="Argentina">
+                <span class="flag-name">Argentina</span>
+              </button>
+              <button type="button" class="flag-btn" onclick="selectCheckoutCountry('Bolivia', 'bo', this)">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flags/bo.svg" class="flag-img" alt="Bolivia">
+                <span class="flag-name">Bolivia</span>
+              </button>
+              <button type="button" class="flag-btn" onclick="selectCheckoutCountry('Brasil', 'br', this)">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flags/br.svg" class="flag-img" alt="Brasil">
+                <span class="flag-name">Brasil</span>
+              </button>
+              <button type="button" class="flag-btn" onclick="selectCheckoutCountry('Chile', 'cl', this)">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flags/cl.svg" class="flag-img" alt="Chile">
+                <span class="flag-name">Chile</span>
+              </button>
+              <button type="button" class="flag-btn" onclick="selectCheckoutCountry('Colombia', 'co', this)">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flags/co.svg" class="flag-img" alt="Colombia">
+                <span class="flag-name">Colombia</span>
+              </button>
+              <button type="button" class="flag-btn" onclick="selectCheckoutCountry('Ecuador', 'ec', this)">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flags/ec.svg" class="flag-img" alt="Ecuador">
+                <span class="flag-name">Ecuador</span>
+              </button>
+              <button type="button" class="flag-btn" onclick="selectCheckoutCountry('México', 'mx', this)">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flags/mx.svg" class="flag-img" alt="México">
+                <span class="flag-name">México</span>
+              </button>
+              <button type="button" class="flag-btn" onclick="selectCheckoutCountry('Perú', 'pe', this)">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flags/pe.svg" class="flag-img" alt="Perú">
+                <span class="flag-name">Perú</span>
+              </button>
+              <button type="button" class="flag-btn" onclick="selectCheckoutCountry('Paraguay', 'py', this)">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flags/py.svg" class="flag-img" alt="Paraguay">
+                <span class="flag-name">Paraguay</span>
+              </button>
+              <button type="button" class="flag-btn" onclick="selectCheckoutCountry('Uruguay', 'uy', this)">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flags/uy.svg" class="flag-img" alt="Uruguay">
+                <span class="flag-name">Uruguay</span>
+              </button>
+              <button type="button" class="flag-btn" onclick="selectCheckoutCountry('Venezuela', 've', this)">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flags/ve.svg" class="flag-img" alt="Venezuela">
+                <span class="flag-name">Venezuela</span>
+              </button>
+              <button type="button" class="flag-btn" onclick="selectCheckoutCountry('España', 'es', this)">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flags/es.svg" class="flag-img" alt="España">
+                <span class="flag-name">España</span>
+              </button>
+              <button type="button" class="flag-btn" onclick="selectCheckoutCountry('Estados Unidos', 'us', this)">
+                <img src="https://prueb2.dashnexpages.net/assets/svg-icons/Flags/us.svg" class="flag-img" alt="Estados Unidos">
+                <span class="flag-name">USA</span>
+              </button>
             </div>
             <div class="ptcg-checkout__field-error" id="ptcg-err-intl-country" hidden>
               <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Campo requerido
@@ -1018,8 +1105,34 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1500.0.min.js"></script>
-<script src="https://prueb2.dashnexpages.net/assets/js/petcingo-checkout.js?v=20260518"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
-<script>lucide.createIcons();</script>
+<script src="https://prueb2.dashnexpages.net/assets/js/petcingo-checkout.js?v=20260518"></script>
+<script>
+  lucide.createIcons();
+
+  function selectCheckoutCountry(country, flagCode, btn) {
+    var input = document.getElementById('ptcg-intl-country');
+    if (input) {
+      input.value = country;
+      var event = new Event('change', { bubbles: true });
+      input.dispatchEvent(event);
+    }
+    
+    var grid = btn.closest('.flag-grid');
+    if (grid) {
+      grid.querySelectorAll('.flag-btn').forEach(function(el) {
+        el.classList.remove('selected');
+      });
+    }
+    btn.classList.add('selected');
+
+    var err = document.getElementById('ptcg-err-intl-country');
+    if (err) err.hidden = true;
+
+    if (typeof ptcgUpdateIntlShipping === 'function') {
+      ptcgUpdateIntlShipping(flagCode);
+    }
+  }
+</script>
 </body>
 </html>
