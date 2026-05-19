@@ -279,7 +279,7 @@
       icon:     'ri-qr-code-line',
       name:     'Tag Pet ID',
       desc:     'Placa individual NFC + QR para una mascota. Perfil online completo con foto, contactos y veterinario.',
-      price:    '79',
+      price:    '97',
       currency: 'Bs',
       period:   'pago unico',
       features: [
@@ -300,7 +300,7 @@
       icon:     'ri-home-heart-line',
       name:     'Pack Familiar',
       desc:     'Hasta 3 placas para tus mascotas. Ideal para familias con varios animales. Ahorra comprando juntos.',
-      price:    '199',
+      price:    '250',
       currency: 'Bs',
       period:   'pago unico (3 placas)',
       features: [
@@ -314,14 +314,14 @@
       featured: true,
       checkoutBo:   'finalizar-compra',
       checkoutIntl: 'checkout',
-      planParam:    'familiar'
+      planParam:    'pack'
     },
     {
       id:       'preventa',
       icon:     'ri-price-tag-3-line',
       name:     'Preventa',
       desc:     'Precio especial de lanzamiento. Disponible por tiempo limitado. Una placa al mejor precio.',
-      price:    '59',
+      price:    '67',
       currency: 'Bs',
       period:   'precio de lanzamiento',
       features: [
@@ -340,7 +340,7 @@
   ];
 
   function buildUrl(base, planParam) {
-    var url = '/' + base + '/?plan=' + encodeURIComponent(planParam);
+    var url = 'https://prueb2.dashnexpages.net/' + base + '/?plan=' + encodeURIComponent(planParam);
     if (_ref) url += '&ref=' + encodeURIComponent(_ref);
     return url;
   }

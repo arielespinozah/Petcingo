@@ -198,7 +198,7 @@
   <!-- Tabs de plan -->
   <div class="it-plan-tabs">
     <a class="it-plan-tab" href="?plan=petid">Tag Pet ID</a>
-    <a class="it-plan-tab" href="?plan=familiar">Pack Familiar</a>
+    <a class="it-plan-tab" href="?plan=pack">Pack Familiar</a>
     <a class="it-plan-tab" href="?plan=preventa">Preventa</a>
   </div>
 
@@ -230,7 +230,7 @@
     <div>
       <h4 style="color:#fff;font-size:0.82rem;margin-bottom:8px;">Producto</h4>
       <a href="https://prueb2.dashnexpages.net/planes/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Tag Pet ID</a>
-      <a href="https://prueb2.dashnexpages.net/planes/?plan=familiar" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Pack Familiar</a>
+      <a href="https://prueb2.dashnexpages.net/planes/?plan=pack" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Pack Familiar</a>
       <a href="https://prueb2.dashnexpages.net/activacion/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Activar placa</a>
       <a href="https://prueb2.dashnexpages.net/mi-cuenta/" style="color:rgba(255,255,255,0.6);text-decoration:none;display:block;">Perfil de mascota</a>
     </div>
@@ -263,9 +263,9 @@
       badge: 'Placa NFC + QR',
       name: 'Tag Pet ID',
       desc: 'Placa individual NFC + QR para una mascota. Perfil online completo con foto, contactos y veterinario.',
-      price: '79',
+      price: '97',
       currency: 'Bs',
-      usd: '≈ USD 11',
+      usd: '≈ USD 14.99',
       period: 'Pago único · Sin mensualidades',
       features: [
         'Placa de acero inoxidable',
@@ -276,14 +276,14 @@
         'Entrega a domicilio'
       ]
     },
-    familiar: {
+    pack: {
       icon: '🏠',
       badge: 'Pack 3 Placas',
       name: 'Pack Familiar',
       desc: 'Hasta 3 placas para tus mascotas. Ideal para familias con varios animales. Ahorra comprando juntos.',
-      price: '199',
+      price: '250',
       currency: 'Bs',
-      usd: '≈ USD 28',
+      usd: '≈ USD 36',
       period: 'Pago único · 3 placas incluidas',
       features: [
         '3 placas de acero inoxidable',
@@ -299,9 +299,9 @@
       badge: 'Precio de Lanzamiento',
       name: 'Preventa',
       desc: 'Precio especial de lanzamiento. Disponible por tiempo limitado. Una placa al mejor precio.',
-      price: '59',
+      price: '67',
       currency: 'Bs',
-      usd: '≈ USD 8',
+      usd: '≈ USD 9.99',
       period: 'Precio de lanzamiento · Pago único',
       features: [
         'Placa de acero inoxidable',
@@ -316,6 +316,7 @@
 
   var params = new URLSearchParams(window.location.search);
   var planKey = params.get('plan') || 'petid';
+  if (planKey === 'familiar') planKey = 'pack';
   var ref = params.get('ref') || '';
   if (!PLANS[planKey]) planKey = 'petid';
   var plan = PLANS[planKey];

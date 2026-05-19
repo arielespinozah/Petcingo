@@ -96,6 +96,20 @@ https://prueb2.dashnexpages.net/assets/js/petcingo.js
 https://prueb2.dashnexpages.net/assets/scss/_variables.scss
 
 
+
+/assets/svg-icons
+https://prueb2.dashnexpages.net/assets/svg-icons/
+
+/assets/svg-iconsFlag-Departamentos
+https://prueb2.dashnexpages.net/assets/svg-icons/Flag-Departamentos/
+
+/assets/svg-icons/Flags
+https://prueb2.dashnexpages.net/assets/svg-icons/Flags/
+
+/assets/svg-icons/Solar
+https://prueb2.dashnexpages.net/assets/svg-icons/Solar/
+
+
 /assets/fonts
 
 https://prueb2.dashnexpages.net/assets/fonts/PlusJakartaSans-Bold.woff2
