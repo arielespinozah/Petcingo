@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node --check \"f:/Antigravity/Petcingo/assets/js/petcingo-dash.js\")",
+      "Bash(node --check \"f:/Antigravity/Petcingo/assets/js/petcingo.js\")"
+    ]
+  }
+}
