@@ -13,7 +13,9 @@
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
       "Bash(git push *)",
-      "Bash(echo \"exit:$?\")"
+      "Bash(echo \"exit:$?\")",
+      "Bash(node --check paginas_html/index.html)",
+      "Bash(git commit *)"
     ]
   }
 }
