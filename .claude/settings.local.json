@@ -2,7 +2,17 @@
   "permissions": {
     "allow": [
       "Bash(node --check \"f:/Antigravity/Petcingo/assets/js/petcingo-dash.js\")",
-      "Bash(node --check \"f:/Antigravity/Petcingo/assets/js/petcingo.js\")"
+      "Bash(node --check \"f:/Antigravity/Petcingo/assets/js/petcingo.js\")",
+      "Bash(node --check f:/Antigravity/Petcingo/assets/js/petcingo-dash.js)",
+      "Bash(node --check f:/Antigravity/Petcingo/assets/js/petcingo.js)",
+      "Bash(node --check f:/Antigravity/Petcingo/assets/js/app.js)",
+      "Bash(node --check f:/Antigravity/Petcingo/assets/js/petcingo-checkout.js)",
+      "Bash(grep -v '//.*ri-')",
+      "Bash(grep -v '//')",
+      "Bash(grep -v '//.*ri-\\\\|checkRemixIcon\\\\|iconMap\\\\|ri-arrow-left-line.*&#\\\\|ri-arrow-right.*&#\\\\|ri-check-fill.*&#\\\\|ri-check-line.*&#\\\\|ri-information-line.*&#\\\\|ri-error-warning\\\\|ri-arrow-down-s\\\\|ri-user-3.*&#\\\\|ri-user-line\\\\|ri-phone-line.*&#\\\\|ri-mail-line.*&#\\\\|ri-map-pin.*&#\\\\|ri-store-2.*&#\\\\|ri-timer.*&#\\\\|ri-close-line.*&#\\\\|ri-upload\\\\|ri-bank\\\\|ri-file-copy\\\\|ri-qr-code.*&#\\\\|ri-search-line.*&#\\\\|ri-subtract.*&#\\\\|ri-add-line.*&#\\\\|ri-coupon\\\\|ri-shopping-bag-3\\\\|ri-shopping-cart.*&#\\\\|remixicon\\\\.css\\\\|remixicon\\\\|font-family.*remixicon\\\\|class.*ri-\\\\]\\\\|class.*ri-\\\\]')",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
     ]
   }
 }
