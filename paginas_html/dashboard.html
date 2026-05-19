@@ -405,6 +405,61 @@
 
     .lucide { width: 1.2em; height: 1.2em; stroke-width: 2; }
     .lucide.text-success { color: #2ECC71; }
+
+    /* CONTENEDOR PRINCIPAL */
+    #dashboard {
+      max-width: 1400px !important;
+      margin: 0 auto !important;
+      width: 100% !important;
+    }
+
+    /* SIDEBAR */
+    #sidebar {
+      width: 240px !important;
+      min-width: 240px !important;
+      flex-shrink: 0 !important;
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+      flex: 1 !important;
+      min-width: 0 !important;
+      overflow-x: hidden !important;
+    }
+
+    /* NOTA DE VENTA (POS) - panel lateral */
+    #pos-note-panel {
+      min-width: 380px !important;
+      width: 380px !important;
+      flex-shrink: 0 !important;
+    }
+
+    /* LIMITAR ANCHO EN PANTALLAS GRANDES */
+    @media (min-width: 1600px) {
+      #dashboard {
+        max-width: 1400px !important;
+      }
+    }
+
+    /* RESPONSIVE REAL - solo para dispositivos táctiles */
+    @media (max-width: 768px) and (pointer: coarse) {
+      #sidebar {
+        position: fixed !important;
+        z-index: 1000 !important;
+        left: 0 !important;
+        top: 0 !important;
+        height: 100vh !important;
+        transform: translateX(-100%) !important;
+        transition: transform 0.3s !important;
+      }
+      #sidebar.open {
+        transform: translateX(0) !important;
+      }
+      #pos-note-panel {
+        min-width: 100% !important;
+        width: 100% !important;
+      }
+    }
   </style>
 </head>
 <body>

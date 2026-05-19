@@ -1197,7 +1197,11 @@
     var el = document.createElement('div');
     el.className = 'dash-alert ' + (type || '');
     var iconSrc = (icon && icon.indexOf('solar-') === 0) ? icon : 'solar-bell-bold.svg';
-    el.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/' + iconSrc + '" width="18" height="18" style="filter:brightness(0) invert(1);flex-shrink:0" alt=""><span>' + msg + '</span>';
+    var alertFilter = 'filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)';
+    if (type === 'success') alertFilter = 'filter:invert(60%) sepia(90%) saturate(400%) hue-rotate(80deg) brightness(95%) contrast(85%)';
+    else if (type === 'danger') alertFilter = 'filter:invert(30%) sepia(90%) saturate(2000%) hue-rotate(340deg) brightness(90%) contrast(95%)';
+    else if (type === 'warning') alertFilter = 'filter:invert(60%) sepia(90%) saturate(800%) hue-rotate(0deg) brightness(100%) contrast(95%)';
+    el.innerHTML = '<img src="https://prueb2.dashnexpages.net/assets/svg-icons/' + iconSrc + '" width="18" height="18" style="' + alertFilter + ';flex-shrink:0" alt=""><span>' + msg + '</span>';
     container.appendChild(el);
     var timer = setTimeout(function() { _dismissAlert(el); }, 6000);
     el.addEventListener('click', function() { clearTimeout(timer); _dismissAlert(el); });
