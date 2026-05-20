@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://prueb2.dashnexpages.net/assets/fonts/remixicon/remixicon.css" rel="stylesheet">
+  
   
   <link rel="stylesheet" href="https://prueb2.dashnexpages.net/assets/css/petcingo-index.css">
   <link rel="stylesheet" href="https://prueb2.dashnexpages.net/assets/css/petcingo-activate.css">
@@ -184,13 +184,6 @@
     .ptcg-activate__title {
       font-family: 'Sora', sans-serif !important;
     }
-    /* Excepción: iconos Remix Icon */
-    #dashboard i[class*="ri-"],
-    #login-screen i[class*="ri-"] {
-      font-family: 'remixicon' !important;
-      font-style: normal !important;
-    }
-
     /* ═══ BLINDAJE HOVER DE BOTONES ═══ */
     .ptcg-index__btn--primary:hover  { background: #2E3A9E !important; color: #fff !important; }
     .ptcg-index__btn--secondary:hover { background: rgba(69,82,204,0.14) !important; color: #4552CC !important; }
@@ -341,9 +334,7 @@
     #pet-detail-modal h3 {
       font-family: 'Sora', sans-serif !important;
     }
-    #vet-edit-modal i, #shelter-edit-modal i, #payment-modal i, #pet-detail-modal i {
-      font-family: 'remixicon' !important;
-    }
+    #vet-edit-modal i, #shelter-edit-modal i, #payment-modal i, #pet-detail-modal 
     .soporte-btns button { font-family: 'Plus Jakarta Sans', sans-serif !important; }
 
     /* ── Sidebar: separadores de categoría ── */
@@ -393,15 +384,6 @@
 .stat-card.active .stat-icon i   { color: #2ECC71 !important; }
 .stat-card.lost .stat-icon i     { color: #E74C3C !important; }
 .stat-card.expired .stat-icon i  { color: #F39C12 !important; }
-
-/* Blindaje de iconos en modales (para que no se vean cuadrados) */
-#vet-edit-modal i[class*="ri-"],
-#shelter-edit-modal i[class*="ri-"],
-#payment-modal i[class*="ri-"],
-#pet-detail-modal i[class*="ri-"] {
-  font-family: 'remixicon' !important;
-  font-style: normal !important;
-}
 
     .lucide { width: 1.2em; height: 1.2em; stroke-width: 2; }
     .lucide.text-success { color: #2ECC71; }
@@ -460,6 +442,60 @@
         width: 100% !important;
       }
     }
+    /* ═══ REDISEÑO VISUAL (SaaS, Anti-Dashnex) ═══ */
+    .nav-item.active .nav-icon img { filter: brightness(0) invert(1) !important; }
+    
+    .ptcg-activate__form-row, .form-row {
+      display: flex; flex-direction: column; gap: 12px !important; margin-bottom: 0 !important;
+    }
+    .ptcg-activate__form-group, .form-group {
+      margin-bottom: 0 !important; width: 100%;
+    }
+    .ptcg-activate__label {
+      margin-bottom: 8px !important; display: block; font-weight: 600; color: #424242; font-size: 0.9rem;
+    }
+    .ptcg-activate__input, .ptcg-activate__select,
+    input[type="text"]:not(#login-pass), input[type="number"], input[type="date"],
+    input[type="url"], input[type="tel"], input[type="email"],
+    textarea.ptcg-activate__input,
+    select.ptcg-activate__select, select.seller-select-big,
+    select[id*="filter-"], select[id*="-status"], select[id*="-channel"],
+    select[id*="-category"], select[id*="-type"] {
+      height: 42px !important; box-sizing: border-box !important;
+    }
+
+    .table-actions {
+      display: flex; gap: 4px; justify-content: flex-end; align-items: center;
+    }
+    
+    .stats-grid {
+      display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 16px !important; margin-bottom: 24px !important; align-items: stretch !important;
+    }
+    .stat-card {
+      height: 100% !important; justify-content: space-between !important; display: flex !important; flex-direction: column !important;
+    }
+    .stat-icon img, .stat-icon i {
+      width: 24px !important; height: 24px !important; font-size: 24px !important;
+    }
+
+    #pos-note-panel {
+      min-width: 380px !important; width: 380px !important; flex-shrink: 0 !important; box-sizing: border-box !important;
+    }
+    .payment-gateway-inputs, .shipping-inputs {
+      width: 100% !important; box-sizing: border-box !important; max-width: 100% !important; overflow: hidden !important;
+    }
+    #print-360-config-fields {
+      display: flex !important; flex-direction: column !important; gap: 12px !important;
+    }
+
+    @media (max-width: 991px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    }
+    @media (max-width: 767px) {
+      .table-actions button { width: 44px !important; height: 44px !important; font-size: 0 !important; }
+      .table-actions button img { width: 20px; height: 20px; margin: 0; }
+      .table-wrap { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+    }
   </style>
 </head>
 <body>
@@ -472,10 +508,10 @@
 <div id="login-screen" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(248,249,251,0.96);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);">
   <div style="background:#fff;border-radius:28px;padding:44px 32px;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 50px rgba(69,82,204,0.12),0 0 0 1px rgba(69,82,204,0.06);">
     <img src="https://prueb2.dashnexpages.net/assets/images/logo/PETCINGO_DARK.svg" alt="Petcingo" style="height:48px;margin-bottom:20px;display:block;margin-left:auto;margin-right:auto;">
-    <h2 style="font-family:'Sora',sans-serif;font-size:1.5rem;font-weight:800;color:#212121;margin:0 0 6px;">Panel de Administración</h2>
-    <p style="font-size:0.9rem;color:#757575;margin:0 0 24px;font-family:'Plus Jakarta Sans',sans-serif;">Ingresa la contraseña de acceso</p>
-    <div id="login-err" style="display:none;color:#E74C3C;font-weight:600;font-size:0.85rem;margin-bottom:12px;font-family:'Plus Jakarta Sans',sans-serif;">Contraseña incorrecta. Intenta de nuevo.</div>
-    <input type="password" id="login-pass" placeholder="Contraseña" autocomplete="current-password"
+    <h2 style="font-family:'Sora',sans-serif;font-size:1.5rem;font-weight:800;color:#212121;margin:0 0 6px;">Panel de Administraci&oacute;n</h2>
+    <p style="font-size:0.9rem;color:#757575;margin:0 0 24px;font-family:'Plus Jakarta Sans',sans-serif;">Ingresa la contrase&ntilde;a de acceso</p>
+    <div id="login-err" style="display:none;color:#E74C3C;font-weight:600;font-size:0.85rem;margin-bottom:12px;font-family:'Plus Jakarta Sans',sans-serif;">Contrase&ntilde;a incorrecta. Intenta de nuevo.</div>
+    <input type="password" id="login-pass" placeholder="Contrase&ntilde;a" autocomplete="current-password"
       style="width:100%;padding:14px 16px;border:1.5px solid #E0E0E0;border-radius:14px;font-size:0.95rem;font-family:'Plus Jakarta Sans',sans-serif;outline:none;transition:border-color 0.2s;margin-bottom:16px;box-sizing:border-box;display:block;"
       onfocus="this.style.borderColor='#4552CC';this.style.boxShadow='0 0 0 3px rgba(69,82,204,0.12)'"
       onblur="this.style.borderColor='#E0E0E0';this.style.boxShadow='none'"
@@ -496,7 +532,7 @@
   <button onclick="toggleSidebar()" style="background:#fff;border:1px solid #E0E0E0;border-radius:8px;padding:8px;cursor:pointer;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-menu-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button>
 </div>
 
-<!-- Alertas superiores — dentro de #dashboard para heredar blindaje tipográfico -->
+<!-- Alertas superiores — dentro de #dashboard para heredar blindaje tipogr&aacute;fico -->
 <div id="dashboard-alerts" style="position:fixed !important;top:16px !important;right:16px !important;z-index:200 !important;pointer-events:none !important;">
   <div id="alerts-container" style="display:flex;flex-direction:column;gap:6px;max-width:360px;"></div>
 </div>
@@ -517,17 +553,17 @@
     <nav class="sidebar-nav">
       <div class="nav-separator">Monitoreo</div>
       <button class="nav-item active" data-section="overview" onclick="showSection('overview',this)">
-        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Resumen
+        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-dashboard-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Resumen
       </button>
       <button class="nav-item" data-section="pets" data-perm="pets" onclick="showSection('pets',this)">
-        <span class="nav-icon"><i class="data-lucide="paw-print""></i></span> Mascotas
+        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-paw-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Mascotas
       </button>
       <button class="nav-item" data-section="lost-pets" onclick="showSection('lost-pets',this)">
-        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Mascotas Perdidas
+        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-bell-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Mascotas Perdidas
         <span id="lost-nav-badge" style="margin-left:auto;background:#f43f5e;color:#fff;font-size:.65rem;padding:1px 6px;border-radius:99px;font-weight:700;display:none"></span>
       </button>
       <button class="nav-item" data-section="reports" onclick="showSection('reports',this)">
-        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Reportes <span id="reports-nav-badge" style="margin-left:4px;background:#f43f5e;color:#fff;font-size:.65rem;padding:1px 6px;border-radius:99px;font-weight:700;display:none"></span>
+        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-chart-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Reportes <span id="reports-nav-badge" style="margin-left:4px;background:#f43f5e;color:#fff;font-size:.65rem;padding:1px 6px;border-radius:99px;font-weight:700;display:none"></span>
       </button>
 
       <div class="nav-separator">Operaciones</div>
@@ -540,7 +576,7 @@
         <span id="commissions-nav-badge" style="margin-left:auto;background:#f43f5e;color:#fff;font-size:.65rem;padding:1px 6px;border-radius:99px;font-weight:700;display:none"></span>
       </button>
       <button class="nav-item" data-section="store" onclick="showSection('store',this)">
-        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-shop-bold.svg" style="width:18px;height:18px;filter:inherit;" alt=""></span> Tienda
+        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-shop-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Tienda
         <span id="store-nav-badge" style="margin-left:auto;background:#f39c12;color:#fff;font-size:.65rem;padding:1px 6px;border-radius:99px;font-weight:700;display:none"></span>
       </button>
       <button class="nav-item" data-section="pos" onclick="showSection('pos',this)">
@@ -555,49 +591,49 @@
         <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-hospital-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Veterinarias
       </button>
       <button class="nav-item" data-section="shelters" data-perm="shelters" onclick="showSection('shelters',this)">
-        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Refugios
+        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-building-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Refugios
       </button>
       <button class="nav-item" data-section="affiliates" onclick="showSection('affiliates',this);if(typeof loadAffiliates==='function')loadAffiliates();">
-        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Afiliados
+        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-medal-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Afiliados
       </button>
       <button class="nav-item" data-section="customize" onclick="showSection('customize',this)">
-        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Personalizar Index
+        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-settings-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Personalizar Index
       </button>
 
-      <div class="nav-separator">Ventas y Logística</div>
+      <div class="nav-separator">Ventas y Log&iacute;stica</div>
       <button class="nav-item" data-section="orders" data-perm="orders" onclick="showSection('orders',this)">
         <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-cart-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Pedidos y Pagos
       </button>
       <button class="nav-item" data-section="shipping-config" data-perm="settings" onclick="showSection('shipping-config',this)">
-        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-delivery-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Pasarelas y Envíos
+        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-delivery-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Pasarelas y Env&iacute;os
       </button>
       <button class="nav-item" data-section="print-360" data-perm="admin" onclick="showSection('print-360',this);if(typeof loadPrintableOrders==='function')loadPrintableOrders();">
-        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-printer-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Impresión 360
+        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-printer-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Impresi&oacute;n 360
       </button>
 
       <div class="nav-separator">Sistema</div>
       <button class="nav-item" data-section="users" data-perm="settings" onclick="showSection('users',this)">
-        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Usuarios
+        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-user-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Usuarios
       </button>
       <button class="nav-item" data-section="logs" data-perm="settings" onclick="showSection('logs',this)">
-        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Auditoria
+        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Auditoria
       </button>
       <button class="nav-item" data-section="monitoring" data-perm="settings" onclick="showSection('monitoring',this)">
-        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Monitoreo
+        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-chart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Monitoreo
       </button>
       <button class="nav-item" data-section="storage" data-perm="settings" onclick="showSection('storage',this)">
-        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Almacenamiento
+        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-database-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Almacenamiento
       </button>
       <button class="nav-item" data-section="backup" data-perm="settings" onclick="showSection('backup',this)">
-        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Base de Datos
+        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-database-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Base de Datos
       </button>
       <button class="nav-item" data-section="settings" data-perm="settings" onclick="showSection('settings',this)">
-        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Configuracion
+        <span class="nav-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-settings-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></span> Configuracion
       </button>
     </nav>
 
     <div class="sidebar-footer">
-      <button class="btn-logout" onclick="doLogout()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-logout-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Cerrar sesión</button>
+      <button class="btn-logout" onclick="doLogout()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-logout-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Cerrar sesi&oacute;n</button>
     </div>
   </aside>
 
@@ -607,32 +643,32 @@
     <!-- ── RESUMEN ── -->
     <section class="section active" id="sec-overview">
       <div class="page-header">
-        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Resumen</h2>
+        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-chart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Resumen</h2>
         <p>Vista general del sistema Petcingo</p>
       </div>
 
       <!-- Row 1: Placas -->
       <div class="stats-grid">
         <div class="stat-card total">
-          <div class="stat-icon"><i class="data-lucide="paw-print""></i></div>
+          <div class="stat-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-paw-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
           <div class="stat-value" id="stat-total">—</div>
           <div class="stat-label">Placas Totales</div>
           <div id="stat-reserved-label" style="font-size:.68rem;color:var(--muted-dark);margin-top:3px"></div>
         </div>
         <div class="stat-card active">
-          <div class="stat-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
+          <div class="stat-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-check-circle-bold.svg" width="20" height="20" style="filter:invert(72%) sepia(45%) saturate(3501%) hue-rotate(113deg) brightness(95%) contrast(84%)" alt=""></div>
           <div class="stat-value" id="stat-active">—</div>
-          <div class="stat-label">Activadas (con dueño)</div>
+          <div class="stat-label">Activadas (con due&ntilde;o)</div>
         </div>
         <div class="stat-card lost">
-          <div class="stat-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
+          <div class="stat-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-alert-linear.svg" width="20" height="20" style="filter:invert(37%) sepia(93%) saturate(3663%) hue-rotate(345deg) brightness(96%) contrast(91%)" alt=""></div>
           <div class="stat-value" id="stat-lost">—</div>
           <div class="stat-label">Reportadas Perdidas</div>
         </div>
         <div class="stat-card expired">
-          <div class="stat-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-clock-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
+          <div class="stat-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-clock-linear.svg" width="20" height="20" style="filter:invert(67%) sepia(74%) saturate(2222%) hue-rotate(15deg) brightness(101%) contrast(93%)" alt=""></div>
           <div class="stat-value" id="stat-expired">—</div>
-          <div class="stat-label">Suscripción Vencida</div>
+          <div class="stat-label">Suscripci&oacute;n Vencida</div>
         </div>
       </div>
 
@@ -644,12 +680,12 @@
           <div class="stat-label">Veterinarias aliadas</div>
         </div>
         <div class="stat-card" style="background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.25)">
-          <div class="stat-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
+          <div class="stat-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
           <div class="stat-value" id="stat-shelters-count">—</div>
           <div class="stat-label">Refugios aliados</div>
         </div>
         <div class="stat-card" style="background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.25)">
-          <div class="stat-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
+          <div class="stat-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-database-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
           <div class="stat-value" id="stat-stock">—</div>
           <div class="stat-label">Stock disponible</div>
           <div style="font-size:.68rem;color:var(--muted-dark);margin-top:3px">placas sin asignar</div>
@@ -665,13 +701,13 @@
       <!-- Recent activations + quick actions -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:0">
         <div class="ptcg-index__card">
-          <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-clock-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Últimas Activaciones</div>
+          <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-clock-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> &Uacute;ltimas Activaciones</div>
           <div class="ptcg-activate__subtitle" style="margin-bottom:16px;font-size:0.85rem;" style="margin-bottom:10px">Placas activadas recientemente por propietarios</div>
           <div id="recent-list"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></div>
         </div>
         <div class="ptcg-index__card">
-          <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Últimas Reservadas</div>
-          <div class="ptcg-activate__subtitle" style="margin-bottom:16px;font-size:0.85rem;" style="margin-bottom:10px">Placas creadas pendientes de activación</div>
+          <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-clock-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> &Uacute;ltimas Reservadas</div>
+          <div class="ptcg-activate__subtitle" style="margin-bottom:16px;font-size:0.85rem;" style="margin-bottom:10px">Placas creadas pendientes de activaci&oacute;n</div>
           <div id="recent-reserved-list"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></div>
         </div>
       </div>
@@ -686,13 +722,13 @@
       <div class="qr-layout">
         <div>
           <div class="ptcg-index__card">
-            <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Cliente</div>
+            <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-user-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Cliente</div>
             <div class="ptcg-activate__subtitle" style="margin-bottom:16px;font-size:0.85rem;">Selecciona el cliente al que pertenece esta placa</div>
             <select class="seller-select-big ptcg-activate__select" id="reg-seller-select" style="width:100%;margin-bottom:12px;">
               <option value="">— Selecciona un cliente —</option>
             </select>
             <div class="reg-next-preview" id="reg-seller-info">
-              <div style="font-size:.72rem;color:var(--muted-dark);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Próximo ID</div>
+              <div style="font-size:.72rem;color:var(--muted-dark);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Pr&oacute;ximo ID</div>
               <div class="reg-next-id" id="reg-next-id">—</div>
             </div>
             <button class="ptcg-index__btn ptcg-index__btn--primary" style="width:100%;padding:14px" onclick="registerPlate()">
@@ -701,13 +737,13 @@
 
             <div class="register-result" id="reg-result">
               <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                <div class="register-id-display" id="reg-result-id" style="cursor:pointer;flex:1;min-width:0;" onclick="copyRegCode()" title="Clic para copiar el código">—</div>
-                <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="copyRegCode()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Copiar código</button>
+                <div class="register-id-display" id="reg-result-id" style="cursor:pointer;flex:1;min-width:0;" onclick="copyRegCode()" title="Clic para copiar el c&oacute;digo">—</div>
+                <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="copyRegCode()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Copiar c&oacute;digo</button>
               </div>
               <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
-                <button class="ptcg-index__btn ptcg-index__btn--success btn-sm" onclick="downloadRegQR()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Descargar QR</button>
-                <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm"   onclick="copyRegLink()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Copiar enlace</button>
-                <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="registerNextFast()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Siguiente rápido</button>
+                <button class="ptcg-index__btn ptcg-index__btn--success btn-sm" onclick="downloadRegQR()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-printer-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Descargar QR</button>
+                <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm"   onclick="copyRegLink()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Copiar enlace</button>
+                <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="registerNextFast()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-right-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Siguiente r&aacute;pido</button>
                 <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm"   onclick="resetRegister()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Limpiar</button>
               </div>
             </div>
@@ -728,7 +764,7 @@
               <div class="qr-result" id="qr-result" style="margin-top:14px">
                 <div class="qr-links" id="qr-links"></div>
                 <div class="qr-actions">
-                  <button class="ptcg-index__btn ptcg-index__btn--success btn-sm" onclick="downloadQR()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Descargar</button>
+                  <button class="ptcg-index__btn ptcg-index__btn--success btn-sm" onclick="downloadQR()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-printer-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Descargar</button>
                   <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm"   onclick="generateNew()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Limpiar</button>
                 </div>
               </div>
@@ -740,8 +776,8 @@
         <div style="position:sticky;top:32px;display:flex;justify-content:center">
           <div id="reg-qr-display">
             <div style="text-align:center;color:var(--muted-dark);padding:48px 20px">
-              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
-              <p style="font-size:.85rem">El QR aparecerá aquí</p>
+              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-qr-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+              <p style="font-size:.85rem">El QR aparecer&aacute; aqu&iacute;</p>
             </div>
           </div>
           <div id="qr-display" style="display:none"></div>
@@ -752,12 +788,12 @@
     <!-- ── MASCOTAS ── -->
     <section class="section" id="sec-pets">
       <div class="page-header">
-        <h2><i class="data-lucide="paw-print""></i> Mascotas Registradas</h2>
+        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-paw-bold.svg" width="24" height="24" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Mascotas Registradas</h2>
         <p>Gestiona todas las placas del sistema</p>
       </div>
       <div class="ptcg-index__card">
         <div class="table-toolbar">
-          <input type="text" class="ptcg-activate__input" id="search-input" placeholder="Buscar por ID, nombre o dueño…" oninput="filterTable()"/>
+          <input type="text" class="ptcg-activate__input" id="search-input" placeholder="Buscar por ID, nombre o due&ntilde;o…" oninput="filterTable()"/>
           <select class="ptcg-activate__select" id="filter-status" onchange="filterTable()">
             <option value="">Todos los estados</option>
             <option value="activo">Activos</option>
@@ -772,7 +808,7 @@
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>ID / Código</th><th>Mascota</th><th>Dueño</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead>
+            <thead><tr><th>ID / C&oacute;digo</th><th>Mascota</th><th>Due&ntilde;o</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead>
             <tbody id="pets-tbody">
               <tr><td colspan="6"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></td></tr>
             </tbody>
@@ -786,7 +822,7 @@
     <section class="section" id="sec-vets">
       <div class="page-header">
         <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-hospital-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Veterinarias</h2>
-        <p>Red de clínicas veterinarias aliadas a Petcingo</p>
+        <p>Red de cl&iacute;nicas veterinarias aliadas a Petcingo</p>
       </div>
       <div class="ptcg-index__card" style="margin-bottom:24px;">
         <button class="ptcg-index__btn ptcg-index__btn--secondary" onclick="document.getElementById('vet-form-wrap').classList.toggle('open')">
@@ -813,7 +849,7 @@
         </div>
       </div>
       <div class="ptcg-index__card">
-        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px" style="margin-bottom:16px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Veterinarias Registradas<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="margin-left:auto" onclick="loadVets()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button></div>
+        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px" style="margin-bottom:16px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-hospital-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Veterinarias Registradas<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="margin-left:auto" onclick="loadVets()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button></div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Nombre</th><th>Ciudad</th><th>Telefono</th><th>Nivel</th><th>Comision %</th><th>Estado</th><th>Acciones</th></tr></thead>
@@ -836,7 +872,7 @@
       <div class="qr-layout">
         <div class="ptcg-index__card">
           <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-qr-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Crear Nueva Placa</div>
-          <div class="ptcg-activate__subtitle" style="margin-bottom:16px;font-size:0.85rem;">El ID se genera automáticamente con el prefijo y contador. <strong>Se creará una nueva placa reservada.</strong></div>
+          <div class="ptcg-activate__subtitle" style="margin-bottom:16px;font-size:0.85rem;">El ID se genera autom&aacute;ticamente con el prefijo y contador. <strong>Se crear&aacute; una nueva placa reservada.</strong></div>
           <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px">
             <div style="flex:1;padding:11px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10);border-radius:11px;font-size:.95rem;font-weight:600;color:#c084fc" id="vet-next-id">—</div>
             <button class="ptcg-index__btn ptcg-index__btn--primary" onclick="generateVetQR()">Crear y Reservar Placa</button>
@@ -844,7 +880,7 @@
           <div class="qr-result" id="vet-qr-result">
             <div class="qr-links" id="vet-qr-links"></div>
             <div class="qr-actions" style="margin-top:14px">
-              <button class="ptcg-index__btn ptcg-index__btn--success btn-sm" onclick="downloadVetQR()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Descargar</button>
+              <button class="ptcg-index__btn ptcg-index__btn--success btn-sm" onclick="downloadVetQR()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-printer-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Descargar</button>
               <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm"   onclick="refreshVetCounter()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Siguiente</button>
             </div>
           </div>
@@ -852,8 +888,8 @@
         <div style="display:flex;justify-content:center;align-items:flex-start;padding-top:8px"><div id="vet-qr-display"></div></div>
       </div>
       <div class="ptcg-index__card">
-        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px" style="margin-bottom:16px"><i class="data-lucide="paw-print""></i> Placas de esta Veterinaria<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="margin-left:auto" onclick="loadVetPets()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button></div>
-        <div class="table-wrap"><table><thead><tr><th>ID</th><th>Mascota</th><th>Dueño</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody id="vet-pets-tbody"><tr><td colspan="6"><div class="empty-state"><p>Selecciona una veterinaria</p></div></td></tr></tbody></table></div>
+        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px" style="margin-bottom:16px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-paw-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Placas de esta Veterinaria<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="margin-left:auto" onclick="loadVetPets()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button></div>
+        <div class="table-wrap"><table><thead><tr><th>ID</th><th>Mascota</th><th>Due&ntilde;o</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody id="vet-pets-tbody"><tr><td colspan="6"><div class="empty-state"><p>Selecciona una veterinaria</p></div></td></tr></tbody></table></div>
         <div class="table-count" id="vet-pets-count"></div>
       </div>
     </section>
@@ -861,7 +897,7 @@
     <!-- ── REFUGIOS ── -->
     <section class="section" id="sec-shelters">
       <div class="page-header">
-        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Refugios</h2>
+        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Refugios</h2>
         <p>Red de refugios y protectoras aliados a Petcingo</p>
       </div>
       <div class="ptcg-index__card" style="margin-bottom:24px;">
@@ -869,16 +905,16 @@
           <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-add-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Registrar Nuevo Refugio
         </button>
         <div id="shelter-form-wrap" class="collapsible-form">
-          <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.05rem;display:flex;align-items:center;gap:8px;margin-top:20px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Datos del Refugio</div>
+          <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.05rem;display:flex;align-items:center;gap:8px;margin-top:20px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Datos del Refugio</div>
           <div class="ptcg-activate__form-row">
             <div class="form-group full"><label class="ptcg-activate__label">Nombre *</label><input class="ptcg-activate__input" type="text" id="sh-name" placeholder="Ej: Huellas Felices" maxlength="80"/></div>
-            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Encargado *</label><input class="ptcg-activate__input" type="text" id="sh-responsible" placeholder="Ej: María López" maxlength="60"/></div>
+            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Encargado *</label><input class="ptcg-activate__input" type="text" id="sh-responsible" placeholder="Ej: Mar&iacute;a L&oacute;pez" maxlength="60"/></div>
             <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Prefijo de Placa * <span style="color:var(--error)">●</span></label><input class="ptcg-activate__input" type="text" id="sh-prefix" placeholder="Ej: REF-HF (sin espacios)" maxlength="20" oninput="this.value=this.value.toUpperCase().replace(/\s/g,'')"/></div>
-            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Teléfono</label><input class="ptcg-activate__input" type="tel" id="sh-phone" placeholder="+591 76543210" maxlength="20"/></div>
-            <div class="form-group full"><label class="ptcg-activate__label">Dirección</label><input class="ptcg-activate__input" type="text" id="sh-address" placeholder="Ej: Calle Potosí 123, Zona Norte" maxlength="120"/></div>
+            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Tel&eacute;fono</label><input class="ptcg-activate__input" type="tel" id="sh-phone" placeholder="+591 76543210" maxlength="20"/></div>
+            <div class="form-group full"><label class="ptcg-activate__label">Direcci&oacute;n</label><input class="ptcg-activate__input" type="text" id="sh-address" placeholder="Ej: Calle Potos&iacute; 123, Zona Norte" maxlength="120"/></div>
             <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Usuario (login refugio)</label><input class="ptcg-activate__input" type="text" id="sh-username" placeholder="Ej: huellas-felices" maxlength="40" oninput="this.value=this.value.toLowerCase().replace(/\s/g,'')"/></div>
-            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Contraseña (login refugio)</label><input class="ptcg-activate__input" type="password" id="sh-password" placeholder="Mínimo 6 caracteres" maxlength="40"/></div>
-            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Límite mascotas en adopción</label><input class="ptcg-activate__input" type="number" id="sh-limite" placeholder="40" min="1" max="200" value="40"/></div>
+            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Contrase&ntilde;a (login refugio)</label><input class="ptcg-activate__input" type="password" id="sh-password" placeholder="M&iacute;nimo 6 caracteres" maxlength="40"/></div>
+            <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">L&iacute;mite mascotas en adopci&oacute;n</label><input class="ptcg-activate__input" type="number" id="sh-limite" placeholder="40" min="1" max="200" value="40"/></div>
             <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Max. campanas activas</label><input class="ptcg-activate__input" type="number" id="sh-maxCampaigns" placeholder="3" min="1" max="10" value="3"/></div>
             <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Dias para expirar campana</label><input class="ptcg-activate__input" type="number" id="sh-campaignExpirationDays" placeholder="15" min="5" max="60" value="15"/></div>
             <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Horas de aviso previo</label><input class="ptcg-activate__input" type="number" id="sh-campaignGraceHours" placeholder="48" min="12" max="168" value="48"/></div>
@@ -887,7 +923,7 @@
         </div>
       </div>
       <div class="ptcg-index__card">
-        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px" style="margin-bottom:16px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Refugios Registrados<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="margin-left:auto" onclick="loadShelters()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button></div>
+        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px" style="margin-bottom:16px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Refugios Registrados<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="margin-left:auto" onclick="loadShelters()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button></div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Nombre</th><th>Prefijo</th><th>Encargado</th><th>Estado</th><th>Comision %</th><th>Telefono</th><th>Direccion</th><th>Registrado</th><th>Acciones</th></tr></thead>
@@ -910,7 +946,7 @@
       <div class="qr-layout">
         <div class="ptcg-index__card">
           <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-qr-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Crear Nueva Placa</div>
-          <div class="ptcg-activate__subtitle" style="margin-bottom:16px;font-size:0.85rem;">El ID se genera automáticamente. <strong>Se creará una nueva placa reservada.</strong></div>
+          <div class="ptcg-activate__subtitle" style="margin-bottom:16px;font-size:0.85rem;">El ID se genera autom&aacute;ticamente. <strong>Se crear&aacute; una nueva placa reservada.</strong></div>
           <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px">
             <div style="flex:1;padding:11px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10);border-radius:11px;font-size:.95rem;font-weight:600;color:#c084fc" id="sh-next-id">—</div>
             <button class="ptcg-index__btn ptcg-index__btn--primary" onclick="generateShelterQR()">Crear y Reservar Placa</button>
@@ -918,7 +954,7 @@
           <div class="qr-result" id="sh-qr-result">
             <div class="qr-links" id="sh-qr-links"></div>
             <div class="qr-actions" style="margin-top:14px">
-              <button class="ptcg-index__btn ptcg-index__btn--success btn-sm" onclick="downloadShelterQR()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Descargar</button>
+              <button class="ptcg-index__btn ptcg-index__btn--success btn-sm" onclick="downloadShelterQR()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-printer-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Descargar</button>
               <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm"   onclick="refreshShelterCounter()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Siguiente</button>
             </div>
           </div>
@@ -926,8 +962,8 @@
         <div style="display:flex;justify-content:center;align-items:flex-start;padding-top:8px"><div id="sh-qr-display"></div></div>
       </div>
       <div class="ptcg-index__card">
-        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px" style="margin-bottom:16px"><i class="data-lucide="paw-print""></i> Placas de este Refugio<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="margin-left:auto" onclick="loadShelterPets()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button></div>
-        <div class="table-wrap"><table><thead><tr><th>ID</th><th>Mascota</th><th>Dueño</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody id="sh-pets-tbody"><tr><td colspan="6"><div class="empty-state"><p>Selecciona un refugio</p></div></td></tr></tbody></table></div>
+        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px" style="margin-bottom:16px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-paw-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Placas de este Refugio<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="margin-left:auto" onclick="loadShelterPets()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button></div>
+        <div class="table-wrap"><table><thead><tr><th>ID</th><th>Mascota</th><th>Due&ntilde;o</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody id="sh-pets-tbody"><tr><td colspan="6"><div class="empty-state"><p>Selecciona un refugio</p></div></td></tr></tbody></table></div>
         <div class="table-count" id="sh-pets-count"></div>
       </div>
     </section>
@@ -935,14 +971,14 @@
     <!-- ── USUARIOS ── -->
     <section class="section" id="sec-users">
       <div class="page-header">
-        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Usuarios y Permisos</h2>
+        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-user-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Usuarios y Permisos</h2>
         <p>Gestiona el acceso del equipo con permisos granulares</p>
       </div>
       <div class="ptcg-index__card">
-        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Crear Usuario</div>
+        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-user-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Crear Usuario</div>
         <div class="ptcg-activate__form-row" style="margin-bottom:14px">
           <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Nombre de usuario *</label><input class="ptcg-activate__input" type="text" id="usr-name" placeholder="Ej: ana.garcia" maxlength="40"/></div>
-          <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Contraseña *</label><input class="ptcg-activate__input" type="password" id="usr-pass" placeholder="Mínimo 6 caracteres" maxlength="40"/></div>
+          <div class="ptcg-activate__form-group"><label class="ptcg-activate__label">Contrase&ntilde;a *</label><input class="ptcg-activate__input" type="password" id="usr-pass" placeholder="M&iacute;nimo 6 caracteres" maxlength="40"/></div>
         </div>
         <div style="margin-bottom:14px">
           <div class="ptcg-activate__label" style="margin-bottom:8px">Permisos de acceso</div>
@@ -952,36 +988,36 @@
             <label class="perm-check"><input type="checkbox" id="perm-pets"      checked/> <span>Ver Mascotas</span></label>
             <label class="perm-check"><input type="checkbox" id="perm-vets"/>               <span>Gestionar Veterinarias</span></label>
             <label class="perm-check"><input type="checkbox" id="perm-shelters"/>            <span>Gestionar Refugios</span></label>
-            <label class="perm-check"><input type="checkbox" id="perm-settings"/>            <span><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-lock-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Configuración</span></label>
+            <label class="perm-check"><input type="checkbox" id="perm-settings"/>            <span><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-lock-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Configuraci&oacute;n</span></label>
           </div>
         </div>
-        <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" id="btn-user-action" onclick="saveUser()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Crear Usuario</button>
+        <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" id="btn-user-action" onclick="saveUser()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-user-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Crear Usuario</button>
         <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="margin-left:8px" onclick="resetUserForm()">Cancelar</button>
       </div>
       <div class="ptcg-index__card">
-        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px" style="margin-bottom:16px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Usuarios Registrados<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="margin-left:auto" onclick="loadUsers()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button></div>
+        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px" style="margin-bottom:16px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-user-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Usuarios Registrados<button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="margin-left:auto" onclick="loadUsers()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button></div>
         <div id="users-list"><div class="empty-state" style="padding:20px"><div class="loading-dots"><span></span><span></span><span></span></div></div></div>
       </div>
     </section>
 
-    <!-- ── AUDITORÍA ── -->
+    <!-- ── AUDITOR&Iacute;A ── -->
     <section class="section" id="sec-logs">
       <div class="page-header">
-        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Registro de Auditoría</h2>
-        <p>Historial de acciones del sistema — muestra 25 por página</p>
+        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Registro de Auditor&iacute;a</h2>
+        <p>Historial de acciones del sistema — muestra 25 por p&aacute;gina</p>
       </div>
       <div class="ptcg-index__card">
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px">
           <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="loadLogs(true)"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Recargar</button>
           <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
             <input type="number" id="cfg-log-days" value="30" min="1" max="365" style="width:64px;padding:5px 8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:var(--text-dark);font-size:.82rem;text-align:center"/>
-            <span style="font-size:.75rem;color:var(--muted-dark)">días</span>
-            <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="color:#4552CC" onclick="archiveLogsToBucket()" id="btn-archive-logs"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Archivar logs (&gt;30 dias)</button>
+            <span style="font-size:.75rem;color:var(--muted-dark)">d&iacute;as</span>
+            <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="color:#4552CC" onclick="archiveLogsToBucket()" id="btn-archive-logs"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-database-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Archivar logs (&gt;30 dias)</button>
           </div>
         </div>
         <div id="logs-list"><div class="empty-state" style="padding:24px"><div class="loading-dots"><span></span><span></span><span></span></div></div></div>
         <div style="text-align:center;margin-top:16px">
-          <button id="btn-load-more-logs" class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="loadMoreLogs()" style="display:none"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-down-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Cargar más</button>
+          <button id="btn-load-more-logs" class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="loadMoreLogs()" style="display:none"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-arrow-down-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Cargar m&aacute;s</button>
         </div>
       </div>
     </section>
@@ -989,39 +1025,39 @@
     <!-- ── BASE DE DATOS / BACKUP ── -->
     <section class="section" id="sec-backup">
       <div class="page-header">
-        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Base de Datos</h2>
-        <p>Respaldo completo y gestión de retención de datos</p>
+        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-database-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Base de Datos</h2>
+        <p>Respaldo completo y gesti&oacute;n de retenci&oacute;n de datos</p>
       </div>
 
       <!-- Full Backup -->
       <div class="ptcg-index__card" style="margin-bottom:20px;border:1.5px solid rgba(81,0,192,.3);background:rgba(81,0,192,.05)">
-        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Backup Completo del Sistema</div>
+        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-database-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Backup Completo del Sistema</div>
         <div class="ptcg-activate__subtitle" style="margin-bottom:16px;font-size:0.85rem;">Exporta TODAS las colecciones en un solo archivo JSON: pets, usuarios, veterinarias, refugios, escaneos y logs.</div>
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;">
           <button id="btn-full-backup" class="ptcg-index__btn ptcg-index__btn--primary" onclick="exportFullBackup()" style="padding:12px 28px">
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Exportar Backup Completo
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-database-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Exportar Backup Completo
           </button>
           <input type="file" id="import-full-backup-file" style="display:none" accept=".json" onchange="importFullBackup(event)">
           <button class="ptcg-index__btn ptcg-index__btn--secondary" onclick="document.getElementById('import-full-backup-file').click()" style="padding:12px 28px">
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Importar Backup Completo
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-database-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Importar Backup Completo
           </button>
         </div>
       </div>
 
       <!-- Scan retention -->
       <div class="ptcg-index__card" style="margin-bottom:20px;border:1.5px solid rgba(255,59,107,.2);background:rgba(255,59,107,.03)">
-        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Retención de Escaneos</div>
-        <div class="ptcg-activate__subtitle" style="margin-bottom:16px;font-size:0.85rem;">Elimina escaneos antiguos (scan_logs) para mantener la base de datos liviana. Se recomienda purgar cada 90 días.</div>
+        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-clock-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Retenci&oacute;n de Escaneos</div>
+        <div class="ptcg-activate__subtitle" style="margin-bottom:16px;font-size:0.85rem;">Elimina escaneos antiguos (scan_logs) para mantener la base de datos liviana. Se recomienda purgar cada 90 d&iacute;as.</div>
         <div style="display:flex;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap">
           <input type="number" id="cfg-scan-days" value="90" min="7" max="365" style="width:80px;padding:8px 10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:10px;color:var(--text-dark);font-size:.9rem;text-align:center"/>
-          <span style="font-size:.85rem;color:var(--muted-dark)">días de retención</span>
+          <span style="font-size:.85rem;color:var(--muted-dark)">d&iacute;as de retenci&oacute;n</span>
           <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="color:var(--error);margin-left:auto" onclick="purgeScanLogs()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Purgar escaneos antiguos</button>
         </div>
       </div>
 
       <!-- Individual collections -->
       <div class="ptcg-index__card">
-        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Exportar / Importar por Colección</div>
+        <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-database-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Exportar / Importar por Colecci&oacute;n</div>
         <div class="ptcg-activate__subtitle" style="margin-bottom:16px;font-size:0.85rem;">Descarga o restaura colecciones individuales en formato JSON.</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:16px">
           <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:18px 16px">
@@ -1034,7 +1070,7 @@
           <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:18px 16px">
             <div style="font-size:28px;margin-bottom:8px">🏥</div>
             <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:6px">Veterinarias</div>
-            <div style="font-size:.78rem;color:var(--muted-dark);margin-bottom:12px">Red de clínicas aliadas</div>
+            <div style="font-size:.78rem;color:var(--muted-dark);margin-bottom:12px">Red de cl&iacute;nicas aliadas</div>
             <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" style="width:100%;margin-bottom:6px" onclick="exportDatabase('veterinarias')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-upload-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Exportar</button>
             <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" style="width:100%" onclick="importDatabase('veterinarias')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-upload-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Importar</button>
           </div>
@@ -1060,13 +1096,13 @@
           </div>
           <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:18px 16px">
             <div style="font-size:28px;margin-bottom:8px">📋</div>
-            <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:6px">Auditoría (logs)</div>
+            <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:6px">Auditor&iacute;a (logs)</div>
             <div style="font-size:.78rem;color:var(--muted-dark);margin-bottom:12px">Registro de acciones</div>
             <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" style="width:100%;margin-bottom:6px" onclick="exportDatabase('logs')"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-upload-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Exportar</button>
           </div>
         </div>
         <div style="margin-top:18px;padding:14px 16px;background:rgba(255,176,32,.06);border:1px solid rgba(255,176,32,.2);border-radius:12px;font-size:.8rem;color:#b8860b;line-height:1.6">
-          <strong>ℹ️ Importación:</strong> Carga un JSON exportado desde esta sección. IDs existentes son sobreescritos (merge). Fechas ISO se convierten automáticamente a Timestamp de Firestore.
+          <strong>ℹ️ Importaci&oacute;n:</strong> Carga un JSON exportado desde esta secci&oacute;n. IDs existentes son sobreescritos (merge). Fechas ISO se convierten autom&aacute;ticamente a Timestamp de Firestore.
         </div>
       </div>
     </section>
@@ -1074,7 +1110,7 @@
     <!-- ── MONITOREO DE APIS ── -->
     <section class="section" id="sec-monitoring">
       <div class="page-header">
-        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Monitoreo de APIs</h2>
+        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-chart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Monitoreo de APIs</h2>
         <p>Estado en tiempo real de las dependencias y servicios del ecosistema</p>
       </div>
       
@@ -1150,7 +1186,7 @@
     <!-- ── GESTIÓN DE ALMACENAMIENTO ── -->
     <section class="section" id="sec-storage">
       <div class="page-header">
-        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Gestion de Almacenamiento</h2>
+        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-database-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Gestion de Almacenamiento</h2>
         <p>Estadisticas de uso y herramientas de optimizacion para planes gratuitos</p>
       </div>
 
@@ -1159,7 +1195,7 @@
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
           <div>
             <h3 style="margin:0;display:flex;align-items:center;gap:8px;font-family:'Sora',sans-serif;font-weight:700;font-size:1.1rem;color:#212121;">
-              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Archivo Automatico de Logs
+              <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-database-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Archivo Automatico de Logs
             </h3>
             <p style="margin:6px 0 0;color:#757575;font-size:0.85rem;">
               Consolida logs antiguos en documentos comprimidos por mes. Reduce lecturas y escrituras.
@@ -1173,7 +1209,7 @@
           </label>
         </div>
         <div id="archive-status-msg" style="margin-top:12px;padding:8px 12px;border-radius:8px;background:#FFF3E0;color:#E65100;font-size:0.82rem;font-weight:600;display:none;">
-          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> <span id="archive-status-text"></span>
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-database-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> <span id="archive-status-text"></span>
         </div>
       </div>
 
@@ -1276,7 +1312,7 @@
       <!-- Tabla de Estadisticas por Coleccion -->
       <div class="ptcg-index__card" style="margin-bottom:20px;padding:24px;border:1px solid rgba(0,0,0,0.05);background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.02)">
         <h3 style="font-family:'Sora',sans-serif;font-weight:700;font-size:1.1rem;color:#212121;margin:0 0 16px 0;display:flex;align-items:center;gap:8px">
-          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Estadisticas por Coleccion
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-database-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Estadisticas por Coleccion
         </h3>
         <div class="table-wrap">
           <table>
@@ -1298,7 +1334,7 @@
       <!-- Contenedor de Optimización -->
       <div class="ptcg-index__card" style="padding:24px;border:1px solid rgba(255,176,32,.2);background:rgba(255,176,32,.03);border-radius:16px;margin-bottom:20px;">
         <h3 style="font-family:'Sora',sans-serif;font-weight:700;font-size:1.1rem;color:#D35400;margin:0 0 8px 0;display:flex;align-items:center;gap:8px">
-          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Optimizacion para el Plan Spark (Gratuito)
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-database-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Optimizacion para el Plan Spark (Gratuito)
         </h3>
         <p style="font-size:0.85rem;color:#757575;line-height:1.6;margin-bottom:16px">
           Para evitar exceder el limite gratuito de Firebase y mantener el sistema a coste cero, implementamos las siguientes estrategias:
@@ -1313,10 +1349,10 @@
             <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Recargar Estadisticas
           </button>
           <button class="ptcg-index__btn ptcg-index__btn--secondary" onclick="optimizeLocalCache()" style="padding:12px 28px">
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Forzar Optimizacion Cache
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-database-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Forzar Optimizacion Cache
           </button>
           <button class="ptcg-index__btn ptcg-index__btn--secondary" onclick="archiveOldLogs()" style="padding:12px 28px">
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Archivar logs
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-database-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Archivar logs
           </button>
         </div>
       </div>
@@ -1325,8 +1361,8 @@
     <!-- ── CONFIGURACIÓN ── -->
     <section class="section" id="sec-settings">
       <div class="page-header">
-        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Configuración</h2>
-        <p>Personalización y ajustes del panel</p>
+        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-settings-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Configuraci&oacute;n</h2>
+        <p>Personalizaci&oacute;n y ajustes del panel</p>
       </div>
       <div class="settings-grid">
         <!-- Logo -->
@@ -1339,7 +1375,7 @@
             <img id="cfg-logo-preview" class="logo-preview" alt="preview logo"/>
           </div>
           <div style="display:flex;gap:10px">
-            <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="saveLogo()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar logo</button>
+            <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="saveLogo()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar logo</button>
             <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm"   onclick="removeLogo()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-trash-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Quitar logo</button>
           </div>
         </div>
@@ -1351,13 +1387,13 @@
             <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-qr-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> QR de Pago para Checkout
           </div>
           <div class="ptcg-activate__subtitle" style="margin-bottom:16px;font-size:0.85rem;">
-            Sube la imagen QR de tu banca mobile. Se mostrará en el checkout cuando el cliente elija "QR Transferencia".
+            Sube la imagen QR de tu banca mobile. Se mostrar&aacute; en el checkout cuando el cliente elija "QR Transferencia".
           </div>
           
           <!-- Dropzone -->
           <div id="ptcg-qr-upload-area" style="border:2px dashed rgba(69,82,204,0.25);border-radius:14px;padding:28px 20px;text-align:center;cursor:pointer;background:rgba(238,240,250,0.40);transition:all 0.2s;"
                onclick="document.getElementById('ptcg-qr-file-input').click()">
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-upload-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
             <span style="font-size:0.85rem;font-weight:600;color:#333959;">Toca para subir el QR</span>
             <span style="font-size:0.74rem;color:#6C7297;">PNG o JPG — max 2 MB</span>
           </div>
@@ -1372,14 +1408,14 @@
           </div>
           
           <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="ptcgSaveQr()" style="margin-top:12px;">
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar QR
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar QR
           </button>
         </div>
 
         <!-- Datos Bancarios -->
         <div class="ptcg-index__card">
           <div class="ptcg-activate__title" style="margin-bottom:8px;font-size:1.1rem;display:flex;align-items:center;gap:8px"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-bank-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Datos Bancarios (Checkout)</div>
-          <div class="ptcg-activate__subtitle" style="margin-bottom:16px;font-size:0.85rem;">Información mostrada en el checkout para depósitos.</div>
+          <div class="ptcg-activate__subtitle" style="margin-bottom:16px;font-size:0.85rem;">Informaci&oacute;n mostrada en el checkout para dep&oacute;sitos.</div>
           <div class="ptcg-activate__form-group" style="display:grid;gap:12px;">
             <div>
               <label class="ptcg-activate__label">Banco</label>
@@ -1390,7 +1426,7 @@
               <input class="ptcg-activate__input" type="text" id="cfg-bank-type" placeholder="Ej: Cuenta Corriente"/>
             </div>
             <div>
-              <label class="ptcg-activate__label">Número de Cuenta</label>
+              <label class="ptcg-activate__label">N&uacute;mero de Cuenta</label>
               <input class="ptcg-activate__input" type="text" id="cfg-bank-account" placeholder="Ej: 4010123456"/>
             </div>
             <div>
@@ -1399,7 +1435,7 @@
             </div>
           </div>
           <div style="display:flex;gap:10px;margin-top:16px;align-items:center;">
-            <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" id="btn-save-bank" onclick="saveBankInfo()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar datos</button>
+            <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" id="btn-save-bank" onclick="saveBankInfo()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar datos</button>
             <span id="cfg-bank-status" style="font-size:0.85rem;display:none;font-weight:600;"></span>
           </div>
         </div>
@@ -1409,7 +1445,7 @@
     <!-- ── REPORTES ── -->
     <section class="section" id="sec-reports">
       <div class="page-header">
-        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Reportes</h2>
+        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Reportes</h2>
         <p>Mensajes recibidos desde perfiles de mascotas, propietarios y refugios</p>
       </div>
 
@@ -1432,8 +1468,8 @@
     <!-- ── PEDIDOS ── -->
     <section class="section" id="sec-orders">
       <div class="page-header">
-        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-cart-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Gestión de Pedidos</h2>
-        <p>Administra los pedidos de placas, cambia estados y genera guías de envío</p>
+        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-cart-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Gesti&oacute;n de Pedidos</h2>
+        <p>Administra los pedidos de placas, cambia estados y genera gu&iacute;as de env&iacute;o</p>
       </div>
 
       <div class="stats-grid" style="margin-bottom:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
@@ -1443,7 +1479,7 @@
           <div class="stat-label" style="font-size:0.8rem;color:#757575;font-weight:600;text-transform:uppercase;">Pendientes</div>
         </div>
         <div class="stat-card" style="background:rgba(69,82,204,0.08);border:1px solid rgba(69,82,204,0.2);border-radius:14px;padding:16px;text-align:center;">
-          <div class="stat-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
+          <div class="stat-icon"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-clock-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></div>
           <div class="stat-value" id="stat-processing" style="font-size:1.8rem;font-weight:800;color:#212121;">—</div>
           <div class="stat-label" style="font-size:0.8rem;color:#757575;font-weight:600;text-transform:uppercase;">En proceso</div>
         </div>
@@ -1480,7 +1516,7 @@
             <option value="Nacional">Nacional</option>
             <option value="Internacional">Internacional</option>
           </select>
-          <input type="text" id="order-filter-search" placeholder="Buscar comprador o código" oninput="filterOrders()" class="ptcg-activate__input" style="width:200px;margin-bottom:0;">
+          <input type="text" id="order-filter-search" placeholder="Buscar comprador o c&oacute;digo" oninput="filterOrders()" class="ptcg-activate__input" style="width:200px;margin-bottom:0;">
           <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;font-weight:600;color:#212121;cursor:pointer;">
             <input type="checkbox" id="order-filter-urgent" onchange="filterOrders()"> Urgentes
           </label>
@@ -1524,7 +1560,7 @@
             <option value="pagado">Pagado</option>
           </select>
           <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="loadCommissions()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Recargar</button>
-          <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="exportCommissionsReport()" style="margin-left:auto;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Exportar reporte</button>
+          <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="exportCommissionsReport()" style="margin-left:auto;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Exportar reporte</button>
         </div>
       </div>
 
@@ -1546,17 +1582,17 @@
     <section class="section" id="sec-store">
       <div class="page-header">
         <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-shop-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Tienda</h2>
-        <p>Gestiona productos, precios e inventario de la tienda pública</p>
+        <p>Gestiona productos, precios e inventario de la tienda p&uacute;blica</p>
       </div>
 
       <!-- Toolbar -->
       <div class="ptcg-index__card" style="margin-bottom:16px;">
         <div class="table-toolbar" style="margin-bottom:0;">
           <select class="ptcg-activate__select" id="store-filter-category" onchange="filterProducts()">
-            <option value="">Todas las categorías</option>
+            <option value="">Todas las categor&iacute;as</option>
             <option value="placa">Placas</option>
             <option value="accesorio">Accesorios</option>
-            <option value="renovacion">Renovación</option>
+            <option value="renovacion">Renovaci&oacute;n</option>
           </select>
           <select class="ptcg-activate__select" id="store-filter-status" onchange="filterProducts()">
             <option value="">Todos</option>
@@ -1580,11 +1616,11 @@
             <input type="text" id="store-prod-name" class="ptcg-activate__input" placeholder="Ej: Placa Pet ID" maxlength="100">
           </div>
           <div class="ptcg-activate__form-group">
-            <label class="ptcg-activate__label">Categoría</label>
+            <label class="ptcg-activate__label">Categor&iacute;a</label>
             <select id="store-prod-category" class="ptcg-activate__select">
               <option value="placa">Placa</option>
               <option value="accesorio">Accesorio</option>
-              <option value="renovacion">Renovación</option>
+              <option value="renovacion">Renovaci&oacute;n</option>
             </select>
           </div>
           <div class="ptcg-activate__form-group">
@@ -1603,8 +1639,8 @@
             </select>
           </div>
           <div class="form-group full" style="grid-column:1/-1;">
-            <label class="ptcg-activate__label">Descripción</label>
-            <textarea id="store-prod-desc" class="ptcg-activate__input" rows="3" placeholder="Descripción del producto…" maxlength="500" style="resize:vertical;"></textarea>
+            <label class="ptcg-activate__label">Descripci&oacute;n</label>
+            <textarea id="store-prod-desc" class="ptcg-activate__input" rows="3" placeholder="Descripci&oacute;n del producto…" maxlength="500" style="resize:vertical;"></textarea>
           </div>
           <div class="form-group full" style="grid-column:1/-1;">
             <label class="ptcg-activate__label">URL de imagen (opcional)</label>
@@ -1612,7 +1648,7 @@
           </div>
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <button class="ptcg-index__btn ptcg-index__btn--primary" id="btn-save-product" onclick="saveProduct()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar producto</button>
+          <button class="ptcg-index__btn ptcg-index__btn--primary" id="btn-save-product" onclick="saveProduct()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar producto</button>
           <button class="ptcg-index__btn ptcg-index__btn--secondary" onclick="hideProductForm()">Cancelar</button>
         </div>
       </div>
@@ -1621,7 +1657,7 @@
       <div class="ptcg-index__card">
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Producto</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <thead><tr><th>Producto</th><th>Categor&iacute;a</th><th>Precio</th><th>Stock</th><th>Estado</th><th>Acciones</th></tr></thead>
             <tbody id="store-tbody">
               <tr><td colspan="6"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></td></tr>
             </tbody>
@@ -1634,14 +1670,14 @@
     <!-- ── PASARELAS Y ENVÍOS ── -->
     <section class="section" id="sec-shipping-config">
       <div class="page-header">
-        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-delivery-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Pasarelas y Envíos</h2>
-        <p>Configura métodos de envío (DHL) y pasarelas de pago.</p>
+        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-delivery-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Pasarelas y Env&iacute;os</h2>
+        <p>Configura m&eacute;todos de env&iacute;o (DHL) y pasarelas de pago.</p>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
         <!-- DHL Config -->
         <div class="ptcg-index__card">
           <div class="ptcg-activate__title" style="margin-bottom:12px;font-size:1.1rem;display:flex;align-items:center;gap:8px;">
-            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Configuración DHL (Internacional)
+            <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-delivery-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Configuraci&oacute;n DHL (Internacional)
           </div>
           <div class="ptcg-activate__form-group" style="margin-bottom:10px;">
             <label class="ptcg-activate__label">Tarifa base (USD)</label>
@@ -1651,7 +1687,7 @@
             <label class="ptcg-activate__label">Costo por KG extra (USD)</label>
             <input type="number" id="cfg-dhl-kg" class="ptcg-activate__input" placeholder="5.00" step="0.01">
           </div>
-          <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="saveShippingConfig()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar Envíos</button>
+          <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="saveShippingConfig()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar Env&iacute;os</button>
         </div>
         
         <!-- Gateways Config -->
@@ -1668,10 +1704,10 @@
             <input type="text" id="cfg-paypal-id" class="ptcg-activate__input" placeholder="AbC123...">
           </div>
           <div class="ptcg-activate__form-group" style="margin-bottom:10px;">
-            <label class="ptcg-activate__label">API PagosNet / Libélula (Bolivia - Futuro)</label>
-            <input type="text" id="cfg-bo-gateway" class="ptcg-activate__input" placeholder="Llave de integración...">
+            <label class="ptcg-activate__label">API PagosNet / Lib&eacute;lula (Bolivia - Futuro)</label>
+            <input type="text" id="cfg-bo-gateway" class="ptcg-activate__input" placeholder="Llave de integraci&oacute;n...">
           </div>
-          <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="saveGatewayConfig()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar Pasarelas</button>
+          <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="saveGatewayConfig()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar Pasarelas</button>
         </div>
       </div>
 
@@ -1695,7 +1731,7 @@
             <input type="number" id="cfg-ship-cbba" class="ptcg-activate__input" placeholder="20" min="0" step="0.5">
           </div>
           <div class="ptcg-activate__form-group">
-            <label class="ptcg-activate__label"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Resto del pais (Bs.)</label>
+            <label class="ptcg-activate__label"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Resto del pais (Bs.)</label>
             <input type="number" id="cfg-ship-resto" class="ptcg-activate__input" placeholder="30" min="0" step="0.5">
           </div>
           <div class="ptcg-activate__form-group">
@@ -1703,12 +1739,12 @@
             <input type="number" id="cfg-ship-pickup" class="ptcg-activate__input" placeholder="0" min="0" step="0.5">
           </div>
           <div class="ptcg-activate__form-group">
-            <label class="ptcg-activate__label"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Internacional (USD)</label>
+            <label class="ptcg-activate__label"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Internacional (USD)</label>
             <input type="number" id="cfg-ship-intl-usd" class="ptcg-activate__input" placeholder="25" min="0" step="0.5">
           </div>
         </div>
         <div style="display:flex;gap:10px;align-items:center;">
-          <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="saveShippingRates()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar tarifas</button>
+          <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="saveShippingRates()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar tarifas</button>
           <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="loadShippingRates()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Recargar</button>
         </div>
       </div>
@@ -1716,27 +1752,27 @@
       <!-- Tarifas de Envio Internacional por Pais (ISO 2-letter mapping) -->
       <div class="ptcg-index__card" style="margin-top:20px;">
         <div class="ptcg-activate__title" style="margin-bottom:12px;font-size:1.1rem;display:flex;align-items:center;gap:8px;">
-          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-delivery-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Tarifas de Envío Internacional (Por País)
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-delivery-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Tarifas de Env&iacute;o Internacional (Por Pa&iacute;s)
         </div>
-        <div class="ptcg-activate__subtitle" style="margin-bottom:16px;font-size:0.85rem;">Define el costo de envío en USD por país usando el código de 2 letras (ej. US, ES, MX). Estos valores se consultan en el checkout internacional.</div>
+        <div class="ptcg-activate__subtitle" style="margin-bottom:16px;font-size:0.85rem;">Define el costo de env&iacute;o en USD por pa&iacute;s usando el c&oacute;digo de 2 letras (ej. US, ES, MX). Estos valores se consultan en el checkout internacional.</div>
         
         <div style="display:flex;gap:12px;margin-bottom:16px;background:#F8F9FA;padding:12px;border-radius:8px;border:1px solid #E0E0E0;align-items:flex-end;flex-wrap:wrap;">
           <div style="flex:1;min-width:140px;">
-            <label style="display:block;font-size:0.75rem;font-weight:700;color:#616161;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">Código País (2 letras)</label>
+            <label style="display:block;font-size:0.75rem;font-weight:700;color:#616161;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">C&oacute;digo Pa&iacute;s (2 letras)</label>
             <input type="text" id="new-intl-country" placeholder="Ej. US" maxlength="2" style="width:100%;padding:8px 12px;border:1.5px solid #E0E0E0;border-radius:6px;font-size:0.85rem;font-family:'Plus Jakarta Sans',sans-serif;outline:none;text-transform:uppercase;">
           </div>
           <div style="flex:1;min-width:140px;">
             <label style="display:block;font-size:0.75rem;font-weight:700;color:#616161;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">Costo (USD)</label>
             <input type="number" id="new-intl-cost" placeholder="0.00" min="0" step="0.01" style="width:100%;padding:8px 12px;border:1.5px solid #E0E0E0;border-radius:6px;font-size:0.85rem;font-family:'Plus Jakarta Sans',sans-serif;outline:none;">
           </div>
-          <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="addIntlShippingRateRow()" style="height:38px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-add-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Agregar País</button>
+          <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="addIntlShippingRateRow()" style="height:38px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-add-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Agregar Pa&iacute;s</button>
         </div>
 
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>País</th>
+                <th>Pa&iacute;s</th>
                 <th>Costo (USD)</th>
                 <th style="width:80px;text-align:center;">Acciones</th>
               </tr>
@@ -1748,20 +1784,20 @@
         </div>
 
         <div style="display:flex;gap:10px;align-items:center;margin-top:16px;">
-          <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="saveIntlShippingRates()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar Tarifas Internacionales</button>
+          <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="saveIntlShippingRates()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar Tarifas Internacionales</button>
           <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="loadIntlShippingRates()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Recargar</button>
         </div>
       </div>
 
-      <!-- Configuración Avanzada de Envíos -->
+      <!-- Configuraci&oacute;n Avanzada de Env&iacute;os -->
       <div class="ptcg-index__card" style="margin-top:20px;">
         <div class="ptcg-activate__title" style="margin-bottom:12px;font-size:1.1rem;display:flex;align-items:center;gap:8px;">
-          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Configuración Avanzada de Envíos
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-delivery-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Configuraci&oacute;n Avanzada de Env&iacute;os
         </div>
         <div class="ptcg-activate__subtitle" style="margin-bottom:16px;font-size:0.85rem;">Selecciona el metodo de calculo para envios nacionales e internacionales.</div>
         
         <div class="ptcg-activate__form-group" style="margin-bottom:16px;max-width:400px;">
-          <label class="ptcg-activate__label">Tipo de Envío</label>
+          <label class="ptcg-activate__label">Tipo de Env&iacute;o</label>
           <select id="shipping-type-select" class="ptcg-activate__select" onchange="toggleShippingTypeView()" style="width:100%;">
             <option value="nacional">Tarifa Plana Nacional</option>
             <option value="internacional">Tarifa por Peso/Volumen Internacional</option>
@@ -1800,7 +1836,7 @@
         </div>
 
         <div style="display:flex;gap:10px;align-items:center;margin-top:16px;">
-          <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="saveShippingSettings()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar Configuración</button>
+          <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="saveShippingSettings()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar Configuraci&oacute;n</button>
           <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="loadShippingSettings()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Recargar</button>
         </div>
       </div>
@@ -1917,7 +1953,7 @@
             </div>
           </div>
           <div style="display:flex;gap:8px;margin-top:14px;">
-            <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="savePrintConfig()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar config</button>
+            <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="savePrintConfig()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar config</button>
           </div>
         </div>
 
@@ -1943,7 +1979,7 @@
     <section class="section" id="sec-promotions">
       <div class="page-header">
         <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-tag-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Promociones</h2>
-        <p>Gestiona códigos de descuento para la tienda</p>
+        <p>Gestiona c&oacute;digos de descuento para la tienda</p>
       </div>
 
       <!-- Toolbar -->
@@ -1961,19 +1997,19 @@
             <option value="percent">Porcentaje</option>
           </select>
           <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="loadPromotions()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Recargar</button>
-          <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="showPromoForm()" style="margin-left:auto;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-add-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Nuevo código</button>
+          <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="showPromoForm()" style="margin-left:auto;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-add-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Nuevo c&oacute;digo</button>
         </div>
       </div>
 
       <!-- Formulario (oculto) -->
       <div class="ptcg-index__card" id="promo-form" style="display:none;margin-bottom:16px;">
         <div class="ptcg-activate__title" style="margin-bottom:12px;font-size:1.1rem;display:flex;align-items:center;gap:8px;">
-          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-tag-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> <span id="promo-form-title">Nuevo código de descuento</span>
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-tag-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> <span id="promo-form-title">Nuevo c&oacute;digo de descuento</span>
         </div>
         <input type="hidden" id="promo-id">
         <div class="ptcg-activate__form-row" style="margin-bottom:12px;">
           <div class="ptcg-activate__form-group">
-            <label class="ptcg-activate__label">Código *</label>
+            <label class="ptcg-activate__label">C&oacute;digo *</label>
             <input type="text" id="promo-code" class="ptcg-activate__input" placeholder="Ej: PETCINGO10" maxlength="30" oninput="this.value=this.value.toUpperCase().replace(/\s/g,'')">
           </div>
           <div class="ptcg-activate__form-group">
@@ -1988,19 +2024,19 @@
             <input type="number" id="promo-value" class="ptcg-activate__input" placeholder="10" min="0.01" step="0.01">
           </div>
           <div class="ptcg-activate__form-group">
-            <label class="ptcg-activate__label">Usos máximos <small style="font-weight:400;">(vacío = ilimitado)</small></label>
+            <label class="ptcg-activate__label">Usos m&aacute;ximos <small style="font-weight:400;">(vac&iacute;o = ilimitado)</small></label>
             <input type="number" id="promo-max-uses" class="ptcg-activate__input" placeholder="100" min="1" step="1">
           </div>
           <div class="ptcg-activate__form-group">
-            <label class="ptcg-activate__label">Monto mínimo de compra (Bs)</label>
+            <label class="ptcg-activate__label">Monto m&iacute;nimo de compra (Bs)</label>
             <input type="number" id="promo-min-amount" class="ptcg-activate__input" placeholder="0" min="0" step="0.01">
           </div>
           <div class="ptcg-activate__form-group">
-            <label class="ptcg-activate__label">Fecha de expiración <small style="font-weight:400;">(vacío = sin límite)</small></label>
+            <label class="ptcg-activate__label">Fecha de expiraci&oacute;n <small style="font-weight:400;">(vac&iacute;o = sin l&iacute;mite)</small></label>
             <input type="date" id="promo-expires" class="ptcg-activate__input">
           </div>
           <div class="ptcg-activate__form-group">
-            <label class="ptcg-activate__label">Canal <small style="font-weight:400;">(vacío = todos)</small></label>
+            <label class="ptcg-activate__label">Canal <small style="font-weight:400;">(vac&iacute;o = todos)</small></label>
             <select id="promo-channel" class="ptcg-activate__select">
               <option value="">Todos los canales</option>
               <option value="directo">Venta directa</option>
@@ -2011,7 +2047,7 @@
           </div>
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <button class="ptcg-index__btn ptcg-index__btn--primary" id="btn-save-promo" onclick="savePromotion()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar código</button>
+          <button class="ptcg-index__btn ptcg-index__btn--primary" id="btn-save-promo" onclick="savePromotion()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar c&oacute;digo</button>
           <button class="ptcg-index__btn ptcg-index__btn--secondary" onclick="hidePromoForm()">Cancelar</button>
         </div>
       </div>
@@ -2020,7 +2056,7 @@
       <div class="ptcg-index__card">
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Código</th><th>Tipo</th><th>Valor</th><th>Usos</th><th>Expira</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <thead><tr><th>C&oacute;digo</th><th>Tipo</th><th>Valor</th><th>Usos</th><th>Expira</th><th>Estado</th><th>Acciones</th></tr></thead>
             <tbody id="promotions-tbody">
               <tr><td colspan="7"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></td></tr>
             </tbody>
@@ -2033,8 +2069,8 @@
     <!-- ── MASCOTAS PERDIDAS ── -->
     <section class="section" id="sec-lost-pets">
       <div class="page-header">
-        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Mascotas Perdidas</h2>
-        <p>Mascotas reportadas como perdidas y su visibilidad en el sitio público</p>
+        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Mascotas Perdidas</h2>
+        <p>Mascotas reportadas como perdidas y su visibilidad en el sitio p&uacute;blico</p>
       </div>
 
       <div class="ptcg-index__card">
@@ -2043,7 +2079,7 @@
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Mascota</th><th>Dueño</th><th>Último escaneo</th><th>En index</th><th>Acciones</th></tr></thead>
+            <thead><tr><th>Mascota</th><th>Due&ntilde;o</th><th>&Uacute;ltimo escaneo</th><th>En index</th><th>Acciones</th></tr></thead>
             <tbody id="lost-pets-tbody">
               <tr><td colspan="5"><div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div></td></tr>
             </tbody>
@@ -2056,28 +2092,28 @@
     <!-- ── PERSONALIZAR INDEX ── -->
     <section class="section" id="sec-customize">
       <div class="page-header">
-        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Personalizar Index</h2>
-        <p>Edita los textos, precios y secciones visibles en la página principal del sitio.</p>
+        <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-settings-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Personalizar Index</h2>
+        <p>Edita los textos, precios y secciones visibles en la p&aacute;gina principal del sitio.</p>
       </div>
 
       <!-- Tabs + Save -->
       <div class="ptcg-index__card" style="margin-bottom:16px;padding:12px 16px;">
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-          <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm ctab-btn" id="ctab-ann"   onclick="showCTab('ann',this)"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Anuncio</button>
-          <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm ctab-btn" id="ctab-hero"  onclick="showCTab('hero',this)"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Hero</button>
-          <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm ctab-btn" id="ctab-plans" onclick="showCTab('plans',this)"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Planes</button>
-          <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm ctab-btn" id="ctab-misc"     onclick="showCTab('misc',this)"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> General</button>
-          <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm ctab-btn" id="ctab-advanced" onclick="showCTab('advanced',this)"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Avanzado</button>
+          <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm ctab-btn" id="ctab-ann"   onclick="showCTab('ann',this)"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-bell-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Anuncio</button>
+          <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm ctab-btn" id="ctab-hero"  onclick="showCTab('hero',this)"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-image-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Hero</button>
+          <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm ctab-btn" id="ctab-plans" onclick="showCTab('plans',this)"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-tag-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Planes</button>
+          <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm ctab-btn" id="ctab-misc"     onclick="showCTab('misc',this)"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-settings-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> General</button>
+          <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm ctab-btn" id="ctab-advanced" onclick="showCTab('advanced',this)"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-database-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Avanzado</button>
           <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
             <span id="cfg-save-status" style="font-size:0.8rem;color:#9E9E9E;display:none;font-family:'Plus Jakarta Sans',sans-serif;"></span>
-            <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" id="btn-save-cfg" onclick="saveSiteConfig()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar cambios</button>
+            <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" id="btn-save-cfg" onclick="saveSiteConfig()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar cambios</button>
           </div>
         </div>
       </div>
 
       <!-- Panel: Anuncio -->
       <div id="ctab-panel-ann" class="ctab-panel ptcg-index__card">
-        <h3 style="font-family:'Sora',sans-serif;font-size:1.05rem;font-weight:700;margin:0 0 18px;color:#212121;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Barra de anuncio</h3>
+        <h3 style="font-family:'Sora',sans-serif;font-size:1.05rem;font-weight:700;margin:0 0 18px;color:#212121;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-bell-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Barra de anuncio</h3>
         <div style="display:grid;gap:14px;">
           <label style="display:flex;align-items:center;gap:8px;font-size:0.88rem;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;">
             <input type="checkbox" id="cfg-ann-visible" style="width:16px;height:16px;accent-color:#4552CC;">
@@ -2086,35 +2122,35 @@
           <div>
             <label class="ptcg-activate__label">Texto del anuncio</label>
             <input type="text" id="cfg-ann-text" class="ptcg-activate__input" maxlength="200" placeholder="Ej: Preventa activa · Placa Pet ID a solo Bs. 67 (precio regular Bs. 97)">
-            <div style="font-size:0.75rem;color:#9E9E9E;margin-top:4px;font-family:'Plus Jakarta Sans',sans-serif;">Este texto aparece en la barra superior del sitio público (se duplica automáticamente en móvil).</div>
+            <div style="font-size:0.75rem;color:#9E9E9E;margin-top:4px;font-family:'Plus Jakarta Sans',sans-serif;">Este texto aparece en la barra superior del sitio p&uacute;blico (se duplica autom&aacute;ticamente en m&oacute;vil).</div>
           </div>
         </div>
       </div>
 
       <!-- Panel: Hero -->
       <div id="ctab-panel-hero" class="ctab-panel ptcg-index__card" style="display:none;">
-        <h3 style="font-family:'Sora',sans-serif;font-size:1.05rem;font-weight:700;margin:0 0 18px;color:#212121;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Sección Hero</h3>
+        <h3 style="font-family:'Sora',sans-serif;font-size:1.05rem;font-weight:700;margin:0 0 18px;color:#212121;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-image-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Secci&oacute;n Hero</h3>
         <div style="display:grid;gap:14px;">
           <div>
-            <label class="ptcg-activate__label">Eyebrow (texto pequeño encima del H1)</label>
-            <input type="text" id="cfg-hero-eyebrow" class="ptcg-activate__input" maxlength="60" placeholder="Protección permanente">
+            <label class="ptcg-activate__label">Eyebrow (texto peque&ntilde;o encima del H1)</label>
+            <input type="text" id="cfg-hero-eyebrow" class="ptcg-activate__input" maxlength="60" placeholder="Protecci&oacute;n permanente">
           </div>
           <div>
-            <label class="ptcg-activate__label">Título principal (H1)</label>
+            <label class="ptcg-activate__label">T&iacute;tulo principal (H1)</label>
             <input type="text" id="cfg-hero-h1" class="ptcg-activate__input" maxlength="120" placeholder="Si se pierde, que vuelva a casa.">
-            <div style="font-size:0.75rem;color:#9E9E9E;margin-top:4px;font-family:'Plus Jakarta Sans',sans-serif;">HTML básico permitido: &lt;br&gt;, &lt;em&gt;texto&lt;/em&gt;, &lt;strong&gt;texto&lt;/strong&gt;.</div>
+            <div style="font-size:0.75rem;color:#9E9E9E;margin-top:4px;font-family:'Plus Jakarta Sans',sans-serif;">HTML b&aacute;sico permitido: &lt;br&gt;, &lt;em&gt;texto&lt;/em&gt;, &lt;strong&gt;texto&lt;/strong&gt;.</div>
           </div>
           <div>
-            <label class="ptcg-activate__label">Subtítulo del hero</label>
+            <label class="ptcg-activate__label">Subt&iacute;tulo del hero</label>
             <textarea id="cfg-hero-sub" class="ptcg-activate__input" rows="3" maxlength="400" style="resize:vertical;min-height:80px;" placeholder="La placa inteligente con QR + NFC..."></textarea>
-            <div style="font-size:0.75rem;color:#9E9E9E;margin-top:4px;font-family:'Plus Jakarta Sans',sans-serif;">HTML básico permitido: &lt;strong&gt;, &lt;em&gt;.</div>
+            <div style="font-size:0.75rem;color:#9E9E9E;margin-top:4px;font-family:'Plus Jakarta Sans',sans-serif;">HTML b&aacute;sico permitido: &lt;strong&gt;, &lt;em&gt;.</div>
           </div>
         </div>
       </div>
 
       <!-- Panel: Planes -->
       <div id="ctab-panel-plans" class="ctab-panel ptcg-index__card" style="display:none;">
-        <h3 style="font-family:'Sora',sans-serif;font-size:1.05rem;font-weight:700;margin:0 0 18px;color:#212121;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Planes y precios</h3>
+        <h3 style="font-family:'Sora',sans-serif;font-size:1.05rem;font-weight:700;margin:0 0 18px;color:#212121;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-tag-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Planes y precios</h3>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;">
 
           <!-- Plan Preventa -->
@@ -2137,14 +2173,14 @@
             </div>
             <div style="margin-top:10px;">
               <label class="ptcg-activate__label">Nota del plan</label>
-              <input type="text" id="cfg-preventa-note" class="ptcg-activate__input" maxlength="80" placeholder="Incluye placa + 1 año de perfil activo">
+              <input type="text" id="cfg-preventa-note" class="ptcg-activate__input" maxlength="80" placeholder="Incluye placa + 1 a&ntilde;o de perfil activo">
             </div>
           </div>
 
           <!-- Plan Pet ID -->
           <div style="border:1.5px solid #4552CC;border-radius:16px;padding:18px;background:rgba(69,82,204,0.02);">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-              <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:0.9rem;color:#212121;display:flex;align-items:center;gap:6px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Pet ID <span style="font-size:0.68rem;background:#4552CC;color:#fff;padding:2px 8px;border-radius:99px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;">POPULAR</span></div>
+              <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:0.9rem;color:#212121;display:flex;align-items:center;gap:6px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-tag-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Pet ID <span style="font-size:0.68rem;background:#4552CC;color:#fff;padding:2px 8px;border-radius:99px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;">POPULAR</span></div>
               <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;">
                 <input type="checkbox" id="cfg-petid-visible" style="accent-color:#4552CC;"> Visible
               </label>
@@ -2161,14 +2197,14 @@
             </div>
             <div style="margin-top:10px;">
               <label class="ptcg-activate__label">Nota del plan</label>
-              <input type="text" id="cfg-petid-note" class="ptcg-activate__input" maxlength="80" placeholder="Incluye placa física + activación + 1 año">
+              <input type="text" id="cfg-petid-note" class="ptcg-activate__input" maxlength="80" placeholder="Incluye placa f&iacute;sica + activaci&oacute;n + 1 a&ntilde;o">
             </div>
           </div>
 
           <!-- Plan Pack Familia -->
           <div style="border:1.5px solid #EEF1FB;border-radius:16px;padding:18px;">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-              <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:0.9rem;color:#212121;display:flex;align-items:center;gap:6px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Pack Familia</div>
+              <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:0.9rem;color:#212121;display:flex;align-items:center;gap:6px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-tag-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Pack Familia</div>
               <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;">
                 <input type="checkbox" id="cfg-familia-visible" style="accent-color:#4552CC;"> Visible
               </label>
@@ -2185,7 +2221,7 @@
             </div>
             <div style="margin-top:10px;">
               <label class="ptcg-activate__label">Nota del plan</label>
-              <input type="text" id="cfg-familia-note" class="ptcg-activate__input" maxlength="80" placeholder="3 placas + 1 año de perfil cada una">
+              <input type="text" id="cfg-familia-note" class="ptcg-activate__input" maxlength="80" placeholder="3 placas + 1 a&ntilde;o de perfil cada una">
             </div>
           </div>
 
@@ -2194,20 +2230,20 @@
 
       <!-- Panel: General -->
       <div id="ctab-panel-misc" class="ctab-panel ptcg-index__card" style="display:none;">
-        <h3 style="font-family:'Sora',sans-serif;font-size:1.05rem;font-weight:700;margin:0 0 18px;color:#212121;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Configuración general</h3>
+        <h3 style="font-family:'Sora',sans-serif;font-size:1.05rem;font-weight:700;margin:0 0 18px;color:#212121;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-settings-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Configuraci&oacute;n general</h3>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;">
           <div>
             <label class="ptcg-activate__label">Precio internacional (USD)</label>
             <input type="text" id="cfg-intl-usd" class="ptcg-activate__input" maxlength="10" placeholder="14.99">
           </div>
           <div>
-            <label class="ptcg-activate__label">WhatsApp internacional (solo número)</label>
+            <label class="ptcg-activate__label">WhatsApp internacional (solo n&uacute;mero)</label>
             <input type="text" id="cfg-intl-wa" class="ptcg-activate__input" maxlength="20" placeholder="59170000000">
           </div>
         </div>
         <div style="margin-top:16px;padding:14px;background:#FFF8E1;border-radius:12px;font-size:0.82rem;color:#795548;font-family:'Plus Jakarta Sans',sans-serif;display:flex;gap:8px;align-items:flex-start;">
-          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
-          <span>Los cambios se aplican al sitio público al guardar. Las imágenes y secciones de Adopciones, Directorio y FAQ se gestionan desde sus módulos.</span>
+          <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-settings-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt="">
+          <span>Los cambios se aplican al sitio p&uacute;blico al guardar. Las im&aacute;genes y secciones de Adopciones, Directorio y FAQ se gestionan desde sus m&oacute;dulos.</span>
         </div>
       </div>
 
@@ -2223,22 +2259,22 @@
             </label>
           </div>
           <div style="display:grid;gap:10px;">
-            <div><label class="ptcg-activate__label">Título de sección</label><input type="text" id="cfg-ventajas-title" class="ptcg-activate__input" maxlength="80" placeholder="¿Por qué Petcingo?"></div>
-            <div><label class="ptcg-activate__label">Subtítulo</label><input type="text" id="cfg-ventajas-sub" class="ptcg-activate__input" maxlength="160" placeholder="Breve descripción de las ventajas"></div>
+            <div><label class="ptcg-activate__label">T&iacute;tulo de secci&oacute;n</label><input type="text" id="cfg-ventajas-title" class="ptcg-activate__input" maxlength="80" placeholder="&iquest;Por qu&eacute; Petcingo?"></div>
+            <div><label class="ptcg-activate__label">Subt&iacute;tulo</label><input type="text" id="cfg-ventajas-sub" class="ptcg-activate__input" maxlength="160" placeholder="Breve descripci&oacute;n de las ventajas"></div>
           </div>
         </div>
 
         <!-- ── Cómo funciona ── -->
         <div class="ptcg-index__card" style="margin-bottom:16px;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-            <h4 style="font-family:'Sora',sans-serif;font-size:0.95rem;font-weight:700;margin:0;color:#212121;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-map-point-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Cómo funciona</h4>
+            <h4 style="font-family:'Sora',sans-serif;font-size:0.95rem;font-weight:700;margin:0;color:#212121;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-grid-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> C&oacute;mo funciona</h4>
             <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;font-weight:600;color:#616161;cursor:pointer;">
               <input type="checkbox" id="cfg-como-visible" style="accent-color:#4552CC;width:15px;height:15px;"> Visible
             </label>
           </div>
           <div style="display:grid;gap:10px;">
-            <div><label class="ptcg-activate__label">Título de sección</label><input type="text" id="cfg-como-title" class="ptcg-activate__input" maxlength="80" placeholder="¿Cómo funciona?"></div>
-            <div><label class="ptcg-activate__label">Subtítulo</label><input type="text" id="cfg-como-sub" class="ptcg-activate__input" maxlength="160" placeholder="En 3 simples pasos…"></div>
+            <div><label class="ptcg-activate__label">T&iacute;tulo de secci&oacute;n</label><input type="text" id="cfg-como-title" class="ptcg-activate__input" maxlength="80" placeholder="&iquest;C&oacute;mo funciona?"></div>
+            <div><label class="ptcg-activate__label">Subt&iacute;tulo</label><input type="text" id="cfg-como-sub" class="ptcg-activate__input" maxlength="160" placeholder="En 3 simples pasos…"></div>
           </div>
         </div>
 
@@ -2251,22 +2287,22 @@
             </label>
           </div>
           <div style="display:grid;gap:10px;">
-            <div><label class="ptcg-activate__label">Título de sección</label><input type="text" id="cfg-impacto-title" class="ptcg-activate__input" maxlength="80" placeholder="Nuestro impacto"></div>
-            <div><label class="ptcg-activate__label">Subtítulo</label><input type="text" id="cfg-impacto-sub" class="ptcg-activate__input" maxlength="160" placeholder="Mascotas reunidas con sus familias"></div>
+            <div><label class="ptcg-activate__label">T&iacute;tulo de secci&oacute;n</label><input type="text" id="cfg-impacto-title" class="ptcg-activate__input" maxlength="80" placeholder="Nuestro impacto"></div>
+            <div><label class="ptcg-activate__label">Subt&iacute;tulo</label><input type="text" id="cfg-impacto-sub" class="ptcg-activate__input" maxlength="160" placeholder="Mascotas reunidas con sus familias"></div>
           </div>
         </div>
 
         <!-- ── Afiliados ── -->
         <div class="ptcg-index__card" style="margin-bottom:16px;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-            <h4 style="font-family:'Sora',sans-serif;font-size:0.95rem;font-weight:700;margin:0;color:#212121;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Afiliados / Red</h4>
+            <h4 style="font-family:'Sora',sans-serif;font-size:0.95rem;font-weight:700;margin:0;color:#212121;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-user-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Afiliados / Red</h4>
             <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;font-weight:600;color:#616161;cursor:pointer;">
               <input type="checkbox" id="cfg-afiliados-visible" style="accent-color:#4552CC;width:15px;height:15px;"> Visible
             </label>
           </div>
           <div style="display:grid;gap:10px;">
-            <div><label class="ptcg-activate__label">Título de sección</label><input type="text" id="cfg-afiliados-title" class="ptcg-activate__input" maxlength="80" placeholder="Nuestra red"></div>
-            <div><label class="ptcg-activate__label">Subtítulo</label><input type="text" id="cfg-afiliados-sub" class="ptcg-activate__input" maxlength="160" placeholder="Veterinarias y refugios aliados"></div>
+            <div><label class="ptcg-activate__label">T&iacute;tulo de secci&oacute;n</label><input type="text" id="cfg-afiliados-title" class="ptcg-activate__input" maxlength="80" placeholder="Nuestra red"></div>
+            <div><label class="ptcg-activate__label">Subt&iacute;tulo</label><input type="text" id="cfg-afiliados-sub" class="ptcg-activate__input" maxlength="160" placeholder="Veterinarias y refugios aliados"></div>
           </div>
         </div>
 
@@ -2279,46 +2315,46 @@
             </label>
           </div>
           <div style="display:grid;gap:10px;">
-            <div><label class="ptcg-activate__label">Título de sección</label><input type="text" id="cfg-vets-title" class="ptcg-activate__input" maxlength="80" placeholder="Directorio de Veterinarias"></div>
-            <div><label class="ptcg-activate__label">Subtítulo</label><input type="text" id="cfg-vets-sub" class="ptcg-activate__input" maxlength="160" placeholder="Encuentra una clínica cerca de ti"></div>
+            <div><label class="ptcg-activate__label">T&iacute;tulo de secci&oacute;n</label><input type="text" id="cfg-vets-title" class="ptcg-activate__input" maxlength="80" placeholder="Directorio de Veterinarias"></div>
+            <div><label class="ptcg-activate__label">Subt&iacute;tulo</label><input type="text" id="cfg-vets-sub" class="ptcg-activate__input" maxlength="160" placeholder="Encuentra una cl&iacute;nica cerca de ti"></div>
           </div>
         </div>
 
         <!-- ── FAQ ── -->
         <div class="ptcg-index__card" style="margin-bottom:16px;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-            <h4 style="font-family:'Sora',sans-serif;font-size:0.95rem;font-weight:700;margin:0;color:#212121;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> FAQ</h4>
+            <h4 style="font-family:'Sora',sans-serif;font-size:0.95rem;font-weight:700;margin:0;color:#212121;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> FAQ</h4>
             <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;font-weight:600;color:#616161;cursor:pointer;">
               <input type="checkbox" id="cfg-faq-visible" style="accent-color:#4552CC;width:15px;height:15px;"> Visible
             </label>
           </div>
-          <div><label class="ptcg-activate__label">Título de sección</label><input type="text" id="cfg-faq-title" class="ptcg-activate__input" maxlength="80" placeholder="Preguntas frecuentes"></div>
+          <div><label class="ptcg-activate__label">T&iacute;tulo de secci&oacute;n</label><input type="text" id="cfg-faq-title" class="ptcg-activate__input" maxlength="80" placeholder="Preguntas frecuentes"></div>
         </div>
 
         <!-- ── Adopciones ── -->
         <div class="ptcg-index__card" style="margin-bottom:16px;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-            <h4 style="font-family:'Sora',sans-serif;font-size:0.95rem;font-weight:700;margin:0;color:#212121;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Adopciones</h4>
+            <h4 style="font-family:'Sora',sans-serif;font-size:0.95rem;font-weight:700;margin:0;color:#212121;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-heart-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Adopciones</h4>
             <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;font-weight:600;color:#616161;cursor:pointer;">
               <input type="checkbox" id="cfg-adopt-visible" style="accent-color:#4552CC;width:15px;height:15px;"> Visible
             </label>
           </div>
           <div style="display:grid;gap:10px;">
-            <div><label class="ptcg-activate__label">Título de sección</label><input type="text" id="cfg-adopt-title" class="ptcg-activate__input" maxlength="80" placeholder="Adopta una mascota"></div>
+            <div><label class="ptcg-activate__label">T&iacute;tulo de secci&oacute;n</label><input type="text" id="cfg-adopt-title" class="ptcg-activate__input" maxlength="80" placeholder="Adopta una mascota"></div>
             <div style="padding-top:4px;">
-              <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="syncAdoptions()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Sincronizar mascotas en adopción</button>
-              <div style="font-size:0.75rem;color:#9E9E9E;margin-top:6px;font-family:'Plus Jakarta Sans',sans-serif;">Actualiza el feed público de adopciones desde los refugios registrados.</div>
+              <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="syncAdoptions()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Sincronizar mascotas en adopci&oacute;n</button>
+              <div style="font-size:0.75rem;color:#9E9E9E;margin-top:6px;font-family:'Plus Jakarta Sans',sans-serif;">Actualiza el feed p&uacute;blico de adopciones desde los refugios registrados.</div>
             </div>
           </div>
         </div>
 
         <!-- ── Global: Testimonio, Footer, WhatsApp, Color ── -->
         <div class="ptcg-index__card" style="margin-bottom:0;">
-          <h4 style="font-family:'Sora',sans-serif;font-size:0.95rem;font-weight:700;margin:0 0 14px;color:#212121;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Global</h4>
+          <h4 style="font-family:'Sora',sans-serif;font-size:0.95rem;font-weight:700;margin:0 0 14px;color:#212121;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-settings-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Global</h4>
           <div style="display:grid;gap:12px;">
             <div>
               <label class="ptcg-activate__label">Testimonio #1 — Nombre y ciudad</label>
-              <input type="text" id="cfg-test1-name" class="ptcg-activate__input" maxlength="60" placeholder="María Gonzales, Santa Cruz">
+              <input type="text" id="cfg-test1-name" class="ptcg-activate__input" maxlength="60" placeholder="Mar&iacute;a Gonzales, Santa Cruz">
             </div>
             <div>
               <label class="ptcg-activate__label">Testimonio #1 — Texto</label>
@@ -2329,11 +2365,11 @@
               <input type="text" id="cfg-footer-text" class="ptcg-activate__input" maxlength="120" placeholder="Petcingo © 2026 · Todos los derechos reservados">
             </div>
             <div>
-              <label class="ptcg-activate__label">Número WhatsApp flotante (con código de país)</label>
+              <label class="ptcg-activate__label">N&uacute;mero WhatsApp flotante (con c&oacute;digo de pa&iacute;s)</label>
               <input type="tel" id="cfg-wa-number" class="ptcg-activate__input" maxlength="20" placeholder="+59171040074">
             </div>
             <div>
-              <label class="ptcg-activate__label">Color de énfasis (hex)</label>
+              <label class="ptcg-activate__label">Color de &eacute;nfasis (hex)</label>
               <div style="display:flex;align-items:center;gap:10px;">
                 <input type="color" id="cfg-accent-color" style="width:50px;height:38px;padding:4px;border:1px solid #D1D5DB;border-radius:8px;cursor:pointer;background:#fff;">
                 <input type="text" id="cfg-accent-color-text" class="ptcg-activate__input" maxlength="9" placeholder="#4552CC" style="max-width:110px;" oninput="var c=document.getElementById('cfg-accent-color');if(this.value.match(/^#[0-9a-fA-F]{6}$/))c.value=this.value;">
@@ -2515,7 +2551,7 @@
   <div style="background:#fff;border-radius:24px;padding:28px;max-width:580px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(69,82,204,0.18),0 0 0 1px rgba(69,82,204,0.07);">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
       <h3 style="font-family:'Sora',sans-serif;font-size:1.2rem;font-weight:800;color:#212121;margin:0;display:flex;align-items:center;gap:8px;">
-        <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Verificar pedido
+        <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Verificar pedido
       </h3>
       <button onclick="closeVerifyModal()" style="background:rgba(69,82,204,0.06);border:1px solid rgba(69,82,204,0.12);color:#616161;font-size:1rem;cursor:pointer;padding:6px 10px;border-radius:10px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-close-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button>
     </div>
@@ -2559,7 +2595,7 @@
     <p style="font-size:0.85rem;color:#757575;margin:0 0 16px;">Ingresa un comprobante o referencia (opcional).</p>
     <div style="margin-bottom:16px;">
       <label class="ptcg-activate__label">Comprobante / Ref.</label>
-      <input type="text" id="payment-comprobante" class="ptcg-activate__input" placeholder="Ej: Nº transacción 123456" maxlength="120">
+      <input type="text" id="payment-comprobante" class="ptcg-activate__input" placeholder="Ej: Nº transacci&oacute;n 123456" maxlength="120">
     </div>
     <div style="display:flex;gap:10px;">
       <button class="ptcg-index__btn ptcg-index__btn--secondary" style="flex:1;" onclick="closePaymentModal()">Cancelar</button>
@@ -2573,9 +2609,9 @@
   <div style="background:#fff;border-radius:24px;padding:28px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 50px rgba(69,82,204,0.15),0 0 0 1px rgba(69,82,204,0.06);">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
       <h3 style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.1rem;color:#212121;margin:0;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-hospital-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Editar Veterinaria</h3>
-      <button onclick="closeVetModal()" style="background:rgba(69,82,204,0.06);border:1px solid rgba(69,82,204,0.12);color:#616161;font-size:1rem;cursor:pointer;padding:6px 10px;border-radius:10px;line-height:1;transition:background 0.15s;" onmouseover="this.style.background='rgba(231,76,60,0.08)';this.style.color='#E74C3C'" onmouseout="this.style.background='rgba(69,82,204,0.06)';this.style.color='#616161'"><i data-lucide="x"></i></button>
+      <button onclick="closeVetModal()" style="background:rgba(69,82,204,0.06);border:1px solid rgba(69,82,204,0.12);color:#616161;font-size:1rem;cursor:pointer;padding:6px 10px;border-radius:10px;line-height:1;transition:background 0.15s;" onmouseover="this.style.background='rgba(231,76,60,0.08)';this.style.color='#E74C3C'" onmouseout="this.style.background='rgba(69,82,204,0.06)';this.style.color='#616161'"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-close-linear.svg" width="16" height="16" alt="Cerrar"></button>
     </div>
-    <p style="font-size:0.82rem;color:#757575;margin:0 0 20px;font-family:'Plus Jakarta Sans',sans-serif;">Actualiza los datos de la clínica o veterinaria.</p>
+    <p style="font-size:0.82rem;color:#757575;margin:0 0 20px;font-family:'Plus Jakarta Sans',sans-serif;">Actualiza los datos de la cl&iacute;nica o veterinaria.</p>
     <input type="hidden" id="ev-vet-id"/>
     <div style="display:grid;gap:12px;margin-bottom:20px;">
       <div><label class="ptcg-activate__label">Nombre *</label><input class="ptcg-activate__input" type="text" id="ev-name" maxlength="80" style="width:100%;box-sizing:border-box;"/></div>
@@ -2598,7 +2634,7 @@
     </div>
     <div style="display:flex;gap:10px;">
       <button class="ptcg-index__btn ptcg-index__btn--secondary" onclick="closeVetModal()" style="flex:1;">Cancelar</button>
-      <button class="ptcg-index__btn ptcg-index__btn--primary" id="btn-update-vet" onclick="updateVet()" style="flex:2;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar cambios</button>
+      <button class="ptcg-index__btn ptcg-index__btn--primary" id="btn-update-vet" onclick="updateVet()" style="flex:2;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar cambios</button>
     </div>
   </div>
 </div>
@@ -2607,8 +2643,8 @@
 <div id="shelter-edit-modal" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.45);align-items:center;justify-content:center;padding:16px;">
   <div style="background:#fff;border-radius:24px;padding:28px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 50px rgba(69,82,204,0.15),0 0 0 1px rgba(69,82,204,0.06);">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-      <h3 style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.1rem;color:#212121;margin:0;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Editar Refugio</h3>
-      <button onclick="closeShelterModal()" style="background:rgba(69,82,204,0.06);border:1px solid rgba(69,82,204,0.12);color:#616161;font-size:1rem;cursor:pointer;padding:6px 10px;border-radius:10px;line-height:1;transition:background 0.15s;" onmouseover="this.style.background='rgba(231,76,60,0.08)';this.style.color='#E74C3C'" onmouseout="this.style.background='rgba(69,82,204,0.06)';this.style.color='#616161'"><i data-lucide="x"></i></button>
+      <h3 style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.1rem;color:#212121;margin:0;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-hospital-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Editar Refugio</h3>
+      <button onclick="closeShelterModal()" style="background:rgba(69,82,204,0.06);border:1px solid rgba(69,82,204,0.12);color:#616161;font-size:1rem;cursor:pointer;padding:6px 10px;border-radius:10px;line-height:1;transition:background 0.15s;" onmouseover="this.style.background='rgba(231,76,60,0.08)';this.style.color='#E74C3C'" onmouseout="this.style.background='rgba(69,82,204,0.06)';this.style.color='#616161'"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-close-linear.svg" width="16" height="16" alt="Cerrar"></button>
     </div>
     <p style="font-size:0.82rem;color:#757575;margin:0 0 20px;font-family:'Plus Jakarta Sans',sans-serif;">Actualiza los datos del refugio y sus credenciales de acceso.</p>
     <input type="hidden" id="es-shelter-id"/>
@@ -2617,16 +2653,16 @@
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
         <div><label class="ptcg-activate__label">Encargado</label><input class="ptcg-activate__input" type="text" id="es-responsible" maxlength="60" style="width:100%;box-sizing:border-box;"/></div>
         <div><label class="ptcg-activate__label">Ciudad</label><input class="ptcg-activate__input" type="text" id="es-city" maxlength="40" style="width:100%;box-sizing:border-box;"/></div>
-        <div><label class="ptcg-activate__label">Teléfono</label><input class="ptcg-activate__input" type="tel" id="es-phone" maxlength="20" style="width:100%;box-sizing:border-box;"/></div>
-        <div><label class="ptcg-activate__label">Límite mascotas</label><input class="ptcg-activate__input" type="number" id="es-limite" min="1" max="200" style="width:100%;box-sizing:border-box;"/></div>
+        <div><label class="ptcg-activate__label">Tel&eacute;fono</label><input class="ptcg-activate__input" type="tel" id="es-phone" maxlength="20" style="width:100%;box-sizing:border-box;"/></div>
+        <div><label class="ptcg-activate__label">L&iacute;mite mascotas</label><input class="ptcg-activate__input" type="number" id="es-limite" min="1" max="200" style="width:100%;box-sizing:border-box;"/></div>
       </div>
-      <div><label class="ptcg-activate__label">Dirección</label><input class="ptcg-activate__input" type="text" id="es-address" maxlength="120" style="width:100%;box-sizing:border-box;"/></div>
+      <div><label class="ptcg-activate__label">Direcci&oacute;n</label><input class="ptcg-activate__input" type="text" id="es-address" maxlength="120" style="width:100%;box-sizing:border-box;"/></div>
       <div><label class="ptcg-activate__label">Email</label><input class="ptcg-activate__input" type="email" id="es-email" maxlength="80" style="width:100%;box-sizing:border-box;"/></div>
       <div style="border-top:1px solid rgba(0,0,0,0.06);padding-top:16px;margin-top:4px;">
         <div style="font-size:0.72rem;font-weight:700;color:#9E9E9E;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;font-family:'Plus Jakarta Sans',sans-serif;">Acceso al panel del refugio</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
           <div><label class="ptcg-activate__label">Usuario (login)</label><input class="ptcg-activate__input" type="text" id="es-username" maxlength="40" oninput="this.value=this.value.toLowerCase().replace(/\s/g,'')" style="width:100%;box-sizing:border-box;"/></div>
-          <div><label class="ptcg-activate__label">Contraseña <span style="font-weight:400;font-size:0.68rem;color:#9E9E9E;">(vacío = no cambiar)</span></label><input class="ptcg-activate__input" type="password" id="es-password" maxlength="40" style="width:100%;box-sizing:border-box;"/></div>
+          <div><label class="ptcg-activate__label">Contrase&ntilde;a <span style="font-weight:400;font-size:0.68rem;color:#9E9E9E;">(vac&iacute;o = no cambiar)</span></label><input class="ptcg-activate__input" type="password" id="es-password" maxlength="40" style="width:100%;box-sizing:border-box;"/></div>
         </div>
       </div>
       <div style="border-top:1px solid rgba(0,0,0,0.06);padding-top:16px;margin-top:4px;">
@@ -2640,7 +2676,7 @@
     </div>
     <div style="display:flex;gap:10px;">
       <button class="ptcg-index__btn ptcg-index__btn--secondary" onclick="closeShelterModal()" style="flex:1;">Cancelar</button>
-      <button class="ptcg-index__btn ptcg-index__btn--primary" id="btn-update-shelter" onclick="updateShelter()" style="flex:2;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar cambios</button>
+      <button class="ptcg-index__btn ptcg-index__btn--primary" id="btn-update-shelter" onclick="updateShelter()" style="flex:2;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar cambios</button>
     </div>
   </div>
 </div>
@@ -2648,21 +2684,21 @@
 <!-- ── AFILIADOS ── -->
 <section class="section" id="sec-affiliates">
   <div class="page-header">
-    <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Afiliados</h2>
+    <h2><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-user-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Afiliados</h2>
     <p>Gestiona los afiliados, sus comisiones y niveles.</p>
   </div>
   <div class="ptcg-index__card" style="margin-bottom:16px;">
     <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:1rem;margin-bottom:16px;display:flex;align-items:center;gap:10px;">
-      <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Niveles de Comision
+      <img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-settings-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Niveles de Comision
     </div>
     <p style="font-size:0.85rem;color:#757575;margin-bottom:14px;">Configura los rangos de ventas y porcentajes por nivel. Se guardan en config/affiliate_levels.</p>
     <div id="affiliate-levels-container" style="margin-bottom:14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.875rem;"></div>
-    <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="saveAffiliateLevels()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar niveles</button>
+    <button class="ptcg-index__btn ptcg-index__btn--primary btn-sm" onclick="saveAffiliateLevels()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-document-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Guardar niveles</button>
     <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="loadAffiliateLevels()" style="margin-left:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Recargar</button>
   </div>
   <div class="ptcg-index__card">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-      <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:1rem;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-info-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Afiliados Registrados</div>
+      <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:1rem;display:flex;align-items:center;gap:8px;"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-user-bold.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""> Afiliados Registrados</div>
       <button class="ptcg-index__btn ptcg-index__btn--secondary btn-sm" onclick="loadAffiliates()"><img src="https://prueb2.dashnexpages.net/assets/svg-icons/solar-refresh-linear.svg" width="20" height="20" style="filter:invert(28%) sepia(67%) saturate(1585%) hue-rotate(218deg) brightness(94%) contrast(91%)" alt=""></button>
     </div>
     <div class="table-wrap">
