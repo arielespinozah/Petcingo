@@ -1,0 +1,63 @@
+{
+  "projects": {
+    "petcingo": {
+      "firebase": {
+        "projectId": "petcingo-43096",
+        "serviceAccountPath": "secrets/serviceAccount.json"
+      },
+      "firestore": {
+        "rules": {
+          "allow": ["**"],
+          "deny": []
+        },
+        "maxCollectionReadSize": 100,
+        "maxBatchFetchSize": 200,
+        "paths": {
+          "all_pets": {
+            "template": "pets",
+            "description": "Mascotas registradas"
+          },
+          "all_orders": {
+            "template": "orders",
+            "description": "Pedidos y ordenes"
+          },
+          "all_users": {
+            "template": "users",
+            "description": "Usuarios registrados"
+          },
+          "all_products": {
+            "template": "products",
+            "description": "Productos en venta"
+          },
+          "all_shelters": {
+            "template": "shelters",
+            "description": "Refugios de mascotas"
+          },
+          "all_promotions": {
+            "template": "promotions",
+            "description": "Promociones y cupones"
+          },
+          "all_veterinarias": {
+            "template": "veterinarias",
+            "description": "Veterinarias registradas"
+          },
+          "all_staff": {
+            "template": "staff",
+            "description": "Personal y staff"
+          },
+          "all_config": {
+            "template": "config",
+            "description": "Configuracion del sistema"
+          },
+          "all_logs": {
+            "template": "logs",
+            "description": "Logs de actividad"
+          }
+        }
+      },
+      "timeouts": {
+        "callMs": 15000
+      }
+    }
+  }
+}
