@@ -109,6 +109,14 @@ https://prueb2.dashnexpages.net/assets/svg-icons/Flags/
 /assets/svg-icons/Solar
 https://prueb2.dashnexpages.net/assets/svg-icons/Solar/
 
+\assets\svg-icons\SocialMedia
+https://prueb2.dashnexpages.net/assets/svg-icons/Social-Media
+
+\assets\svg-icons\Metodos-de-Pago
+https://prueb2.dashnexpages.net/assets/svg-icons/Metodos-de-Pago
+
+
+
 
 /assets/fonts
 
